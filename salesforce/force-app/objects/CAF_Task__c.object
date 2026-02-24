@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    List view for CAF_Task__c.
+
+    The object was created over the Metadata API, which - like field-level
+    security and page layout membership - does not create a default list view.
+    CAF_Request__c has one only because it was built through the UI wizard.
+    Without this, /lightning/o/CAF_Task__c/list falls back to "Recently Viewed"
+    and reads as empty even with 27 records present.
+
+    Only the list view is declared here. Deploying a subcomponent does not
+    require, or overwrite, the rest of the object definition.
+
+    SN_Number__c is deliberately not a column: CAFSalesforceSync writes the
+    ServiceNow number into both Name and SN_Number__c, so showing both would put
+    the same value in two adjacent columns.
+-->
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <listViews>
+        <fullName>All</fullName>
+        <columns>NAME</columns>
+        <columns>CAF_Request__c</columns>
+        <columns>Short_Description__c</columns>
+        <columns>State__c</columns>
+        <columns>Approval__c</columns>
+        <columns>Met_Criteria__c</columns>
+        <columns>Planned_Completion_Date__c</columns>
+        <filterScope>Everything</filterScope>
+        <label>All</label>
+    </listViews>
+</CustomObject>
