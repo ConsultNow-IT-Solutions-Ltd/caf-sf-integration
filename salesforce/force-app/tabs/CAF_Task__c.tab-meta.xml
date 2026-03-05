@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Tab for CAF_Task__c.
+
+    CAF_Request__c got its tab from the UI wizard that created the object;
+    CAF_Task__c was created over the Metadata API, which creates no tab, so the
+    App Launcher offered CAF Dashboard and CAF Requests and nothing for tasks.
+    The fourth face of the same gap, after field-level security, the list view
+    and the page layout.
+
+    The motif is the standard custom-object tab icon set. Visibility comes from
+    the CAF_Integration permission set rather than from profile defaults, so it
+    does not depend on which profile the viewer happens to hold.
+-->
+<CustomTab xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customObject>true</customObject>
+    <motif>Custom18: Padlock</motif>
+</CustomTab>
