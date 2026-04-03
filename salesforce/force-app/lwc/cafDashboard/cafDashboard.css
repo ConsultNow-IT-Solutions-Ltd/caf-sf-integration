@@ -1,0 +1,261 @@
+/* Reyan Technologies: navy #000724, royal blue #0A3176 */
+
+.caf {
+    background: #fff;
+    border-radius: 6px;
+    padding: 1.25rem 1.25rem 1rem;
+    font-family: 'Salesforce Sans', Arial, sans-serif;
+    color: #16171a;
+}
+
+.caf__head {
+    border-bottom: 3px solid #0a3176;
+    padding-bottom: 0.6rem;
+    margin-bottom: 1rem;
+}
+
+.caf__title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #000724;
+    margin: 0;
+    letter-spacing: -0.01em;
+}
+
+.caf__sub {
+    font-size: 0.8125rem;
+    color: #5c5f66;
+    margin: 0.2rem 0 0;
+}
+
+.caf__msg {
+    padding: 1.5rem 0;
+    color: #5c5f66;
+    font-size: 0.875rem;
+}
+
+.caf__msg--error {
+    color: #ba0517;
+}
+
+/* Wide grids scroll inside their own container rather than the page. */
+.caf__scroll {
+    overflow-x: auto;
+}
+
+.grid {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 0.8125rem;
+}
+
+.grid th,
+.grid td {
+    border-bottom: 1px solid #e5e5e5;
+    padding: 0.55rem 0.5rem;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.grid thead th {
+    background: #000724;
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.75rem;
+    line-height: 1.25;
+    vertical-align: bottom;
+    border-bottom: none;
+}
+
+.grid__control {
+    min-width: 88px;
+    max-width: 110px;
+}
+
+.grid__control span {
+    display: block;
+    white-space: normal;
+    word-break: break-word;
+}
+
+/* First column pinned, so control names stay attached to an app when scrolled. */
+.grid__app {
+    text-align: left;
+    font-weight: 600;
+    white-space: nowrap;
+    position: sticky;
+    left: 0;
+    background: #fff;
+    z-index: 1;
+    padding-right: 1.25rem;
+}
+
+.grid thead .grid__app {
+    background: #000724;
+    z-index: 2;
+}
+
+.grid tbody tr:hover .grid__app,
+.grid tbody tr:hover td {
+    background: #f4f6fb;
+}
+
+.dot {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    vertical-align: middle;
+}
+
+.dot--green { background: #2e844a; }
+.dot--amber { background: #dd7a01; }
+.dot--red   { background: #ba0517; }
+.dot--blue  { background: #0a3176; }
+
+.dot--none {
+    background: #fff;
+    border: 1px dashed #c9c9c9;
+}
+
+.pill {
+    display: inline-block;
+    padding: 0.15rem 0.6rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.pill--green { background: #ebf7ee; color: #1d6334; border: 1px solid #a6dab7; }
+.pill--amber { background: #fdf3e6; color: #8c5000; border: 1px solid #f2c98a; }
+.pill--none  { background: #f4f4f6; color: #6b6b76; border: 1px solid #d8d8de; }
+
+/*
+    An unassessed control. Deliberately flat text rather than another dot: the
+    dots all mean "we looked and this is the answer", and N/A means nobody has
+    looked yet. Rendering it as a fifth colour would put it on the same footing
+    as a compliance verdict. Not a button either - there is no request behind it
+    to drill into.
+*/
+.na {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: #8a8a95;
+    background: #f4f4f6;
+    border: 1px solid #e2e2e8;
+    border-radius: 3px;
+    padding: 0.1rem 0.32rem;
+    cursor: default;
+}
+
+.legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.1rem;
+    list-style: none;
+    margin: 0.9rem 0 0;
+    padding: 0;
+    font-size: 0.75rem;
+    color: #5c5f66;
+}
+
+.legend li {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+/* --- clickable cells --- */
+.grid__cell { padding: 0.35rem 0.5rem; }
+
+.cellbtn {
+    background: none;
+    border: none;
+    padding: 0.2rem 0.35rem;
+    border-radius: 4px;
+    cursor: pointer;
+    line-height: 0;
+}
+.cellbtn:hover:not(:disabled) { background: #dfe6f5; }
+.cellbtn:disabled { cursor: default; }
+.cellbtn:focus-visible { outline: 2px solid #0a3176; outline-offset: 1px; }
+
+/* --- drill-in panel --- */
+.panel {
+    margin-top: 1.25rem;
+    border: 1px solid #d7dce8;
+    border-radius: 6px;
+    padding: 0.9rem 1rem 1rem;
+    background: #fafbfe;
+}
+.panel__head { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; }
+.panel__title { margin: 0; font-size: 1rem; font-weight: 700; color: #000724; }
+.panel__sub { margin: 0.1rem 0 0.8rem; font-size: 0.8125rem; color: #5c5f66; }
+.panel__close {
+    background: none; border: 1px solid #c9cede; border-radius: 4px;
+    padding: 0.25rem 0.7rem; font-size: 0.75rem; cursor: pointer; color: #16171a;
+}
+.panel__close:hover { background: #eef1f8; }
+.panel__note { margin: 0.7rem 0 0; font-size: 0.75rem; color: #5c5f66; font-style: italic; }
+
+.tasks { width: 100%; border-collapse: collapse; font-size: 0.8125rem; background: #fff; }
+.tasks th, .tasks td { border-bottom: 1px solid #e5e5e5; padding: 0.5rem 0.6rem; text-align: left; }
+.tasks thead th { background: #eef1f8; font-weight: 600; font-size: 0.75rem; color: #000724; }
+.tasks__desc { max-width: 320px; }
+.tasks__actions { white-space: nowrap; }
+
+.tasks__row--active td,
+.tasks__row--active th { background: #eef1f8; }
+
+.act {
+    background: #0a3176; color: #fff; border: none; border-radius: 4px;
+    padding: 0.25rem 0.6rem; font-size: 0.75rem; cursor: pointer; margin-right: 0.35rem;
+}
+.act:hover:not(:disabled) { background: #06245a; }
+.act:disabled { background: #9aa6c4; cursor: default; }
+
+/* The attestation route is the considered one, so it reads as secondary to the
+   single-field actions beside it rather than competing with them. */
+.act--ghost {
+    background: #fff; color: #0a3176; border: 1px solid #0a3176;
+}
+.act--ghost:hover:not(:disabled) { background: #dfe6f5; }
+.act--ghost:disabled { background: #fff; color: #9aa6c4; border-color: #c9cede; }
+
+/* --- evidence and attestation --- */
+.attest {
+    margin-top: 1rem;
+    border-top: 1px solid #d7dce8;
+    padding-top: 0.9rem;
+}
+
+.attest__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.7rem;
+}
+
+.attest__title { margin: 0; font-size: 0.9375rem; font-weight: 700; color: #000724; }
+
+.attest__who {
+    margin: 0 0 0.7rem;
+    font-size: 0.75rem;
+    color: #5c5f66;
+    font-style: italic;
+}
+
+.attest__cols {
+    display: grid;
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+    gap: 1rem;
+    align-items: start;
+}
+
+@media (max-width: 900px) {
+    .attest__cols { grid-template-columns: minmax(0, 1fr); }
+}
