@@ -1,0 +1,87 @@
+<template>
+    <div class="ev">
+        <div class="ev__head">
+            <h3 class="ev__title">{heading}</h3>
+            <p class="ev__sub">{subheading}</p>
+        </div>
+
+        <template lwc:if={error}>
+            <p class="ev__msg ev__msg--error">{error}</p>
+        </template>
+
+        <template lwc:if={showUpload}>
+            <div class="ev__upload">
+                <lightning-file-upload
+                    label="Upload evidence"
+                    name="cafEvidence"
+                    accept={acceptedFormats}
+                    record-id={recordId}
+                    multiple
+                    disabled={uploadDisabled}
+                    onuploadfinished={handleUploadFinished}>
+                </lightning-file-upload>
+                <template lwc:if={uploading}>
+                    <span class="ev__working">
+                        <lightning-spinner alternative-text="Sending to ServiceNow" size="small"
+                                           variant="brand"></lightning-spinner>
+                        Sending to ServiceNow&hellip;
+                    </span>
+                </template>
+            </div>
+        </template>
+
+        <template lwc:if={mismatch}>
+            <p class="ev__msg ev__msg--warn">{mismatchLabel}</p>
+        </template>
+
+        <div class="ev__cols">
+            <section class="ev__col">
+                <h4 class="ev__collabel">
+                    Salesforce Files
+                    <span class="ev__count">{sfCount}</span>
+                </h4>
+                <template lwc:if={hasSalesforceFiles}>
+                    <ul class="files">
+                        <template for:each={salesforceFiles} for:item="f">
+                            <li key={f.id} class="files__row">
+                                <a href={f.downloadUrl} target="_blank" rel="noopener"
+                                   class="files__name" title="Download">{f.name}</a>
+                                <span class="files__meta">{f.sizeLabel} &middot; {f.createdBy} &middot; {f.createdOn}</span>
+                            </li>
+                        </template>
+                    </ul>
+                </template>
+                <template lwc:else>
+                    <p class="ev__msg">No files uploaded yet.</p>
+                </template>
+            </section>
+
+            <section class="ev__col">
+                <h4 class="ev__collabel">
+                    ServiceNow attachments
+                    <span class="ev__count ev__count--sn">{snCount}</span>
+                </h4>
+                <template lwc:if={serviceNowError}>
+                    <p class="ev__msg ev__msg--error">{serviceNowError}</p>
+                </template>
+                <template lwc:elseif={hasServiceNowFiles}>
+                    <ul class="files">
+                        <template for:each={serviceNowFiles} for:item="f">
+                            <li key={f.id} class="files__row">
+                                <span class="files__name files__name--plain">{f.name}</span>
+                                <span class="files__meta">{f.sizeLabel} &middot; {f.createdBy} &middot; {f.createdOn}</span>
+                            </li>
+                        </template>
+                    </ul>
+                </template>
+                <template lwc:else>
+                    <p class="ev__msg">{emptyServiceNowMessage}</p>
+                </template>
+            </section>
+        </div>
+
+        <template lwc:if={loading}>
+            <p class="ev__msg">Reading evidence&hellip;</p>
+        </template>
+    </div>
+</template>
