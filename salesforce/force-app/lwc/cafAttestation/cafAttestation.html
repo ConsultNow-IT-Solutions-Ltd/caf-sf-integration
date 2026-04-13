@@ -1,0 +1,53 @@
+<template>
+    <div class="at">
+        <div class="at__head">
+            <h3 class="at__title">{heading}</h3>
+            <p class="at__sub">
+                Recorded in ServiceNow. Approving closes the task and sets the parent
+                request's compliance status.
+            </p>
+        </div>
+
+        <template lwc:if={isBlocked}>
+            <p class="at__blocked">{blockedReason}</p>
+        </template>
+
+        <lightning-radio-group
+            class="at__criteria"
+            label="Success criteria"
+            options={criteriaOptions}
+            value={metCriteria}
+            type="radio"
+            disabled={disabled}
+            onchange={handleCriteria}>
+        </lightning-radio-group>
+
+        <lightning-textarea
+            class="at__comments"
+            label="Attestation comments"
+            placeholder="What was checked, and against what evidence."
+            value={comments}
+            disabled={disabled}
+            onchange={handleComments}>
+        </lightning-textarea>
+
+        <div class="at__actions">
+            <button type="button" class="btn btn--approve" disabled={disabled}
+                    onclick={handleApprove}>Approve</button>
+            <button type="button" class="btn btn--reject" disabled={disabled}
+                    onclick={handleReject}>Reject</button>
+            <template lwc:if={busy}>
+                <span class="at__working">Sending to ServiceNow&hellip;</span>
+            </template>
+        </div>
+
+        <template lwc:if={hasOutcome}>
+            <p class={outcomeClass}>{outcomeLabel}</p>
+        </template>
+
+        <p class="at__note">
+            Rejecting also closes the task, and marks the request out of compliance.
+            ServiceNow applies both outcomes; Salesforce only reports them.
+        </p>
+    </div>
+</template>
