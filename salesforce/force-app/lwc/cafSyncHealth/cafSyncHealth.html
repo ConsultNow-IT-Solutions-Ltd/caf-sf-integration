@@ -1,0 +1,75 @@
+<template>
+    <section class="sync">
+        <div class="sync__bar">
+            <div class="sync__state">
+                <template lwc:if={loading}>
+                    <span class="dot dot--none"></span>
+                    <span class="sync__headline">Checking ServiceNow&hellip;</span>
+                </template>
+
+                <template lwc:elseif={error}>
+                    <span class="dot dot--amber"></span>
+                    <span class="sync__headline">Could not check</span>
+                </template>
+
+                <template lwc:else>
+                    <span class={statusDot}></span>
+                    <span class="sync__headline">{headline}</span>
+                    <span class="sync__when">checked {checkedAtLabel}</span>
+                </template>
+            </div>
+
+            <button type="button" class="sync__btn" disabled={loading} onclick={handleRecheck}>
+                Re-check now
+            </button>
+        </div>
+
+        <template lwc:if={error}>
+            <p class="sync__error">{error}</p>
+        </template>
+
+        <template lwc:elseif={hasReport}>
+            <p class="sync__summary">{summary}</p>
+
+            <template lwc:if={hasDrift}>
+                <div class="sync__scroll">
+                    <table class="drift">
+                        <thead>
+                            <tr>
+                                <th>Record</th>
+                                <th>Type</th>
+                                <th>Difference</th>
+                                <th>ServiceNow</th>
+                                <th>Salesforce</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template for:each={differences} for:item="d">
+                                <tr key={d.key}>
+                                    <td class="drift__num">{d.recordNumber}</td>
+                                    <td>{d.recordType}</td>
+                                    <td>{d.kind}</td>
+                                    <td class="drift__val">{d.servicenow}</td>
+                                    <td class="drift__val">{d.salesforce}</td>
+                                    <td>
+                                        <button type="button" class="act"
+                                                disabled={d.resyncDisabled}
+                                                data-type={d.recordType}
+                                                data-sysid={d.sysId}
+                                                data-number={d.recordNumber}
+                                                onclick={handleResync}>Re-sync</button>
+                                    </td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </div>
+                <p class="sync__note">
+                    ServiceNow is the system of record. Re-sync re-sends its values to
+                    Salesforce; it never edits ServiceNow to match this side.
+                </p>
+            </template>
+        </template>
+    </section>
+</template>
