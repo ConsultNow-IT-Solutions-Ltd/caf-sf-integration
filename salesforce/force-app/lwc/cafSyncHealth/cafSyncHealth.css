@@ -1,0 +1,131 @@
+/* Reyan Technologies: navy #000724, royal blue #0A3176
+ *
+ * The palette repeats cafDashboard.css rather than importing it. LWC styles are
+ * scoped to their own shadow root, so a component cannot inherit its parent's
+ * classes - .dot here is a different .dot from the one in the grid, and both
+ * have to exist for the two to look like one screen.
+ */
+
+.sync {
+    border: 1px solid #d7dce8;
+    border-radius: 6px;
+    background: #fafbfe;
+    padding: 0.7rem 0.9rem;
+    margin-bottom: 1rem;
+    font-family: 'Salesforce Sans', Arial, sans-serif;
+    color: #16171a;
+}
+
+.sync__bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.sync__state {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 0;
+}
+
+.sync__headline {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #000724;
+}
+
+.sync__when {
+    font-size: 0.75rem;
+    color: #5c5f66;
+}
+
+.sync__summary {
+    margin: 0.35rem 0 0;
+    font-size: 0.75rem;
+    color: #5c5f66;
+}
+
+.sync__error {
+    margin: 0.45rem 0 0;
+    font-size: 0.8125rem;
+    color: #ba0517;
+}
+
+.sync__note {
+    margin: 0.6rem 0 0;
+    font-size: 0.75rem;
+    color: #5c5f66;
+    font-style: italic;
+}
+
+.sync__btn {
+    background: none;
+    border: 1px solid #c9cede;
+    border-radius: 4px;
+    padding: 0.25rem 0.7rem;
+    font-size: 0.75rem;
+    cursor: pointer;
+    color: #16171a;
+    white-space: nowrap;
+}
+.sync__btn:hover:not(:disabled) { background: #eef1f8; }
+.sync__btn:disabled { color: #9aa6c4; cursor: default; }
+
+.dot {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    vertical-align: middle;
+    flex: none;
+}
+
+.dot--green { background: #2e844a; }
+.dot--amber { background: #dd7a01; }
+.dot--red   { background: #ba0517; }
+
+.dot--none {
+    background: #fff;
+    border: 1px dashed #c9c9c9;
+}
+
+/* Wide tables scroll inside their own container rather than the page. */
+.sync__scroll {
+    overflow-x: auto;
+    margin-top: 0.6rem;
+}
+
+.drift {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8125rem;
+    background: #fff;
+}
+
+.drift th,
+.drift td {
+    border-bottom: 1px solid #e5e5e5;
+    padding: 0.45rem 0.6rem;
+    text-align: left;
+}
+
+.drift thead th {
+    background: #eef1f8;
+    font-weight: 600;
+    font-size: 0.75rem;
+    color: #000724;
+    white-space: nowrap;
+}
+
+.drift__num { font-weight: 600; white-space: nowrap; }
+.drift__val { color: #16171a; }
+
+.act {
+    background: #0a3176; color: #fff; border: none; border-radius: 4px;
+    padding: 0.25rem 0.6rem; font-size: 0.75rem; cursor: pointer;
+}
+.act:hover:not(:disabled) { background: #06245a; }
+.act:disabled { background: #9aa6c4; cursor: default; }
