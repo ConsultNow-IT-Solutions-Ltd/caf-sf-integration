@@ -603,3 +603,97 @@ graph TD
 
 ---
 
+## User Interface
+
+### UI Actions (2)
+
+| Action | Table | Type | Active | Condition | Description |
+|--------|-------|------|--------|-----------|-------------|
+| **Initiate CAF Process** | `cmdb_ci_business_app` | Form Button (Server) | ✅ | BA status = `not_initiated` | Calls `CAFUtil.generateCAFRequests()` and sets BA status to `out_of_compliance` |
+| **Risk Assessment** | `caf_req` | Form Link (Client) | ❌ | — | *(Inactive)* Opens risk assessment in GlideOverlay dialog |
+
+### Form Behavior Summary
+
+| Form | Key Behaviors |
+|------|--------------|
+| **CAF Request** | Auto-populates short description, managed_by, assigned_to from BA; fields become read-only based on state; Archer fields shown conditionally |
+| **CAF Task** | Hides cancelled state from dropdown; read-only on close; approval related list hidden conditionally; met_criteria mandatory on close with success criteria |
+| **CAF Relationship** | Frequency auto-populates relative_start_date; uniqueness validation prevents duplicates |
+
+---
+
+## Notifications
+
+### Email Notifications (8)
+
+| # | Notification | Table | Trigger | Recipients |
+|---|-------------|-------|---------|------------|
+| 1 | **CAF New Request Created** | `caf_req` | Insert | BA Manager, Assigned To |
+| 2 | **CAF New Request Created - Reminder** | `caf_req` | Event: `caf.req.creation.remi` | BA Manager, Assigned To |
+| 3 | **CAF State Changed** | `caf_req` | Update (state/status change) | Assigned To, BA Manager |
+| 4 | **CAF - Task State Changed** | `caf_tsk` | Update (state change) | Assigned To |
+| 5 | **CAF - Task Assigned To Changed** | `caf_tsk` | Update (assigned_to change) | New Assigned To |
+| 6 | **CAF - Approval Requested** | `sysapproval_approver` | Insert (source=caf_tsk) | Approver |
+| 7 | **CAF Compliance Status** | `cmdb_ci_business_app` | Update (compliance status change) | BA Manager |
+| 8 | **CAF Crown Jewels** | `cmdb_ci_business_app` | Update (crown_jewels=Yes) | BA Manager |
+
+### Registered Events (2)
+
+| Event | Table | Usage |
+|-------|-------|-------|
+| `x_gskn2_caf_compli.CAF_new_Request` | `caf_req` | Fired by scheduled job for new request notifications |
+| `x_gskn2_caf_compli.caf.req.creation.remi` | `caf_req` | Fired by flow for creation reminder notifications |
+
+---
+
+## Scheduled Jobs
+
+### CAF - Create New CAF Requests
+
+| Property | Value |
+|----------|-------|
+| **Schedule** | Daily at 23:30 UTC |
+| **Active** | ✅ Yes |
+
+**Logic:**
+1. Queries all Business Applications with Tier 0/1/2 in Production
+2. For each BA, checks for closed CAF requests
+3. Calculates next due date based on `relative_creation` duration
+4. If current date ≥ calculated creation date → generates new CAF requests
+5. Fires `CAF_new_Request` event for notifications
+
+---
+
+### CAF - Update CAF Request Status if Overdue
+
+| Property | Value |
+|----------|-------|
+| **Schedule** | Daily at 23:00 UTC |
+| **Active** | ✅ Yes |
+
+**Logic:**
+1. Queries all active CAF requests
+2. Compares `planned_completion_date` against current date
+3. If overdue → sets `caf_status` to `out_of_compliance`
+4. Triggers downstream business rules and notifications
+
+---
+
+## Application Navigation
+
+### Menu: CAF Compliance
+
+**Visible to:** `itil`, `caf_admin`, `caf_read_only_all`, `caf_tier_0_owner`, `caf_tier_1_owner`, `caf_tier_2_owner`, `caf_engineer`
+
+| Order | Module | Type | Target | Role Filter | Notes |
+|-------|--------|------|--------|-------------|-------|
+| 10 | CAF Requests | List | `caf_req` | — | Filtered to assigned/owned records |
+| 20 | CAF Tasks | List | `caf_tsk` | — | Filtered to assigned/owned records |
+| 30 | CAF Controls Relationship | List | `caf_relationship` | `caf_admin` | Admin-only configuration |
+| 35 | CAF Controls | List | `caf_conformance_type` | `caf_admin` | Admin-only configuration |
+| 40 | Critical Business Applications | List | `cmdb_ci_business_app` | — | View: business_applications |
+| 50 | Portal ➚ | Direct URL | `/caf` | — | Opens Service Portal |
+| 65 | Dashboard - Data Analytics | Direct | PA Dashboard | — | Performance Analytics |
+
+---
+
