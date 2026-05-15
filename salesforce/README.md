@@ -69,3 +69,104 @@ reconciliation updated the Salesforce task in the same call.
 Source is under [force-app/](force-app/); it deploys as-is with the Metadata API
 (`package.xml` is at the root of the zip, `singlePackage=true`).
 
+## The grid
+
+Rows are business applications, columns are CAF Controls, each cell a
+colour-coded dot. Currently **19 apps x 6 controls**, reseeded 2026-08-08 from
+the three SAP/Zscalar applications it used to show — see section 13 of
+[HANDOFF.md](../HANDOFF.md) and
+[testing/automation/seed/data.ts](../testing/automation/seed/data.ts), which is
+the source of truth for the shape of it.
+
+```
+APP                   HA  Backup  DR  RTO  Enc  TestB     Overall
+Customer CRM           O    O      O   O    O    O        Compliant
+Document Management    O    O      O   ~    O    O        5 of 6
+Employee Helpdesk      X    ~      X   O    O    ~        2 of 6
+Intranet Portal       N/A   ~     N/A  O   N/A   ~        1 of 3
+Vendor Management      E    O      O   ~    O    O        4 of 6
+Zoho Email             X    X      ~   X    ~    X        0 of 6
+...                                                       (19 rows)
+```
+
+`O` compliant · `~` approaching due · `X` out of compliance · `E` exception
+approved · `N/A` never assessed.
+
+**There is no app list in the code.** A row is a distinct
+`Business_Application__c` across the mirrored requests, so the way to change what
+this shows is to change what ServiceNow holds and let the push carry it over.
+
+**Columns come from the data, not from a list in the code.** Adding a CAF Control
+in ServiceNow adds a column here with no code change — that is the defining
+behaviour of the AngularJS widget this replaces, and the reason the Apex
+controller returns flat rows and lets the client pivot. Pivoting in Apex would
+mean inventing a column contract the client then has to trust.
+
+**An app is compliant only when every control is**, matching the ServiceNow
+widget. Softening that here would make the two views disagree about the same
+data, which is worse than either being wrong alone.
+
+## Sync Health
+
+The strip above the grid asks ServiceNow for its own view of every request and
+task and compares it with what Salesforce holds. Green with a record count when
+they agree; when they do not it names each difference — record, field, both
+values — with a **Re-sync** button that re-pushes that one record.
+
+It exists because every push in this integration is fire-and-forget: a failed
+push is logged in ServiceNow and nothing else happens, so without this the grid
+can show a value that stopped being true and nobody would know.
+
+Two rules built into it. **Repair is never automatic** — Re-sync is a button next
+to a difference someone is looking at, because unattended repair can turn a
+Salesforce problem into a ServiceNow one. And **repair only flows ServiceNow →
+Salesforce**, because Salesforce holds a mirror and a mirror that disagrees is
+stale by definition.
+
+`CafSyncHealth.check()` is deliberately **not** `cacheable=true` — Apex that
+makes a callout cannot be — so the LWC calls it imperatively. That is what makes
+Re-check honest: it goes and looks rather than re-reading a cache.
+
+Verified 2026-08-07 in both directions: 46 records compared with 0 differences;
+then `Short_Description__c` on RCAF0001037 was edited in Salesforce only, the
+check reported exactly that one difference, Re-sync repaired it from ServiceNow,
+and the next check returned to 0.
+
+## Evidence and attestation
+
+**Two buttons and two panels, because they are two jobs done by two people.**
+Whoever owns the application gathers the evidence; someone else judges it. One
+button covering both would imply one person does both, which is the opposite of
+what an attestation is for.
+
+- **Upload evidence** opens `cafEvidence` alone, with its upload control.
+- **Attest** opens `cafEvidence` in read-only mode beside `cafAttestation`. The
+  approver has to *see* the evidence to attest to it and must not be adding to
+  it, so the same component renders with `hide-upload` rather than a second
+  read-only component existing to say the same things.
+
+Both are also `lightning__RecordPage` components: drop them on the `CAF_Task__c`
+record page in App Builder and the standard record page becomes an attestation
+surface too. Both carry the `lightningCommunity__Page` target for the Experience
+Cloud site that has not been built yet.
+
+**Uploading puts the file in two places.** `lightning-file-upload` stores it as a
+`ContentVersion` against the task, which is what gives preview, download and the
+Files related list; then `CafEvidenceService.pushEvidence` sends it to ServiceNow
+as a `sys_attachment`, one file per Apex transaction. The panel shows both lists
+next to each other and warns when the counts differ, because **only the
+ServiceNow copy unlocks an attestation** — that gate is enforced in ServiceNow,
+not here. Cap is 2 MB per file: Apex holds the Blob and its base64 expansion in
+the same 6 MB heap.
+
+Attesting sets `met_criteria`, `comments` and `approval` in ServiceNow and stops
+there. Setting `approval` *is* the transition — an existing business rule closes
+the task and moves the parent request's compliance status. Salesforce writes
+none of that; it arrives on the usual push.
+
+Note that **closing the last task on a request does not close the request** — the
+flow creates the next task in the chain instead. Attesting `CAFT0001022`
+*"Attach evidence"* produced `CAFT0001001` *"IT Application Owner Attestation"*,
+which is now sitting Open on `RCAF0001022` with no evidence: a ready-made
+starting point for demonstrating the whole feature.
+
