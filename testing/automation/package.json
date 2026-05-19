@@ -1,0 +1,13 @@
+{
+  "name": "caf-compliance-test-automation",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Playwright automation for the CAF Compliance test pack (ServiceNow and Salesforce).",
+  "scripts": {
+    "auth": "playwright test auth/servicenow.setup.ts --project=setup",
+    "int": "playwright test specs/integration-readonly.spec.ts --project=int"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.62.1"
+  }
+}
