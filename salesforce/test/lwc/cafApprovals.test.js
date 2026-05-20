@@ -554,3 +554,56 @@ describe('c-caf-approvals review panel inputs', () => {
         expect(el.shadowRoot.querySelector('section.review')).toBeNull();
     });
 });
+
+describe('c-caf-approvals clear filters', () => {
+    afterEach(() => {
+        while (document.body.firstChild) {
+            document.body.removeChild(document.body.firstChild);
+        }
+        jest.clearAllMocks();
+    });
+
+    const clearButton = (el) => el.shadowRoot.querySelector('button.filters__clear');
+
+    // TC-UNIT-120
+    it('Clear filters resets the application, search and overdue filters together', async () => {
+        const el = await render([task(1, 'CRM', iso(-1)), task(2, 'HR', iso(-1)), task(3, 'HR', null)]);
+        const select = el.shadowRoot.querySelector('select');
+        select.value = 'HR';
+        select.dispatchEvent(new CustomEvent('change'));
+        const input = el.shadowRoot.querySelector('input[type="search"]');
+        input.value = 'zzz';
+        input.dispatchEvent(new CustomEvent('input'));
+        const box = el.shadowRoot.querySelector('input.filters__overdue');
+        box.checked = true;
+        box.dispatchEvent(new CustomEvent('change'));
+        await flush();
+        expect(el.shadowRoot.textContent).toContain('No tasks match the filter.');
+
+        clearButton(el).click();
+        await flush();
+
+        expect(queueRows(el)).toHaveLength(3);
+        expect(el.shadowRoot.querySelector('select').value).toBe('');
+        expect(el.shadowRoot.querySelector('input[type="search"]').value).toBe('');
+        expect(el.shadowRoot.querySelector('input.filters__overdue').checked).toBe(false);
+        expect(clearButton(el)).toBeNull();
+    });
+
+    // TC-UNIT-121
+    it('shows Clear filters only while a filter is narrowing the queue', async () => {
+        const el = await render([task(1, 'CRM', null)]);
+        expect(clearButton(el)).toBeNull();
+
+        const input = el.shadowRoot.querySelector('input[type="search"]');
+        input.value = '   ';
+        input.dispatchEvent(new CustomEvent('input'));
+        await flush();
+        expect(clearButton(el)).toBeNull();
+
+        input.value = 'CAFT';
+        input.dispatchEvent(new CustomEvent('input'));
+        await flush();
+        expect(clearButton(el)).not.toBeNull();
+    });
+});
