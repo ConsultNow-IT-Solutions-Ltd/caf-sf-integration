@@ -1,5 +1,7 @@
 @import 'c/cafTheme';
 
+.actions { display: flex; gap: 0.5rem; }
+
 .review {
     margin-top: 1rem;
     border: 1px solid #d7dce8;
