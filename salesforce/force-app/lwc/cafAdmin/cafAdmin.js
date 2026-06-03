@@ -51,6 +51,7 @@ export default class CafAdmin extends LightningElement {
     overview;
     error;
     failuresOnly = false;
+    operationFilter = '';
 
     wiredOverview;
 
@@ -210,9 +211,35 @@ export default class CafAdmin extends LightningElement {
         });
     }
 
-    /** @returns {object[]} the log rows after the failures-only filter */
+    /**
+     * The operation dropdown: each operation in the log once, sorted, with
+     * "All operations" first. Calls with no operation recorded are only
+     * reachable through "All operations".
+     *
+     * @returns {{value: string, label: string, selected: boolean}[]}
+     */
+    get operationOptions() {
+        const ops = [...new Set(this.allCalls.map((c) => text(c.Operation__c)).filter(Boolean))].sort((a, b) =>
+            a.localeCompare(b)
+        );
+        const current = ops.includes(this.operationFilter) ? this.operationFilter : '';
+        return [{ value: '', label: 'All operations', selected: current === '' }].concat(
+            ops.map((o) => ({ value: o, label: o, selected: current === o }))
+        );
+    }
+
+    /**
+     * The log rows after the operation and failures-only filters. An
+     * operation a refresh no longer returns is treated as "All operations",
+     * so the table never empties for a reason the dropdown cannot show.
+     *
+     * @returns {object[]}
+     */
     get calls() {
-        return this.failuresOnly ? this.allCalls.filter((c) => !c.ok) : this.allCalls;
+        const op = this.operationOptions.some((o) => o.value === this.operationFilter) ? this.operationFilter : '';
+        return this.allCalls
+            .filter((c) => !op || text(c.Operation__c) === op)
+            .filter((c) => !this.failuresOnly || !c.ok);
     }
 
     /** @returns {boolean} whether the filtered log has rows */
@@ -254,6 +281,15 @@ export default class CafAdmin extends LightningElement {
      */
     handleFailuresOnly(event) {
         this.failuresOnly = !!(event && event.target && event.target.checked);
+    }
+
+    /**
+     * Operation dropdown changed. An empty or missing value means all.
+     *
+     * @param {Event} event change event from the select
+     */
+    handleOperationFilter(event) {
+        this.operationFilter = (event && event.target && event.target.value) || '';
     }
 
     /**

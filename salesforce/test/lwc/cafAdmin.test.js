@@ -150,3 +150,77 @@ describe('c-caf-admin with missing or bad data', () => {
         expect(el.shadowRoot.querySelector('.msg--error')).toBeNull();
     });
 });
+
+describe('c-caf-admin callout log filters', () => {
+    afterEach(() => {
+        while (document.body.firstChild) {
+            document.body.removeChild(document.body.firstChild);
+        }
+        jest.clearAllMocks();
+    });
+
+    function call(n, operation, ok, overrides = {}) {
+        return {
+            Id: 'l' + n,
+            Name: 'LOG-' + n,
+            Operation__c: operation,
+            Succeeded__c: ok,
+            Latency_Ms__c: 100,
+            Status_Code__c: ok ? 200 : 500,
+            Called_At__c: '2026-10-19T09:0' + n + ':00.000Z',
+            ...overrides
+        };
+    }
+
+    const logRows = (el) => el.shadowRoot.querySelectorAll('.scroll')[0].querySelectorAll('tbody tr');
+    const pick = async (el, value) => {
+        const select = el.shadowRoot.querySelector('select.filters__operation');
+        select.value = value;
+        select.dispatchEvent(new CustomEvent('change'));
+        await flush();
+    };
+
+    // TC-UNIT-124
+    it('lists each operation once and narrows the log to the one chosen, leaving the tiles on the whole log', async () => {
+        const el = await render(
+            overview({
+                calls: [call(1, 'attest', true), call(2, 'getEvidence', false), call(3, 'attest', false), call(4, null, true)]
+            })
+        );
+        const options = Array.from(el.shadowRoot.querySelectorAll('select.filters__operation option')).map((o) => o.textContent);
+        expect(options).toEqual(['All operations', 'attest', 'getEvidence']);
+
+        await pick(el, 'attest');
+        expect(Array.from(logRows(el)).map((r) => r.querySelector('td').textContent)).toEqual(['LOG-1', 'LOG-3']);
+        expect(el.shadowRoot.querySelector('.tile__value').textContent).toBe('4');
+
+        await pick(el, '');
+        expect(logRows(el)).toHaveLength(4);
+    });
+
+    // TC-UNIT-125
+    it('shows the whole log when a refresh no longer returns the chosen operation', async () => {
+        const el = await render(overview({ calls: [call(1, 'attest', true), call(2, 'getEvidence', true)] }));
+        await pick(el, 'attest');
+        expect(logRows(el)).toHaveLength(1);
+
+        getOverview.emit(overview({ calls: [call(2, 'getEvidence', true)] }));
+        await flush();
+        expect(logRows(el)).toHaveLength(1);
+        expect(logRows(el)[0].textContent).toContain('LOG-2');
+        expect(el.shadowRoot.querySelector('select.filters__operation').value).toBe('');
+    });
+
+    // TC-UNIT-126
+    it('combines the operation filter with Failures only', async () => {
+        const el = await render(overview({ calls: [call(1, 'attest', true), call(2, 'getEvidence', false), call(3, 'attest', false)] }));
+        await pick(el, 'attest');
+        const box = el.shadowRoot.querySelector('input[type="checkbox"]');
+        box.checked = true;
+        box.dispatchEvent(new CustomEvent('change'));
+        await flush();
+
+        expect(logRows(el)).toHaveLength(1);
+        expect(logRows(el)[0].textContent).toContain('LOG-3');
+    });
+});
