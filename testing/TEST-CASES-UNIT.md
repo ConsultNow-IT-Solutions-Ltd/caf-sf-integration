@@ -153,6 +153,8 @@ TC-UNIT-001 covers the direction no live case can reach without an upload.
 | TC-UNIT-124 | Operation dropdown lists each logged operation once, sorted; choosing one narrows the log; the tiles stay on the whole log | |
 | TC-UNIT-125 | An operation a refresh no longer returns falls back to "All operations" | An empty log with no visible reason |
 | TC-UNIT-126 | Operation filter and Failures only apply together | |
+| TC-UNIT-127 | Failures only with no failed calls says "None of the N logged calls failed" (or "The one logged call did not fail") | It read "No callouts logged", which suggests logging has stopped |
+| TC-UNIT-128 | A filter that matches nothing says "No logged calls match the filter"; an empty log still says "No callouts logged" | |
 
 ## LWC: missing or bad data on the new screens
 
