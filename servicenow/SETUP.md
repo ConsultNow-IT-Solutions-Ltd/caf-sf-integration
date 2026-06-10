@@ -59,3 +59,57 @@ Source of truth for the code is
 [CAF - Push Request to Salesforce.business-rule.js](CAF%20-%20Push%20Request%20to%20Salesforce.business-rule.js);
 both were posted to the instance from those files.
 
+## Properties
+
+| Name | Type | Value |
+|---|---|---|
+| `x_gskn2_caf_compli.sf.enabled` | boolean | `true` |
+| `x_gskn2_caf_compli.sf.instance_url` | string | `https://orgfarm-4938c7f768-dev-ed.develop.my.salesforce.com` |
+| `x_gskn2_caf_compli.sf.client_id` | string | connected app Consumer Key |
+| `x_gskn2_caf_compli.sf.client_secret` | password2 | encrypted at rest (`{{gpaes}}…`) |
+| `x_gskn2_caf_compli.sf.api_version` | string | `v67.0` |
+| `x_gskn2_caf_compli.sf.integration_user` | string | `sf.integration` |
+
+**`sf.enabled` is the kill switch.** Set it to `false` and every push stops
+immediately — no code change, no deactivating rules under pressure. It is the
+first thing to reach for if anything misbehaves mid-demo.
+
+## Auth
+
+OAuth 2.0 Client Credentials, requested inline by the Script Include rather than
+through an Application Registry entity. That was a deliberate trade: it keeps
+every moving part in one script plus six properties, which is what made the whole
+setup deployable and testable over the Table API. It differs from §3 of the
+handoff document, which specifies JWT bearer — JWT remains the better production
+answer and the deviation should be recorded in the TDD delta.
+
+The token is not cached; each push costs one extra round trip. At POC volume
+that is worth more in debuggability than it costs.
+
+## Verified behaviour
+
+```
+19:30:46  [CAF->SF] RCAF0001034 pushed, HTTP 201                    (created)
+19:31:36  [CAF->SF] RCAF0001034 pushed, HTTP 200                    (updated, no duplicate)
+19:41:18  [CAF->SF] CAFT0001042 -> CAF_Task__c, HTTP 201            (created, parent linked)
+19:41:18  [CAF->SF] CAFT0001007 -> CAF_Task__c, HTTP 201            (created, no parent)
+```
+
+Counts held steady across a second push of every record - 3 requests, 2 tasks -
+so upsert-by-External-Id works end to end from inside ServiceNow, not just from
+a laptop.
+
+**Parent linking is by External Id, not by Salesforce Id.** A task sends
+
+```json
+"CAF_Request__r": { "ServiceNow_Sys_Id__c": "<parent sys_id>" }
+```
+
+which resolves the lookup inside the same upsert. There is therefore no ordering
+dependency between the request and task pushes, and no Salesforce Id ever has to
+be written back into ServiceNow. `CAFT0001042` linked to `RCAF0001033` this way.
+
+**Parentless tasks are real.** `CAFT0001007` has an empty `caf_request`, so the
+payload omits the relationship entirely rather than sending an empty one, which
+Salesforce would reject.
+
