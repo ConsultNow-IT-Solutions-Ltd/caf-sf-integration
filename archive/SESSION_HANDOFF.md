@@ -204,3 +204,107 @@ have recreated its Salesforce record. Worth remembering for any future cleanup.
 
 ---
 
+## Sync Health, in full
+
+Built 2026-08-07. Answers the question the rest of the integration could not:
+are these two systems still telling the same story?
+
+**Why it was needed.** Every push is fire-and-forget — `_push()` logs a failure
+with `gs.error` and returns, so a Salesforce outage cannot roll back a
+ServiceNow transaction. Correct, but it means a failed push exists only as a log
+line nobody reads while the grid keeps showing a value that is no longer true.
+
+**The pieces**
+
+| Where | What |
+|---|---|
+| ServiceNow | `GET /api/x_gskn2_caf_compli/caf/snapshot` — read-only, returns number, status, state and description for every request and task |
+| ServiceNow | `POST /api/x_gskn2_caf_compli/caf/resync/{type}/{sysId}` — re-pushes one record, modifies nothing in ServiceNow |
+| Salesforce | `CafSyncHealth.cls` — callout, compare, report |
+| Salesforce | `cafSyncHealth` LWC — the strip above the grid |
+
+Sources: [servicenow/CAF Integration - Sync Snapshot.scripted-rest.js](servicenow/CAF%20Integration%20-%20Sync%20Snapshot.scripted-rest.js),
+[servicenow/CAF Integration - Resync Record.scripted-rest.js](servicenow/CAF%20Integration%20-%20Resync%20Record.scripted-rest.js),
+[salesforce/force-app/classes/CafSyncHealth.cls](salesforce/force-app/classes/CafSyncHealth.cls).
+
+**Four drift types**, each of which has actually occurred in this project: in
+ServiceNow but missing in Salesforce (failed push); in Salesforce but missing in
+ServiceNow (the orphan cleanup, mid-way); same record with different values (the
+echo-loop stranding); and Salesforce simply stale.
+
+**Design decisions worth keeping**
+
+- **Detection is automatic, repair never is.** Re-sync is a button next to a
+  difference someone is looking at. Unattended repair can turn a Salesforce
+  problem into a ServiceNow one.
+- **Repair only ever flows ServiceNow → Salesforce.** Salesforce holds a mirror;
+  a mirror that disagrees is stale by definition.
+- **No `cacheable=true`.** An Apex method that makes a callout cannot be
+  cacheable, so the LWC calls it imperatively. That is also what makes Re-check
+  honest — it really does go and look, rather than re-reading a cache.
+- **Blank equals null.** ServiceNow returns null for an empty field and
+  Salesforce may hold either; treating them as different would report drift on
+  every record with an empty approval, which is most of them.
+- **No new custom fields**, so the metadata-API field-level-security trap does
+  not apply.
+
+**Verified end to end, not just on the happy path.** With the systems in
+agreement: 46 records compared, 0 differences. Then drift was induced by editing
+`Short_Description__c` on RCAF0001037 in Salesforce only — the check reported
+exactly one difference naming both values, Re-sync repaired it from ServiceNow
+(HTTP 200), and the follow-up check returned to 0. Editing the mirror is a safe
+test precisely because ServiceNow overwrites it.
+
+Then run again through the UI by the user, end to end, and left in sync.
+
+### Demo script for the drift moment
+
+Repeatable, and it touches nothing in ServiceNow — the mirror is corrupted and
+then restored from the system of record.
+
+1. `/lightning/o/CAF_Task__c/list?filterName=All`, double-click the **State**
+   cell on **CAFT0001046**, change `In Progress` to `Open`, Save.
+   *(`State__c` is editable on the CAF Task layout for exactly this reason; every
+   other mirrored field is Readonly.)*
+2. CAF Dashboard tab → **Re-check now**. The strip turns red:
+   `Task CAFT0001046 | State differs | SN=In Progress | SF=Open`.
+3. **Re-sync** → ServiceNow re-pushes → strip returns to green.
+
+The narration that matters for a non-technical audience: the grid can only be
+trusted if something is checking it, and this is the something. Run step 1
+before the meeting if you would rather open on the red state.
+
+---
+
+## Open items
+
+Rough priority for a demo:
+
+1. **No evidence upload or attestation UI** — steps 7 onward.
+2. **No Platform Events** — step 8. Every call is synchronous today.
+3. **Sync Health has no schedule and no test class.** It runs when someone opens
+   the dashboard or presses Re-check. A nightly scheduled comparison that
+   emails or posts on drift is the obvious next step, and `CafSyncHealth` has no
+   Apex test coverage — fine for a Developer Edition org, blocking for any
+   deployment to production.
+4. **`RCAF0001001` has no business application and no CAF control**, so the
+   dashboard's `getRequests()` filters it out. Harmless, but it is the one
+   request that will never appear in the grid.
+
+---
+
+## Credentials
+
+| What | Where |
+|---|---|
+| Salesforce consumer key + secret | ServiceNow properties `x_gskn2_caf_compli.sf.*` (secret encrypted) |
+| `sf.integration` password | `C:\Users\patel\.caf-jwt\sf-integration-password.txt` and the Salesforce named credential |
+| Unused JWT keypair | `C:\Users\patel\.caf-jwt\caf-jwt.p12` + password file |
+| cnit OAuth token | `%USERPROFILE%\.cnit\creds\caf-reyan.oauth.dpapi` |
+
+The Salesforce client secret and the `sf.integration` password both passed
+through the 2026-08-06 session transcript. Throwaway POC org, low stakes — but
+rotate both if it outlives the demo, and never put either in the docs.
+
+**Kill switch:** set `x_gskn2_caf_compli.sf.enabled` to `false` and every
+outbound push stops immediately.
