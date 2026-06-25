@@ -697,3 +697,529 @@ graph TD
 
 ---
 
+## Salesforce Integration
+
+> Verified against both live systems on 2026-08-07.
+
+### The seam
+
+Salesforce mirrors two of the five ServiceNow tables — **CAF Request** and
+**CAF Task** — and nothing else. Controls, relationships and task templates are
+configuration, they change rarely, and mirroring them would create a second
+place to configure the product. The consequence is deliberate and shows up in
+the UI: the ServiceNow grid draws its columns from `caf_conformance_type` where
+`active=true`, while the Salesforce grid derives them from the request data it
+holds, so **a control with no requests gets a column in ServiceNow and none in
+Salesforce**. That is expected behaviour, not drift, and Sync Health will not
+report it because no mirrored record disagrees.
+
+| Property | Value |
+|---|---|
+| **Correlation key** | ServiceNow `sys_id`, stored in the External Id field `ServiceNow_Sys_Id__c` |
+| **Write semantics** | Upsert by External Id — replay-safe, verified idempotent |
+| **Reverse correlation** | **None.** No Salesforce Id is ever stored in ServiceNow |
+| **Deletes** | Propagate in neither direction |
+
+**No Salesforce Id is stored back in ServiceNow, by design.** The correlation is
+one-directional, which is what makes a Salesforce org rebuild survivable: repoint
+the sync and every record re-upserts into place. The cost is that a record
+deleted on one side lives on as an orphan on the other, and that *updating* a
+not-yet-deleted ServiceNow record will **recreate** its Salesforce twin — so a
+cleanup performed in the wrong order silently undoes itself. Kill switch off,
+ServiceNow side first, kill switch on after.
+
+### Salesforce data model
+
+```mermaid
+erDiagram
+    CAF_REQUEST_C ||--o{ CAF_TASK_C : "parent of"
+    CAF_TASK_C ||--o{ CONTENT_VERSION : "evidence files"
+
+    CAF_REQUEST_C {
+        string Name "mirrors SN number"
+        string ServiceNow_Sys_Id__c "External Id, unique"
+        string SN_Number__c
+        string Short_Description__c
+        string Business_Application__c "display value, not a reference"
+        string CAF_Control__c "display value, not a reference"
+        string CAF_Status__c
+        string State__c "label, not the integer"
+        datetime Planned_Completion_Date__c
+    }
+
+    CAF_TASK_C {
+        string Name "mirrors SN number"
+        string ServiceNow_Sys_Id__c "External Id, unique"
+        string SN_Number__c
+        string Short_Description__c
+        reference CAF_Request__c "parent lookup"
+        string State__c "label, not the integer"
+        string Approval__c
+        string Met_Criteria__c
+        datetime Planned_Completion_Date__c
+    }
+```
+
+#### Object: CAF_Request__c
+
+| Field | Type | Length | Notes |
+|---|---|---|---|
+| `Name` | Text | 80 | Set to the ServiceNow number on every push |
+| `ServiceNow_Sys_Id__c` | Text | 32 | **External Id, unique** — the correlation key |
+| `SN_Number__c` | Text | 40 | `RCAF…`, the human-facing identifier |
+| `Short_Description__c` | Text | 255 | Truncated at 255 by the sync |
+| `Business_Application__c` | Text | 100 | **Display value**, not a reference — CMDB is not mirrored |
+| `CAF_Control__c` | Text | 120 | Display value resolved through the relationship record |
+| `CAF_Status__c` | Text | 40 | `in_compliance` / `approaching_due` / `out_of_compliance` / `archer_exception_approved` |
+| `State__c` | Text | 40 | **Label**, not the integer — `Open` / `In Progress` / `Closed Complete` / `Cancelled` |
+| `Planned_Completion_Date__c` | DateTime | — | ISO-converted by the sync |
+
+#### Object: CAF_Task__c
+
+| Field | Type | Length | Notes |
+|---|---|---|---|
+| `Name` | Text | 80 | Set to the ServiceNow number on every push |
+| `ServiceNow_Sys_Id__c` | Text | 32 | **External Id, unique** |
+| `SN_Number__c` | Text | 40 | `CAFT…` |
+| `Short_Description__c` | Text | 255 | |
+| `CAF_Request__c` | Lookup → `CAF_Request__c` | 18 | Parented by External Id, not by Salesforce Id |
+| `State__c` | Text | 40 | **The only mirrored field editable on the page layout** — see below |
+| `Approval__c` | Text | 40 | `requested` / `approved` / `rejected` |
+| `Met_Criteria__c` | Text | 40 | `yes` / `no` |
+| `Planned_Completion_Date__c` | DateTime | — | |
+
+**State is mirrored as a label, not as the integer.** `CAFSalesforceSync` maps
+`1 → Open`, `2 → In Progress`, `3 → Closed Complete`, `-1 → Cancelled`, and the
+`/snapshot` resource applies the same mapping. If those two lists ever disagree,
+Sync Health reports drift on every record — which is loud enough to notice
+immediately, and is the reason the mapping lives in exactly two places.
+
+**Every mirrored field is Readonly on the page layout except `State__c`**, which
+is editable solely so the drift demonstration is possible without touching
+ServiceNow. Note the layout trap: a field *absent* from the layout also shows a
+lock icon and refuses inline edit, even where field-level security grants Edit
+and the describe reports `updateable=true`. Deliberately Readonly and
+accidentally absent look identical to a user.
+
+### Outbound: ServiceNow → Salesforce
+
+| Business Rule | Table | When | Order | Active |
+|---|---|---|---|---|
+| `CAF - Push Request to Salesforce` | `x_gskn2_caf_compli_caf_req` | `async_always` | 1000 | Yes |
+| `CAF - Push Task to Salesforce` | `x_gskn2_caf_compli_caf_tsk` | `async_always` | 1000 | Yes |
+
+Both call the **`CAFSalesforceSync`** script include, which builds the payload,
+obtains an OAuth token and issues a `PATCH` to the Salesforce upsert endpoint
+`/services/data/vXX.X/sobjects/<object>/ServiceNow_Sys_Id__c/<sys_id>`.
+
+> **`async_always`, not `async`.** The choice *labelled* "async" in
+> `sys_script.when` has the value `async_always`; plain `async` is the deprecated
+> one. Running after commit is what keeps a Salesforce outage off the critical
+> path of a compliance write.
+
+**Pushes are fire-and-forget.** `_push()` logs a failure with `gs.error` and
+returns. A Salesforce outage therefore cannot roll back the ServiceNow
+transaction that triggered it — which is correct for a compliance record, and is
+precisely why [Sync Health](#sync-health) exists: without it a failed push lives
+only as a log line nobody reads, while the dashboard carries on showing a value
+that is no longer true.
+
+#### Configuration properties
+
+Six system properties, all in the application scope:
+
+| Property | Type | Purpose |
+|---|---|---|
+| `x_gskn2_caf_compli.sf.enabled` | boolean | **Master kill switch.** `false` stops every outbound call immediately |
+| `x_gskn2_caf_compli.sf.instance_url` | string | Salesforce My Domain URL; serves both the token endpoint and the data API |
+| `x_gskn2_caf_compli.sf.api_version` | string | Salesforce REST API version |
+| `x_gskn2_caf_compli.sf.client_id` | string | Consumer Key of the connected app |
+| `x_gskn2_caf_compli.sf.client_secret` | **`password2`** | Consumer Secret, **encrypted at rest** |
+| `x_gskn2_caf_compli.sf.integration_user` | string | The user name Salesforce-originated writes arrive as; the echo-loop guard keys off it |
+
+The kill switch does **not** queue. Changes made while it is `false` do not reach
+Salesforce and stay stale until a re-sync.
+
+### Inbound: Salesforce → ServiceNow
+
+One Scripted REST API, **`CAF Integration`**, base URI
+`/api/x_gskn2_caf_compli/caf`, six resources — all active, all requiring
+authentication, none requiring ACL authorisation:
+
+| Method | Path | Resource | Purpose |
+|---|---|---|---|
+| `PATCH` | `/task/{sysId}` | Update Task | Generic task update, six-field allow-list |
+| `POST` | `/task/{sysId}/evidence` | Upload Evidence | Base64 in, `sys_attachment` out |
+| `GET` | `/task/{sysId}/evidence` | List Evidence | What ServiceNow actually holds; read-only |
+| `POST` | `/task/{sysId}/attest` | Attest Task | The evidence gate, then the outcome |
+| `GET` | `/snapshot` | Sync Snapshot | Read-only comparison feed |
+| `POST` | `/resync/{type}/{sysId}` | Resync Record | Re-push one record; modifies nothing in ServiceNow |
+
+Authentication is HTTP basic as **`sf.integration`**, reached from Apex through
+the `ServiceNow_CAF` named credential.
+
+#### The write allow-list
+
+```javascript
+var WRITABLE = ['state', 'met_criteria', 'approval', 'comments', 'vqd_link', 'vqd_link_2'];
+```
+
+**Anything outside that list fails the whole call** — `HTTP 400`,
+`Fields not writable from Salesforce: <field>`, and *none* of the request is
+applied, including the fields that were writable. Applying the writable subset
+silently would leave a caller believing it had set `met_criteria` when it had
+not, which is worse than an error.
+
+#### Status codes
+
+| Code | Condition |
+|---|---|
+| `200` | Update or attestation applied |
+| `201` | Evidence stored as a `sys_attachment` |
+| `400` | Empty body; non-allow-listed field; invalid `outcome` or `met_criteria` |
+| `404` | No CAF Task with that `sys_id` |
+| `409` | Task not In Progress; task no longer active; outcome already recorded |
+| `428` | **Evidence gate** — no `sys_attachment` on the task |
+
+#### Response envelope
+
+Scripted REST wraps whatever a resource returns in a `result` key. Parsing the
+top level in Apex yields a one-key Map and a null for every field wanted, which
+surfaces downstream as a null-dereference pointing at nothing useful.
+`CafSyncHealth`, `CafEvidenceService` and `CafAttestationService` each unwrap it;
+anything new must do the same.
+
+### The echo-loop guard and the explicit reconcile
+
+This is the part of the integration most likely to be broken by a well-meaning
+simplification, and the failure is silent.
+
+The outbound rules skip anything written by `sf.integration`, which stops a
+Salesforce update bouncing straight back. **That alone strands derived changes.**
+Cascading rules run in the same transaction and are attributed to the same user,
+so they are skipped too — measured: a task moved to In Progress moved its parent
+request in ServiceNow while Salesforce still read `Open`, with **no push logged
+for either record**.
+
+The fix is to reconcile explicitly at the end of each inbound resource: exactly
+two upserts — the task and its parent request — triggered by the *request* rather
+than by a record change, so no loop can form from it.
+
+```mermaid
+sequenceDiagram
+    participant U as App owner (Salesforce)
+    participant L as cafDashboard LWC
+    participant A as CafTaskService (Apex)
+    participant R as Scripted REST<br/>PATCH /task/:sysId
+    participant E as ServiceNow engine<br/>business rules + flows
+    participant S as CAFSalesforceSync
+
+    U->>L: Start task
+    L->>A: applyChange(sysId, state, 2)
+    A->>R: PATCH via callout:ServiceNow_CAF<br/>(basic auth, sf.integration)
+    R->>E: update task state = 2
+    E-->>E: cascading rules move parent request to state 2
+    Note over E,S: Outbound rules SKIP both writes —<br/>same transaction, same user, echo guard fires
+    R->>S: explicit reconcile: upsert TASK
+    R->>S: explicit reconcile: upsert REQUEST
+    S-->>L: both records now current in Salesforce
+    R-->>A: 200 + re-read state
+    A-->>L: refreshApex
+```
+
+The log signature of a healthy round trip is one `[SF->CAF]` line followed by two
+`[CAF->SF]` lines within about a second. **If a future change removes the
+explicit push, nothing errors** — the task simply stops matching its mirror, and
+only Sync Health notices.
+
+> The guard keys off the *user name*. Run the inbound API as any other account
+> and the guard silently does nothing, producing a loop that spends the API
+> budget with no error anywhere.
+
+### Salesforce components
+
+#### Apex classes (5, all unmanaged)
+
+| Class | Responsibility |
+|---|---|
+| `CafDashboardController` | Read model for the grid. Returns rows and lets the LWC pivot them, so no column contract is invented in Apex |
+| `CafTaskService` | `getTasks` for the drill-in; `applyChange` for the inbound `PATCH` |
+| `CafEvidenceService` | Salesforce Files in, both file lists out, push to ServiceNow |
+| `CafAttestationService` | Outcome out, ServiceNow's verdict back |
+| `CafSyncHealth` | Callout, compare, report; and `resync` |
+
+> `number` is a **reserved identifier in Apex**, which rules it out as a variable
+> or field name. `CafAttestationService` uses `taskNumber`.
+
+#### Lightning Web Components (4)
+
+| Component | Placement | Notes |
+|---|---|---|
+| `cafDashboard` | CAF Dashboard tab | Applications as rows, controls as **dynamic columns from the data**, colour-coded dots, drill-in to tasks |
+| `cafSyncHealth` | Inside `cafDashboard`, above the grid | Status strip; runs on load; `Re-check now` and per-difference `Re-sync` |
+| `cafEvidence` | Drill-in panel and `CAF_Task__c` record page | Both file lists side by side; `hide-upload` flag serves the read-only modes |
+| `cafAttestation` | Drill-in panel and record page | Criteria yes/no, comments, Approve / Reject |
+
+All four are API v67. `cafEvidence` and `cafAttestation` additionally carry the
+`lightningCommunity__Page` target so they are droppable on an Experience Cloud
+page — though no such site exists yet.
+
+> A `targetConfig` for `lightningCommunity__Page` **cannot contain `<property>`
+> tags**. Design properties belong under `lightningCommunity__Default`; the bare
+> target is enough to make a component droppable.
+
+#### Org furniture
+
+| Item | Detail |
+|---|---|
+| **Tabs** | CAF Dashboard, CAF Requests, CAF Tasks |
+| **List views** | `All`, with explicit `<columns>` on both objects |
+| **Page layouts** | Carrying the custom fields, every mirrored field Readonly except `State__c` |
+| **Permission set** | `CAF_Integration` — in source, and must be extended for any new field |
+| **Named credential** | `ServiceNow_CAF` → `https://dev281754.service-now.com`, principal type Named User. **Created by hand, deliberately not in source** |
+
+> **The Metadata API blind spot.** Anything created over the Metadata API needs
+> four things the UI wizard does silently — field-level security, a page layout
+> entry, a list view *with columns*, and a tab. Every one of them fails as an
+> empty screen rather than an error, which is why they surfaced one at a time.
+> All four are fixed and in source.
+
+### Sync Health
+
+Answers the question the rest of the integration could not: *are these two
+systems still telling the same story?*
+
+`CafSyncHealth.check()` pulls `GET /snapshot`, compares it against the mirrored
+records, and reports differences. It is **not `cacheable`** — an Apex method that
+makes a callout cannot be — which is also what makes `Re-check now` honest: it
+really does go and look.
+
+**Four drift types, each of which has actually occurred on this project:**
+
+| # | Drift | Cause | Repairable by Re-sync? |
+|---|---|---|---|
+| 1 | Value differs | Someone edited the mirror, or the echo guard stranded a derived change | **Yes** |
+| 2 | In ServiceNow, missing in Salesforce | A failed push | **Yes** |
+| 3 | In Salesforce, missing in ServiceNow | A record deleted in ServiceNow, or an orphan | **No** — repair only ever flows ServiceNow → Salesforce |
+| 4 | Salesforce simply stale | Changes made with the kill switch off | **Yes** |
+
+Two design invariants worth preserving:
+
+- **Detection is automatic; repair never is.** `Re-sync` is a button beside a
+  difference someone is looking at. Unattended repair can turn a Salesforce
+  problem into a ServiceNow one.
+- **Blank equals null.** ServiceNow returns null for an empty field and
+  Salesforce may hold either. Treating them as different would report drift on
+  every record with an empty `approval`, which is most of them.
+
+`Re-sync` modifies **nothing** in ServiceNow. A mirror that disagrees is stale by
+definition, so the system of record is never edited to match it.
+
+### Evidence and attestation
+
+Gathering evidence and judging it are **separate buttons and separate panels,
+because they are done by separate people.** *Upload evidence* opens `cafEvidence`
+alone; *Attest* opens it **read-only** beside `cafAttestation`, since an approver
+has to see the evidence and must not be adding to it. The same component serves
+both through the `hide-upload` flag, which a closed task also sets.
+
+Row actions by task state:
+
+| State | Actions |
+|---|---|
+| Open | Start, Upload evidence |
+| In Progress | Upload evidence, Attest |
+| Closed | View evidence only |
+
+#### Two copies of every file, on purpose
+
+Salesforce keeps the `ContentVersion`, which makes preview, download and the
+standard Files related list work with no round trip. ServiceNow keeps a
+`sys_attachment`, which is the copy an auditor is entitled to and **the only one
+the attestation gate counts**. They are deliberately not reconciled — unlike a
+mirrored field there is no value to disagree about — and `cafEvidence` shows both
+lists side by side so a failed push is *visible rather than inferred*. A count
+mismatch raises a warning in the panel.
+
+**Ceiling: 2 MB per file**, enforced in both `CafEvidenceService` and the
+ServiceNow resource (`MAX_BYTES = 2097152`). Apex holds the Blob and its base64
+expansion in the same 6 MB heap and caps a callout body at 6 MB. Files push one
+per Apex transaction, so the ceiling is a property of the **largest single file**,
+not of how many were dropped at once.
+
+> Apex cannot call out after DML in the same transaction. Uploading a file and
+> pushing it are therefore two transactions — free through the LWC, because
+> `lightning-file-upload` finishes before the push is invoked, but fatal to a
+> single anonymous-Apex script that tries both.
+
+#### The attestation engine already existed
+
+The business rule **`CAF - success criteria not met`** (active, before update,
+order 2100, filter `approvalVALCHANGES^active=true`) *is* the attestation
+transition: `approved` closes the task and sets the parent request's `caf_status`
+to `in_compliance`; `rejected` closes it and sets `out_of_compliance`. The attest
+endpoint writes three fields and lets that rule do all of it. **The transition is
+not reimplemented in the endpoint** — there would then be two of them, and the
+`/caf` portal only ever runs one.
+
+Two things the design above implies that the instance does not have:
+
+- **`approval='requested'` is the default on every task**, not a
+  submitted-for-approval state. There is no "submit for attestation" step to
+  model; the act is `requested → approved | rejected`.
+- **Approval routing is aspirational.** `CAF - Approval Task` is inactive and
+  notification 6 *CAF - Approval Requested* therefore never fires.
+
+#### Where the evidence gate lives, and why not in the business rule
+
+`CAF - attachment mandatory for def tasks` implements exactly the same check and
+is **deliberately left inactive**. Activating it would change closure behaviour
+for the `/caf` portal and for admins, and pre-existing tasks have no attachment,
+so every portal close would start failing. The gate is enforced in the attest
+endpoint instead, where it binds every caller of that endpoint and nobody else.
+
+**The asymmetry is intended and should be stated rather than discovered:** an
+evidence-free task can still be closed through the ServiceNow portal; the same
+task cannot be attested from Salesforce.
+
+### Authentication
+
+| Direction | Mechanism |
+|---|---|
+| **Outbound** ServiceNow → Salesforce | OAuth 2.0 **Client Credentials**, requested inline by `CAFSalesforceSync` from `sf.instance_url`, using `sf.client_id` and the encrypted `sf.client_secret` |
+| **Inbound** Salesforce → ServiceNow | HTTP basic as `sf.integration`, through the `ServiceNow_CAF` named credential |
+
+Two constraints on the named credential:
+
+- **The name is load-bearing.** Apex references `callout:ServiceNow_CAF`; a
+  rename breaks every callout in the integration.
+- **It is created by hand and not in source, deliberately.** Salesforce will not
+  deploy a named credential without a password, and that password must not sit
+  in a client-facing directory. If the org is rebuilt, recreate it with that
+  exact name.
+
+### Deviations and known limitations
+
+#### Deviations from the original design
+
+| # | Deviation | Rationale |
+|---|---|---|
+| 1 | **Client Credentials rather than JWT bearer** | ServiceNow's `jwt_provider` table has no fields for `iss` / `sub` / `aud`, which Salesforce requires, so JWT needs a custom JWT API Script. Client Credentials was one policy change on the connected app. **JWT remains the better production answer** |
+| 2 | **No Application Registry entity** | `CAFSalesforceSync` requests its own token inline, keeping every moving part in one script plus six system properties |
+| 3 | **No Salesforce Id stored in ServiceNow** | One-directional correlation; makes an org rebuild survivable |
+| 4 | **Row-level security deferred** | POC scope. The query business rules are not exercised across the seam |
+
+#### Known limitations
+
+| # | Limitation | Consequence |
+|---|---|---|
+| 1 | **No Experience Cloud site** | The components carry the target but there is nowhere to place them, so the licensing argument for the split is not yet realised end to end. Verify the org's Experience licence count before building on it |
+| 2 | **No named approver** | Attestation uses the `approval` field alone, so whoever presses the button in Salesforce is the approver and the audit trail records only `sf.integration`. **For a compliance product this is the weakest point in the evidence chain** |
+| 3 | **No Platform Events** | Every inbound call is synchronous. A ServiceNow outage surfaces as a failed action in the LWC — nothing is queued and nothing retries. Salesforce's own record is left unchanged, so the two sides stay consistent |
+| 4 | **Sync Health has no schedule** | It runs when someone opens the dashboard or presses Re-check. A nightly comparison that emails or posts on drift is the obvious next step |
+| 5 | **No Apex test coverage** on `CafSyncHealth`, `CafEvidenceService` or `CafAttestationService` | Acceptable in a Developer Edition org; **a hard blocker for production**, since Salesforce requires 75% org-wide coverage to deploy |
+| 6 | **Compliance roll-up is computed twice, from different sources** | `cafDashboard` computes its own roll-up from the mirrored `CAF_Status__c` values and never reads `cmdb_ci_business_app.u_caf_compliance_status`. Where that field is wrong, the two surfaces **visibly disagree about identical data**, and Sync Health correctly reports "in sync" throughout because no mirrored record differs. Fix belongs in the ServiceNow business rule, not in the mirror |
+
+---
+
+## Dependencies & Integrations
+
+| System | Integration Point | Direction | Description |
+|--------|------------------|-----------|-------------|
+| **CMDB** | `cmdb_ci_business_app` | Read/Write | Reads BA metadata (tier, crown jewels, owners); writes compliance status |
+| **Approval Engine** | `sysapproval_approver` | Write | Creates approval records for task attestation |
+| **Archer (External)** | Exception reference | Reference | Stores Archer finding numbers for approved exceptions |
+| **Service Portal** | `/caf` | UI | Admin and audit compliance portal |
+| **Performance Analytics** | Dashboard | Read | Compliance reporting and analytics |
+| **Salesforce** | `CAFSalesforceSync` → REST upsert | Outbound | Async push of CAF Requests and Tasks, upsert by External Id |
+| **Salesforce** | Scripted REST API `caf`, 6 resources | Inbound | Task updates, evidence, attestation, snapshot and re-sync, as `sf.integration` |
+| **Salesforce Files** | `ContentVersion` | Bi-directional | Evidence held on both sides; ServiceNow's copy is the one the gate counts |
+
+---
+
+## Component Summary
+
+### ServiceNow
+
+| Category | Total | Active | Inactive |
+|----------|-------|--------|----------|
+| **Tables** | 5 | 5 | 0 |
+| **Business Rules** | 24 | 20 | 4 |
+| **Script Includes** | 2 | 2 | 0 |
+| **Flows** | 2 | 2 | 0 |
+| **Roles** | 6 | 6 | 0 |
+| **ACLs** | 48+ | — | — |
+| **Client Scripts** | 7 | 5 | 2 |
+| **UI Actions** | 2 | 1 | 1 |
+| **UI Policies** | 6 | 6 | 0 |
+| **Scheduled Jobs** | 2 | 2 | 0 |
+| **Email Notifications** | 8 | 8 | 0 |
+| **Events** | 2 | 2 | 0 |
+| **Modules** | 7 | 7 | 0 |
+| **Application Menus** | 1 | 1 | 0 |
+| **UI Pages** | 0 | — | — |
+| **Scripted REST APIs** | 1 | 1 | 0 |
+| **Scripted REST Resources** | 6 | 6 | 0 |
+| **System Properties** (`sf.*`) | 6 | 6 | 0 |
+
+*The two Salesforce push business rules and the `CAFSalesforceSync` script
+include are counted in the Business Rules and Script Includes rows above.*
+
+### Salesforce
+
+| Category | Total | Notes |
+|----------|-------|-------|
+| **Custom Objects** | 2 | `CAF_Request__c`, `CAF_Task__c` |
+| **Custom Fields** | 17 | 8 on Request, 9 on Task; 2 are External Ids |
+| **Apex Classes** | 5 | All unmanaged; **0 test classes** |
+| **Lightning Web Components** | 4 | All API v67 |
+| **Page Layouts** | 2 | Every mirrored field Readonly except `State__c` |
+| **List Views** | 2 | `All`, with explicit columns |
+| **Tabs** | 3 | CAF Dashboard, CAF Requests, CAF Tasks |
+| **Permission Sets** | 1 | `CAF_Integration` |
+| **Named Credentials** | 1 | `ServiceNow_CAF` — by hand, not in source |
+| **Apex Test Coverage** | **0%** | Blocking for production; see limitation 5 |
+
+---
+
+## Key Design Decisions
+
+### Compliance engine (ServiceNow)
+
+| Decision | Rationale |
+|----------|-----------|
+| **Separate Relationship Tasks table** | Reusable task templates instantiated per compliance cycle without duplicating configuration |
+| **Relative date durations** | Flexible scheduling — controls can have different lead times and frequencies without hardcoding |
+| **Query business rules for row-level security** | Users only see compliance data for their own business applications, enforced at platform level |
+| **Tiered role model** | Aligns with organizational structure where different teams own different service categories |
+| **Auto-number on Requests and Tasks** | Unique, human-readable identifiers for tracking and communication |
+| **Self-referencing parent on Relationships** | Supports hierarchical control structures for complex compliance frameworks |
+| **Archer exception support** | Acknowledges that some compliance gaps have approved exceptions from risk management |
+| **Extendable Request and Task tables** | Allows future specialization of request/task types without schema migration |
+
+### Integration (ServiceNow ↔ Salesforce)
+
+| Decision | Rationale |
+|----------|-----------|
+| **State machine stays in ServiceNow** | The single decision everything else follows from. Splitting state across two platforms produces two schedulers, two truths about whether a request is closed, and an audit trail nobody trusts |
+| **Only Requests and Tasks are mirrored** | Controls, relationships and task templates are configuration. Mirroring them would create a second place to configure the product |
+| **Upsert by External Id on the ServiceNow `sys_id`** | Makes replay-on-failure safe, and makes a Salesforce org rebuild survivable — repoint the sync and every record re-upserts into place |
+| **No Salesforce Id stored in ServiceNow** | Keeps the correlation one-directional. The cost is orphans on delete, which is the cheaper problem |
+| **Async, fire-and-forget push** | A Salesforce outage must never roll back a compliance write. The cost is a failure visible only in a log, which is what Sync Health answers |
+| **Echo-loop guard *plus* an explicit two-upsert reconcile** | The guard alone strands derived changes, because cascading rules run in the same transaction as the same user. The reconcile is triggered by the request rather than by a record change, so no loop can form. **Do not simplify this away — its failure is silent** |
+| **Allow-list refuses the whole call** | A caller that believes it set a field and did not is worse than an error |
+| **Detection automatic, repair never** | Unattended repair can turn a Salesforce problem into a ServiceNow one |
+| **Repair only flows ServiceNow → Salesforce** | A mirror that disagrees is stale by definition |
+| **Evidence stored on both sides, unreconciled** | Salesforce's copy serves preview and download; ServiceNow's is the auditor's copy and the only one the gate counts. There is no value to disagree about |
+| **Evidence gate in the endpoint, not the business rule** | Activating the rule would change closure behaviour for the portal and for admins, and every pre-existing task has no attachment |
+| **Attestation reuses the existing business rule** | Reimplementing the transition in the endpoint would create two of them, and the `/caf` portal only ever runs one |
+| **Blank equals null in the comparison** | Otherwise drift is reported on every record with an empty `approval`, which is most of them |
+| **Columns derived from data on both grids** | Adding a control needs no code change on either side. The accepted cost is that the two grids legitimately disagree about their column set |
+
+---
+
+*Sections 1–10 generated from ServiceNow instance metadata — scope
+`x_gskn2_caf_compli` v1.0.0, 2026-06-18.*
+*[Salesforce Integration](#salesforce-integration) and the revised architecture,
+dependency, component and design-decision sections written 2026-08-07 and
+verified against both live systems on that date.*
