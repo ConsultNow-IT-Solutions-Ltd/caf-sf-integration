@@ -170,3 +170,42 @@ flow creates the next task in the chain instead. Attesting `CAFT0001022`
 which is now sitting Open on `RCAF0001022` with no evidence: a ready-made
 starting point for demonstrating the whole feature.
 
+## One thing about the current data
+
+**Seven requests are filtered out.** `RCAF0001001` has no business application
+and no control; six more were detached during the 2026-08-08 reseed and are
+cancelled with no business application (HANDOFF section 13). The Apex `WHERE`
+clause excludes all seven rather than rendering rows with a blank name, so the
+grid shows 102 of the 109 mirrored requests. Sync Health still counts them, which
+is correct — they exist in both systems.
+
+## Redeploying
+
+```powershell
+& "C:\Users\patel\AppData\Roaming\npm\sf.cmd" project deploy start --metadata-dir <force-app> --target-org caf-sf
+```
+
+Two traps. **Do not add `--single-package`** — the deploy then fails with "No
+package.xml found" even though it is right there; without the flag it works.
+And if you ever build the zip by hand instead, write entries with **forward
+slashes**: `ZipFile::CreateFromDirectory` puts Windows backslashes in entry
+names on .NET Framework and every component then fails with "named in
+package.xml, but was not found in zipped directory", which reads like a manifest
+error and is not one.
+
+## Not built
+
+- **No Apex test coverage** for `CafSyncHealth`, `CafEvidenceService` or
+  `CafAttestationService`, and Sync Health has no scheduled run — it checks when
+  someone opens the dashboard or presses Re-check. A Developer Edition org does
+  not require tests to deploy; anything heading for production does.
+- **No FlexiPage in source.** `cafEvidence` and `cafAttestation` are
+  record-page-targeted and appear in the App Builder palette for `CAF_Task__c`,
+  but placing and activating that page is a manual step.
+- **No named approver.** Whoever presses Approve in Salesforce is the approver;
+  no `sysapproval_approver` record is created, so the ServiceNow *CAF - Approval
+  Requested* notification still never fires.
+- **No Experience Cloud site.** Both new LWCs carry the target; the org's
+  Experience licence count has not been checked.
+- No Platform Events. Every call is synchronous, so a ServiceNow outage surfaces
+  as a failed action in the UI rather than being queued (step 8).
