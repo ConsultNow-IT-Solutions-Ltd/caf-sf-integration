@@ -113,3 +113,36 @@ be written back into ServiceNow. `CAFT0001042` linked to `RCAF0001033` this way.
 payload omits the relationship entirely rather than sending an empty one, which
 Salesforce would reject.
 
+## Checking it
+
+ServiceNow side — **System Logs → All**, or:
+
+```javascript
+var gr = new GlideRecord('syslog');
+gr.addQuery('message', 'CONTAINS', '[CAF->SF]');
+gr.orderByDesc('sys_created_on');
+gr.setLimit(20);
+gr.query();
+while (gr.next()) { gs.info(gr.getValue('sys_created_on') + '  ' + gr.getValue('message')); }
+```
+
+Salesforce side — the **CAF Requests** tab.
+
+## Inbound: Salesforce → ServiceNow
+
+`PATCH /api/x_gskn2_caf_compli/caf/task/{sysId}`, basic auth as `sf.integration`.
+Script in [CAF Integration - Update Task.scripted-rest.js](CAF%20Integration%20-%20Update%20Task.scripted-rest.js).
+
+Salesforce may write six fields and nothing else: `state`, `met_criteria`,
+`approval`, `comments`, `vqd_link`, `vqd_link_2`. Anything else fails the whole
+call with 400 rather than applying the writable subset — a caller that believes
+it set `met_criteria` and did not is worse than an error. Everything driving the
+state machine (`number`, `active`, actual dates, `business_application`) stays
+unwritable from Salesforce, which is §2's governing rule enforced at the boundary.
+
+| Case | Result |
+|---|---|
+| allowed field | 200, field applied |
+| `number` (not in allow-list) | 400 `Fields not writable from Salesforce: number` |
+| unknown sys_id | 404 `CAF Task not found` |
+
