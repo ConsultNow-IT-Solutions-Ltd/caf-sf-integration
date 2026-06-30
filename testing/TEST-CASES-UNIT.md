@@ -65,6 +65,8 @@ TC-UNIT-001 covers the direction no live case can reach without an upload.
 | TC-UNIT-083 | Only the pressed row reads "Re-syncing…"; every Re-sync disabled until it finishes; re-checks after | No racing pushes |
 | TC-UNIT-084 | "checked … · N min ago"; unparseable time omitted | A stale check is visible |
 | TC-UNIT-085 | Differences counted by record type above the table | |
+| TC-UNIT-129 | Type dropdown narrows the drift table to one record type; the headline and breakdown still count every difference | |
+| TC-UNIT-130 | Type dropdown hidden when every difference is one type; a re-check that drops the chosen type shows every row | An empty table with no visible reason |
 
 ## LWC: `cafAttestation` (`salesforce/test/lwc/cafAttestation.test.js`)
 

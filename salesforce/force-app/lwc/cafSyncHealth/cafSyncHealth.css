@@ -131,3 +131,5 @@
 .act:disabled { background: #9aa6c4; cursor: default; }
 
 .sync__breakdown { margin: 0 0 0.4rem; font-size: 0.75rem; color: #8e030f; font-weight: 600; }
+
+.sync__filter { display: inline-flex; align-items: center; gap: 0.4rem; margin: 0 0 0.4rem; font-size: 0.75rem; color: #5c5f66; }
