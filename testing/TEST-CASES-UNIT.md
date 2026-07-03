@@ -67,6 +67,8 @@ TC-UNIT-001 covers the direction no live case can reach without an upload.
 | TC-UNIT-085 | Differences counted by record type above the table | |
 | TC-UNIT-129 | Type dropdown narrows the drift table to one record type; the headline and breakdown still count every difference | |
 | TC-UNIT-130 | Type dropdown hidden when every difference is one type; a re-check that drops the chosen type shows every row | An empty table with no visible reason |
+| TC-UNIT-131 | A check 15 minutes old or more is flagged amber with "Re-check for a current answer"; a fresh or unreadable time is not | Drift since an old check would not show |
+| TC-UNIT-132 | The flag appears as the clock moves on, without a re-check | |
 
 ## LWC: `cafAttestation` (`salesforce/test/lwc/cafAttestation.test.js`)
 
