@@ -323,3 +323,171 @@ test('TC-INT-014 — Unknown sys_id returns 404', async () => {
   expect(findings, findings.join('\n')).toEqual([]);
 });
 
+test('TC-INT-015 — Empty body returns 400', async () => {
+  const ev = new CaseEvidence('TC-INT-015', 'Empty body returns 400');
+  ev.expect('HTTP 400, body "Empty request body".');
+  ev.expect('Decided before the record is loaded, so the task is untouched.');
+  if (!(await requireApi(ev))) return;
+
+  ev.step('Select any task to address, and read it.');
+  const candidates = readTasks();
+  expect(candidates.length, 'The instance holds no CAF Tasks').toBeGreaterThan(0);
+  const target = candidates[0];
+  const before = readTask(target.sys_id)!;
+
+  // Genuinely no body, not `{}`. The resource tests `request.body ?
+  // request.body.data : null`, and `{}` is truthy — it passes that check, loads
+  // the record, applies nothing, and still reaches gr.update() and the two
+  // reconcile upserts. That is a no-op write rather than a refusal, so sending
+  // it here would exercise the wrong branch and cost two Salesforce API calls.
+  ev.step('PATCH with no request body at all.');
+  const res = await caf.patchTask(target.sys_id, undefined);
+  const after = readTask(target.sys_id)!;
+  ev.actual(`HTTP ${res.status} in ${res.ms}ms — ${res.text.slice(0, 200)}`);
+  ev.observe(
+    'Sent with no body rather than {}. An empty object is truthy, so it passes the resource\'s emptiness ' +
+      'check, reaches gr.update() and fires the two reconcile upserts — a no-op write, not a refusal. ' +
+      'Worth stating in the report: "empty body" and "empty JSON object" are different requests here.'
+  );
+
+  const diff = proveUnmoved(ev, 'TC-INT-015', before, after);
+  const message = caf.errorMessage(res);
+  const findings: string[] = [];
+  if (res.status !== 400) findings.push(`Expected 400, got ${res.status}`);
+  if (!message.includes('Empty request body')) findings.push(`Unexpected message — "${message}"`);
+  if (diff.length) findings.push(`Task changed — ${diff.join('; ')}`);
+
+  findings.forEach((f) => ev.observe(f));
+  findings.length === 0
+    ? ev.pass('400 "Empty request body"; the addressed task is unmoved.')
+    : ev.fail(findings.join(' | '));
+  expect(findings, findings.join('\n')).toEqual([]);
+});
+
+// ===========================================================================
+// Suite 4 — Attestation: POST /caf/task/{sysId}/attest
+// ===========================================================================
+
+test('TC-INT-029 — The evidence gate refuses an attestation with nothing behind it', async () => {
+  const ev = new CaseEvidence('TC-INT-029', 'The evidence gate (refusal half)');
+  ev.expect('HTTP 428, "Attach at least one evidence file to <number> before attesting."');
+  ev.expect('Nothing written: approval still requested, state still In Progress, task still active.');
+  if (!(await requireApi(ev))) return;
+
+  // The gate is the *last* check in the resource, so the fixture has to clear
+  // every earlier one: active, In Progress, and not already carrying the outcome
+  // being sent. A task failing any of those returns a different 409 and the gate
+  // is never reached — which would pass a weaker assertion for the wrong reason.
+  ev.step('Find an active, In Progress task that holds no sys_attachment.');
+  const inProgress = readTasks('active=true^state=2').filter((t) => isTrue(t.active));
+  const withoutEvidence = inProgress.filter((t) => attachmentCount(t.sys_id) === 0);
+  ev.record(
+    'Active In Progress tasks',
+    TABLES.tsk,
+    cnitCommand(TABLES.tsk, { query: 'active=true^state=2', fields: TASK_FIELDS }),
+    inProgress
+  );
+  ev.observe(
+    `${inProgress.length} active In Progress task(s); ${withoutEvidence.length} of them hold no ServiceNow attachment.`
+  );
+
+  if (withoutEvidence.length === 0) {
+    ev.blocked(
+      'No evidence-free In Progress task exists. Creating one means starting a task and its parent request — ' +
+        'a write, and the thing this case exists not to do. HANDOFF section 6 records CAFT0001001 as the ' +
+        'intended starting point; it is Open, so it must be started before this gate is reachable.'
+    );
+    test.skip(true, 'No evidence-free In Progress task available');
+    return;
+  }
+
+  const target = withoutEvidence[0];
+  const outcome = target.approval === 'approved' ? 'rejected' : 'approved';
+  ev.observe(
+    `Target ${target.number} (${target.sys_id}), approval=${target.approval || 'empty'}. ` +
+      `Attesting "${outcome}" so the already-that-outcome check, which runs before the gate, cannot intercept.`
+  );
+
+  ev.step('Attest it with a fully valid body. The only thing missing is the evidence.');
+  const before = readTask(target.sys_id)!;
+  const res = await caf.attest(target.sys_id, { outcome, met_criteria: 'yes', comments: CANARY });
+  const after = readTask(target.sys_id)!;
+  ev.actual(`HTTP ${res.status} in ${res.ms}ms — ${res.text.slice(0, 200)}`);
+
+  const diff = proveUnmoved(ev, 'TC-INT-029', before, after);
+  const message = caf.errorMessage(res);
+  const findings: string[] = [];
+  if (res.status !== 428) findings.push(`Expected 428, got ${res.status}`);
+  if (!message.includes('Attach at least one evidence file')) findings.push(`Unexpected message — "${message}"`);
+  if (!message.includes(target.number)) findings.push(`The message does not name the task — "${message}"`);
+  if (diff.length) findings.push(`Task changed — ${diff.join('; ')}`);
+  if (after.approval === outcome) findings.push(`approval was set to ${outcome} despite the refusal`);
+
+  ev.observe(
+    'Corollary worth recording in the report, not testable here: the same task closes successfully through ' +
+      'the /caf portal, because CAF - attachment mandatory for def tasks is deliberately inactive. The gate ' +
+      'binds callers of this endpoint and nobody else.'
+  );
+
+  findings.forEach((f) => ev.observe(f));
+  findings.length === 0
+    ? ev.pass(`428 naming ${target.number}; approval still "${after.approval}", state still ${after.state}.`)
+    : ev.fail(findings.join(' | '));
+  expect(findings, findings.join('\n')).toEqual([]);
+});
+
+test('TC-INT-032 — Attesting a task that is not In Progress', async () => {
+  const ev = new CaseEvidence('TC-INT-032', 'Attesting a task that is not In Progress');
+  ev.expect('HTTP 409, "<number> must be In Progress before it can be attested. Start the task first."');
+  ev.expect('Nothing written.');
+  if (!(await requireApi(ev))) return;
+
+  // Active, but not state 2. The active check runs first, so a closed task would
+  // answer with the inactive message and TC-INT-033's branch would be tested
+  // twice while this one went unexercised.
+  ev.step('Find an active task that is not In Progress.');
+  const candidates = readTasks('active=true^state!=2').filter((t) => isTrue(t.active) && t.state !== '2');
+  ev.record(
+    'Active tasks not In Progress',
+    TABLES.tsk,
+    cnitCommand(TABLES.tsk, { query: 'active=true^state!=2', fields: TASK_FIELDS }),
+    candidates
+  );
+
+  if (candidates.length === 0) {
+    ev.blocked('Every active task is already In Progress; this branch is unreachable without a write.');
+    test.skip(true, 'No active non-In-Progress task available');
+    return;
+  }
+
+  const target = candidates[0];
+  ev.observe(`Target ${target.number} (${target.sys_id}), state=${target.state}, active=${target.active}.`);
+
+  ev.step('Attest it.');
+  const before = readTask(target.sys_id)!;
+  const res = await caf.attest(target.sys_id, { outcome: 'approved', met_criteria: 'yes' });
+  const after = readTask(target.sys_id)!;
+  ev.actual(`HTTP ${res.status} in ${res.ms}ms — ${res.text.slice(0, 200)}`);
+
+  const diff = proveUnmoved(ev, 'TC-INT-032', before, after);
+  const message = caf.errorMessage(res);
+  const findings: string[] = [];
+  if (res.status !== 409) findings.push(`Expected 409, got ${res.status}`);
+  if (!message.includes('must be In Progress before it can be attested')) {
+    findings.push(`Unexpected message — "${message}"`);
+  }
+  if (!message.includes(target.number)) findings.push(`The message does not name the task — "${message}"`);
+  if (diff.length) findings.push(`Task changed — ${diff.join('; ')}`);
+
+  ev.observe(
+    'The check lives in the endpoint rather than in CAF - Task - prevent state change, which evaluates ' +
+      'before the approval rule sets state=3 and so would not catch this route.'
+  );
+
+  findings.forEach((f) => ev.observe(f));
+  findings.length === 0
+    ? ev.pass(`409 naming ${target.number}; state still ${after.state}, approval still "${after.approval}".`)
+    : ev.fail(findings.join(' | '));
+  expect(findings, findings.join('\n')).toEqual([]);
+});
+
