@@ -84,6 +84,9 @@ export default class CafReports extends LightningElement {
     taskError;
 
     appFilter = ALL;
+
+    /** Narrows the due-dates table to overdue requests; the heading counts stay on both. */
+    dueOverdueOnly = false;
     report = { kpis: [], byControl: [], byApplication: [], dueRows: [], overdue: 0, dueSoon: 0 };
 
     wiredRequests;
@@ -451,9 +454,30 @@ export default class CafReports extends LightningElement {
         return this.report.dueSoon;
     }
 
+    /** @returns {object[]} the due rows after "Overdue only" */
+    get visibleDueRows() {
+        return this.dueOverdueOnly ? this.report.dueRows.filter((r) => r.late) : this.report.dueRows;
+    }
+
     /** @returns {boolean} */
     get hasDueRows() {
-        return this.report.dueRows.length > 0;
+        return this.visibleDueRows.length > 0;
+    }
+
+    /** @returns {string} what to say when the due-dates table has no rows */
+    get dueEmptyMessage() {
+        return this.dueOverdueOnly && this.report.dueRows.length
+            ? 'Nothing overdue. ' + this.report.dueRows.length + ' due in the next 30 days.'
+            : 'Nothing overdue or due in the next 30 days.';
+    }
+
+    /**
+     * "Overdue only" on the due-dates table toggled.
+     *
+     * @param {Event} event change event from the checkbox
+     */
+    handleDueOverdueOnly(event) {
+        this.dueOverdueOnly = !!(event && event.target && event.target.checked);
     }
 
     /**

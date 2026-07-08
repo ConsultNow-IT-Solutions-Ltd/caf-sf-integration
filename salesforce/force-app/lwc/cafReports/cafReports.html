@@ -146,6 +146,12 @@
             <h3 class="section">
                 Due dates <span class="muted">&middot; {overdueCount} overdue, {dueSoonCount} due in the next 30 days</span>
             </h3>
+            <div class="filters">
+                <label class="filters__check">
+                    <input type="checkbox" class="due__overdue" checked={dueOverdueOnly} onchange={handleDueOverdueOnly} />
+                    Overdue only
+                </label>
+            </div>
             <template lwc:if={hasDueRows}>
                 <div class="scroll">
                     <table class="tasks">
@@ -156,7 +162,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <template for:each={dueRows} for:item="d">
+                            <template for:each={visibleDueRows} for:item="d">
                                 <tr key={d.key}>
                                     <td class="mono">{d.number}</td>
                                     <td>{d.app}</td>
@@ -171,7 +177,7 @@
                 </div>
             </template>
             <template lwc:else>
-                <p class="msg">Nothing overdue or due in the next 30 days.</p>
+                <p class="msg due__empty">{dueEmptyMessage}</p>
             </template>
         </template>
     </div>
