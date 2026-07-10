@@ -144,6 +144,8 @@ TC-UNIT-001 covers the direction no live case can reach without an upload.
 | TC-UNIT-049 | Task-summary failure shown in its panel; rest of report stays | |
 | TC-UNIT-133 | Overdue only narrows the due-dates table to late requests; the heading still gives both counts | |
 | TC-UNIT-134 | Overdue only with nothing late says "Nothing overdue. N due in the next 30 days." | An empty table mustn't read as nothing coming due |
+| TC-UNIT-135 | Clicking an application in "By application" scopes the whole report and the dropdown to it; clicking it again goes back to all | |
+| TC-UNIT-136 | "(No application)" can be clicked through like any other application | Blank applications aren't a dead end |
 
 ## LWC: `cafAdmin` (`salesforce/test/lwc/cafAdmin.test.js`)
 

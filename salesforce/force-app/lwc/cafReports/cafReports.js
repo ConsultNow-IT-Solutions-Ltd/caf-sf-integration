@@ -198,6 +198,22 @@ export default class CafReports extends LightningElement {
     }
 
     /**
+     * An application name in "By application" clicked: scopes the whole
+     * report to it, as the dropdown would. Clicking the application already
+     * in force goes back to all.
+     *
+     * @param {Event} event click event from an application name
+     */
+    handleAppClick(event) {
+        const app = event && event.currentTarget && event.currentTarget.dataset.app;
+        if (!app) {
+            return;
+        }
+        this.appFilter = this.appFilter === app ? ALL : app;
+        this.rebuild();
+    }
+
+    /**
      * The rows every figure is computed from, after the filter.
      *
      * @returns {object[]}
@@ -376,7 +392,8 @@ export default class CafReports extends LightningElement {
                 rateLabel: rate + '%',
                 meterStyle: 'width:' + rate + '%',
                 overallLabel: allGreen ? 'Compliant' : compliant + ' of ' + appRows.length,
-                overallClass: allGreen ? 'pill pill--green' : 'pill pill--amber'
+                overallClass: allGreen ? 'pill pill--green' : 'pill pill--amber',
+                linkTitle: this.appFilter === app ? 'Show all applications' : 'Show only ' + app
             });
         });
         out.sort((a, b) => a.rate - b.rate || b.failing - a.failing || a.app.localeCompare(b.app));

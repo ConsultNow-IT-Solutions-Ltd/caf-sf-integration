@@ -97,7 +97,10 @@
                             <tbody>
                                 <template for:each={byApplication} for:item="a">
                                     <tr key={a.key}>
-                                        <th scope="row" class="bars__name">{a.app}</th>
+                                        <th scope="row" class="bars__name">
+                                            <button type="button" class="link app-link" data-app={a.app}
+                                                    title={a.linkTitle} onclick={handleAppClick}>{a.app}</button>
+                                        </th>
                                         <td class="meter__col">
                                             <div class="meter" title={a.rateLabel}>
                                                 <span class="meter__fill" style={a.meterStyle}></span>
