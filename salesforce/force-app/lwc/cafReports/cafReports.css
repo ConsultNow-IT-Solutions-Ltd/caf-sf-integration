@@ -1,0 +1,54 @@
+@import 'c/cafTheme';
+
+.actions { display: flex; gap: 0.5rem; }
+.muted { color: #5c5f66; font-weight: 400; }
+
+.bars__name { font-weight: 600; white-space: nowrap; text-align: left; }
+.bars__col { width: 55%; min-width: 180px; }
+.bars__none { color: #8a8a95; font-size: 0.75rem; }
+
+/* One stacked bar: segments sized by flex-grow, a 2px surface gap between them. */
+.stack {
+    display: flex;
+    gap: 2px;
+    height: 14px;
+    border-radius: 4px;
+    overflow: hidden;
+    background: #fff;
+}
+
+.seg { display: block; min-width: 3px; height: 100%; }
+.seg--green { background: #2e844a; }
+.seg--amber { background: #dd7a01; }
+.seg--red   { background: #ba0517; }
+.seg--blue  { background: #0a3176; }
+.seg--none  { background: #d8d8de; }
+
+/* The legend reuses the segment colours as 10px keys. */
+.seg--key { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+
+.cols {
+    display: grid;
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+    gap: 1.25rem;
+    align-items: start;
+}
+
+@media (max-width: 900px) {
+    .cols { grid-template-columns: minmax(0, 1fr); }
+}
+
+.meter__col { min-width: 140px; }
+.meter, .hbar {
+    display: inline-block;
+    vertical-align: middle;
+    width: calc(100% - 3.5rem);
+    max-width: 220px;
+    height: 8px;
+    border-radius: 4px;
+    background: #eef1f8;
+    overflow: hidden;
+}
+.meter__fill { display: block; height: 100%; background: #2e844a; border-radius: 4px; }
+.hbar__fill  { display: block; height: 100%; background: #0a3176; border-radius: 4px; }
+.meter__label { margin-left: 0.4rem; font-size: 0.75rem; color: #5c5f66; font-variant-numeric: tabular-nums; }

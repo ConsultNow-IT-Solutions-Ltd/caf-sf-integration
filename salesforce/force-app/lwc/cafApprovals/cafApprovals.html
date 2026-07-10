@@ -1,0 +1,162 @@
+<template>
+    <div class="view">
+        <div class="view__head">
+            <div>
+                <h2 class="view__title">Approvals</h2>
+                <p class="view__sub">Tasks In Progress and waiting on an attestation, across every request</p>
+            </div>
+            <button type="button" class="btn btn--ghost" onclick={handleRefresh}>Refresh</button>
+        </div>
+
+        <ul class="tiles">
+            <li class="tile">
+                <span class="tile__value">{awaitingCount}</span>
+                <span class="tile__label">Awaiting decision</span>
+            </li>
+            <li class="tile">
+                <span class="tile__value tile__value--red">{overdueCount}</span>
+                <span class="tile__label">Past due date</span>
+            </li>
+            <li class="tile">
+                <span class="tile__value">{approvedCount}</span>
+                <span class="tile__label">Approved (last 25 decisions)</span>
+            </li>
+            <li class="tile">
+                <span class="tile__value">{rejectedCount}</span>
+                <span class="tile__label">Rejected (last 25 decisions)</span>
+            </li>
+        </ul>
+
+        <template lwc:if={loading}>
+            <p class="msg">Loading the approval queue&hellip;</p>
+        </template>
+
+        <template lwc:elseif={error}>
+            <p class="msg msg--error">{error}</p>
+        </template>
+
+        <template lwc:else>
+            <div class="filters">
+                <label class="filters__field">
+                    <span>Application</span>
+                    <select class="filters__select" onchange={handleAppFilter}>
+                        <template for:each={appOptions} for:item="o">
+                            <option key={o.value} value={o.value} selected={o.selected}>{o.label}</option>
+                        </template>
+                    </select>
+                </label>
+                <label class="filters__field filters__field--grow">
+                    <span>Search</span>
+                    <input type="search" class="filters__input" placeholder="Task, request, control or description"
+                           value={search} oninput={handleSearch} />
+                </label>
+            </div>
+
+            <template lwc:if={hasQueue}>
+                <div class="scroll">
+                    <table class="tasks queue">
+                        <thead>
+                            <tr>
+                                <th>Task</th><th>Application</th><th>Control</th><th>Request</th>
+                                <th>Description</th><th>Due</th><th>Criteria met</th><th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template for:each={visibleQueue} for:item="t">
+                                <tr key={t.Id} class={t.rowClass}>
+                                    <td class="mono">{t.SN_Number__c}</td>
+                                    <td>{t.app}</td>
+                                    <td>{t.control}</td>
+                                    <td class="mono">{t.requestNumber}</td>
+                                    <td class="tasks__desc">{t.Short_Description__c}</td>
+                                    <td><span class={t.dueClass}>{t.dueLabel}</span></td>
+                                    <td>{t.Met_Criteria__c}</td>
+                                    <td class="tasks__actions">
+                                        <button type="button" class="btn" disabled={t.unlinked}
+                                                data-id={t.Id}
+                                                data-sysid={t.ServiceNow_Sys_Id__c}
+                                                data-number={t.SN_Number__c}
+                                                data-state={t.State__c}
+                                                data-approval={t.Approval__c}
+                                                onclick={handleReview}>Review</button>
+                                    </td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </div>
+            </template>
+            <template lwc:elseif={isFiltered}>
+                <p class="msg">No tasks match the filter.</p>
+            </template>
+            <template lwc:else>
+                <p class="msg">Nothing is waiting on an attestation.</p>
+            </template>
+
+            <template lwc:if={hasActiveTask}>
+                <section class="review">
+                    <div class="review__head">
+                        <h3 class="review__title">Attest {activeTask.number}</h3>
+                        <button type="button" class="btn btn--ghost" onclick={handleCloseReview}>Done</button>
+                    </div>
+                    <p class="review__who">
+                        Reviewing evidence someone else gathered. This panel cannot add to it.
+                    </p>
+                    <div class="review__cols">
+                        <c-caf-evidence
+                            record-id={activeTask.id}
+                            sn-sys-id={activeTask.sysId}
+                            task-number={activeTask.number}
+                            hide-upload={evidenceReadOnly}
+                            onevidencecount={handleEvidenceCount}>
+                        </c-caf-evidence>
+                        <c-caf-attestation
+                            record-id={activeTask.id}
+                            sn-sys-id={activeTask.sysId}
+                            task-number={activeTask.number}
+                            task-state={activeTask.state}
+                            task-approval={activeTask.approval}
+                            evidence-count={evidenceCount}
+                            onattested={handleAttested}>
+                        </c-caf-attestation>
+                    </div>
+                </section>
+            </template>
+
+            <h3 class="section">Recently decided</h3>
+            <template lwc:if={hasDecisions}>
+                <div class="scroll">
+                    <table class="tasks">
+                        <thead>
+                            <tr>
+                                <th>Task</th><th>Application</th><th>Control</th>
+                                <th>Description</th><th>Decision</th><th>Criteria met</th><th>Updated</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template for:each={decisions} for:item="d">
+                                <tr key={d.Id}>
+                                    <td class="mono">{d.SN_Number__c}</td>
+                                    <td>{d.app}</td>
+                                    <td>{d.control}</td>
+                                    <td class="tasks__desc">{d.Short_Description__c}</td>
+                                    <td><span class={d.decisionClass}>{d.decisionLabel}</span></td>
+                                    <td>{d.Met_Criteria__c}</td>
+                                    <td>{d.updated}</td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </div>
+            </template>
+            <template lwc:else>
+                <p class="msg">No decisions have come back from ServiceNow yet.</p>
+            </template>
+
+            <p class="note">
+                Decisions are applied by ServiceNow. A task leaves this queue when ServiceNow closes
+                it and pushes the new state back.
+            </p>
+        </template>
+    </div>
+</template>

@@ -10,5 +10,11 @@ const { jestConfig } = require('@salesforce/sfdx-lwc-jest/config');
 module.exports = {
     ...jestConfig,
     testMatch: ['<rootDir>/test/lwc/**/*.test.js'],
+    // cafTheme is a CSS-only module (@import 'c/cafTheme'). The platform finds
+    // its .css; Jest's resolver looks for a .js and needs pointing at it.
+    moduleNameMapper: {
+        ...(jestConfig.moduleNameMapper || {}),
+        '^c/cafTheme$': '<rootDir>/force-app/lwc/cafTheme/cafTheme.css'
+    },
     modulePathIgnorePatterns: ['<rootDir>/.localdevserver']
 };
