@@ -301,3 +301,109 @@ test('TC-INT-065 — Date conversion fidelity', async () => {
   expect(findings, findings.join('\n')).toEqual([]);
 });
 
+test('TC-INT-066 — The state code-to-label mapping is total', async () => {
+  const ev = new CaseEvidence('TC-INT-066', 'The state code-to-label mapping is total');
+  ev.expect('Every state value in use maps to a label: 1, 2, 3, -1.');
+  ev.expect('No mirrored State__c holds a bare numeric string.');
+
+  const findings: string[] = [];
+  for (const [label, table, object] of [
+    ['Requests', TABLES.req, sf.OBJECTS.req],
+    ['Tasks', TABLES.tsk, sf.OBJECTS.tsk],
+  ] as const) {
+    ev.step(`Collect the distinct state values on ${label.toLowerCase()} and their mirrored labels.`);
+    const snRows = cnitGet(table, { fields: ['number', 'sys_id', 'state'] });
+    const soql = `SELECT SN_Number__c, ServiceNow_Sys_Id__c, State__c FROM ${object} ORDER BY SN_Number__c`;
+    const sfRows = sf.soql(soql);
+
+    const distinct = [...new Set(snRows.map((r) => r.state))].sort();
+    const unmapped = distinct.filter((s) => !(s in STATE_LABELS));
+    ev.record(`${label} — states in use`, table, cnitCommand(table, { fields: ['number', 'state'] }),
+      distinct.map((s) => ({ state: s, label: STATE_LABELS[s] ?? '(unmapped — passed through raw)' })));
+
+    const byId = index(sfRows as any[], 'ServiceNow_Sys_Id__c');
+    const wrong: string[] = [];
+    const numeric: string[] = [];
+    for (const sn of snRows) {
+      const mirror = byId.get(sn.sys_id);
+      if (!mirror) continue;
+      const actual = String(mirror.State__c ?? '');
+      const expected = STATE_LABELS[sn.state] ?? sn.state;
+      if (actual !== expected) wrong.push(`${sn.number}: state ${sn.state} → expected "${expected}", holds "${actual}"`);
+      if (/^-?\d+$/.test(actual)) numeric.push(`${sn.number} holds "${actual}"`);
+    }
+
+    ev.actual(
+      `${label}: states in use ${distinct.join(', ')}; ${unmapped.length} unmapped; ` +
+        `${wrong.length} mislabelled; ${numeric.length} rendering as a raw number.`
+    );
+    if (unmapped.length) {
+      findings.push(
+        `${label}: state value(s) ${unmapped.join(', ')} have no label. _stateLabel's default branch passes ` +
+          'the raw value through, so these publish a number into a label field'
+      );
+    }
+    if (wrong.length) findings.push(`${label} label mismatch — ${sample(wrong)}`);
+    if (numeric.length) findings.push(`${label}: State__c holds a bare numeric — ${sample(numeric)}`);
+  }
+
+  findings.forEach((f) => ev.observe(f));
+  findings.length === 0
+    ? ev.pass('Every state in use maps to a label, and every mirrored label matches.')
+    : ev.fail(findings.join(' | '));
+  expect(findings, findings.join('\n')).toEqual([]);
+});
+
+test('TC-INT-067 — Denormalised business application is still current', async () => {
+  const ev = new CaseEvidence('TC-INT-067', 'Denormalised business application is still current');
+  ev.expect('Business_Application__c equals the display value its reference resolves to now.');
+
+  ev.step('Read requests with their business application reference, and the business application names.');
+  const snReq = cnitGet(TABLES.req, { fields: ['number', 'sys_id', 'business_application'] });
+  const apps = cnitGet(TABLES.businessApp, { fields: ['sys_id', 'name'] });
+  const appName = new Map(apps.map((a) => [a.sys_id, a.name]));
+
+  const soql =
+    `SELECT SN_Number__c, ServiceNow_Sys_Id__c, Business_Application__c FROM ${sf.OBJECTS.req} ORDER BY SN_Number__c`;
+  const sfReq = sf.soql(soql);
+  ev.record('Salesforce requests', sf.OBJECTS.req, sf.soqlCommand(soql), sfReq as Record<string, string>[]);
+
+  ev.step('Compare the stored label against the current display value.');
+  const byId = index(sfReq as any[], 'ServiceNow_Sys_Id__c');
+  const stale: string[] = [];
+  const unresolved: string[] = [];
+  let compared = 0;
+
+  for (const sn of snReq) {
+    const mirror = byId.get(sn.sys_id);
+    if (!mirror) continue;
+    compared += 1;
+    const ref = sn.business_application;
+    const current = ref ? appName.get(ref) : '';
+    const held = String(mirror.Business_Application__c ?? '');
+    if (ref && current === undefined) {
+      unresolved.push(`${sn.number} references ${ref}, which resolves to no business application`);
+      continue;
+    }
+    if ((current ?? '') !== held) {
+      stale.push(`${sn.number}: mirror holds "${held}", reference now resolves to "${current ?? ''}"`);
+    }
+  }
+
+  ev.actual(`${compared} request(s) compared; ${stale.length} stale label(s), ${unresolved.length} unresolved reference(s).`);
+  ev.observe(
+    'Same defect class as the control name, which has already occurred on this build: the display value is a ' +
+      'snapshot taken at push time, and Sync Health does not compare this field.'
+  );
+
+  const findings = [
+    ...(stale.length ? [`Stale denormalised label — ${sample(stale)}`] : []),
+    ...(unresolved.length ? [`Unresolved reference — ${sample(unresolved)}`] : []),
+  ];
+  findings.forEach((f) => ev.observe(f));
+  findings.length === 0
+    ? ev.pass('Every mirrored business application label matches the current display value.')
+    : ev.fail(findings.join(' | '));
+  expect(findings, findings.join('\n')).toEqual([]);
+});
+
