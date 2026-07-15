@@ -1,0 +1,1257 @@
+{
+  "run": {
+    "instance": "https://dev281754.service-now.com + Salesforce orgfarm-4938c7f768-dev-ed",
+    "executedBy": "admin (ServiceNow, via cnit OAuth) / admin.070b86ccf531@agentforce.com (Salesforce)",
+    "executedVia": "Playwright runner, no browser and no writes. ServiceNow read over cnit, Salesforce over the sf CLI. Each case compares the transform output held in Salesforce against the source record it was built from."
+  },
+  "case": {
+    "id": "TC-INT-063",
+    "title": "The External Id is unique and always populated",
+    "startedAt": "2026-08-08T17:23:39.203Z",
+    "verdict": "PASS",
+    "steps": [
+      {
+        "n": 1,
+        "text": "Read every CAF_Request__c row with its External Id.",
+        "at": "2026-08-08T17:23:39.204Z",
+        "screenshots": []
+      },
+      {
+        "n": 2,
+        "text": "Read every CAF_Task__c row with its External Id.",
+        "at": "2026-08-08T17:23:49.678Z",
+        "screenshots": []
+      },
+      {
+        "n": 3,
+        "text": "Read every CAF_Control_Catalog__c row with its External Id.",
+        "at": "2026-08-08T17:24:05.410Z",
+        "screenshots": []
+      }
+    ],
+    "records": [
+      {
+        "label": "CAF_Request__c",
+        "table": "CAF_Request__c",
+        "query": "sf data query --query \"SELECT SN_Number__c, ServiceNow_Sys_Id__c FROM CAF_Request__c ORDER BY SN_Number__c\" --target-org caf-sf",
+        "rows": [
+          {
+            "SN_Number__c": "RCAF0001001",
+            "ServiceNow_Sys_Id__c": "cc67fc481b5ee5d0a3d187b8e34bcbf9"
+          },
+          {
+            "SN_Number__c": "RCAF0001019",
+            "ServiceNow_Sys_Id__c": "32932cf483431210bd2a5860ceaad317"
+          },
+          {
+            "SN_Number__c": "RCAF0001020",
+            "ServiceNow_Sys_Id__c": "32932cf483431210bd2a5860ceaad31a"
+          },
+          {
+            "SN_Number__c": "RCAF0001021",
+            "ServiceNow_Sys_Id__c": "fe932cf483431210bd2a5860ceaad31c"
+          },
+          {
+            "SN_Number__c": "RCAF0001022",
+            "ServiceNow_Sys_Id__c": "32932cf483431210bd2a5860ceaad3ce"
+          },
+          {
+            "SN_Number__c": "RCAF0001023",
+            "ServiceNow_Sys_Id__c": "cf932cf483431210bd2a5860ceaad3d0"
+          },
+          {
+            "SN_Number__c": "RCAF0001024",
+            "ServiceNow_Sys_Id__c": "8f932cf483431210bd2a5860ceaad3d3"
+          },
+          {
+            "SN_Number__c": "RCAF0001031",
+            "ServiceNow_Sys_Id__c": "de19acbc83431210bd2a5860ceaad37e"
+          },
+          {
+            "SN_Number__c": "RCAF0001032",
+            "ServiceNow_Sys_Id__c": "1219acbc83431210bd2a5860ceaad382"
+          },
+          {
+            "SN_Number__c": "RCAF0001033",
+            "ServiceNow_Sys_Id__c": "1219acbc83431210bd2a5860ceaad385"
+          },
+          {
+            "SN_Number__c": "RCAF0001034",
+            "ServiceNow_Sys_Id__c": "1219acbc83431210bd2a5860ceaad388"
+          },
+          {
+            "SN_Number__c": "RCAF0001035",
+            "ServiceNow_Sys_Id__c": "d219ecbc83431210bd2a5860ceaad390"
+          },
+          {
+            "SN_Number__c": "RCAF0001036",
+            "ServiceNow_Sys_Id__c": "d219ecbc83431210bd2a5860ceaad393"
+          },
+          {
+            "SN_Number__c": "RCAF0001037",
+            "ServiceNow_Sys_Id__c": "dcd9acfc83431210bd2a5860ceaad35b"
+          },
+          {
+            "SN_Number__c": "RCAF0001038",
+            "ServiceNow_Sys_Id__c": "18d9acfc83431210bd2a5860ceaad35f"
+          },
+          {
+            "SN_Number__c": "RCAF0001039",
+            "ServiceNow_Sys_Id__c": "14d9a03083831210bd2a5860ceaad3ce"
+          },
+          {
+            "SN_Number__c": "RCAF0001040",
+            "ServiceNow_Sys_Id__c": "d0d9a03083831210bd2a5860ceaad3d1"
+          },
+          {
+            "SN_Number__c": "RCAF0001041",
+            "ServiceNow_Sys_Id__c": "90d9a03083831210bd2a5860ceaad3d4"
+          },
+          {
+            "SN_Number__c": "RCAF0001042",
+            "ServiceNow_Sys_Id__c": "50d9a03083831210bd2a5860ceaad3d7"
+          },
+          {
+            "SN_Number__c": "RCAF0001101",
+            "ServiceNow_Sys_Id__c": "119c570283668710c67233d6feaad37f"
+          },
+          {
+            "SN_Number__c": "RCAF0001102",
+            "ServiceNow_Sys_Id__c": "1d9cd34683668710c67233d6feaad315"
+          },
+          {
+            "SN_Number__c": "RCAF0001103",
+            "ServiceNow_Sys_Id__c": "699cd34683668710c67233d6feaad335"
+          },
+          {
+            "SN_Number__c": "RCAF0001104",
+            "ServiceNow_Sys_Id__c": "219cd34683668710c67233d6feaad3a0"
+          },
+          {
+            "SN_Number__c": "RCAF0001105",
+            "ServiceNow_Sys_Id__c": "ed9cd34683668710c67233d6feaad3a6"
+          },
+          {
+            "SN_Number__c": "RCAF0001106",
+            "ServiceNow_Sys_Id__c": "3d9cd34683668710c67233d6feaad3c6"
+          },
+          {
+            "SN_Number__c": "RCAF0001107",
+            "ServiceNow_Sys_Id__c": "f99c174683668710c67233d6feaad341"
+          },
+          {
+            "SN_Number__c": "RCAF0001108",
+            "ServiceNow_Sys_Id__c": "399c174683668710c67233d6feaad349"
+          },
+          {
+            "SN_Number__c": "RCAF0001109",
+            "ServiceNow_Sys_Id__c": "c29c174683668710c67233d6feaad382"
+          },
+          {
+            "SN_Number__c": "RCAF0001110",
+            "ServiceNow_Sys_Id__c": "829c174683668710c67233d6feaad389"
+          },
+          {
+            "SN_Number__c": "RCAF0001111",
+            "ServiceNow_Sys_Id__c": "ca9c174683668710c67233d6feaad3da"
+          },
+          {
+            "SN_Number__c": "RCAF0001112",
+            "ServiceNow_Sys_Id__c": "0a9c174683668710c67233d6feaad3e1"
+          },
+          {
+            "SN_Number__c": "RCAF0001113",
+            "ServiceNow_Sys_Id__c": "0a9c574683668710c67233d6feaad334"
+          },
+          {
+            "SN_Number__c": "RCAF0001114",
+            "ServiceNow_Sys_Id__c": "969c574683668710c67233d6feaad393"
+          },
+          {
+            "SN_Number__c": "RCAF0001115",
+            "ServiceNow_Sys_Id__c": "569c574683668710c67233d6feaad39a"
+          },
+          {
+            "SN_Number__c": "RCAF0001116",
+            "ServiceNow_Sys_Id__c": "569c574683668710c67233d6feaad3df"
+          },
+          {
+            "SN_Number__c": "RCAF0001117",
+            "ServiceNow_Sys_Id__c": "529c574683668710c67233d6feaad3e5"
+          },
+          {
+            "SN_Number__c": "RCAF0001118",
+            "ServiceNow_Sys_Id__c": "5e9c574683668710c67233d6feaad3f5"
+          },
+          {
+            "SN_Number__c": "RCAF0001119",
+            "ServiceNow_Sys_Id__c": "6e9c574683668710c67233d6feaad3fb"
+          },
+          {
+            "SN_Number__c": "RCAF0001120",
+            "ServiceNow_Sys_Id__c": "269c974683668710c67233d6feaad300"
+          },
+          {
+            "SN_Number__c": "RCAF0001121",
+            "ServiceNow_Sys_Id__c": "2a9c974683668710c67233d6feaad374"
+          },
+          {
+            "SN_Number__c": "RCAF0001122",
+            "ServiceNow_Sys_Id__c": "6e9c974683668710c67233d6feaad378"
+          },
+          {
+            "SN_Number__c": "RCAF0001123",
+            "ServiceNow_Sys_Id__c": "e29c974683668710c67233d6feaad3d4"
+          },
+          {
+            "SN_Number__c": "RCAF0001124",
+            "ServiceNow_Sys_Id__c": "2a9c974683668710c67233d6feaad3d8"
+          },
+          {
+            "SN_Number__c": "RCAF0001125",
+            "ServiceNow_Sys_Id__c": "669c174683668710c67233d6feaad3cf"
+          },
+          {
+            "SN_Number__c": "RCAF0001126",
+            "ServiceNow_Sys_Id__c": "2e9c174683668710c67233d6feaad3d3"
+          },
+          {
+            "SN_Number__c": "RCAF0001127",
+            "ServiceNow_Sys_Id__c": "b69cd74683668710c67233d6feaad352"
+          },
+          {
+            "SN_Number__c": "RCAF0001128",
+            "ServiceNow_Sys_Id__c": "fa9cd74683668710c67233d6feaad356"
+          },
+          {
+            "SN_Number__c": "RCAF0001129",
+            "ServiceNow_Sys_Id__c": "7a9cd74683668710c67233d6feaad39d"
+          },
+          {
+            "SN_Number__c": "RCAF0001130",
+            "ServiceNow_Sys_Id__c": "329cd74683668710c67233d6feaad3a2"
+          },
+          {
+            "SN_Number__c": "RCAF0001131",
+            "ServiceNow_Sys_Id__c": "769cd74683668710c67233d6feaad3a6"
+          },
+          {
+            "SN_Number__c": "RCAF0001132",
+            "ServiceNow_Sys_Id__c": "0b9cd74683668710c67233d6feaad3c3"
+          },
+          {
+            "SN_Number__c": "RCAF0001133",
+            "ServiceNow_Sys_Id__c": "8b9cd74683668710c67233d6feaad3ca"
+          },
+          {
+            "SN_Number__c": "RCAF0001134",
+            "ServiceNow_Sys_Id__c": "439cd74683668710c67233d6feaad3cf"
+          },
+          {
+            "SN_Number__c": "RCAF0001135",
+            "ServiceNow_Sys_Id__c": "879cd74683668710c67233d6feaad3d3"
+          },
+          {
+            "SN_Number__c": "RCAF0001136",
+            "ServiceNow_Sys_Id__c": "cb9cd74683668710c67233d6feaad3d7"
+          },
+          {
+            "SN_Number__c": "RCAF0001137",
+            "ServiceNow_Sys_Id__c": "039cd74683668710c67233d6feaad3dc"
+          },
+          {
+            "SN_Number__c": "RCAF0001138",
+            "ServiceNow_Sys_Id__c": "479cd74683668710c67233d6feaad3e0"
+          },
+          {
+            "SN_Number__c": "RCAF0001139",
+            "ServiceNow_Sys_Id__c": "179c570683668710c67233d6feaad35d"
+          },
+          {
+            "SN_Number__c": "RCAF0001140",
+            "ServiceNow_Sys_Id__c": "db9c570683668710c67233d6feaad361"
+          },
+          {
+            "SN_Number__c": "RCAF0001141",
+            "ServiceNow_Sys_Id__c": "939cd74683668710c67233d6feaad3f5"
+          },
+          {
+            "SN_Number__c": "RCAF0001142",
+            "ServiceNow_Sys_Id__c": "d79cd74683668710c67233d6feaad3f9"
+          },
+          {
+            "SN_Number__c": "RCAF0001143",
+            "ServiceNow_Sys_Id__c": "d79cd74683668710c67233d6feaad3ff"
+          },
+          {
+            "SN_Number__c": "RCAF0001144",
+            "ServiceNow_Sys_Id__c": "9f9c1b4683668710c67233d6feaad303"
+          },
+          {
+            "SN_Number__c": "RCAF0001145",
+            "ServiceNow_Sys_Id__c": "e39c1b4683668710c67233d6feaad308"
+          },
+          {
+            "SN_Number__c": "RCAF0001146",
+            "ServiceNow_Sys_Id__c": "ef9c1b4683668710c67233d6feaad318"
+          },
+          {
+            "SN_Number__c": "RCAF0001147",
+            "ServiceNow_Sys_Id__c": "279c1b4683668710c67233d6feaad31d"
+          },
+          {
+            "SN_Number__c": "RCAF0001148",
+            "ServiceNow_Sys_Id__c": "6b9c1b4683668710c67233d6feaad321"
+          },
+          {
+            "SN_Number__c": "RCAF0001149",
+            "ServiceNow_Sys_Id__c": "6b9c1b4683668710c67233d6feaad327"
+          },
+          {
+            "SN_Number__c": "RCAF0001150",
+            "ServiceNow_Sys_Id__c": "239c1b4683668710c67233d6feaad32c"
+          },
+          {
+            "SN_Number__c": "RCAF0001151",
+            "ServiceNow_Sys_Id__c": "679c1b4683668710c67233d6feaad330"
+          },
+          {
+            "SN_Number__c": "RCAF0001152",
+            "ServiceNow_Sys_Id__c": "ab9c1b4683668710c67233d6feaad334"
+          },
+          {
+            "SN_Number__c": "RCAF0001153",
+            "ServiceNow_Sys_Id__c": "ff9c1b4683668710c67233d6feaad338"
+          },
+          {
+            "SN_Number__c": "RCAF0001154",
+            "ServiceNow_Sys_Id__c": "379c1b4683668710c67233d6feaad33d"
+          },
+          {
+            "SN_Number__c": "RCAF0001155",
+            "ServiceNow_Sys_Id__c": "3b9c1b4683668710c67233d6feaad344"
+          },
+          {
+            "SN_Number__c": "RCAF0001156",
+            "ServiceNow_Sys_Id__c": "ff9c1b4683668710c67233d6feaad348"
+          },
+          {
+            "SN_Number__c": "RCAF0001157",
+            "ServiceNow_Sys_Id__c": "379c1b4683668710c67233d6feaad34d"
+          },
+          {
+            "SN_Number__c": "RCAF0001158",
+            "ServiceNow_Sys_Id__c": "7b9c1b4683668710c67233d6feaad351"
+          },
+          {
+            "SN_Number__c": "RCAF0001159",
+            "ServiceNow_Sys_Id__c": "bf9c1b4683668710c67233d6feaad355"
+          },
+          {
+            "SN_Number__c": "RCAF0001160",
+            "ServiceNow_Sys_Id__c": "f39c1b4683668710c67233d6feaad35a"
+          },
+          {
+            "SN_Number__c": "RCAF0001161",
+            "ServiceNow_Sys_Id__c": "c0ac1b4683668710c67233d6feaad360"
+          },
+          {
+            "SN_Number__c": "RCAF0001162",
+            "ServiceNow_Sys_Id__c": "4cac1b4683668710c67233d6feaad3a2"
+          },
+          {
+            "SN_Number__c": "RCAF0001163",
+            "ServiceNow_Sys_Id__c": "80ac1b4683668710c67233d6feaad3a7"
+          },
+          {
+            "SN_Number__c": "RCAF0001164",
+            "ServiceNow_Sys_Id__c": "c4ac1b4683668710c67233d6feaad3ab"
+          },
+          {
+            "SN_Number__c": "RCAF0001165",
+            "ServiceNow_Sys_Id__c": "c0ac1b4683668710c67233d6feaad3bc"
+          },
+          {
+            "SN_Number__c": "RCAF0001166",
+            "ServiceNow_Sys_Id__c": "08ac1b4683668710c67233d6feaad3c0"
+          },
+          {
+            "SN_Number__c": "RCAF0001167",
+            "ServiceNow_Sys_Id__c": "08ac1b4683668710c67233d6feaad3c6"
+          },
+          {
+            "SN_Number__c": "RCAF0001168",
+            "ServiceNow_Sys_Id__c": "ccac1b4683668710c67233d6feaad3ca"
+          },
+          {
+            "SN_Number__c": "RCAF0001169",
+            "ServiceNow_Sys_Id__c": "04ac1b4683668710c67233d6feaad3cf"
+          },
+          {
+            "SN_Number__c": "RCAF0001170",
+            "ServiceNow_Sys_Id__c": "c4ac1b4683668710c67233d6feaad3ec"
+          },
+          {
+            "SN_Number__c": "RCAF0001171",
+            "ServiceNow_Sys_Id__c": "0cac1b4683668710c67233d6feaad3f0"
+          },
+          {
+            "SN_Number__c": "RCAF0001172",
+            "ServiceNow_Sys_Id__c": "40ac1b4683668710c67233d6feaad3f5"
+          },
+          {
+            "SN_Number__c": "RCAF0001173",
+            "ServiceNow_Sys_Id__c": "dcac5b4683668710c67233d6feaad313"
+          },
+          {
+            "SN_Number__c": "RCAF0001174",
+            "ServiceNow_Sys_Id__c": "94ac5b4683668710c67233d6feaad318"
+          },
+          {
+            "SN_Number__c": "RCAF0001175",
+            "ServiceNow_Sys_Id__c": "54ac5b4683668710c67233d6feaad367"
+          },
+          {
+            "SN_Number__c": "RCAF0001176",
+            "ServiceNow_Sys_Id__c": "54ac5b4683668710c67233d6feaad36d"
+          },
+          {
+            "SN_Number__c": "RCAF0001177",
+            "ServiceNow_Sys_Id__c": "1cac5b4683668710c67233d6feaad371"
+          },
+          {
+            "SN_Number__c": "RCAF0001178",
+            "ServiceNow_Sys_Id__c": "5cac5b4683668710c67233d6feaad3a7"
+          },
+          {
+            "SN_Number__c": "RCAF0001179",
+            "ServiceNow_Sys_Id__c": "6cac5b4683668710c67233d6feaad3ad"
+          },
+          {
+            "SN_Number__c": "RCAF0001180",
+            "ServiceNow_Sys_Id__c": "68ac9b4683668710c67233d6feaad39e"
+          },
+          {
+            "SN_Number__c": "RCAF0001181",
+            "ServiceNow_Sys_Id__c": "acac9b4683668710c67233d6feaad3a2"
+          },
+          {
+            "SN_Number__c": "RCAF0001182",
+            "ServiceNow_Sys_Id__c": "e0ac9b4683668710c67233d6feaad3a7"
+          },
+          {
+            "SN_Number__c": "RCAF0001183",
+            "ServiceNow_Sys_Id__c": "e8ac9b4683668710c67233d6feaad3e9"
+          },
+          {
+            "SN_Number__c": "RCAF0001184",
+            "ServiceNow_Sys_Id__c": "20ac9b4683668710c67233d6feaad3ee"
+          },
+          {
+            "SN_Number__c": "RCAF0001185",
+            "ServiceNow_Sys_Id__c": "ce7d1fc683668710c67233d6feaad311"
+          },
+          {
+            "SN_Number__c": "RCAF0001186",
+            "ServiceNow_Sys_Id__c": "867d1fc683668710c67233d6feaad316"
+          },
+          {
+            "SN_Number__c": "RCAF0001187",
+            "ServiceNow_Sys_Id__c": "027d1fc683668710c67233d6feaad340"
+          },
+          {
+            "SN_Number__c": "RCAF0001188",
+            "ServiceNow_Sys_Id__c": "027d1fc683668710c67233d6feaad346"
+          },
+          {
+            "SN_Number__c": "RCAF0001189",
+            "ServiceNow_Sys_Id__c": "467d1fc683668710c67233d6feaad363"
+          },
+          {
+            "SN_Number__c": "RCAF0001190",
+            "ServiceNow_Sys_Id__c": "8a7d1fc683668710c67233d6feaad367"
+          }
+        ],
+        "at": "2026-08-08T17:23:49.677Z"
+      },
+      {
+        "label": "CAF_Task__c",
+        "table": "CAF_Task__c",
+        "query": "sf data query --query \"SELECT SN_Number__c, ServiceNow_Sys_Id__c FROM CAF_Task__c ORDER BY SN_Number__c\" --target-org caf-sf",
+        "rows": [
+          {
+            "SN_Number__c": "CAFT0001001",
+            "ServiceNow_Sys_Id__c": "e99621b983a6c310c67233d6feaad3d3"
+          },
+          {
+            "SN_Number__c": "CAFT0001002",
+            "ServiceNow_Sys_Id__c": "dab829bd83a6c310c67233d6feaad33c"
+          },
+          {
+            "SN_Number__c": "CAFT0001003",
+            "ServiceNow_Sys_Id__c": "2ccb693583e6c310c67233d6feaad346"
+          },
+          {
+            "SN_Number__c": "CAFT0001004",
+            "ServiceNow_Sys_Id__c": "bb1ea27983eec310c67233d6feaad35d"
+          },
+          {
+            "SN_Number__c": "CAFT0001019",
+            "ServiceNow_Sys_Id__c": "43936cf483431210bd2a5860ceaad363"
+          },
+          {
+            "SN_Number__c": "CAFT0001020",
+            "ServiceNow_Sys_Id__c": "8f932cf483431210bd2a5860ceaad3a5"
+          },
+          {
+            "SN_Number__c": "CAFT0001021",
+            "ServiceNow_Sys_Id__c": "47932cf483431210bd2a5860ceaad3b1"
+          },
+          {
+            "SN_Number__c": "CAFT0001022",
+            "ServiceNow_Sys_Id__c": "8f936cf483431210bd2a5860ceaad36c"
+          },
+          {
+            "SN_Number__c": "CAFT0001023",
+            "ServiceNow_Sys_Id__c": "c3936cf483431210bd2a5860ceaad38e"
+          },
+          {
+            "SN_Number__c": "CAFT0001024",
+            "ServiceNow_Sys_Id__c": "0f936cf483431210bd2a5860ceaad382"
+          },
+          {
+            "SN_Number__c": "CAFT0001025",
+            "ServiceNow_Sys_Id__c": "deb3603883431210bd2a5860ceaad356"
+          },
+          {
+            "SN_Number__c": "CAFT0001026",
+            "ServiceNow_Sys_Id__c": "91442c3883431210bd2a5860ceaad37e"
+          },
+          {
+            "SN_Number__c": "CAFT0001027",
+            "ServiceNow_Sys_Id__c": "bab4647883431210bd2a5860ceaad3c0"
+          },
+          {
+            "SN_Number__c": "CAFT0001034",
+            "ServiceNow_Sys_Id__c": "221920fc83431210bd2a5860ceaad336"
+          },
+          {
+            "SN_Number__c": "CAFT0001035",
+            "ServiceNow_Sys_Id__c": "ae19ecbc83431210bd2a5860ceaad37d"
+          },
+          {
+            "SN_Number__c": "CAFT0001036",
+            "ServiceNow_Sys_Id__c": "261920fc83431210bd2a5860ceaad343"
+          },
+          {
+            "SN_Number__c": "CAFT0001037",
+            "ServiceNow_Sys_Id__c": "b21920fc83431210bd2a5860ceaad371"
+          },
+          {
+            "SN_Number__c": "CAFT0001038",
+            "ServiceNow_Sys_Id__c": "b21920fc83431210bd2a5860ceaad367"
+          },
+          {
+            "SN_Number__c": "CAFT0001039",
+            "ServiceNow_Sys_Id__c": "b61920fc83431210bd2a5860ceaad37e"
+          },
+          {
+            "SN_Number__c": "CAFT0001040",
+            "ServiceNow_Sys_Id__c": "b839a0fc83431210bd2a5860ceaad3c4"
+          },
+          {
+            "SN_Number__c": "CAFT0001041",
+            "ServiceNow_Sys_Id__c": "cd49e0fc83431210bd2a5860ceaad370"
+          },
+          {
+            "SN_Number__c": "CAFT0001042",
+            "ServiceNow_Sys_Id__c": "1359a4fc83431210bd2a5860ceaad39e"
+          },
+          {
+            "SN_Number__c": "CAFT0001043",
+            "ServiceNow_Sys_Id__c": "c07928fc83431210bd2a5860ceaad313"
+          },
+          {
+            "SN_Number__c": "CAFT0001044",
+            "ServiceNow_Sys_Id__c": "ff7968fc83431210bd2a5860ceaad34c"
+          },
+          {
+            "SN_Number__c": "CAFT0001045",
+            "ServiceNow_Sys_Id__c": "8c99e8fc83431210bd2a5860ceaad360"
+          },
+          {
+            "SN_Number__c": "CAFT0001046",
+            "ServiceNow_Sys_Id__c": "a8d9a03083831210bd2a5860ceaad3fd"
+          },
+          {
+            "SN_Number__c": "CAFT0001047",
+            "ServiceNow_Sys_Id__c": "e4d9a03083831210bd2a5860ceaad3f6"
+          },
+          {
+            "SN_Number__c": "CAFT0001048",
+            "ServiceNow_Sys_Id__c": "e4d9a03083831210bd2a5860ceaad3af"
+          },
+          {
+            "SN_Number__c": "CAFT0001049",
+            "ServiceNow_Sys_Id__c": "e0d9e03083831210bd2a5860ceaad307"
+          },
+          {
+            "SN_Number__c": "CAFT0001050",
+            "ServiceNow_Sys_Id__c": "acd9e03083831210bd2a5860ceaad318"
+          },
+          {
+            "SN_Number__c": "CAFT0001051",
+            "ServiceNow_Sys_Id__c": "60d9e03083831210bd2a5860ceaad310"
+          },
+          {
+            "SN_Number__c": "CAFT0001101",
+            "ServiceNow_Sys_Id__c": "de9c574683668710c67233d6feaad3ed"
+          },
+          {
+            "SN_Number__c": "CAFT0001102",
+            "ServiceNow_Sys_Id__c": "1a9c974683668710c67233d6feaad300"
+          },
+          {
+            "SN_Number__c": "CAFT0001103",
+            "ServiceNow_Sys_Id__c": "de9c574683668710c67233d6feaad383"
+          },
+          {
+            "SN_Number__c": "CAFT0001104",
+            "ServiceNow_Sys_Id__c": "169c974683668710c67233d6feaad31e"
+          },
+          {
+            "SN_Number__c": "CAFT0001105",
+            "ServiceNow_Sys_Id__c": "169c974683668710c67233d6feaad30b"
+          },
+          {
+            "SN_Number__c": "CAFT0001106",
+            "ServiceNow_Sys_Id__c": "929c974683668710c67233d6feaad317"
+          },
+          {
+            "SN_Number__c": "CAFT0001107",
+            "ServiceNow_Sys_Id__c": "1a9c974683668710c67233d6feaad341"
+          },
+          {
+            "SN_Number__c": "CAFT0001108",
+            "ServiceNow_Sys_Id__c": "969c974683668710c67233d6feaad33a"
+          },
+          {
+            "SN_Number__c": "CAFT0001109",
+            "ServiceNow_Sys_Id__c": "1a9c974683668710c67233d6feaad32e"
+          },
+          {
+            "SN_Number__c": "CAFT0001110",
+            "ServiceNow_Sys_Id__c": "2e9c974683668710c67233d6feaad364"
+          },
+          {
+            "SN_Number__c": "CAFT0001111",
+            "ServiceNow_Sys_Id__c": "2a9c974683668710c67233d6feaad351"
+          },
+          {
+            "SN_Number__c": "CAFT0001112",
+            "ServiceNow_Sys_Id__c": "aa9c974683668710c67233d6feaad35d"
+          },
+          {
+            "SN_Number__c": "CAFT0001113",
+            "ServiceNow_Sys_Id__c": "a29c974683668710c67233d6feaad36f"
+          },
+          {
+            "SN_Number__c": "CAFT0001114",
+            "ServiceNow_Sys_Id__c": "ae9c974683668710c67233d6feaad380"
+          },
+          {
+            "SN_Number__c": "CAFT0001115",
+            "ServiceNow_Sys_Id__c": "aa9c974683668710c67233d6feaad38d"
+          },
+          {
+            "SN_Number__c": "CAFT0001116",
+            "ServiceNow_Sys_Id__c": "269c974683668710c67233d6feaad3ab"
+          },
+          {
+            "SN_Number__c": "CAFT0001117",
+            "ServiceNow_Sys_Id__c": "229c974683668710c67233d6feaad3bd"
+          },
+          {
+            "SN_Number__c": "CAFT0001118",
+            "ServiceNow_Sys_Id__c": "2e9c974683668710c67233d6feaad3c9"
+          },
+          {
+            "SN_Number__c": "CAFT0001119",
+            "ServiceNow_Sys_Id__c": "a69c974683668710c67233d6feaad3e7"
+          },
+          {
+            "SN_Number__c": "CAFT0001120",
+            "ServiceNow_Sys_Id__c": "a29c974683668710c67233d6feaad3f9"
+          },
+          {
+            "SN_Number__c": "CAFT0001121",
+            "ServiceNow_Sys_Id__c": "ae9cd74683668710c67233d6feaad305"
+          },
+          {
+            "SN_Number__c": "CAFT0001122",
+            "ServiceNow_Sys_Id__c": "629cd74683668710c67233d6feaad317"
+          },
+          {
+            "SN_Number__c": "CAFT0001123",
+            "ServiceNow_Sys_Id__c": "269cd74683668710c67233d6feaad310"
+          },
+          {
+            "SN_Number__c": "CAFT0001124",
+            "ServiceNow_Sys_Id__c": "2a9cd74683668710c67233d6feaad303"
+          },
+          {
+            "SN_Number__c": "CAFT0001125",
+            "ServiceNow_Sys_Id__c": "d4ac5b4683668710c67233d6feaad3cf"
+          },
+          {
+            "SN_Number__c": "CAFT0001126",
+            "ServiceNow_Sys_Id__c": "50ac5b4683668710c67233d6feaad3c5"
+          },
+          {
+            "SN_Number__c": "CAFT0001127",
+            "ServiceNow_Sys_Id__c": "14ac5b4683668710c67233d6feaad3dc"
+          },
+          {
+            "SN_Number__c": "CAFT0001128",
+            "ServiceNow_Sys_Id__c": "58ac9b4683668710c67233d6feaad30b"
+          },
+          {
+            "SN_Number__c": "CAFT0001129",
+            "ServiceNow_Sys_Id__c": "d0ac9b4683668710c67233d6feaad301"
+          },
+          {
+            "SN_Number__c": "CAFT0001130",
+            "ServiceNow_Sys_Id__c": "94ac9b4683668710c67233d6feaad318"
+          },
+          {
+            "SN_Number__c": "CAFT0001131",
+            "ServiceNow_Sys_Id__c": "a0ac9b4683668710c67233d6feaad354"
+          },
+          {
+            "SN_Number__c": "CAFT0001132",
+            "ServiceNow_Sys_Id__c": "2cac9b4683668710c67233d6feaad349"
+          },
+          {
+            "SN_Number__c": "CAFT0001133",
+            "ServiceNow_Sys_Id__c": "ecac9b4683668710c67233d6feaad360"
+          },
+          {
+            "SN_Number__c": "CAFT0001134",
+            "ServiceNow_Sys_Id__c": "28ac9b4683668710c67233d6feaad35e"
+          },
+          {
+            "SN_Number__c": "CAFT0001135",
+            "ServiceNow_Sys_Id__c": "e4ac9b4683668710c67233d6feaad379"
+          },
+          {
+            "SN_Number__c": "CAFT0001136",
+            "ServiceNow_Sys_Id__c": "64ac9b4683668710c67233d6feaad36b"
+          },
+          {
+            "SN_Number__c": "CAFT0001137",
+            "ServiceNow_Sys_Id__c": "e0ac9b4683668710c67233d6feaad38e"
+          },
+          {
+            "SN_Number__c": "CAFT0001138",
+            "ServiceNow_Sys_Id__c": "6cac9b4683668710c67233d6feaad383"
+          },
+          {
+            "SN_Number__c": "CAFT0001139",
+            "ServiceNow_Sys_Id__c": "20ac9b4683668710c67233d6feaad39b"
+          },
+          {
+            "SN_Number__c": "CAFT0001140",
+            "ServiceNow_Sys_Id__c": "64ac9b4683668710c67233d6feaad3ca"
+          },
+          {
+            "SN_Number__c": "CAFT0001141",
+            "ServiceNow_Sys_Id__c": "ecac9b4683668710c67233d6feaad3bf"
+          },
+          {
+            "SN_Number__c": "CAFT0001142",
+            "ServiceNow_Sys_Id__c": "a0ac9b4683668710c67233d6feaad3d7"
+          },
+          {
+            "SN_Number__c": "CAFT0001143",
+            "ServiceNow_Sys_Id__c": "e4acdb4683668710c67233d6feaad306"
+          },
+          {
+            "SN_Number__c": "CAFT0001144",
+            "ServiceNow_Sys_Id__c": "60ac9b4683668710c67233d6feaad3fc"
+          },
+          {
+            "SN_Number__c": "CAFT0001145",
+            "ServiceNow_Sys_Id__c": "a0acdb4683668710c67233d6feaad32c"
+          },
+          {
+            "SN_Number__c": "CAFT0001146",
+            "ServiceNow_Sys_Id__c": "e4acdb4683668710c67233d6feaad35b"
+          },
+          {
+            "SN_Number__c": "CAFT0001147",
+            "ServiceNow_Sys_Id__c": "60acdb4683668710c67233d6feaad351"
+          },
+          {
+            "SN_Number__c": "CAFT0001148",
+            "ServiceNow_Sys_Id__c": "24acdb4683668710c67233d6feaad368"
+          },
+          {
+            "SN_Number__c": "CAFT0001149",
+            "ServiceNow_Sys_Id__c": "68acdb4683668710c67233d6feaad397"
+          },
+          {
+            "SN_Number__c": "CAFT0001150",
+            "ServiceNow_Sys_Id__c": "e0acdb4683668710c67233d6feaad38d"
+          },
+          {
+            "SN_Number__c": "CAFT0001151",
+            "ServiceNow_Sys_Id__c": "6cacdb4683668710c67233d6feaad3b0"
+          },
+          {
+            "SN_Number__c": "CAFT0001152",
+            "ServiceNow_Sys_Id__c": "ecacdb4683668710c67233d6feaad3a1"
+          },
+          {
+            "SN_Number__c": "CAFT0001153",
+            "ServiceNow_Sys_Id__c": "64acdb4683668710c67233d6feaad3c9"
+          },
+          {
+            "SN_Number__c": "CAFT0001154",
+            "ServiceNow_Sys_Id__c": "e0acdb4683668710c67233d6feaad3bb"
+          },
+          {
+            "SN_Number__c": "CAFT0001155",
+            "ServiceNow_Sys_Id__c": "60acdb4683668710c67233d6feaad3de"
+          },
+          {
+            "SN_Number__c": "CAFT0001156",
+            "ServiceNow_Sys_Id__c": "e8acdb4683668710c67233d6feaad3d3"
+          },
+          {
+            "SN_Number__c": "CAFT0001157",
+            "ServiceNow_Sys_Id__c": "2cac1f4683668710c67233d6feaad303"
+          },
+          {
+            "SN_Number__c": "CAFT0001158",
+            "ServiceNow_Sys_Id__c": "e0ac1f4683668710c67233d6feaad31a"
+          },
+          {
+            "SN_Number__c": "CAFT0001159",
+            "ServiceNow_Sys_Id__c": "6cac1f4683668710c67233d6feaad30f"
+          },
+          {
+            "SN_Number__c": "CAFT0001160",
+            "ServiceNow_Sys_Id__c": "e4ac1f4683668710c67233d6feaad333"
+          },
+          {
+            "SN_Number__c": "CAFT0001161",
+            "ServiceNow_Sys_Id__c": "bcac1f4683668710c67233d6feaad349"
+          },
+          {
+            "SN_Number__c": "CAFT0001162",
+            "ServiceNow_Sys_Id__c": "38ac1f4683668710c67233d6feaad33f"
+          },
+          {
+            "SN_Number__c": "CAFT0001163",
+            "ServiceNow_Sys_Id__c": "b0ac1f4683668710c67233d6feaad363"
+          },
+          {
+            "SN_Number__c": "CAFT0001164",
+            "ServiceNow_Sys_Id__c": "78ac1f4683668710c67233d6feaad379"
+          },
+          {
+            "SN_Number__c": "CAFT0001165",
+            "ServiceNow_Sys_Id__c": "f0ac1f4683668710c67233d6feaad36f"
+          },
+          {
+            "SN_Number__c": "CAFT0001166",
+            "ServiceNow_Sys_Id__c": "7cac1f4683668710c67233d6feaad392"
+          },
+          {
+            "SN_Number__c": "CAFT0001167",
+            "ServiceNow_Sys_Id__c": "30ac1f4683668710c67233d6feaad3db"
+          },
+          {
+            "SN_Number__c": "CAFT0001168",
+            "ServiceNow_Sys_Id__c": "f0ac1f4683668710c67233d6feaad3c4"
+          },
+          {
+            "SN_Number__c": "CAFT0001169",
+            "ServiceNow_Sys_Id__c": "7cac1f4683668710c67233d6feaad3e7"
+          },
+          {
+            "SN_Number__c": "CAFT0001170",
+            "ServiceNow_Sys_Id__c": "b4ac1f4683668710c67233d6feaad3e5"
+          },
+          {
+            "SN_Number__c": "CAFT0001171",
+            "ServiceNow_Sys_Id__c": "bcac1f4683668710c67233d6feaad3f3"
+          },
+          {
+            "SN_Number__c": "CAFT0001172",
+            "ServiceNow_Sys_Id__c": "f0ac1f4683668710c67233d6feaad3f2"
+          },
+          {
+            "SN_Number__c": "CAFT0001173",
+            "ServiceNow_Sys_Id__c": "70ac5f4683668710c67233d6feaad315"
+          },
+          {
+            "SN_Number__c": "CAFT0001174",
+            "ServiceNow_Sys_Id__c": "34ac1f4683668710c67233d6feaad3fe"
+          },
+          {
+            "SN_Number__c": "CAFT0001175",
+            "ServiceNow_Sys_Id__c": "bcac5f4683668710c67233d6feaad321"
+          },
+          {
+            "SN_Number__c": "CAFT0001176",
+            "ServiceNow_Sys_Id__c": "3cac5f4683668710c67233d6feaad344"
+          },
+          {
+            "SN_Number__c": "CAFT0001177",
+            "ServiceNow_Sys_Id__c": "fcac5f4683668710c67233d6feaad32d"
+          },
+          {
+            "SN_Number__c": "CAFT0001178",
+            "ServiceNow_Sys_Id__c": "78ac5f4683668710c67233d6feaad351"
+          },
+          {
+            "SN_Number__c": "CAFT0001179",
+            "ServiceNow_Sys_Id__c": "f4ac5f4683668710c67233d6feaad374"
+          },
+          {
+            "SN_Number__c": "CAFT0001180",
+            "ServiceNow_Sys_Id__c": "34ac5f4683668710c67233d6feaad381"
+          },
+          {
+            "SN_Number__c": "CAFT0001181",
+            "ServiceNow_Sys_Id__c": "70ac5f4683668710c67233d6feaad36a"
+          },
+          {
+            "SN_Number__c": "CAFT0001182",
+            "ServiceNow_Sys_Id__c": "f8ac5f4683668710c67233d6feaad397"
+          },
+          {
+            "SN_Number__c": "CAFT0001183",
+            "ServiceNow_Sys_Id__c": "b4ac5f4683668710c67233d6feaad3bd"
+          },
+          {
+            "SN_Number__c": "CAFT0001184",
+            "ServiceNow_Sys_Id__c": "b8ac5f4683668710c67233d6feaad3b2"
+          },
+          {
+            "SN_Number__c": "CAFT0001185",
+            "ServiceNow_Sys_Id__c": "4e7ddbc683668710c67233d6feaad3b3"
+          },
+          {
+            "SN_Number__c": "CAFT0001186",
+            "ServiceNow_Sys_Id__c": "4e7ddbc683668710c67233d6feaad3fb"
+          },
+          {
+            "SN_Number__c": "CAFT0001187",
+            "ServiceNow_Sys_Id__c": "0e7d1fc683668710c67233d6feaad378"
+          },
+          {
+            "SN_Number__c": "CAFT0001188",
+            "ServiceNow_Sys_Id__c": "027d1fc683668710c67233d6feaad38f"
+          },
+          {
+            "SN_Number__c": "CAFT0001189",
+            "ServiceNow_Sys_Id__c": "027d1fc683668710c67233d6feaad39c"
+          },
+          {
+            "SN_Number__c": "CAFT0001190",
+            "ServiceNow_Sys_Id__c": "4e7d1fc683668710c67233d6feaad3a5"
+          },
+          {
+            "SN_Number__c": "CAFT0001301",
+            "ServiceNow_Sys_Id__c": "1fce5f8a83668710c67233d6feaad3ea"
+          },
+          {
+            "SN_Number__c": "CAFT0001302",
+            "ServiceNow_Sys_Id__c": "9bce9f8a83668710c67233d6feaad33c"
+          },
+          {
+            "SN_Number__c": "CAFT0001303",
+            "ServiceNow_Sys_Id__c": "73cedf8a83668710c67233d6feaad3aa"
+          },
+          {
+            "SN_Number__c": "CAFT0001304",
+            "ServiceNow_Sys_Id__c": "bfcedf8a83668710c67233d6feaad3bd"
+          },
+          {
+            "SN_Number__c": "CAFT0001305",
+            "ServiceNow_Sys_Id__c": "40dedf8a83668710c67233d6feaad3d1"
+          },
+          {
+            "SN_Number__c": "CAFT0001306",
+            "ServiceNow_Sys_Id__c": "44dedf8a83668710c67233d6feaad3f1"
+          },
+          {
+            "SN_Number__c": "CAFT0001307",
+            "ServiceNow_Sys_Id__c": "08de13ca83668710c67233d6feaad304"
+          },
+          {
+            "SN_Number__c": "CAFT0001308",
+            "ServiceNow_Sys_Id__c": "44de13ca83668710c67233d6feaad318"
+          },
+          {
+            "SN_Number__c": "CAFT0001309",
+            "ServiceNow_Sys_Id__c": "0cde13ca83668710c67233d6feaad34b"
+          },
+          {
+            "SN_Number__c": "CAFT0001310",
+            "ServiceNow_Sys_Id__c": "08de13ca83668710c67233d6feaad32b"
+          },
+          {
+            "SN_Number__c": "CAFT0001311",
+            "ServiceNow_Sys_Id__c": "c0de13ca83668710c67233d6feaad37f"
+          },
+          {
+            "SN_Number__c": "CAFT0001312",
+            "ServiceNow_Sys_Id__c": "04de13ca83668710c67233d6feaad384"
+          },
+          {
+            "SN_Number__c": "CAFT0001313",
+            "ServiceNow_Sys_Id__c": "0cde13ca83668710c67233d6feaad399"
+          },
+          {
+            "SN_Number__c": "CAFT0001314",
+            "ServiceNow_Sys_Id__c": "a8de53ca83668710c67233d6feaad309"
+          },
+          {
+            "SN_Number__c": "CAFT0001315",
+            "ServiceNow_Sys_Id__c": "24de53ca83668710c67233d6feaad37b"
+          },
+          {
+            "SN_Number__c": "CAFT0001316",
+            "ServiceNow_Sys_Id__c": "68de53ca83668710c67233d6feaad3c7"
+          },
+          {
+            "SN_Number__c": "CAFT0001317",
+            "ServiceNow_Sys_Id__c": "a0de53ca83668710c67233d6feaad3e2"
+          },
+          {
+            "SN_Number__c": "CAFT0001318",
+            "ServiceNow_Sys_Id__c": "24de53ca83668710c67233d6feaad3f0"
+          },
+          {
+            "SN_Number__c": "CAFT0001319",
+            "ServiceNow_Sys_Id__c": "a4de53ca83668710c67233d6feaad3fe"
+          },
+          {
+            "SN_Number__c": "CAFT0001320",
+            "ServiceNow_Sys_Id__c": "2ade57ca83668710c67233d6feaad3db"
+          },
+          {
+            "SN_Number__c": "CAFT0001321",
+            "ServiceNow_Sys_Id__c": "6ade57ca83668710c67233d6feaad3a9"
+          },
+          {
+            "SN_Number__c": "CAFT0001322",
+            "ServiceNow_Sys_Id__c": "2ade97ca83668710c67233d6feaad3c9"
+          },
+          {
+            "SN_Number__c": "CAFT0001323",
+            "ServiceNow_Sys_Id__c": "2ede97ca83668710c67233d6feaad3d5"
+          },
+          {
+            "SN_Number__c": "CAFT0001324",
+            "ServiceNow_Sys_Id__c": "eede97ca83668710c67233d6feaad3fc"
+          },
+          {
+            "SN_Number__c": "CAFT0001325",
+            "ServiceNow_Sys_Id__c": "e2ded7ca83668710c67233d6feaad309"
+          },
+          {
+            "SN_Number__c": "CAFT0001326",
+            "ServiceNow_Sys_Id__c": "aaded7ca83668710c67233d6feaad33c"
+          },
+          {
+            "SN_Number__c": "CAFT0001327",
+            "ServiceNow_Sys_Id__c": "26ded7ca83668710c67233d6feaad349"
+          },
+          {
+            "SN_Number__c": "CAFT0001328",
+            "ServiceNow_Sys_Id__c": "62ded7ca83668710c67233d6feaad370"
+          },
+          {
+            "SN_Number__c": "CAFT0001329",
+            "ServiceNow_Sys_Id__c": "eaded7ca83668710c67233d6feaad37c"
+          },
+          {
+            "SN_Number__c": "CAFT0001330",
+            "ServiceNow_Sys_Id__c": "62ded7ca83668710c67233d6feaad397"
+          },
+          {
+            "SN_Number__c": "CAFT0001331",
+            "ServiceNow_Sys_Id__c": "a2ded7ca83668710c67233d6feaad3b0"
+          },
+          {
+            "SN_Number__c": "CAFT0001332",
+            "ServiceNow_Sys_Id__c": "a2ded7ca83668710c67233d6feaad3d7"
+          },
+          {
+            "SN_Number__c": "CAFT0001333",
+            "ServiceNow_Sys_Id__c": "2aded7ca83668710c67233d6feaad3ca"
+          },
+          {
+            "SN_Number__c": "CAFT0001334",
+            "ServiceNow_Sys_Id__c": "faded7ca83668710c67233d6feaad3f1"
+          },
+          {
+            "SN_Number__c": "CAFT0001335",
+            "ServiceNow_Sys_Id__c": "feded7ca83668710c67233d6feaad3fd"
+          },
+          {
+            "SN_Number__c": "CAFT0001336",
+            "ServiceNow_Sys_Id__c": "32de1bca83668710c67233d6feaad33e"
+          },
+          {
+            "SN_Number__c": "CAFT0001337",
+            "ServiceNow_Sys_Id__c": "36de1bca83668710c67233d6feaad34a"
+          },
+          {
+            "SN_Number__c": "CAFT0001338",
+            "ServiceNow_Sys_Id__c": "f6de1bca83668710c67233d6feaad371"
+          },
+          {
+            "SN_Number__c": "CAFT0001339",
+            "ServiceNow_Sys_Id__c": "fade1bca83668710c67233d6feaad37d"
+          },
+          {
+            "SN_Number__c": "CAFT0001340",
+            "ServiceNow_Sys_Id__c": "76de1bca83668710c67233d6feaad3b1"
+          },
+          {
+            "SN_Number__c": "CAFT0001341",
+            "ServiceNow_Sys_Id__c": "32de1bca83668710c67233d6feaad3ca"
+          },
+          {
+            "SN_Number__c": "CAFT0001342",
+            "ServiceNow_Sys_Id__c": "f2de1bca83668710c67233d6feaad3f1"
+          },
+          {
+            "SN_Number__c": "CAFT0001343",
+            "ServiceNow_Sys_Id__c": "bede5bca83668710c67233d6feaad309"
+          },
+          {
+            "SN_Number__c": "CAFT0001344",
+            "ServiceNow_Sys_Id__c": "72de5bca83668710c67233d6feaad331"
+          },
+          {
+            "SN_Number__c": "CAFT0001345",
+            "ServiceNow_Sys_Id__c": "76de5bca83668710c67233d6feaad33d"
+          },
+          {
+            "SN_Number__c": "CAFT0001346",
+            "ServiceNow_Sys_Id__c": "72de5bca83668710c67233d6feaad358"
+          },
+          {
+            "SN_Number__c": "CAFT0001347",
+            "ServiceNow_Sys_Id__c": "c3de5bca83668710c67233d6feaad37d"
+          },
+          {
+            "SN_Number__c": "CAFT0001348",
+            "ServiceNow_Sys_Id__c": "4fde5bca83668710c67233d6feaad3b0"
+          },
+          {
+            "SN_Number__c": "CAFT0001349",
+            "ServiceNow_Sys_Id__c": "43de5bca83668710c67233d6feaad3bd"
+          },
+          {
+            "SN_Number__c": "CAFT0001350",
+            "ServiceNow_Sys_Id__c": "83de5bca83668710c67233d6feaad3fd"
+          },
+          {
+            "SN_Number__c": "CAFT0001351",
+            "ServiceNow_Sys_Id__c": "4fde9bca83668710c67233d6feaad315"
+          },
+          {
+            "SN_Number__c": "CAFT0001352",
+            "ServiceNow_Sys_Id__c": "13de9bca83668710c67233d6feaad3d4"
+          },
+          {
+            "SN_Number__c": "CAFT0001353",
+            "ServiceNow_Sys_Id__c": "8dfe170e83668710c67233d6feaad35e"
+          },
+          {
+            "SN_Number__c": "CAFT0001354",
+            "ServiceNow_Sys_Id__c": "8dfe170e83668710c67233d6feaad385"
+          },
+          {
+            "SN_Number__c": "CAFT0001355",
+            "ServiceNow_Sys_Id__c": "81fe170e83668710c67233d6feaad38e"
+          },
+          {
+            "SN_Number__c": "CAFT0001356",
+            "ServiceNow_Sys_Id__c": "d5fe170e83668710c67233d6feaad3a0"
+          },
+          {
+            "SN_Number__c": "CAFT0001357",
+            "ServiceNow_Sys_Id__c": "91fe170e83668710c67233d6feaad3b5"
+          },
+          {
+            "SN_Number__c": "CAFT0001358",
+            "ServiceNow_Sys_Id__c": "d1fe170e83668710c67233d6feaad3f9"
+          }
+        ],
+        "at": "2026-08-08T17:24:05.409Z"
+      },
+      {
+        "label": "CAF_Control_Catalog__c",
+        "table": "CAF_Control_Catalog__c",
+        "query": "sf data query --query \"SELECT SN_Number__c, ServiceNow_Sys_Id__c FROM CAF_Control_Catalog__c ORDER BY SN_Number__c\" --target-org caf-sf",
+        "rows": [
+          {
+            "SN_Number__c": "CNFTYPE0001002",
+            "ServiceNow_Sys_Id__c": "4c85e8a21b7925d46f1e76e5d34bcbfb"
+          },
+          {
+            "SN_Number__c": "CNFTYPE0001003",
+            "ServiceNow_Sys_Id__c": "12952c261b7925d46f1e76e5d34bcb5e"
+          },
+          {
+            "SN_Number__c": "CNFTYPE0001003",
+            "ServiceNow_Sys_Id__c": "bdae1e4a836e4710c67233d6feaad3a4"
+          },
+          {
+            "SN_Number__c": "CNFTYPE0001004",
+            "ServiceNow_Sys_Id__c": "05f10c7f1b61a154eede76e5d34bcb25"
+          },
+          {
+            "SN_Number__c": "CNFTYPE0001004",
+            "ServiceNow_Sys_Id__c": "95d568ea1b7925d46f1e76e5d34bcb9f"
+          },
+          {
+            "SN_Number__c": "CNFTYPE0001004",
+            "ServiceNow_Sys_Id__c": "96138f4283a28710c67233d6feaad30f"
+          },
+          {
+            "SN_Number__c": "CNFTYPE0001005",
+            "ServiceNow_Sys_Id__c": "f1e5e8a61b7925d46f1e76e5d34bcb84"
+          },
+          {
+            "SN_Number__c": "CNFTYPE0001005",
+            "ServiceNow_Sys_Id__c": "fc1288fb1b61a154eede76e5d34bcb81"
+          }
+        ],
+        "at": "2026-08-08T17:24:16.659Z"
+      }
+    ],
+    "observations": [
+      "Upsert guarantees uniqueness only for rows it created. A row inserted by hand or by Data Loader breaks correlation silently, and every later push then updates the wrong one of the pair."
+    ],
+    "expected": [
+      "No duplicate ServiceNow_Sys_Id__c on any mirrored object.",
+      "No blank ServiceNow_Sys_Id__c on any mirrored object."
+    ],
+    "actual": [
+      "CAF_Request__c: 109 row(s), 0 duplicate key(s), 0 blank.",
+      "CAF_Task__c: 179 row(s), 0 duplicate key(s), 0 blank.",
+      "CAF_Control_Catalog__c: 8 row(s), 0 duplicate key(s), 0 blank."
+    ],
+    "verdictReason": "Every mirrored row on all three objects carries a unique, populated External Id.",
+    "finishedAt": "2026-08-08T17:24:16.660Z"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "run": {
+    "instance": "https://dev281754.service-now.com + Salesforce orgfarm-4938c7f768-dev-ed",
+    "executedBy": "admin (ServiceNow, via cnit OAuth) / admin.070b86ccf531@agentforce.com (Salesforce)",
+    "executedVia": "Playwright runner, no browser and no writes. ServiceNow read over cnit, Salesforce over the sf CLI. Each case compares the transform output held in Salesforce against the source record it was built from."
+  },
+  "case": {
+    "id": "TC-INT-070",
+    "title": "Parent references resolve",
+    "startedAt": "2026-08-08T16:03:35.681Z",
+    "verdict": "FAIL",
+    "steps": [
+      {
+        "n": 1,
+        "text": "Read task parentage on both sides.",
+        "at": "2026-08-08T16:03:35.681Z",
+        "screenshots": []
+      }
+    ],
+    "records": [],
+    "observations": [],
+    "expected": [
+      "Every task with a parent in ServiceNow has the same parent in Salesforce.",
+      "Every task without one has none in either place."
+    ],
+    "actual": [],
+    "verdictReason": "SyntaxError: Expected property name or '}' in JSON at position 1 (line 1 column 2)",
+    "finishedAt": "2026-08-08T16:03:41.918Z"
+  }
+}

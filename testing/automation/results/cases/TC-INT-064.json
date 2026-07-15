@@ -1,0 +1,298 @@
+{
+  "run": {
+    "instance": "https://dev281754.service-now.com + Salesforce orgfarm-4938c7f768-dev-ed",
+    "executedBy": "admin (ServiceNow, via cnit OAuth) / admin.070b86ccf531@agentforce.com (Salesforce)",
+    "executedVia": "Playwright runner, no browser and no writes. ServiceNow read over cnit, Salesforce over the sf CLI. Each case compares the transform output held in Salesforce against the source record it was built from."
+  },
+  "case": {
+    "id": "TC-INT-064",
+    "title": "Truncation headroom, and the drift it would cause",
+    "startedAt": "2026-08-08T16:02:57.490Z",
+    "verdict": "PASS",
+    "steps": [
+      {
+        "n": 1,
+        "text": "Measure CAF Request short_description against the transform's 255-character limit.",
+        "at": "2026-08-08T16:02:57.490Z",
+        "screenshots": []
+      },
+      {
+        "n": 2,
+        "text": "Measure CAF Task short_description against the transform's 255-character limit.",
+        "at": "2026-08-08T16:02:59.030Z",
+        "screenshots": []
+      },
+      {
+        "n": 3,
+        "text": "Measure Control name against the transform's 80-character limit.",
+        "at": "2026-08-08T16:03:00.584Z",
+        "screenshots": []
+      }
+    ],
+    "records": [
+      {
+        "label": "CAF Request short_description",
+        "table": "x_gskn2_caf_compli_caf_req",
+        "query": "cnit get x_gskn2_caf_compli_caf_req -Fields number,short_description -ProfileName caf-reyan",
+        "rows": [
+          {
+            "number": "RCAF0001032",
+            "length": "45"
+          },
+          {
+            "number": "RCAF0001033",
+            "length": "35"
+          },
+          {
+            "number": "RCAF0001034",
+            "length": "44"
+          },
+          {
+            "number": "RCAF0001039",
+            "length": "32"
+          },
+          {
+            "number": "RCAF0001038",
+            "length": "42"
+          },
+          {
+            "number": "RCAF0001019",
+            "length": "29"
+          },
+          {
+            "number": "RCAF0001020",
+            "length": "43"
+          },
+          {
+            "number": "RCAF0001022",
+            "length": "42"
+          },
+          {
+            "number": "RCAF0001042",
+            "length": "51"
+          },
+          {
+            "number": "RCAF0001024",
+            "length": "52"
+          },
+          {
+            "number": "RCAF0001041",
+            "length": "38"
+          },
+          {
+            "number": "RCAF0001001",
+            "length": "0"
+          },
+          {
+            "number": "RCAF0001023",
+            "length": "39"
+          },
+          {
+            "number": "RCAF0001040",
+            "length": "41"
+          },
+          {
+            "number": "RCAF0001035",
+            "length": "41"
+          },
+          {
+            "number": "RCAF0001036",
+            "length": "54"
+          },
+          {
+            "number": "RCAF0001037",
+            "length": "28"
+          },
+          {
+            "number": "RCAF0001031",
+            "length": "31"
+          },
+          {
+            "number": "RCAF0001021",
+            "length": "33"
+          }
+        ],
+        "at": "2026-08-08T16:02:59.030Z"
+      },
+      {
+        "label": "CAF Task short_description",
+        "table": "x_gskn2_caf_compli_caf_tsk",
+        "query": "cnit get x_gskn2_caf_compli_caf_tsk -Fields number,short_description -ProfileName caf-reyan",
+        "rows": [
+          {
+            "number": "CAFT0001024",
+            "length": "15"
+          },
+          {
+            "number": "CAFT0001042",
+            "length": "32"
+          },
+          {
+            "number": "CAFT0001034",
+            "length": "15"
+          },
+          {
+            "number": "CAFT0001036",
+            "length": "15"
+          },
+          {
+            "number": "CAFT0001003",
+            "length": "32"
+          },
+          {
+            "number": "CAFT0001019",
+            "length": "15"
+          },
+          {
+            "number": "CAFT0001021",
+            "length": "15"
+          },
+          {
+            "number": "CAFT0001051",
+            "length": "15"
+          },
+          {
+            "number": "CAFT0001045",
+            "length": "32"
+          },
+          {
+            "number": "CAFT0001020",
+            "length": "15"
+          },
+          {
+            "number": "CAFT0001022",
+            "length": "15"
+          },
+          {
+            "number": "CAFT0001026",
+            "length": "32"
+          },
+          {
+            "number": "CAFT0001046",
+            "length": "15"
+          },
+          {
+            "number": "CAFT0001050",
+            "length": "15"
+          },
+          {
+            "number": "CAFT0001035",
+            "length": "15"
+          },
+          {
+            "number": "CAFT0001038",
+            "length": "15"
+          },
+          {
+            "number": "CAFT0001037",
+            "length": "15"
+          },
+          {
+            "number": "CAFT0001039",
+            "length": "15"
+          },
+          {
+            "number": "CAFT0001040",
+            "length": "32"
+          },
+          {
+            "number": "CAFT0001027",
+            "length": "32"
+          },
+          {
+            "number": "CAFT0001004",
+            "length": "32"
+          },
+          {
+            "number": "CAFT0001043",
+            "length": "32"
+          },
+          {
+            "number": "CAFT0001023",
+            "length": "15"
+          },
+          {
+            "number": "CAFT0001041",
+            "length": "32"
+          },
+          {
+            "number": "CAFT0001002",
+            "length": "32"
+          },
+          {
+            "number": "CAFT0001025",
+            "length": "32"
+          },
+          {
+            "number": "CAFT0001049",
+            "length": "15"
+          },
+          {
+            "number": "CAFT0001048",
+            "length": "15"
+          },
+          {
+            "number": "CAFT0001047",
+            "length": "15"
+          },
+          {
+            "number": "CAFT0001001",
+            "length": "32"
+          },
+          {
+            "number": "CAFT0001044",
+            "length": "32"
+          }
+        ],
+        "at": "2026-08-08T16:03:00.584Z"
+      },
+      {
+        "label": "Control name",
+        "table": "x_gskn2_caf_compli_caf_conformance_type",
+        "query": "cnit get x_gskn2_caf_compli_caf_conformance_type -Fields number,name -ProfileName caf-reyan",
+        "rows": [
+          {
+            "number": "CNFTYPE0001004",
+            "length": "10"
+          },
+          {
+            "number": "CNFTYPE0001003",
+            "length": "30"
+          },
+          {
+            "number": "CNFTYPE0001002",
+            "length": "17"
+          },
+          {
+            "number": "CNFTYPE0001004",
+            "length": "31"
+          },
+          {
+            "number": "CNFTYPE0001005",
+            "length": "40"
+          },
+          {
+            "number": "CNFTYPE0001005",
+            "length": "21"
+          }
+        ],
+        "at": "2026-08-08T16:03:02.079Z"
+      }
+    ],
+    "observations": [
+      "If one ever does exceed the limit, Sync Health compares the raw ServiceNow value against the truncated Salesforce copy and reports drift permanently — Re-sync re-truncates to the identical value, so the difference can never clear. This case is an early warning and stops being one the day it fails."
+    ],
+    "expected": [
+      "No caf_req or caf_tsk short_description exceeds 255 characters.",
+      "No control name exceeds 80 characters.",
+      "Therefore nothing is being truncated, and no permanent Sync Health drift exists."
+    ],
+    "actual": [
+      "CAF Request short_description: longest is 54 of 255 on RCAF0001036 — 201 characters of headroom. 0 over the limit.",
+      "CAF Task short_description: longest is 32 of 255 on CAFT0001042 — 223 characters of headroom. 0 over the limit.",
+      "Control name: longest is 40 of 80 on CNFTYPE0001005 — 40 characters of headroom. 0 over the limit."
+    ],
+    "verdictReason": "Every source value is inside its limit; no truncation is occurring.",
+    "finishedAt": "2026-08-08T16:03:02.079Z"
+  }
+}
