@@ -241,3 +241,163 @@ test('TC-INT-051 — Drill-in shows the request’s tasks', async ({ page }) => 
 // Suite 4 — Attestation (the panel composition case)
 // ===========================================================================
 
+test('TC-INT-036 — Evidence and attestation are separate panels for separate people', async ({ page }) => {
+  const ev = new CaseEvidence('TC-INT-036', 'Evidence and attestation are separate panels for separate people');
+  ev.expect('Upload evidence opens cafEvidence alone, writable.');
+  ev.expect('Attest opens cafEvidence read-only beside cafAttestation.');
+  ev.expect('Row actions by state: Open → Start + Upload evidence; In Progress → Upload evidence + Attest; Closed → View evidence only.');
+  ev.expect('There is no standalone "Criteria met" button.');
+
+  ev.step(`Read the row actions offered on ${SUBJECT.mixedRequest} — an Open and a Closed task.`);
+  await lx.openDashboard(page);
+  await lx.openRequest(page, SUBJECT.mixedRequest);
+  const mixed = await lx.readTasks(page);
+
+  ev.step(`Read the row actions offered on ${SUBJECT.inProgressRequest} — an In Progress task.`);
+  await lx.openDashboard(page);
+  await lx.openRequest(page, SUBJECT.inProgressRequest);
+  const inProgress = await lx.readTasks(page);
+
+  const byState = new Map<string, string[]>();
+  for (const t of [...mixed, ...inProgress]) {
+    if (!byState.has(t.state)) byState.set(t.state, t.actions);
+  }
+  ev.record(
+    'Row actions offered, by task state',
+    'cafDashboard',
+    'drill-in on RCAF0001022 and RCAF0001037',
+    [...byState.entries()].map(([state, actions]) => ({ state, actions: actions.join(', ') }))
+  );
+  await ev.shot(page, 'row-actions-in-progress');
+
+  ev.step('Open the evidence panel on the In Progress task — the owner’s view.');
+  await lx.openTaskPanel(page, SUBJECT.inProgressTask, 'evidence');
+  const ownerView = await lx.readEvidencePanel(page);
+  const attestationPresentInOwnerView = (await lx.attestationPanel(page).count()) > 0;
+  await ev.shot(page, 'evidence-panel-owner-view');
+
+  ev.step('Open the attest panel on the same task — the approver’s view.');
+  await lx.openTaskPanel(page, SUBJECT.inProgressTask, 'attest');
+  const approverEvidence = await lx.readEvidencePanel(page);
+  const approverAttestation = await lx.readAttestationPanel(page);
+  await ev.shot(page, 'attest-panel-approver-view');
+
+  ev.record('Evidence panel in each mode', 'cafEvidence', `task ${SUBJECT.inProgressTask}`, [
+    { mode: 'Upload evidence (owner)', heading: ownerView.heading, upload_control: String(ownerView.uploadVisible), attestation_alongside: String(attestationPresentInOwnerView) },
+    { mode: 'Attest (approver)', heading: approverEvidence.heading, upload_control: String(approverEvidence.uploadVisible), attestation_alongside: 'true' },
+  ]);
+  ev.record('Attestation panel', 'cafAttestation', `task ${SUBJECT.inProgressTask}`, [
+    { heading: approverAttestation.heading, criteria_options: approverAttestation.criteriaOptions.join(', '), approve_enabled: String(approverAttestation.approveEnabled), reject_enabled: String(approverAttestation.rejectEnabled), blocked_reason: approverAttestation.blockedReason || '(none)' },
+  ]);
+
+  // The regression: met_criteria used to be its own button that wrote on its own.
+  const standaloneCriteria = await page
+    .locator('c-caf-dashboard button', { hasText: /criteria met/i })
+    .count();
+
+  const problems: string[] = [];
+  const expectFor = (state: string, wanted: string[]) => {
+    const got = byState.get(state);
+    if (!got) {
+      ev.observe(`No task in state "${state}" was reachable in this run, so its row actions were not observed.`);
+      return;
+    }
+    const normalise = (a: string[]) => a.map((s) => s.toLowerCase()).sort().join(' | ');
+    if (normalise(got) !== normalise(wanted)) {
+      problems.push(`${state}: expected [${wanted.join(', ')}], got [${got.join(', ')}]`);
+    }
+    ev.actual(`${state} → ${got.join(', ')}`);
+  };
+  expectFor('Open', ['Start', 'Upload evidence']);
+  expectFor('In Progress', ['Upload evidence', 'Attest']);
+  expectFor('Closed Complete', ['View evidence']);
+
+  ev.actual(`Owner view: upload control present = ${ownerView.uploadVisible}; attestation panel alongside = ${attestationPresentInOwnerView}`);
+  ev.actual(`Approver view: upload control present = ${approverEvidence.uploadVisible}; attestation panel alongside = true`);
+  ev.actual(`Attestation offers criteria options [${approverAttestation.criteriaOptions.join(', ')}] beside Approve/Reject.`);
+  ev.actual(`Standalone "Criteria met" buttons found: ${standaloneCriteria}`);
+  ev.observe(
+    'met_criteria is carried on the attestation form as a yes/no alongside the decision, not as its own button. ' +
+      'Whether it belongs with the approver at all is HANDOFF open item 3 — decided, not settled.'
+  );
+  ev.observe('Approve and Reject were read as controls and deliberately not clicked; either would close the task.');
+
+  if (ownerView.uploadVisible === false) problems.push('the owner’s evidence panel offered no upload control');
+  if (attestationPresentInOwnerView) problems.push('the attestation panel was rendered alongside the plain evidence view');
+  if (approverEvidence.uploadVisible) problems.push('the approver’s evidence panel was writable — an approver must not add to the evidence they judge');
+  if (standaloneCriteria > 0) problems.push(`${standaloneCriteria} standalone "Criteria met" button(s) still present`);
+
+  if (problems.length === 0) {
+    ev.pass('Row actions match the specified set for every state observed; the two jobs open different panels; the approver’s copy of the evidence is read-only; no standalone Criteria met button.');
+  } else {
+    ev.fail(problems.join('; '));
+  }
+  expect(problems, problems.join('\n')).toEqual([]);
+});
+
+// ===========================================================================
+// Suite 3 — Evidence
+// ===========================================================================
+
+test('TC-INT-020 — Both lists are shown side by side', async ({ page }) => {
+  const ev = new CaseEvidence('TC-INT-020', 'Both lists are shown side by side');
+  ev.expect('The panel lists Salesforce files and ServiceNow attachments separately.');
+  ev.expect('A failed push is therefore visible rather than inferred.');
+
+  ev.step(`Open the evidence panel on ${SUBJECT.closedTask}, which holds files on both sides.`);
+  await lx.openDashboard(page);
+  await lx.openRequest(page, SUBJECT.mixedRequest);
+  await lx.openTaskPanel(page, SUBJECT.closedTask, 'evidence');
+  const panel = await lx.readEvidencePanel(page);
+  await ev.shot(page, 'evidence-both-lists');
+
+  ev.record('Evidence panel', 'cafEvidence', `task ${SUBJECT.closedTask}`, [
+    { column: 'Salesforce Files', count: panel.salesforceCount, items: panel.salesforceFiles.join(' | ') || '(none)' },
+    { column: 'ServiceNow attachments', count: panel.servicenowCount, items: panel.servicenowAttachments.join(' | ') || '(none)' },
+  ]);
+  // A failed ServiceNow callout renders in place of the attachment list rather
+  // than as an empty one, and the difference decides whether an empty column
+  // means "nothing there" or "could not look".
+  if (panel.error) ev.observe(`The panel reported an error: ${panel.error}`);
+
+  ev.step('Confirm each column against its own platform.');
+  const snSysId = cnitGet(TABLES.tsk, { query: `number=${SUBJECT.closedTask}`, fields: ['sys_id'] })[0]?.sys_id;
+  const attQuery = `table_name=${TABLES.tsk}^table_sys_id=${snSysId}`;
+  const attachments = cnitGet(TABLES.attachment, { query: attQuery, fields: ['file_name', 'size_bytes'] });
+  ev.record('sys_attachment in ServiceNow', TABLES.attachment, cnitCommand(TABLES.attachment, { query: attQuery }), attachments);
+
+  // Through ContentDocumentLink, not FirstPublishLocationId: a file uploaded by
+  // lightning-file-upload is *linked* to the record, and its publish location
+  // is not necessarily that record. Querying the wrong one returns zero and
+  // agrees with anything.
+  const cvSoql =
+    'SELECT ContentDocument.Title, ContentDocument.ContentSize FROM ContentDocumentLink ' +
+    `WHERE LinkedEntityId IN (SELECT Id FROM CAF_Task__c WHERE SN_Number__c = '${SUBJECT.closedTask}')`;
+  const files = sf.soql(cvSoql).map((f) => ({
+    title: f.ContentDocument?.Title ?? '',
+    size: String(f.ContentDocument?.ContentSize ?? ''),
+  }));
+  ev.record('Files linked to the task in Salesforce', sf.OBJECTS.contentDocumentLink, sf.soqlCommand(cvSoql), files);
+
+  ev.actual(`Panel shows two separate columns: "Salesforce Files" (${panel.salesforceCount}) and "ServiceNow attachments" (${panel.servicenowCount}).`);
+  ev.actual(`Salesforce column lists: ${panel.salesforceFiles.join(' | ') || '(none)'}`);
+  ev.actual(`ServiceNow column lists: ${panel.servicenowAttachments.join(' | ') || '(none)'}`);
+  ev.actual(`Underneath: ${files.length} ContentVersion(s) and ${attachments.length} sys_attachment(s).`);
+  ev.observe(
+    'Two copies on purpose, and not reconciled. Salesforce’s copy makes preview and download work with no ' +
+      'round trip; ServiceNow’s is the copy an auditor is entitled to and the only one the attestation gate counts.'
+  );
+
+  const separated = panel.salesforceCount !== '' && panel.servicenowCount !== '';
+  const sfMatches = panel.salesforceFiles.length === files.length;
+  const snMatches = panel.servicenowAttachments.length === attachments.length;
+  if (separated && sfMatches && snMatches) {
+    ev.pass('Two labelled columns, each agreeing with its own platform — a failed push would show as an empty column beside a populated one.');
+  } else {
+    ev.fail(`Columns separated: ${separated}; Salesforce column ${panel.salesforceFiles.length} vs ${files.length} actual; ServiceNow column ${panel.servicenowAttachments.length} vs ${attachments.length} actual.`);
+  }
+  expect(separated, 'the panel must show the two sources as separate columns').toBeTruthy();
+  expect(panel.salesforceFiles.length, 'Salesforce column disagrees with ContentVersion').toBe(files.length);
+  expect(panel.servicenowAttachments.length, 'ServiceNow column disagrees with sys_attachment').toBe(attachments.length);
+});
+
