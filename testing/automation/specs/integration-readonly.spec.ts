@@ -296,3 +296,88 @@ test('TC-INT-017 — The inbound user is sf.integration and only sf.integration'
 // Suite 3 — Evidence
 // ===========================================================================
 
+test('TC-INT-023 — Evidence list on an unknown task returns 404', async () => {
+  const ev = new CaseEvidence('TC-INT-023', 'Evidence list on an unknown task returns 404');
+  ev.expect('HTTP 404 from GET /caf/task/{sysId}/evidence for a sys_id that does not exist.');
+
+  const fake = '00000000000000000000000000000000';
+  ev.step(`GET /api/x_gskn2_caf_compli/caf/task/${fake}/evidence as sf.integration.`);
+  const res = await caf.listEvidence(fake);
+  ev.record('Response', 'GET /caf/task/{sysId}/evidence', `sysId=${fake}`, [
+    { status: String(res.status), body: res.text.slice(0, 400) },
+  ]);
+  ev.actual(`HTTP ${res.status} — ${res.text.slice(0, 200)}`);
+  ev.observe('Read-only endpoint; the call writes nothing on either platform.');
+
+  if (res.status === 404) ev.pass('Unknown task refused with 404, as specified.');
+  else ev.fail(`Expected HTTP 404, got HTTP ${res.status}.`);
+  expect(res.status).toBe(404);
+});
+
+// ===========================================================================
+// Suite 4 — Attestation
+// ===========================================================================
+
+test('TC-INT-037 — There is no named approver', async () => {
+  const ev = new CaseEvidence('TC-INT-037', 'There is no named approver');
+  ev.expect('sysapproval_approver holds no CAF records.');
+  ev.expect('No approver identity is stored on the task beyond sys_updated_by.');
+
+  ev.step('Read every approval record and resolve which belong to CAF tasks.');
+  const approvers = cnitGet(TABLES.approver, {
+    fields: ['sys_id', 'document_id', 'source_table', 'approver', 'state', 'sys_created_by', 'sys_created_on'],
+  });
+  const cafTaskIds = new Set(cnitGet(TABLES.tsk, { fields: ['sys_id', 'number'] }).map((t) => t.sys_id));
+  const numberById = new Map(cnitGet(TABLES.tsk, { fields: ['sys_id', 'number'] }).map((t) => [t.sys_id, t.number]));
+  const cafApprovals = approvers.filter(
+    (a) => cafTaskIds.has(a.document_id) || /x_gskn2_caf_compli/.test(a.source_table || '')
+  );
+  ev.record('All approval records', TABLES.approver, cnitCommand(TABLES.approver), approvers);
+  ev.record(
+    'Approval records belonging to CAF tasks',
+    TABLES.approver,
+    'filtered client-side by document_id against caf_tsk.sys_id',
+    cafApprovals.map((a) => ({ ...a, caf_task: numberById.get(a.document_id) ?? '(unresolved)' }))
+  );
+
+  ev.step('Check whether an approver identity is stored on the task itself.');
+  const tasks = cnitGet(TABLES.tsk, { fields: ['number', 'approval', 'sys_updated_by'] });
+  const approvedTasks = tasks.filter((t) => t.approval === 'approved' || t.approval === 'rejected');
+  ev.record('Tasks with a recorded outcome', TABLES.tsk, cnitCommand(TABLES.tsk, { fields: ['number', 'approval', 'sys_updated_by'] }), approvedTasks);
+
+  ev.actual(`${approvers.length} approval record(s) exist in total; ${cafApprovals.length} belong to CAF tasks.`);
+  ev.actual(
+    `${approvedTasks.length} task(s) carry an approved/rejected outcome; the only identity on them is ` +
+      `sys_updated_by = ${[...new Set(approvedTasks.map((t) => t.sys_updated_by))].join(', ') || '(none)'}.`
+  );
+  ev.observe(
+    'HANDOFF section 6 states sysapproval_approver holds no CAF records at all. TC-SN-059 found one, on ' +
+      'CAFT0001002, created by the flow. This case re-reads that from the live instance.'
+  );
+  ev.observe(
+    'The finding this case exists to make stands either way: whoever presses the button in Salesforce is the ' +
+      'approver, and the audit trail records only sf.integration. For a compliance product that is the weakest ' +
+      'point in the evidence chain — HANDOFF open item 2.'
+  );
+
+  if (cafApprovals.length === 0) {
+    ev.pass('No approver record and no approver identity: the finding is confirmed exactly as written.');
+  } else {
+    ev.fail(
+      `Expected zero CAF approval records; found ${cafApprovals.length} — ` +
+        cafApprovals
+          .map((a) => `${numberById.get(a.document_id) ?? a.document_id} (created by ${a.sys_created_by})`)
+          .join(', ') +
+        '. The absence of a named approver still holds: none of these names a human approver of an attestation.'
+    );
+  }
+  expect(
+    cafApprovals.map((a) => numberById.get(a.document_id) ?? a.document_id),
+    'sysapproval_approver should hold no CAF records'
+  ).toEqual([]);
+});
+
+// ===========================================================================
+// Suite 5 — Sync Health and drift
+// ===========================================================================
+
