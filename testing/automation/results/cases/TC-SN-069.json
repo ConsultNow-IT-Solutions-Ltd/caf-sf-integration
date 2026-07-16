@@ -1,0 +1,149 @@
+{
+  "run": {
+    "instance": "https://dev281754.service-now.com",
+    "executedBy": "admin",
+    "executedVia": "Playwright (automated); every assertion cross-checked against the ServiceNow Table API"
+  },
+  "case": {
+    "id": "TC-SN-069",
+    "title": "A new CAF control appears as a new column, with no code change",
+    "startedAt": "2026-08-07T16:59:43.274Z",
+    "verdict": "PASS",
+    "steps": [
+      {
+        "n": 1,
+        "text": "Read every active CAF control, ordered by name — the widget's own ordering.",
+        "at": "2026-08-07T16:59:43.274Z",
+        "screenshots": []
+      },
+      {
+        "n": 2,
+        "text": "Open the portal compliance grid and read its column headers.",
+        "at": "2026-08-07T16:59:43.856Z",
+        "screenshots": [
+          "C:\\Users\\patel\\Documents\\ServiceNow Work Project Docs\\Personal AI Assisted\\dev281754 CAF App Reyan\\testing\\automation\\evidence\\TC-SN-069\\02-portal-grid-columns.png"
+        ]
+      },
+      {
+        "n": 3,
+        "text": "Compare the control names against the column headers.",
+        "at": "2026-08-07T16:59:48.772Z",
+        "screenshots": []
+      }
+    ],
+    "records": [
+      {
+        "label": "Active CAF controls",
+        "table": "x_gskn2_caf_compli_caf_conformance_type",
+        "query": "active=true^ORDERBYname",
+        "rows": [
+          {
+            "sys_id": "f1e5e8a61b7925d46f1e76e5d34bcb84",
+            "name": "Confirm & Execute High Availability Plan",
+            "active": "true"
+          },
+          {
+            "sys_id": "95d568ea1b7925d46f1e76e5d34bcb9f",
+            "name": "Confirm Backup & Restore Policy",
+            "active": "true"
+          },
+          {
+            "sys_id": "12952c261b7925d46f1e76e5d34bcb5e",
+            "name": "Confirm Disaster Recovery Plan",
+            "active": "true"
+          },
+          {
+            "sys_id": "4c85e8a21b7925d46f1e76e5d34bcbfb",
+            "name": "Confirm RTO & RPO",
+            "active": "true"
+          },
+          {
+            "sys_id": "fc1288fb1b61a154eede76e5d34bcb81",
+            "name": "Test Backup & Restore",
+            "active": "true"
+          },
+          {
+            "sys_id": "05f10c7f1b61a154eede76e5d34bcb25",
+            "name": "Test Disaster Recovery Plan",
+            "active": "true"
+          }
+        ],
+        "at": "2026-08-07T16:59:43.856Z"
+      },
+      {
+        "label": "Grid column headers as rendered",
+        "table": "/caf?id=caf_apps",
+        "query": "thead row",
+        "rows": [
+          {
+            "position": "0",
+            "header": "Critical Business Application"
+          },
+          {
+            "position": "1",
+            "header": "Service Category"
+          },
+          {
+            "position": "2",
+            "header": "Overall Conformance Status"
+          },
+          {
+            "position": "3",
+            "header": "Confirm & Execute High Availability Plan"
+          },
+          {
+            "position": "4",
+            "header": "Confirm Backup & Restore Policy"
+          },
+          {
+            "position": "5",
+            "header": "Confirm Disaster Recovery Plan"
+          },
+          {
+            "position": "6",
+            "header": "Confirm RTO & RPO"
+          },
+          {
+            "position": "7",
+            "header": "Test Backup & Restore"
+          },
+          {
+            "position": "8",
+            "header": "Test Disaster Recovery Plan"
+          }
+        ],
+        "at": "2026-08-07T16:59:48.772Z"
+      },
+      {
+        "label": "Column binding",
+        "table": "(derived)",
+        "query": "active controls vs rendered headers",
+        "rows": [
+          {
+            "active_controls": "6",
+            "columns_matched": "6",
+            "columns_missing": "0",
+            "leading_attribute_columns": "Critical Business Application / Service Category / Overall Conformance Status"
+          }
+        ],
+        "at": "2026-08-07T16:59:48.772Z"
+      }
+    ],
+    "observations": [
+      "Columns are rendered in name order: true. The widget sorts with orderBy('name'), so a new control lands alphabetically rather than at the end of the grid.",
+      "Mechanism confirmed from the widget source: columns come from a GlideRecord over caf_conformance_type filtered active=true, keyed by control NAME. The superseded sys_choice query it replaced is still present, commented out — the dynamic behaviour was a deliberate migration.",
+      "DIVERGENCE: the Salesforce LWC derives its columns from request data, not from a control table, so a control with no requests gets an N/A column here and NO column in Salesforce. Sync Health cannot report that, because the control table is not mirrored. See TC-INT-049.",
+      "Part B of this case — insert a control and watch a seventh column appear — is a WRITE that leaves a permanent column on the demo grid. Not executed here; it needs explicit approval."
+    ],
+    "expected": [
+      "The portal grid's control columns equal the active rows of caf_conformance_type exactly, in name order.",
+      "No hard-coded control list exists anywhere in the widget — the column set is bound to the data.",
+      "The filter panel above the grid carries one dropdown per control, from the same array."
+    ],
+    "actual": [
+      "6 active control(s); 6 appear as grid columns with none missing."
+    ],
+    "verdictReason": "All 6 active controls are bound to grid columns. The column set is data-driven, not hard-coded. Causation still to be proven by Part B.",
+    "finishedAt": "2026-08-07T16:59:48.786Z"
+  }
+}

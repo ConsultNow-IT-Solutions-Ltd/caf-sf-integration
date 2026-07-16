@@ -1,0 +1,71 @@
+{
+  "run": {
+    "instance": "https://dev281754.service-now.com",
+    "executedBy": "admin",
+    "executedVia": "Playwright (automated); every assertion cross-checked against the ServiceNow Table API"
+  },
+  "case": {
+    "id": "TC-SN-067",
+    "title": "The orphan request never appears in the portal grid",
+    "startedAt": "2026-08-07T16:59:49.085Z",
+    "verdict": "PASS",
+    "steps": [
+      {
+        "n": 1,
+        "text": "Confirm the orphan exists and is genuinely unlinked.",
+        "at": "2026-08-07T16:59:49.085Z",
+        "screenshots": []
+      },
+      {
+        "n": 2,
+        "text": "Count all requests, and those that would qualify for the grid.",
+        "at": "2026-08-07T16:59:49.237Z",
+        "screenshots": []
+      }
+    ],
+    "records": [
+      {
+        "label": "The orphan request",
+        "table": "x_gskn2_caf_compli_caf_req",
+        "query": "number=RCAF0001001",
+        "rows": [
+          {
+            "number": "RCAF0001001",
+            "business_application": "",
+            "caf_status": "out_of_compliance",
+            "active": "true",
+            "caf_conformance_type": "",
+            "state": "1"
+          }
+        ],
+        "at": "2026-08-07T16:59:49.235Z"
+      },
+      {
+        "label": "Request totals",
+        "table": "x_gskn2_caf_compli_caf_req",
+        "query": "all vs business_applicationISNOTEMPTY",
+        "rows": [
+          {
+            "total_requests": "19",
+            "with_business_application": "18",
+            "orphaned": "1"
+          }
+        ],
+        "at": "2026-08-07T16:59:49.559Z"
+      }
+    ],
+    "observations": [
+      "A tester who counts rows will find more records in the table than in the grid. This is expected behaviour, documented here so it is not raised as a defect.",
+      "Not to be confused with the TASK CAFT0001001, which is a live attestation task on RCAF0001022."
+    ],
+    "expected": [
+      "RCAF0001001 has no business application and no control, so getRequests() filters it out of the grid.",
+      "It remains present in the caf_req table — filtered from a view, not deleted."
+    ],
+    "actual": [
+      "19 requests in the table, 18 linked to a business application."
+    ],
+    "verdictReason": "Orphan present in the table, correctly excluded from the grid.",
+    "finishedAt": "2026-08-07T16:59:49.559Z"
+  }
+}

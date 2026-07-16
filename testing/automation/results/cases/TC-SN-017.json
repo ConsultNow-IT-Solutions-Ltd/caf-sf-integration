@@ -1,0 +1,267 @@
+{
+  "run": {
+    "instance": "https://dev281754.service-now.com",
+    "executedBy": "admin",
+    "executedVia": "Playwright (automated); every assertion cross-checked against the ServiceNow Table API"
+  },
+  "case": {
+    "id": "TC-SN-017",
+    "title": "Business application flips to Compliant only when every control is compliant",
+    "startedAt": "2026-08-07T16:59:32.451Z",
+    "verdict": "FAIL",
+    "steps": [
+      {
+        "n": 1,
+        "text": "Read the compliance status of the three demo business applications.",
+        "at": "2026-08-07T16:59:32.451Z",
+        "screenshots": []
+      },
+      {
+        "n": 2,
+        "text": "For each application, read the CAF Requests it claims to summarise.",
+        "at": "2026-08-07T16:59:32.693Z",
+        "screenshots": []
+      },
+      {
+        "n": 3,
+        "text": "Open the /caf compliance grid and confirm what a user is shown.",
+        "at": "2026-08-07T16:59:33.300Z",
+        "screenshots": [
+          "C:\\Users\\patel\\Documents\\ServiceNow Work Project Docs\\Personal AI Assisted\\dev281754 CAF App Reyan\\testing\\automation\\evidence\\TC-SN-017\\03-caf-compliance-grid.png"
+        ]
+      }
+    ],
+    "records": [
+      {
+        "label": "Business applications",
+        "table": "cmdb_ci_business_app",
+        "query": "nameINSAP HANA,SAP Fiori,Zscalar App",
+        "rows": [
+          {
+            "sys_id": "7661e43483431210bd2a5860ceaad360",
+            "u_caf_compliance_status": "compliant",
+            "name": "SAP Fiori"
+          },
+          {
+            "sys_id": "5470cc8583d31210bd2a5860ceaad372",
+            "u_caf_compliance_status": "not_ini",
+            "name": "SAP HANA"
+          },
+          {
+            "sys_id": "6e81683483431210bd2a5860ceaad398",
+            "u_caf_compliance_status": "compliant",
+            "name": "SAP HANA"
+          },
+          {
+            "sys_id": "41b1e83483431210bd2a5860ceaad366",
+            "u_caf_compliance_status": "compliant",
+            "name": "Zscalar App"
+          }
+        ],
+        "at": "2026-08-07T16:59:32.693Z"
+      },
+      {
+        "label": "Requests for SAP Fiori (7661e43483431210bd2a5860ceaad360)",
+        "table": "x_gskn2_caf_compli_caf_req",
+        "query": "business_application=7661e43483431210bd2a5860ceaad360",
+        "rows": [
+          {
+            "number": "RCAF0001019",
+            "caf_status": "out_of_compliance",
+            "active": "true",
+            "state": "2"
+          },
+          {
+            "number": "RCAF0001020",
+            "caf_status": "out_of_compliance",
+            "active": "true",
+            "state": "2"
+          },
+          {
+            "number": "RCAF0001022",
+            "caf_status": "in_compliance",
+            "active": "true",
+            "state": "2"
+          },
+          {
+            "number": "RCAF0001024",
+            "caf_status": "out_of_compliance",
+            "active": "true",
+            "state": "1"
+          },
+          {
+            "number": "RCAF0001023",
+            "caf_status": "out_of_compliance",
+            "active": "true",
+            "state": "2"
+          },
+          {
+            "number": "RCAF0001021",
+            "caf_status": "in_compliance",
+            "active": "false",
+            "state": "3"
+          }
+        ],
+        "at": "2026-08-07T16:59:32.846Z"
+      },
+      {
+        "label": "Requests for SAP HANA (6e81683483431210bd2a5860ceaad398)",
+        "table": "x_gskn2_caf_compli_caf_req",
+        "query": "business_application=6e81683483431210bd2a5860ceaad398",
+        "rows": [
+          {
+            "number": "RCAF0001039",
+            "caf_status": "out_of_compliance",
+            "active": "true",
+            "state": "2"
+          },
+          {
+            "number": "RCAF0001038",
+            "caf_status": "in_compliance",
+            "active": "true",
+            "state": "2"
+          },
+          {
+            "number": "RCAF0001042",
+            "caf_status": "in_compliance",
+            "active": "true",
+            "state": "2"
+          },
+          {
+            "number": "RCAF0001041",
+            "caf_status": "out_of_compliance",
+            "active": "true",
+            "state": "1"
+          },
+          {
+            "number": "RCAF0001040",
+            "caf_status": "out_of_compliance",
+            "active": "true",
+            "state": "1"
+          },
+          {
+            "number": "RCAF0001037",
+            "caf_status": "out_of_compliance",
+            "active": "true",
+            "state": "2"
+          }
+        ],
+        "at": "2026-08-07T16:59:33.148Z"
+      },
+      {
+        "label": "Requests for Zscalar App (41b1e83483431210bd2a5860ceaad366)",
+        "table": "x_gskn2_caf_compli_caf_req",
+        "query": "business_application=41b1e83483431210bd2a5860ceaad366",
+        "rows": [
+          {
+            "number": "RCAF0001032",
+            "caf_status": "in_compliance",
+            "active": "false",
+            "state": "3"
+          },
+          {
+            "number": "RCAF0001033",
+            "caf_status": "in_compliance",
+            "active": "false",
+            "state": "3"
+          },
+          {
+            "number": "RCAF0001034",
+            "caf_status": "in_compliance",
+            "active": "false",
+            "state": "3"
+          },
+          {
+            "number": "RCAF0001035",
+            "caf_status": "in_compliance",
+            "active": "false",
+            "state": "3"
+          },
+          {
+            "number": "RCAF0001036",
+            "caf_status": "in_compliance",
+            "active": "false",
+            "state": "3"
+          },
+          {
+            "number": "RCAF0001031",
+            "caf_status": "in_compliance",
+            "active": "false",
+            "state": "3"
+          }
+        ],
+        "at": "2026-08-07T16:59:33.299Z"
+      },
+      {
+        "label": "Roll-up reconciliation",
+        "table": "(derived)",
+        "query": "business application status vs its controls",
+        "rows": [
+          {
+            "application": "SAP Fiori",
+            "sys_id": "7661e43483431210bd2a5860ceaad360",
+            "u_caf_compliance_status": "compliant",
+            "controls_compliant": "2",
+            "controls_out_of_compliance": "4",
+            "consistent": "NO"
+          },
+          {
+            "application": "SAP HANA",
+            "sys_id": "6e81683483431210bd2a5860ceaad398",
+            "u_caf_compliance_status": "compliant",
+            "controls_compliant": "2",
+            "controls_out_of_compliance": "4",
+            "consistent": "NO"
+          },
+          {
+            "application": "Zscalar App",
+            "sys_id": "41b1e83483431210bd2a5860ceaad366",
+            "u_caf_compliance_status": "compliant",
+            "controls_compliant": "6",
+            "controls_out_of_compliance": "0",
+            "consistent": "YES"
+          }
+        ],
+        "at": "2026-08-07T16:59:33.300Z"
+      },
+      {
+        "label": "Grid as rendered to the user",
+        "table": "/caf?id=caf_apps",
+        "query": "Overall Conformance Status column",
+        "rows": [
+          {
+            "application": "SAP HANA",
+            "overall_status_shown": "Compliant"
+          },
+          {
+            "application": "SAP Fiori",
+            "overall_status_shown": "Compliant"
+          },
+          {
+            "application": "Zscalar App",
+            "overall_status_shown": "Compliant"
+          },
+          {
+            "application": "SAP HANA",
+            "overall_status_shown": "Not initiated"
+          }
+        ],
+        "at": "2026-08-07T16:59:38.396Z"
+      }
+    ],
+    "observations": [
+      "The /caf grid renders u_caf_compliance_status faithfully, so it displays \"Compliant\" beside red control dots. The grid is not at fault; the field it reads is wrong.",
+      "Suspected cause: business rule \"CAF - update BA when req compliant\" (after update, order 1500, filter caf_statusCHANGESTOin_compliance) sets the application compliant whenever ANY request goes compliant, without checking whether its siblings still are not.",
+      "This falsifies HANDOFF section 3: \"An app is compliant only when every control is, matching the ServiceNow widget.\" The Salesforce LWC is documented as mirroring that behaviour, so the same wrong answer is likely on both platforms — see TC-INT-050."
+    ],
+    "expected": [
+      "cmdb_ci_business_app.u_caf_compliance_status reads \"compliant\" only when EVERY CAF Request for that application is in_compliance.",
+      "An application with any out_of_compliance control must not read compliant."
+    ],
+    "actual": [
+      "2 application(s) report Compliant while holding out-of-compliance controls: SAP Fiori (7661e43483431210bd2a5860ceaad360) reads \"compliant\" while 4 of 6 controls are out_of_compliance; SAP HANA (6e81683483431210bd2a5860ceaad398) reads \"compliant\" while 4 of 6 controls are out_of_compliance"
+    ],
+    "verdictReason": "2 business application(s) are reported compliant while controls are out of compliance. Severity: high — this is the headline number on the compliance dashboard.",
+    "finishedAt": "2026-08-07T16:59:38.396Z"
+  }
+}

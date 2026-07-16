@@ -1,0 +1,78 @@
+{
+  "run": {
+    "instance": "https://dev281754.service-now.com",
+    "executedBy": "admin",
+    "executedVia": "Playwright (automated); every assertion cross-checked against the ServiceNow Table API"
+  },
+  "case": {
+    "id": "TC-SN-006",
+    "title": "state is read-only on the request but writable on the task",
+    "startedAt": "2026-08-07T16:59:25.925Z",
+    "verdict": "FAIL",
+    "steps": [
+      {
+        "n": 1,
+        "text": "Read both dictionary entries.",
+        "at": "2026-08-07T16:59:25.925Z",
+        "screenshots": []
+      },
+      {
+        "n": 2,
+        "text": "Open an Open CAF Task form and ask g_form whether state is editable there.",
+        "at": "2026-08-07T16:59:26.115Z",
+        "screenshots": [
+          "C:\\Users\\patel\\Documents\\ServiceNow Work Project Docs\\Personal AI Assisted\\dev281754 CAF App Reyan\\testing\\automation\\evidence\\TC-SN-006\\02-caft0001001-form.png"
+        ]
+      }
+    ],
+    "records": [
+      {
+        "label": "state field, both tables",
+        "table": "sys_dictionary",
+        "query": "caf_req.state and caf_tsk.state",
+        "rows": [
+          {
+            "read_only": "true",
+            "name": "x_gskn2_caf_compli_caf_req",
+            "default_value": "1",
+            "element": "state"
+          },
+          {
+            "read_only": "false",
+            "name": "x_gskn2_caf_compli_caf_tsk",
+            "default_value": "1",
+            "element": "state"
+          }
+        ],
+        "at": "2026-08-07T16:59:26.113Z"
+      },
+      {
+        "label": "Form introspection via g_form",
+        "table": "x_gskn2_caf_compli_caf_tsk",
+        "query": "CAFT0001001 (state=1, Open)",
+        "rows": [
+          {
+            "field_state_readOnly": "true",
+            "field_approval_readOnly": "true",
+            "field_description_mandatory": "true"
+          }
+        ],
+        "at": "2026-08-07T16:59:29.664Z"
+      }
+    ],
+    "observations": [
+      "GAP: the dictionary makes caf_tsk.state writable, but the form reports it read-only on an OPEN task. Something on the form — most likely the client script \"CAF Task On Load Logic\" — is locking it.",
+      "Consequence: state is writable by the API but not through the native form. Either TC-SN-026 needs rewriting, or a task cannot be started from the ServiceNow form at all, which is an unstated workflow claim."
+    ],
+    "expected": [
+      "caf_req.state.read_only = true — a request's state moves only through business rules and flows.",
+      "caf_tsk.state.read_only = false — a task's state can be set directly."
+    ],
+    "actual": [
+      "Dictionary: caf_req.state read_only=true, caf_tsk.state read_only=false",
+      "Form: state readOnly=true, approval readOnly=true, description mandatory=true"
+    ],
+    "verdictReason": "The dictionary and the form disagree about caf_tsk.state. The dictionary assertion passes; the form contradicts it. Referred for a decision on intended behaviour before this is classed as a defect.",
+    "finishedAt": "2026-08-07T16:59:29.664Z"
+  }
+}
