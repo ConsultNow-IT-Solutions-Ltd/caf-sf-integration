@@ -225,3 +225,54 @@ describe('c-caf-reports', () => {
         expect(tile(el, 'Requests assessed')).toBe('1');
     });
 });
+
+describe('c-caf-reports with missing or bad data', () => {
+    afterEach(() => {
+        while (document.body.firstChild) {
+            document.body.removeChild(document.body.firstChild);
+        }
+        jest.clearAllMocks();
+    });
+
+    // TC-UNIT-064
+    it('keeps a request with no application in the counts under its own label', async () => {
+        const el = await render([request(null, 0, 'in_compliance'), request('CRM', 0, 'out_of_compliance'), null]);
+
+        expect(tile(el, 'Requests assessed')).toBe('2');
+        const apps = Array.from(el.shadowRoot.querySelectorAll('.cols section:first-child tbody th')).map((t) => t.textContent);
+        expect(apps).toContain('(No application)');
+    });
+
+    // TC-UNIT-065
+    it('counts a task bucket with no total as zero', async () => {
+        const el = await render([request('CRM', 0, 'in_compliance')], [
+            { state: 'Open', approval: null, total: null },
+            { state: 'Open', approval: null, total: 2 },
+            null
+        ]);
+        const open = Array.from(el.shadowRoot.querySelectorAll('.cols section:last-child tbody tr')).find(
+            (r) => r.querySelector('th').textContent === 'Open'
+        );
+        expect(open.querySelector('.num').textContent).toBe('2');
+    });
+
+    // TC-UNIT-066
+    it('leaves an unparseable planned date off the due list', async () => {
+        const el = await render([request('CRM', 0, 'out_of_compliance', 'soon'), request('CRM', 1, 'out_of_compliance', iso(-1))]);
+        expect(el.shadowRoot.textContent).toContain('1 overdue, 0 due in the next 30 days');
+    });
+
+    // TC-UNIT-067
+    it('clears a filter on an application that a refresh no longer returns', async () => {
+        const el = await render([request('CRM', 0, 'in_compliance'), request('Gone', 0, 'out_of_compliance')]);
+        const select = el.shadowRoot.querySelector('select.filters__app');
+        select.value = 'Gone';
+        select.dispatchEvent(new CustomEvent('change'));
+        await flush();
+        expect(tile(el, 'Requests assessed')).toBe('1');
+
+        getRequests.emit([request('CRM', 0, 'in_compliance'), request('CRM', 1, 'in_compliance')]);
+        await flush();
+        expect(tile(el, 'Requests assessed')).toBe('2');
+    });
+});

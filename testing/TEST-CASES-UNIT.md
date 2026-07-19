@@ -89,6 +89,21 @@ TC-UNIT-001 covers the direction no live case can reach without an upload.
 | TC-UNIT-055 | Long errors cut to 140 characters, full text in the tooltip | |
 | TC-UNIT-056 | Newest call time shown | |
 
+## LWC: missing or bad data on the new screens
+
+| ID | Screen | Case | Why |
+|---|---|---|---|
+| TC-UNIT-060 | Approvals | Null rows dropped; a task with no parent request renders with blank columns, no "null"/"undefined" | A deleted or unshared parent mustn't hide the task |
+| TC-UNIT-061 | Approvals | Unparseable due date shows "(invalid date)" and isn't counted overdue or on time | NaN mustn't read as "not late" |
+| TC-UNIT-062 | Approvals | Searching "undefined" matches nothing on a blank description | Blank fields stay out of the search text |
+| TC-UNIT-063 | Approvals | An approval value other than approved/rejected is shown as received | It was being labelled Rejected |
+| TC-UNIT-064 | Reports | Request with no application is counted under "(No application)"; null rows dropped | No crash on sort, no silent drop |
+| TC-UNIT-065 | Reports | Task bucket with a null total counts as 0; null buckets dropped | No NaN in the task panel |
+| TC-UNIT-066 | Reports | Unparseable planned date is left off the due list | Can't be placed as overdue or upcoming |
+| TC-UNIT-067 | Reports | A filter on an application a refresh no longer returns is cleared | An empty report with no visible reason |
+| TC-UNIT-068 | Admin | Null setting, control and log fields render as blanks or dashes, never "null" | |
+| TC-UNIT-069 | Admin | Overview with no lists shows each section's empty message, not an error | |
+
 Apex: `CafApprovalsControllerTest`, `CafReportsControllerTest` and
 `CafAdminControllerTest` cover the queue filter and order, recent decisions,
 task aggregation, settings with effective values, control request counts
