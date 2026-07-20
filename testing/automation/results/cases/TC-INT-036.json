@@ -1,0 +1,123 @@
+{
+  "run": {
+    "instance": "https://orgfarm-4938c7f768-dev-ed.develop.lightning.force.com + https://dev281754.service-now.com",
+    "executedBy": "admin.070b86ccf531@agentforce.com (Salesforce) / admin (ServiceNow)",
+    "executedVia": "Playwright driving Lightning Experience. Every screen assertion is cross-checked against the ServiceNow record over cnit and the Salesforce record over the sf CLI. No case in this file writes to either platform."
+  },
+  "case": {
+    "id": "TC-INT-036",
+    "title": "Evidence and attestation are separate panels for separate people",
+    "startedAt": "2026-08-08T17:21:34.905Z",
+    "verdict": "PASS",
+    "steps": [
+      {
+        "n": 1,
+        "text": "Read the row actions offered on RCAF0001022 — an Open and a Closed task.",
+        "at": "2026-08-08T17:21:34.906Z",
+        "screenshots": []
+      },
+      {
+        "n": 2,
+        "text": "Read the row actions offered on RCAF0001037 — an In Progress task.",
+        "at": "2026-08-08T17:21:41.272Z",
+        "screenshots": [
+          "C:\\audit\\dev281754 CAF App Reyan\\testing\\automation\\evidence\\TC-INT-036\\02-row-actions-in-progress.png"
+        ]
+      },
+      {
+        "n": 3,
+        "text": "Open the evidence panel on the In Progress task — the owner’s view.",
+        "at": "2026-08-08T17:21:45.088Z",
+        "screenshots": [
+          "C:\\audit\\dev281754 CAF App Reyan\\testing\\automation\\evidence\\TC-INT-036\\03-evidence-panel-owner-view.png"
+        ]
+      },
+      {
+        "n": 4,
+        "text": "Open the attest panel on the same task — the approver’s view.",
+        "at": "2026-08-08T17:21:46.757Z",
+        "screenshots": [
+          "C:\\audit\\dev281754 CAF App Reyan\\testing\\automation\\evidence\\TC-INT-036\\04-attest-panel-approver-view.png"
+        ]
+      }
+    ],
+    "records": [
+      {
+        "label": "Row actions offered, by task state",
+        "table": "cafDashboard",
+        "query": "drill-in on RCAF0001022 and RCAF0001037",
+        "rows": [
+          {
+            "state": "Open",
+            "actions": "Start, Upload evidence"
+          },
+          {
+            "state": "Closed Complete",
+            "actions": "View evidence"
+          },
+          {
+            "state": "In Progress",
+            "actions": "Upload evidence, Attest"
+          }
+        ],
+        "at": "2026-08-08T17:21:44.828Z"
+      },
+      {
+        "label": "Evidence panel in each mode",
+        "table": "cafEvidence",
+        "query": "task CAFT0001046",
+        "rows": [
+          {
+            "mode": "Upload evidence (owner)",
+            "heading": "Evidence — CAFT0001046",
+            "upload_control": "true",
+            "attestation_alongside": "false"
+          },
+          {
+            "mode": "Attest (approver)",
+            "heading": "Evidence — CAFT0001046",
+            "upload_control": "false",
+            "attestation_alongside": "true"
+          }
+        ],
+        "at": "2026-08-08T17:21:48.277Z"
+      },
+      {
+        "label": "Attestation panel",
+        "table": "cafAttestation",
+        "query": "task CAFT0001046",
+        "rows": [
+          {
+            "heading": "Attestation — CAFT0001046",
+            "criteria_options": "",
+            "approve_enabled": "false",
+            "reject_enabled": "false",
+            "blocked_reason": "Attach at least one evidence file before attesting. ServiceNow counts its own copy, not the Salesforce one."
+          }
+        ],
+        "at": "2026-08-08T17:21:48.277Z"
+      }
+    ],
+    "observations": [
+      "met_criteria is carried on the attestation form as a yes/no alongside the decision, not as its own button. Whether it belongs with the approver at all is HANDOFF open item 3 — decided, not settled.",
+      "Approve and Reject were read as controls and deliberately not clicked; either would close the task."
+    ],
+    "expected": [
+      "Upload evidence opens cafEvidence alone, writable.",
+      "Attest opens cafEvidence read-only beside cafAttestation.",
+      "Row actions by state: Open → Start + Upload evidence; In Progress → Upload evidence + Attest; Closed → View evidence only.",
+      "There is no standalone \"Criteria met\" button."
+    ],
+    "actual": [
+      "Open → Start, Upload evidence",
+      "In Progress → Upload evidence, Attest",
+      "Closed Complete → View evidence",
+      "Owner view: upload control present = true; attestation panel alongside = false",
+      "Approver view: upload control present = false; attestation panel alongside = true",
+      "Attestation offers criteria options [] beside Approve/Reject.",
+      "Standalone \"Criteria met\" buttons found: 0"
+    ],
+    "verdictReason": "Row actions match the specified set for every state observed; the two jobs open different panels; the approver’s copy of the evidence is read-only; no standalone Criteria met button.",
+    "finishedAt": "2026-08-08T17:21:48.309Z"
+  }
+}

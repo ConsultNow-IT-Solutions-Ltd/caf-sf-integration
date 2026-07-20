@@ -1,0 +1,449 @@
+{
+  "run": {
+    "instance": "https://orgfarm-4938c7f768-dev-ed.develop.lightning.force.com + https://dev281754.service-now.com",
+    "executedBy": "admin.070b86ccf531@agentforce.com (Salesforce) / admin (ServiceNow)",
+    "executedVia": "Playwright driving Lightning Experience. Every screen assertion is cross-checked against the ServiceNow record over cnit and the Salesforce record over the sf CLI. No case in this file writes to either platform."
+  },
+  "case": {
+    "id": "TC-INT-048",
+    "title": "Grid matches the ServiceNow portal exactly",
+    "startedAt": "2026-08-07T17:51:34.830Z",
+    "verdict": "PASS",
+    "steps": [
+      {
+        "n": 1,
+        "text": "Read the Salesforce grid.",
+        "at": "2026-08-07T17:51:34.830Z",
+        "screenshots": [
+          "C:\\Users\\patel\\Documents\\ServiceNow Work Project Docs\\Personal AI Assisted\\dev281754 CAF App Reyan\\testing\\automation\\evidence\\TC-INT-048\\01-salesforce-compliance-grid.png"
+        ]
+      },
+      {
+        "n": 2,
+        "text": "Capture the ServiceNow /caf portal grid in the same session.",
+        "at": "2026-08-07T17:51:39.517Z",
+        "screenshots": [
+          "C:\\Users\\patel\\Documents\\ServiceNow Work Project Docs\\Personal AI Assisted\\dev281754 CAF App Reyan\\testing\\automation\\evidence\\TC-INT-048\\02-servicenow-portal-grid.png"
+        ]
+      },
+      {
+        "n": 3,
+        "text": "Reconcile both grids against caf_req.caf_status, the system of record.",
+        "at": "2026-08-07T17:51:44.673Z",
+        "screenshots": []
+      }
+    ],
+    "records": [
+      {
+        "label": "Salesforce grid",
+        "table": "cafDashboard",
+        "query": "CAF Dashboard tab",
+        "rows": [
+          {
+            "application": "SAP Fiori",
+            "overall": "2 of 6",
+            "Confirm & Execute High Availability Plan": "RCAF0001024 red",
+            "Confirm Backup & Restore Policy": "RCAF0001020 red",
+            "Confirm Disaster Recovery Plan": "RCAF0001022 green",
+            "Confirm RTO & RPO": "RCAF0001019 red",
+            "Test Backup & Restore": "RCAF0001021 green",
+            "Test Disaster Recovery Plan": "RCAF0001023 red"
+          },
+          {
+            "application": "SAP HANA",
+            "overall": "2 of 6",
+            "Confirm & Execute High Availability Plan": "RCAF0001042 green",
+            "Confirm Backup & Restore Policy": "RCAF0001038 green",
+            "Confirm Disaster Recovery Plan": "RCAF0001040 red",
+            "Confirm RTO & RPO": "RCAF0001037 red",
+            "Test Backup & Restore": "RCAF0001039 red",
+            "Test Disaster Recovery Plan": "RCAF0001041 red"
+          },
+          {
+            "application": "Zscalar App",
+            "overall": "Compliant",
+            "Confirm & Execute High Availability Plan": "RCAF0001036 green",
+            "Confirm Backup & Restore Policy": "RCAF0001032 green",
+            "Confirm Disaster Recovery Plan": "RCAF0001034 green",
+            "Confirm RTO & RPO": "RCAF0001031 green",
+            "Test Backup & Restore": "RCAF0001033 green",
+            "Test Disaster Recovery Plan": "RCAF0001035 green"
+          }
+        ],
+        "at": "2026-08-07T17:51:39.517Z"
+      },
+      {
+        "label": "ServiceNow /caf portal grid",
+        "table": "caf_apps",
+        "query": "/caf?id=caf_apps",
+        "rows": [
+          {
+            "application": "SAP HANA",
+            "overall": "Compliant"
+          },
+          {
+            "application": "SAP Fiori",
+            "overall": "Compliant"
+          },
+          {
+            "application": "",
+            "overall": "Out of compliance"
+          },
+          {
+            "application": "Zscalar App",
+            "overall": "Compliant"
+          },
+          {
+            "application": "Test1",
+            "overall": "Out of compliance"
+          },
+          {
+            "application": "Zoho Email",
+            "overall": "Out of compliance"
+          },
+          {
+            "application": "Test Tier 1 app",
+            "overall": "Out of compliance"
+          },
+          {
+            "application": "PeopleSoft CRM",
+            "overall": "Out of compliance"
+          },
+          {
+            "application": "Outlook Web Access (OWA)",
+            "overall": "Out of compliance"
+          },
+          {
+            "application": "PeopleSoft HRMS",
+            "overall": "Out of compliance"
+          },
+          {
+            "application": "Retail Adding Points",
+            "overall": "Not initiated"
+          },
+          {
+            "application": "Electronic Messaging",
+            "overall": "Not initiated"
+          },
+          {
+            "application": "Retail Client Registration",
+            "overall": "Not initiated"
+          },
+          {
+            "application": "SAP HANA",
+            "overall": "Not initiated"
+          },
+          {
+            "application": "PeopleSoft Enterprise Services",
+            "overall": "Not initiated"
+          },
+          {
+            "application": "PeopleSoft Reporting",
+            "overall": "Not initiated"
+          },
+          {
+            "application": "SAP Labor Distribution",
+            "overall": "Not initiated"
+          },
+          {
+            "application": "Bond Trading - DR",
+            "overall": "Not initiated"
+          },
+          {
+            "application": "PeopleSoft Supply Chain Management",
+            "overall": "Not initiated"
+          },
+          {
+            "application": "Unix Server Hosting",
+            "overall": "Not initiated"
+          },
+          {
+            "application": "External Networking (Internet)",
+            "overall": "Not initiated"
+          },
+          {
+            "application": "SAP Financial Accounting",
+            "overall": "Not initiated"
+          },
+          {
+            "application": "SAP Enterprise Services",
+            "overall": "Not initiated"
+          },
+          {
+            "application": "SAP Payroll",
+            "overall": "Not initiated"
+          },
+          {
+            "application": "Retail Client Lookup",
+            "overall": "Not initiated"
+          },
+          {
+            "application": "Email",
+            "overall": "Not initiated"
+          },
+          {
+            "application": "SAP Materials Management",
+            "overall": "Not initiated"
+          },
+          {
+            "application": "Campus Network (LAN)",
+            "overall": "Not initiated"
+          },
+          {
+            "application": "Desktop Support",
+            "overall": "Not initiated"
+          },
+          {
+            "application": "PeopleSoft Portals",
+            "overall": "Not initiated"
+          },
+          {
+            "application": "Tibco ESB",
+            "overall": "Not initiated"
+          },
+          {
+            "application": "Securities Lending",
+            "overall": "Not initiated"
+          },
+          {
+            "application": "Apache Web Hosting",
+            "overall": "Not initiated"
+          },
+          {
+            "application": "ServiceNow Enterprise Services",
+            "overall": "Not initiated"
+          },
+          {
+            "application": "Sales Force Automation",
+            "overall": "Not initiated"
+          },
+          {
+            "application": "Windows Server Hosting",
+            "overall": "Not initiated"
+          },
+          {
+            "application": "SAP Human Resources",
+            "overall": "Not initiated"
+          },
+          {
+            "application": "Retail",
+            "overall": "Not initiated"
+          },
+          {
+            "application": "Client Services",
+            "overall": "Not initiated"
+          },
+          {
+            "application": "Bond Trading",
+            "overall": "Not initiated"
+          },
+          {
+            "application": "Shared Storage (SAN)",
+            "overall": "Not initiated"
+          },
+          {
+            "application": "z/OS Platform Hosting",
+            "overall": "Not initiated"
+          },
+          {
+            "application": "Printing Services",
+            "overall": "Not initiated"
+          },
+          {
+            "application": "PeopleSoft Financials",
+            "overall": "Not initiated"
+          },
+          {
+            "application": "SAP Controlling",
+            "overall": "Not initiated"
+          },
+          {
+            "application": "Windows Mobile",
+            "overall": "Not initiated"
+          },
+          {
+            "application": "E-Commerce",
+            "overall": "Not initiated"
+          },
+          {
+            "application": "Voice Communication",
+            "overall": "Not initiated"
+          },
+          {
+            "application": "PeopleSoft Governance",
+            "overall": "Not initiated"
+          },
+          {
+            "application": "Inter-Site Networking (WAN)",
+            "overall": "Not initiated"
+          },
+          {
+            "application": "PeopleSoft Asset Lifecycle Management",
+            "overall": "Not initiated"
+          },
+          {
+            "application": "IT Services",
+            "overall": "Not initiated"
+          },
+          {
+            "application": "Oracle Database Hosting",
+            "overall": "Not initiated"
+          },
+          {
+            "application": "Workday Enterprise Services",
+            "overall": "Not initiated"
+          },
+          {
+            "application": "Jobvite Enterprise Recruitment Services",
+            "overall": "Not initiated"
+          },
+          {
+            "application": "IIS Web Hosting",
+            "overall": "Not initiated"
+          },
+          {
+            "application": "OpenText Enterprise Services",
+            "overall": "Not initiated"
+          },
+          {
+            "application": "This Service-now instance",
+            "overall": "Not initiated"
+          },
+          {
+            "application": "SAP Plant Maintenance",
+            "overall": "Not initiated"
+          },
+          {
+            "application": "Retail POS (Point of Sale)",
+            "overall": "Not initiated"
+          },
+          {
+            "application": "Test EU",
+            "overall": "Out of compliance"
+          },
+          {
+            "application": "Zoho HR System",
+            "overall": "Not initiated"
+          }
+        ],
+        "at": "2026-08-07T17:51:44.673Z"
+      },
+      {
+        "label": "caf_req.caf_status — the system of record",
+        "table": "x_gskn2_caf_compli_caf_req",
+        "query": "cnit get x_gskn2_caf_compli_caf_req -Fields number,caf_status -ProfileName caf-reyan",
+        "rows": [
+          {
+            "number": "RCAF0001032",
+            "application": "Zscalar App",
+            "caf_status": "in_compliance"
+          },
+          {
+            "number": "RCAF0001033",
+            "application": "Zscalar App",
+            "caf_status": "in_compliance"
+          },
+          {
+            "number": "RCAF0001034",
+            "application": "Zscalar App",
+            "caf_status": "in_compliance"
+          },
+          {
+            "number": "RCAF0001039",
+            "application": "SAP HANA",
+            "caf_status": "out_of_compliance"
+          },
+          {
+            "number": "RCAF0001038",
+            "application": "SAP HANA",
+            "caf_status": "in_compliance"
+          },
+          {
+            "number": "RCAF0001019",
+            "application": "SAP Fiori",
+            "caf_status": "out_of_compliance"
+          },
+          {
+            "number": "RCAF0001020",
+            "application": "SAP Fiori",
+            "caf_status": "out_of_compliance"
+          },
+          {
+            "number": "RCAF0001022",
+            "application": "SAP Fiori",
+            "caf_status": "in_compliance"
+          },
+          {
+            "number": "RCAF0001042",
+            "application": "SAP HANA",
+            "caf_status": "in_compliance"
+          },
+          {
+            "number": "RCAF0001024",
+            "application": "SAP Fiori",
+            "caf_status": "out_of_compliance"
+          },
+          {
+            "number": "RCAF0001041",
+            "application": "SAP HANA",
+            "caf_status": "out_of_compliance"
+          },
+          {
+            "number": "RCAF0001023",
+            "application": "SAP Fiori",
+            "caf_status": "out_of_compliance"
+          },
+          {
+            "number": "RCAF0001040",
+            "application": "SAP HANA",
+            "caf_status": "out_of_compliance"
+          },
+          {
+            "number": "RCAF0001035",
+            "application": "Zscalar App",
+            "caf_status": "in_compliance"
+          },
+          {
+            "number": "RCAF0001036",
+            "application": "Zscalar App",
+            "caf_status": "in_compliance"
+          },
+          {
+            "number": "RCAF0001037",
+            "application": "SAP HANA",
+            "caf_status": "out_of_compliance"
+          },
+          {
+            "number": "RCAF0001031",
+            "application": "Zscalar App",
+            "caf_status": "in_compliance"
+          },
+          {
+            "number": "RCAF0001021",
+            "application": "SAP Fiori",
+            "caf_status": "in_compliance"
+          }
+        ],
+        "at": "2026-08-07T17:51:47.794Z"
+      }
+    ],
+    "observations": [
+      "Baseline in the case text is SAP HANA 6 out of compliance, SAP Fiori 4 out / 2 compliant, Zscalar App 6 compliant. Observed: SAP Fiori 2 compliant / 4 out; SAP HANA 2 compliant / 4 out; Zscalar App 6 compliant / 0 out.",
+      "The Overall column is NOT part of this comparison — the two surfaces compute it from different sources and disagree, which is TC-INT-050. This case is about the per-control cells, which come from the same mirrored caf_status on both sides."
+    ],
+    "expected": [
+      "Same applications, same controls, same status per cell as the /caf portal grid.",
+      "Both grids reconcile to caf_req.caf_status, which is the system of record."
+    ],
+    "actual": [
+      "Salesforce grid: 3 application(s), 6 control column(s).",
+      "  SAP Fiori — 2 of 6; dots: red, red, green, red, green, red",
+      "  SAP HANA — 2 of 6; dots: green, green, red, red, red, red",
+      "  Zscalar App — Compliant; dots: green, green, green, green, green, green",
+      "ServiceNow portal grid: 62 application row(s) — SAP HANA, SAP Fiori, , Zscalar App, Test1, Zoho Email, Test Tier 1 app, PeopleSoft CRM, Outlook Web Access (OWA), PeopleSoft HRMS, Retail Adding Points, Electronic Messaging, Retail Client Registration, SAP HANA, PeopleSoft Enterprise Services, PeopleSoft Reporting, SAP Labor Distribution, Bond Trading - DR, PeopleSoft Supply Chain Management, Unix Server Hosting, External Networking (Internet), SAP Financial Accounting, SAP Enterprise Services, SAP Payroll, Retail Client Lookup, Email, SAP Materials Management, Campus Network (LAN), Desktop Support, PeopleSoft Portals, Tibco ESB, Securities Lending, Apache Web Hosting, ServiceNow Enterprise Services, Sales Force Automation, Windows Server Hosting, SAP Human Resources, Retail, Client Services, Bond Trading, Shared Storage (SAN), z/OS Platform Hosting, Printing Services, PeopleSoft Financials, SAP Controlling, Windows Mobile, E-Commerce, Voice Communication, PeopleSoft Governance, Inter-Site Networking (WAN), PeopleSoft Asset Lifecycle Management, IT Services, Oracle Database Hosting, Workday Enterprise Services, Jobvite Enterprise Recruitment Services, IIS Web Hosting, OpenText Enterprise Services, This Service-now instance, SAP Plant Maintenance, Retail POS (Point of Sale), Test EU, Zoho HR System",
+      "Cells disagreeing with caf_status: 0"
+    ],
+    "verdictReason": "Every populated cell in the Salesforce grid matches caf_req.caf_status, and both grids show the same 3 applications.",
+    "finishedAt": "2026-08-07T17:51:47.794Z"
+  }
+}
