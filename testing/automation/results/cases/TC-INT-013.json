@@ -1,0 +1,27 @@
+{
+  "run": {
+    "instance": "https://dev281754.service-now.com",
+    "executedBy": "sf.integration (ServiceNow Scripted REST API)",
+    "executedVia": "Playwright runner, no browser. Each case calls the inbound API as sf.integration — the same user the named credential uses, because the echo-loop guard keys off it — and re-reads the task over cnit before and after to prove nothing was written."
+  },
+  "case": {
+    "id": "TC-INT-013",
+    "title": "A non-allow-listed field fails the whole call",
+    "startedAt": "2026-08-08T14:04:20.019Z",
+    "verdict": "BLOCKED",
+    "steps": [],
+    "records": [],
+    "observations": [
+      "GET /caf/snapshot answered 401 as sf.integration — \"User is not authenticated — Required to provide Auth information\". Every case in this file authenticates the same way, so none of them can reach the branch it tests."
+    ],
+    "expected": [
+      "HTTP 400, body naming the refused field: \"Fields not writable from Salesforce: <field>\".",
+      "The allow-listed field in the same body is not applied either — the call is refused whole.",
+      "Re-reading the task shows nothing changed and sys_updated_on unmoved.",
+      "Each of number, active, business_application, actual_start_date, caf_request and sys_id is refused."
+    ],
+    "actual": [],
+    "verdictReason": "GET /caf/snapshot answered 401 as sf.integration — \"User is not authenticated — Required to provide Auth information\". Every case in this file authenticates the same way, so none of them can reach the branch it tests. Diagnose the credential before reading anything into this run — a 401 is indistinguishable from a working refusal at the status-code level, and treating it as one would certify a check that never ran.",
+    "finishedAt": "2026-08-08T14:04:20.685Z"
+  }
+}
