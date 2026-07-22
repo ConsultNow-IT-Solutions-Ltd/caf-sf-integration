@@ -1582,3 +1582,32 @@ passes once the advice is direction-correct; it does not prescribe the wording.
 
 ---
 
+## Coverage summary
+
+| Suite | Cases | P1 |
+|---|---|---|
+| 1 Outbound push | 10 | 6 |
+| 2 Inbound update | 8 | 5 |
+| 3 Evidence | 8 | 1 |
+| 4 Attestation | 11 | 6 |
+| 5 Sync Health and drift | 10 | 4 |
+| 6 Salesforce dashboard | 8 | 4 |
+| 7 Deletion and orphans | 3 | 1 |
+| 8 Configuration and limits | 3 | 1 |
+| 9 Transform and data quality | 9 | 5 |
+| 10 Regressions raised by earlier runs | 1 | 0 |
+| **Total** | **71** | **33** |
+
+**Not covered here, deliberately**
+- Engine behaviour — [TEST-CASES-SERVICENOW.md](TEST-CASES-SERVICENOW.md).
+- Experience Cloud — no site exists; TC-INT-055 is marked blocked.
+- Platform Events — not built (HANDOFF open item 4).
+- Credential rotation and secret hygiene — an operational review, not a test pass.
+  Note that the Salesforce client secret and the `sf.integration` password both
+  passed through a session transcript on 2026-08-06 and should be rotated if this
+  outlives the demo.
+- Load and concurrency. Two users attesting the same task simultaneously is
+  untested, and the endpoint has no optimistic-locking check.
+
+---
+
