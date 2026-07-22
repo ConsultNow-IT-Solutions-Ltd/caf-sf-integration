@@ -1,0 +1,46 @@
+{
+  "run": {
+    "instance": "https://dev281754.service-now.com + Salesforce orgfarm-4938c7f768-dev-ed",
+    "executedBy": "admin (ServiceNow) / admin.070b86ccf531@agentforce.com (Salesforce)",
+    "executedVia": "Playwright runner, no browser: ServiceNow read over cnit and the Scripted REST API as sf.integration, Salesforce read over the sf CLI and anonymous Apex against the deployed classes. Every case reads both sides."
+  },
+  "case": {
+    "id": "TC-INT-023",
+    "title": "Evidence list on an unknown task returns 404",
+    "startedAt": "2026-08-07T17:27:24.078Z",
+    "verdict": "PASS",
+    "steps": [
+      {
+        "n": 1,
+        "text": "GET /api/x_gskn2_caf_compli/caf/task/00000000000000000000000000000000/evidence as sf.integration.",
+        "at": "2026-08-07T17:27:24.078Z",
+        "screenshots": []
+      }
+    ],
+    "records": [
+      {
+        "label": "Response",
+        "table": "GET /caf/task/{sysId}/evidence",
+        "query": "sysId=00000000000000000000000000000000",
+        "rows": [
+          {
+            "status": "404",
+            "body": "{\"result\":{\"error\":\"CAF Task not found: 00000000000000000000000000000000\"}}"
+          }
+        ],
+        "at": "2026-08-07T17:27:24.815Z"
+      }
+    ],
+    "observations": [
+      "Read-only endpoint; the call writes nothing on either platform."
+    ],
+    "expected": [
+      "HTTP 404 from GET /caf/task/{sysId}/evidence for a sys_id that does not exist."
+    ],
+    "actual": [
+      "HTTP 404 — {\"result\":{\"error\":\"CAF Task not found: 00000000000000000000000000000000\"}}"
+    ],
+    "verdictReason": "Unknown task refused with 404, as specified.",
+    "finishedAt": "2026-08-07T17:27:24.815Z"
+  }
+}

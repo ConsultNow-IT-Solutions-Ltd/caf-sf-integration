@@ -1,0 +1,53 @@
+{
+  "run": {
+    "instance": "https://dev281754.service-now.com + Salesforce orgfarm-4938c7f768-dev-ed",
+    "executedBy": "admin (ServiceNow) / admin.070b86ccf531@agentforce.com (Salesforce)",
+    "executedVia": "Playwright runner, no browser: ServiceNow read over cnit and the Scripted REST API as sf.integration, Salesforce read over the sf CLI and anonymous Apex against the deployed classes. Every case reads both sides."
+  },
+  "case": {
+    "id": "TC-INT-038",
+    "title": "Clean state reports zero differences",
+    "startedAt": "2026-08-07T17:27:37.631Z",
+    "verdict": "PASS",
+    "steps": [
+      {
+        "n": 1,
+        "text": "Run CafSyncHealth.check() — the deployed class the LWC calls, not a reimplementation of it.",
+        "at": "2026-08-07T17:27:37.631Z",
+        "screenshots": []
+      }
+    ],
+    "records": [
+      {
+        "label": "CafSyncHealth.check()",
+        "table": "CafSyncHealth",
+        "query": "sf apex run --file <CafSyncHealth.check()>",
+        "rows": [
+          {
+            "inSync": "true",
+            "snRequests": "19",
+            "snTasks": "30",
+            "sfRequests": "19",
+            "sfTasks": "30",
+            "comparedCount": "49",
+            "differences": "0"
+          }
+        ],
+        "at": "2026-08-07T17:27:44.735Z"
+      }
+    ],
+    "observations": [
+      "comparedCount is snRequests + snTasks = 49; the case's baseline figure of 49 was captured on 2026-08-07 and moves whenever the engine spawns a task."
+    ],
+    "expected": [
+      "Zero differences reported.",
+      "The number compared equals requests + tasks."
+    ],
+    "actual": [
+      "inSync = true; 49 record(s) compared; 0 difference(s).",
+      "ServiceNow 19 requests / 30 tasks; Salesforce 19 / 30."
+    ],
+    "verdictReason": "Green: 49 records compared, zero differences.",
+    "finishedAt": "2026-08-07T17:27:44.737Z"
+  }
+}

@@ -1,0 +1,194 @@
+{
+  "run": {
+    "instance": "https://dev281754.service-now.com + Salesforce orgfarm-4938c7f768-dev-ed",
+    "executedBy": "admin (ServiceNow) / admin.070b86ccf531@agentforce.com (Salesforce)",
+    "executedVia": "Playwright runner, no browser: ServiceNow read over cnit and the Scripted REST API as sf.integration, Salesforce read over the sf CLI and anonymous Apex against the deployed classes. Every case reads both sides."
+  },
+  "case": {
+    "id": "TC-INT-044",
+    "title": "Only State__c is editable in the Salesforce mirror",
+    "startedAt": "2026-08-07T17:27:57.890Z",
+    "verdict": "FAIL",
+    "steps": [
+      {
+        "n": 1,
+        "text": "Read the CAF Task page layout and its per-field behavior.",
+        "at": "2026-08-07T17:27:57.891Z",
+        "screenshots": []
+      },
+      {
+        "n": 2,
+        "text": "Cross-check against what the org itself reports as updateable.",
+        "at": "2026-08-07T17:27:57.893Z",
+        "screenshots": []
+      },
+      {
+        "n": 3,
+        "text": "Establish which fields the sync actually mirrors — the set the case is about.",
+        "at": "2026-08-07T17:28:03.948Z",
+        "screenshots": []
+      }
+    ],
+    "records": [
+      {
+        "label": "CAF Task layout — field behaviour",
+        "table": "CAF_Task__c layout",
+        "query": "C:\\Users\\patel\\Documents\\ServiceNow Work Project Docs\\Personal AI Assisted\\dev281754 CAF App Reyan\\salesforce\\force-app\\layouts\\CAF_Task__c-CAF Task Layout.layout",
+        "rows": [
+          {
+            "field": "Name",
+            "behavior": "Required"
+          },
+          {
+            "field": "SN_Number__c",
+            "behavior": "Readonly"
+          },
+          {
+            "field": "Short_Description__c",
+            "behavior": "Readonly"
+          },
+          {
+            "field": "CAF_Request__c",
+            "behavior": "Readonly"
+          },
+          {
+            "field": "State__c",
+            "behavior": "Edit"
+          },
+          {
+            "field": "Approval__c",
+            "behavior": "Readonly"
+          },
+          {
+            "field": "Met_Criteria__c",
+            "behavior": "Readonly"
+          },
+          {
+            "field": "Planned_Completion_Date__c",
+            "behavior": "Readonly"
+          },
+          {
+            "field": "ServiceNow_Sys_Id__c",
+            "behavior": "Readonly"
+          },
+          {
+            "field": "OwnerId",
+            "behavior": "Edit"
+          },
+          {
+            "field": "CreatedById",
+            "behavior": "Readonly"
+          },
+          {
+            "field": "LastModifiedById",
+            "behavior": "Readonly"
+          }
+        ],
+        "at": "2026-08-07T17:27:57.893Z"
+      },
+      {
+        "label": "CAF_Task__c custom fields, per describe",
+        "table": "CAF_Task__c",
+        "query": "sf sobject describe --sobject CAF_Task__c",
+        "rows": [
+          {
+            "name": "Short_Description__c",
+            "updateable": "true",
+            "type": "string"
+          },
+          {
+            "name": "ServiceNow_Sys_Id__c",
+            "updateable": "true",
+            "type": "string"
+          },
+          {
+            "name": "State__c",
+            "updateable": "true",
+            "type": "string"
+          },
+          {
+            "name": "CAF_Request__c",
+            "updateable": "true",
+            "type": "reference"
+          },
+          {
+            "name": "Met_Criteria__c",
+            "updateable": "true",
+            "type": "string"
+          },
+          {
+            "name": "SN_Number__c",
+            "updateable": "true",
+            "type": "string"
+          },
+          {
+            "name": "Approval__c",
+            "updateable": "true",
+            "type": "string"
+          },
+          {
+            "name": "Planned_Completion_Date__c",
+            "updateable": "true",
+            "type": "datetime"
+          }
+        ],
+        "at": "2026-08-07T17:28:03.948Z"
+      },
+      {
+        "label": "Fields CAFSalesforceSync.buildTaskPayload() writes",
+        "table": "CAFSalesforceSync",
+        "query": "servicenow/CAFSalesforceSync.script-include.js",
+        "rows": [
+          {
+            "mirrored_field": "Name"
+          },
+          {
+            "mirrored_field": "SN_Number__c"
+          },
+          {
+            "mirrored_field": "Short_Description__c"
+          },
+          {
+            "mirrored_field": "Planned_Completion_Date__c"
+          },
+          {
+            "mirrored_field": "Business_Application__c"
+          },
+          {
+            "mirrored_field": "CAF_Control__c"
+          },
+          {
+            "mirrored_field": "CAF_Status__c"
+          },
+          {
+            "mirrored_field": "State__c"
+          },
+          {
+            "mirrored_field": "Approval__c"
+          },
+          {
+            "mirrored_field": "Met_Criteria__c"
+          }
+        ],
+        "at": "2026-08-07T17:28:03.949Z"
+      }
+    ],
+    "observations": [
+      "The layout trap: a field missing from the layout shows a lock icon and refuses inline edit even when FLS grants Edit and describe reports updateable=true. \"Deliberately Readonly\" and \"accidentally absent\" look identical to a user, which is why this case reads the layout rather than only the describe.",
+      "Finding: Name is written on every push by CAFSalesforceSync — buildTaskPayload sets Name to the ServiceNow number — and is editable on the layout, so a user can change it in Salesforce. CafSyncHealth compares Status, State, Approval, Criteria met and Description, and never compares Name, so drift introduced this way is invisible to the Sync Health strip until the next push happens to overwrite it. Either make it Readonly or add it to the comparison."
+    ],
+    "expected": [
+      "Every mirrored field except State__c is Readonly on the CAF Task layout.",
+      "State__c is editable solely to make the drift demo possible."
+    ],
+    "actual": [
+      "Mirrored fields (from the push payload): Name, SN_Number__c, Short_Description__c, Planned_Completion_Date__c, Business_Application__c, CAF_Control__c, CAF_Status__c, State__c, Approval__c, Met_Criteria__c",
+      "Editable on the layout AND mirrored: Name (Required), State__c (Edit)",
+      "Editable on the layout but not mirrored: OwnerId",
+      "Readonly on the layout: SN_Number__c, Short_Description__c, CAF_Request__c, Approval__c, Met_Criteria__c, Planned_Completion_Date__c, ServiceNow_Sys_Id__c, CreatedById, LastModifiedById",
+      "Custom fields absent from the layout entirely: none"
+    ],
+    "verdictReason": "Expected State__c alone to be editable among mirrored fields; the layout also allows editing Name (Required).",
+    "finishedAt": "2026-08-07T17:28:03.949Z"
+  }
+}

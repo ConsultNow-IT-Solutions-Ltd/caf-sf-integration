@@ -1,0 +1,76 @@
+{
+  "run": {
+    "instance": "https://dev281754.service-now.com + Salesforce orgfarm-4938c7f768-dev-ed",
+    "executedBy": "admin (ServiceNow) / admin.070b86ccf531@agentforce.com (Salesforce)",
+    "executedVia": "Playwright runner, no browser: ServiceNow read over cnit and the Scripted REST API as sf.integration, Salesforce read over the sf CLI and anonymous Apex against the deployed classes. Every case reads both sides."
+  },
+  "case": {
+    "id": "TC-INT-047",
+    "title": "Drift detection is automatic, repair never is",
+    "startedAt": "2026-08-07T17:27:51.773Z",
+    "verdict": "PASS",
+    "steps": [
+      {
+        "n": 1,
+        "text": "Confirm check() never calls resync().",
+        "at": "2026-08-07T17:27:51.773Z",
+        "screenshots": []
+      },
+      {
+        "n": 2,
+        "text": "Confirm the LWC only reaches resync from a user gesture.",
+        "at": "2026-08-07T17:27:51.773Z",
+        "screenshots": []
+      },
+      {
+        "n": 3,
+        "text": "Confirm nothing in the org runs Sync Health on a schedule.",
+        "at": "2026-08-07T17:27:51.775Z",
+        "screenshots": []
+      }
+    ],
+    "records": [
+      {
+        "label": "Scheduled jobs in the Salesforce org",
+        "table": "CronTrigger",
+        "query": "sf data query --query \"SELECT CronJobDetail.Name, CronJobDetail.JobType, CronExpression, State FROM CronTrigger WHERE State != 'DELETED'\" --target-org caf-sf",
+        "rows": [
+          {
+            "name": "Program Milestone Computation Cron Job",
+            "jobType": "P",
+            "cronExpression": "0 59 6,11,16,23 ? * *",
+            "state": "WAITING"
+          },
+          {
+            "name": "Program Status Update Cron Job",
+            "jobType": "S",
+            "cronExpression": "0 0 5,20 ? * *",
+            "state": "WAITING"
+          },
+          {
+            "name": "Metalytics Data Loader Job for Org : 00Dak000017K5lc",
+            "jobType": "K",
+            "cronExpression": "0 33 5 ? * 1,2,3,4,5,6,7",
+            "state": "WAITING"
+          }
+        ],
+        "at": "2026-08-07T17:27:57.845Z"
+      }
+    ],
+    "observations": [
+      "The three scheduled jobs are Developer Edition org furniture (Program Milestone Computation, Program Status Update, Metalytics Data Loader). None is CAF code and none touches the integration.",
+      "Sync Health runs when someone opens the dashboard or presses Re-check. There is no nightly comparison and nothing emails or posts on drift — report as a known limitation, not a defect. HANDOFF open item 5."
+    ],
+    "expected": [
+      "No code path repairs without a human pressing Re-sync next to a named difference.",
+      "Sync Health has no schedule — a known limitation, HANDOFF open item 5."
+    ],
+    "actual": [
+      "CafSyncHealth.check() calls resync(): false",
+      "Re-sync handlers in the LWC: async handleResync(; bound to onclick in the template: true",
+      "3 scheduled job(s) in the org — Program Milestone Computation Cron Job; Program Status Update Cron Job; Metalytics Data Loader Job for Org : 00Dak000017K5lc. 0 of them relate to CAF or to sync."
+    ],
+    "verdictReason": "Repair is reachable only from a button next to a named difference, and nothing schedules it. Detection is equally unscheduled — the known limitation this case also records.",
+    "finishedAt": "2026-08-07T17:27:57.846Z"
+  }
+}

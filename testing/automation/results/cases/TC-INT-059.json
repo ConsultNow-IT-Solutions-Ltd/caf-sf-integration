@@ -1,0 +1,151 @@
+{
+  "run": {
+    "instance": "https://dev281754.service-now.com + Salesforce orgfarm-4938c7f768-dev-ed",
+    "executedBy": "admin (ServiceNow) / admin.070b86ccf531@agentforce.com (Salesforce)",
+    "executedVia": "Playwright runner, no browser: ServiceNow read over cnit and the Scripted REST API as sf.integration, Salesforce read over the sf CLI and anonymous Apex against the deployed classes. Every case reads both sides."
+  },
+  "case": {
+    "id": "TC-INT-059",
+    "title": "Named credential and Client Credentials auth",
+    "startedAt": "2026-08-07T17:28:42.177Z",
+    "verdict": "PASS",
+    "steps": [
+      {
+        "n": 1,
+        "text": "List the named credentials in the org.",
+        "at": "2026-08-07T17:28:42.177Z",
+        "screenshots": []
+      },
+      {
+        "n": 2,
+        "text": "Confirm every Apex reference uses that exact name.",
+        "at": "2026-08-07T17:28:48.275Z",
+        "screenshots": []
+      },
+      {
+        "n": 3,
+        "text": "Confirm no credential has been committed to source.",
+        "at": "2026-08-07T17:28:48.280Z",
+        "screenshots": []
+      },
+      {
+        "n": 4,
+        "text": "Read the ServiceNow-side integration properties and their storage types.",
+        "at": "2026-08-07T17:28:48.280Z",
+        "screenshots": []
+      },
+      {
+        "n": 5,
+        "text": "Confirm the sync script requests a token by Client Credentials rather than JWT.",
+        "at": "2026-08-07T17:28:49.911Z",
+        "screenshots": []
+      }
+    ],
+    "records": [
+      {
+        "label": "Named credentials",
+        "table": "NamedCredential",
+        "query": "Tooling API",
+        "rows": [
+          {
+            "DeveloperName": "ServiceNow_CAF",
+            "Endpoint": "https://dev281754.service-now.com",
+            "PrincipalType": "NamedUser"
+          }
+        ],
+        "at": "2026-08-07T17:28:48.275Z"
+      },
+      {
+        "label": "callout: references in Apex",
+        "table": "force-app/classes",
+        "query": "grep callout:",
+        "rows": [
+          {
+            "file": "CafAttestationService.cls",
+            "reference": "ServiceNow_CAF"
+          },
+          {
+            "file": "CafEvidenceService.cls",
+            "reference": "ServiceNow_CAF"
+          },
+          {
+            "file": "CafSyncHealth.cls",
+            "reference": "ServiceNow_CAF"
+          },
+          {
+            "file": "CafSyncHealth.cls",
+            "reference": "ServiceNow_CAF"
+          },
+          {
+            "file": "CafTaskService.cls",
+            "reference": "ServiceNow_CAF"
+          }
+        ],
+        "at": "2026-08-07T17:28:48.280Z"
+      },
+      {
+        "label": "Integration properties",
+        "table": "sys_properties",
+        "query": "cnit get sys_properties -Query \"nameSTARTSWITHx_gskn2_caf_compli.sf.\" -ProfileName caf-reyan",
+        "rows": [
+          {
+            "is_private": "false",
+            "name": "x_gskn2_caf_compli.sf.enabled",
+            "read_roles": "",
+            "type": "boolean"
+          },
+          {
+            "is_private": "false",
+            "name": "x_gskn2_caf_compli.sf.integration_user",
+            "read_roles": "",
+            "type": "string"
+          },
+          {
+            "is_private": "false",
+            "name": "x_gskn2_caf_compli.sf.api_version",
+            "read_roles": "",
+            "type": "string"
+          },
+          {
+            "is_private": "false",
+            "name": "x_gskn2_caf_compli.sf.client_id",
+            "read_roles": "",
+            "type": "string"
+          },
+          {
+            "is_private": "false",
+            "name": "x_gskn2_caf_compli.sf.instance_url",
+            "read_roles": "",
+            "type": "string"
+          },
+          {
+            "is_private": "false",
+            "name": "x_gskn2_caf_compli.sf.client_secret",
+            "read_roles": "",
+            "type": "password2"
+          }
+        ],
+        "at": "2026-08-07T17:28:49.911Z"
+      }
+    ],
+    "observations": [
+      "Deviation to record in the TDD delta: Client Credentials rather than JWT bearer, because ServiceNow's jwt_provider table has no iss/sub/aud fields. JWT remains the better production answer.",
+      "The named credential is created by hand and deliberately not in source: Salesforce will not deploy one without a password, and that password must not sit in a client-facing directory."
+    ],
+    "expected": [
+      "The named credential is called ServiceNow_CAF exactly.",
+      "No credential has leaked into force-app/namedCredentials/.",
+      "The client secret property is encrypted (password2).",
+      "Inbound authenticates as sf.integration; outbound obtains a token via Client Credentials."
+    ],
+    "actual": [
+      "Named credential present: ServiceNow_CAF, endpoint https://dev281754.service-now.com, principal NamedUser",
+      "Apex references: ServiceNow_CAF",
+      "Files in force-app/namedCredentials/: the directory does not exist",
+      "Client secret property: x_gskn2_caf_compli.sf.client_secret, type = password2",
+      "Outbound grant type in CAFSalesforceSync: client_credentials"
+    ],
+    "verdictReason": "Named credential, Apex references, source hygiene and secret storage all as specified.",
+    "finishedAt": "2026-08-07T17:28:49.912Z"
+  }
+}

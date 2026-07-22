@@ -1,0 +1,473 @@
+{
+  "run": {
+    "instance": "https://dev281754.service-now.com + Salesforce orgfarm-4938c7f768-dev-ed",
+    "executedBy": "admin (ServiceNow) / admin.070b86ccf531@agentforce.com (Salesforce)",
+    "executedVia": "Playwright runner, no browser: ServiceNow read over cnit and the Scripted REST API as sf.integration, Salesforce read over the sf CLI and anonymous Apex against the deployed classes. Every case reads both sides."
+  },
+  "case": {
+    "id": "TC-INT-001",
+    "title": "Full mirror parity by record, not by count",
+    "startedAt": "2026-08-07T17:26:43.145Z",
+    "verdict": "PASS",
+    "steps": [
+      {
+        "n": 1,
+        "text": "Read every CAF Request and CAF Task from ServiceNow.",
+        "at": "2026-08-07T17:26:43.145Z",
+        "screenshots": []
+      },
+      {
+        "n": 2,
+        "text": "Read every mirrored record from Salesforce.",
+        "at": "2026-08-07T17:26:47.042Z",
+        "screenshots": []
+      },
+      {
+        "n": 3,
+        "text": "Compare as sets of numbers, then separately as sets of sys_id.",
+        "at": "2026-08-07T17:27:01.276Z",
+        "screenshots": []
+      }
+    ],
+    "records": [
+      {
+        "label": "ServiceNow requests",
+        "table": "x_gskn2_caf_compli_caf_req",
+        "query": "cnit get x_gskn2_caf_compli_caf_req -Fields number,sys_id -ProfileName caf-reyan",
+        "rows": [
+          {
+            "number": "RCAF0001032",
+            "sys_id": "1219acbc83431210bd2a5860ceaad382"
+          },
+          {
+            "number": "RCAF0001033",
+            "sys_id": "1219acbc83431210bd2a5860ceaad385"
+          },
+          {
+            "number": "RCAF0001034",
+            "sys_id": "1219acbc83431210bd2a5860ceaad388"
+          },
+          {
+            "number": "RCAF0001039",
+            "sys_id": "14d9a03083831210bd2a5860ceaad3ce"
+          },
+          {
+            "number": "RCAF0001038",
+            "sys_id": "18d9acfc83431210bd2a5860ceaad35f"
+          },
+          {
+            "number": "RCAF0001019",
+            "sys_id": "32932cf483431210bd2a5860ceaad317"
+          },
+          {
+            "number": "RCAF0001020",
+            "sys_id": "32932cf483431210bd2a5860ceaad31a"
+          },
+          {
+            "number": "RCAF0001022",
+            "sys_id": "32932cf483431210bd2a5860ceaad3ce"
+          },
+          {
+            "number": "RCAF0001042",
+            "sys_id": "50d9a03083831210bd2a5860ceaad3d7"
+          },
+          {
+            "number": "RCAF0001024",
+            "sys_id": "8f932cf483431210bd2a5860ceaad3d3"
+          },
+          {
+            "number": "RCAF0001041",
+            "sys_id": "90d9a03083831210bd2a5860ceaad3d4"
+          },
+          {
+            "number": "RCAF0001001",
+            "sys_id": "cc67fc481b5ee5d0a3d187b8e34bcbf9"
+          },
+          {
+            "number": "RCAF0001023",
+            "sys_id": "cf932cf483431210bd2a5860ceaad3d0"
+          },
+          {
+            "number": "RCAF0001040",
+            "sys_id": "d0d9a03083831210bd2a5860ceaad3d1"
+          },
+          {
+            "number": "RCAF0001035",
+            "sys_id": "d219ecbc83431210bd2a5860ceaad390"
+          },
+          {
+            "number": "RCAF0001036",
+            "sys_id": "d219ecbc83431210bd2a5860ceaad393"
+          },
+          {
+            "number": "RCAF0001037",
+            "sys_id": "dcd9acfc83431210bd2a5860ceaad35b"
+          },
+          {
+            "number": "RCAF0001031",
+            "sys_id": "de19acbc83431210bd2a5860ceaad37e"
+          },
+          {
+            "number": "RCAF0001021",
+            "sys_id": "fe932cf483431210bd2a5860ceaad31c"
+          }
+        ],
+        "at": "2026-08-07T17:26:47.042Z"
+      },
+      {
+        "label": "ServiceNow tasks",
+        "table": "x_gskn2_caf_compli_caf_tsk",
+        "query": "cnit get x_gskn2_caf_compli_caf_tsk -Fields number,sys_id -ProfileName caf-reyan",
+        "rows": [
+          {
+            "number": "CAFT0001024",
+            "sys_id": "0f936cf483431210bd2a5860ceaad382"
+          },
+          {
+            "number": "CAFT0001042",
+            "sys_id": "1359a4fc83431210bd2a5860ceaad39e"
+          },
+          {
+            "number": "CAFT0001034",
+            "sys_id": "221920fc83431210bd2a5860ceaad336"
+          },
+          {
+            "number": "CAFT0001036",
+            "sys_id": "261920fc83431210bd2a5860ceaad343"
+          },
+          {
+            "number": "CAFT0001003",
+            "sys_id": "2ccb693583e6c310c67233d6feaad346"
+          },
+          {
+            "number": "CAFT0001019",
+            "sys_id": "43936cf483431210bd2a5860ceaad363"
+          },
+          {
+            "number": "CAFT0001021",
+            "sys_id": "47932cf483431210bd2a5860ceaad3b1"
+          },
+          {
+            "number": "CAFT0001051",
+            "sys_id": "60d9e03083831210bd2a5860ceaad310"
+          },
+          {
+            "number": "CAFT0001045",
+            "sys_id": "8c99e8fc83431210bd2a5860ceaad360"
+          },
+          {
+            "number": "CAFT0001020",
+            "sys_id": "8f932cf483431210bd2a5860ceaad3a5"
+          },
+          {
+            "number": "CAFT0001022",
+            "sys_id": "8f936cf483431210bd2a5860ceaad36c"
+          },
+          {
+            "number": "CAFT0001026",
+            "sys_id": "91442c3883431210bd2a5860ceaad37e"
+          },
+          {
+            "number": "CAFT0001046",
+            "sys_id": "a8d9a03083831210bd2a5860ceaad3fd"
+          },
+          {
+            "number": "CAFT0001050",
+            "sys_id": "acd9e03083831210bd2a5860ceaad318"
+          },
+          {
+            "number": "CAFT0001035",
+            "sys_id": "ae19ecbc83431210bd2a5860ceaad37d"
+          },
+          {
+            "number": "CAFT0001038",
+            "sys_id": "b21920fc83431210bd2a5860ceaad367"
+          },
+          {
+            "number": "CAFT0001037",
+            "sys_id": "b21920fc83431210bd2a5860ceaad371"
+          },
+          {
+            "number": "CAFT0001039",
+            "sys_id": "b61920fc83431210bd2a5860ceaad37e"
+          },
+          {
+            "number": "CAFT0001040",
+            "sys_id": "b839a0fc83431210bd2a5860ceaad3c4"
+          },
+          {
+            "number": "CAFT0001027",
+            "sys_id": "bab4647883431210bd2a5860ceaad3c0"
+          },
+          {
+            "number": "CAFT0001043",
+            "sys_id": "c07928fc83431210bd2a5860ceaad313"
+          },
+          {
+            "number": "CAFT0001023",
+            "sys_id": "c3936cf483431210bd2a5860ceaad38e"
+          },
+          {
+            "number": "CAFT0001041",
+            "sys_id": "cd49e0fc83431210bd2a5860ceaad370"
+          },
+          {
+            "number": "CAFT0001002",
+            "sys_id": "dab829bd83a6c310c67233d6feaad33c"
+          },
+          {
+            "number": "CAFT0001025",
+            "sys_id": "deb3603883431210bd2a5860ceaad356"
+          },
+          {
+            "number": "CAFT0001049",
+            "sys_id": "e0d9e03083831210bd2a5860ceaad307"
+          },
+          {
+            "number": "CAFT0001048",
+            "sys_id": "e4d9a03083831210bd2a5860ceaad3af"
+          },
+          {
+            "number": "CAFT0001047",
+            "sys_id": "e4d9a03083831210bd2a5860ceaad3f6"
+          },
+          {
+            "number": "CAFT0001001",
+            "sys_id": "e99621b983a6c310c67233d6feaad3d3"
+          },
+          {
+            "number": "CAFT0001044",
+            "sys_id": "ff7968fc83431210bd2a5860ceaad34c"
+          }
+        ],
+        "at": "2026-08-07T17:26:47.042Z"
+      },
+      {
+        "label": "Salesforce requests",
+        "table": "CAF_Request__c",
+        "query": "sf data query --query \"SELECT SN_Number__c, ServiceNow_Sys_Id__c FROM CAF_Request__c ORDER BY SN_Number__c\" --target-org caf-sf",
+        "rows": [
+          {
+            "SN_Number__c": "RCAF0001001",
+            "ServiceNow_Sys_Id__c": "cc67fc481b5ee5d0a3d187b8e34bcbf9"
+          },
+          {
+            "SN_Number__c": "RCAF0001019",
+            "ServiceNow_Sys_Id__c": "32932cf483431210bd2a5860ceaad317"
+          },
+          {
+            "SN_Number__c": "RCAF0001020",
+            "ServiceNow_Sys_Id__c": "32932cf483431210bd2a5860ceaad31a"
+          },
+          {
+            "SN_Number__c": "RCAF0001021",
+            "ServiceNow_Sys_Id__c": "fe932cf483431210bd2a5860ceaad31c"
+          },
+          {
+            "SN_Number__c": "RCAF0001022",
+            "ServiceNow_Sys_Id__c": "32932cf483431210bd2a5860ceaad3ce"
+          },
+          {
+            "SN_Number__c": "RCAF0001023",
+            "ServiceNow_Sys_Id__c": "cf932cf483431210bd2a5860ceaad3d0"
+          },
+          {
+            "SN_Number__c": "RCAF0001024",
+            "ServiceNow_Sys_Id__c": "8f932cf483431210bd2a5860ceaad3d3"
+          },
+          {
+            "SN_Number__c": "RCAF0001031",
+            "ServiceNow_Sys_Id__c": "de19acbc83431210bd2a5860ceaad37e"
+          },
+          {
+            "SN_Number__c": "RCAF0001032",
+            "ServiceNow_Sys_Id__c": "1219acbc83431210bd2a5860ceaad382"
+          },
+          {
+            "SN_Number__c": "RCAF0001033",
+            "ServiceNow_Sys_Id__c": "1219acbc83431210bd2a5860ceaad385"
+          },
+          {
+            "SN_Number__c": "RCAF0001034",
+            "ServiceNow_Sys_Id__c": "1219acbc83431210bd2a5860ceaad388"
+          },
+          {
+            "SN_Number__c": "RCAF0001035",
+            "ServiceNow_Sys_Id__c": "d219ecbc83431210bd2a5860ceaad390"
+          },
+          {
+            "SN_Number__c": "RCAF0001036",
+            "ServiceNow_Sys_Id__c": "d219ecbc83431210bd2a5860ceaad393"
+          },
+          {
+            "SN_Number__c": "RCAF0001037",
+            "ServiceNow_Sys_Id__c": "dcd9acfc83431210bd2a5860ceaad35b"
+          },
+          {
+            "SN_Number__c": "RCAF0001038",
+            "ServiceNow_Sys_Id__c": "18d9acfc83431210bd2a5860ceaad35f"
+          },
+          {
+            "SN_Number__c": "RCAF0001039",
+            "ServiceNow_Sys_Id__c": "14d9a03083831210bd2a5860ceaad3ce"
+          },
+          {
+            "SN_Number__c": "RCAF0001040",
+            "ServiceNow_Sys_Id__c": "d0d9a03083831210bd2a5860ceaad3d1"
+          },
+          {
+            "SN_Number__c": "RCAF0001041",
+            "ServiceNow_Sys_Id__c": "90d9a03083831210bd2a5860ceaad3d4"
+          },
+          {
+            "SN_Number__c": "RCAF0001042",
+            "ServiceNow_Sys_Id__c": "50d9a03083831210bd2a5860ceaad3d7"
+          }
+        ],
+        "at": "2026-08-07T17:27:01.276Z"
+      },
+      {
+        "label": "Salesforce tasks",
+        "table": "CAF_Task__c",
+        "query": "sf data query --query \"SELECT SN_Number__c, ServiceNow_Sys_Id__c FROM CAF_Task__c ORDER BY SN_Number__c\" --target-org caf-sf",
+        "rows": [
+          {
+            "SN_Number__c": "CAFT0001001",
+            "ServiceNow_Sys_Id__c": "e99621b983a6c310c67233d6feaad3d3"
+          },
+          {
+            "SN_Number__c": "CAFT0001002",
+            "ServiceNow_Sys_Id__c": "dab829bd83a6c310c67233d6feaad33c"
+          },
+          {
+            "SN_Number__c": "CAFT0001003",
+            "ServiceNow_Sys_Id__c": "2ccb693583e6c310c67233d6feaad346"
+          },
+          {
+            "SN_Number__c": "CAFT0001019",
+            "ServiceNow_Sys_Id__c": "43936cf483431210bd2a5860ceaad363"
+          },
+          {
+            "SN_Number__c": "CAFT0001020",
+            "ServiceNow_Sys_Id__c": "8f932cf483431210bd2a5860ceaad3a5"
+          },
+          {
+            "SN_Number__c": "CAFT0001021",
+            "ServiceNow_Sys_Id__c": "47932cf483431210bd2a5860ceaad3b1"
+          },
+          {
+            "SN_Number__c": "CAFT0001022",
+            "ServiceNow_Sys_Id__c": "8f936cf483431210bd2a5860ceaad36c"
+          },
+          {
+            "SN_Number__c": "CAFT0001023",
+            "ServiceNow_Sys_Id__c": "c3936cf483431210bd2a5860ceaad38e"
+          },
+          {
+            "SN_Number__c": "CAFT0001024",
+            "ServiceNow_Sys_Id__c": "0f936cf483431210bd2a5860ceaad382"
+          },
+          {
+            "SN_Number__c": "CAFT0001025",
+            "ServiceNow_Sys_Id__c": "deb3603883431210bd2a5860ceaad356"
+          },
+          {
+            "SN_Number__c": "CAFT0001026",
+            "ServiceNow_Sys_Id__c": "91442c3883431210bd2a5860ceaad37e"
+          },
+          {
+            "SN_Number__c": "CAFT0001027",
+            "ServiceNow_Sys_Id__c": "bab4647883431210bd2a5860ceaad3c0"
+          },
+          {
+            "SN_Number__c": "CAFT0001034",
+            "ServiceNow_Sys_Id__c": "221920fc83431210bd2a5860ceaad336"
+          },
+          {
+            "SN_Number__c": "CAFT0001035",
+            "ServiceNow_Sys_Id__c": "ae19ecbc83431210bd2a5860ceaad37d"
+          },
+          {
+            "SN_Number__c": "CAFT0001036",
+            "ServiceNow_Sys_Id__c": "261920fc83431210bd2a5860ceaad343"
+          },
+          {
+            "SN_Number__c": "CAFT0001037",
+            "ServiceNow_Sys_Id__c": "b21920fc83431210bd2a5860ceaad371"
+          },
+          {
+            "SN_Number__c": "CAFT0001038",
+            "ServiceNow_Sys_Id__c": "b21920fc83431210bd2a5860ceaad367"
+          },
+          {
+            "SN_Number__c": "CAFT0001039",
+            "ServiceNow_Sys_Id__c": "b61920fc83431210bd2a5860ceaad37e"
+          },
+          {
+            "SN_Number__c": "CAFT0001040",
+            "ServiceNow_Sys_Id__c": "b839a0fc83431210bd2a5860ceaad3c4"
+          },
+          {
+            "SN_Number__c": "CAFT0001041",
+            "ServiceNow_Sys_Id__c": "cd49e0fc83431210bd2a5860ceaad370"
+          },
+          {
+            "SN_Number__c": "CAFT0001042",
+            "ServiceNow_Sys_Id__c": "1359a4fc83431210bd2a5860ceaad39e"
+          },
+          {
+            "SN_Number__c": "CAFT0001043",
+            "ServiceNow_Sys_Id__c": "c07928fc83431210bd2a5860ceaad313"
+          },
+          {
+            "SN_Number__c": "CAFT0001044",
+            "ServiceNow_Sys_Id__c": "ff7968fc83431210bd2a5860ceaad34c"
+          },
+          {
+            "SN_Number__c": "CAFT0001045",
+            "ServiceNow_Sys_Id__c": "8c99e8fc83431210bd2a5860ceaad360"
+          },
+          {
+            "SN_Number__c": "CAFT0001046",
+            "ServiceNow_Sys_Id__c": "a8d9a03083831210bd2a5860ceaad3fd"
+          },
+          {
+            "SN_Number__c": "CAFT0001047",
+            "ServiceNow_Sys_Id__c": "e4d9a03083831210bd2a5860ceaad3f6"
+          },
+          {
+            "SN_Number__c": "CAFT0001048",
+            "ServiceNow_Sys_Id__c": "e4d9a03083831210bd2a5860ceaad3af"
+          },
+          {
+            "SN_Number__c": "CAFT0001049",
+            "ServiceNow_Sys_Id__c": "e0d9e03083831210bd2a5860ceaad307"
+          },
+          {
+            "SN_Number__c": "CAFT0001050",
+            "ServiceNow_Sys_Id__c": "acd9e03083831210bd2a5860ceaad318"
+          },
+          {
+            "SN_Number__c": "CAFT0001051",
+            "ServiceNow_Sys_Id__c": "60d9e03083831210bd2a5860ceaad310"
+          }
+        ],
+        "at": "2026-08-07T17:27:01.276Z"
+      }
+    ],
+    "observations": [
+      "Baseline for this run: 19 requests and 30 tasks in ServiceNow. TEST-CASES-INTEGRATION.md records 19 and 30; HANDOFF section 3 records 19 and 28."
+    ],
+    "expected": [
+      "Requests and tasks are set-for-set identical across both platforms, compared by number.",
+      "The same holds compared by sys_id / ServiceNow_Sys_Id__c.",
+      "The symmetric difference is empty in both directions, for both object types."
+    ],
+    "actual": [
+      "Requests — ServiceNow 19, Salesforce 19. By number: 0 ServiceNow-only, 0 Salesforce-only. By sys_id: 0 ServiceNow-only, 0 Salesforce-only.",
+      "Tasks — ServiceNow 30, Salesforce 30. By number: 0 ServiceNow-only, 0 Salesforce-only. By sys_id: 0 ServiceNow-only, 0 Salesforce-only."
+    ],
+    "verdictReason": "Symmetric difference empty in both directions, by number and by sys_id, for requests and tasks.",
+    "finishedAt": "2026-08-07T17:27:01.277Z"
+  }
+}
