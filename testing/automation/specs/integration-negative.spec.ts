@@ -491,3 +491,199 @@ test('TC-INT-032 — Attesting a task that is not In Progress', async () => {
   expect(findings, findings.join('\n')).toEqual([]);
 });
 
+test('TC-INT-033 — Attesting an inactive task', async () => {
+  const ev = new CaseEvidence('TC-INT-033', 'Attesting an inactive task');
+  ev.expect('HTTP 409, "<number> is no longer active; its outcome is already recorded."');
+  ev.expect('Nothing written — the recorded outcome is not overwritten.');
+  if (!(await requireApi(ev))) return;
+
+  ev.step('Find an inactive task.');
+  const candidates = readTasks('active=false').filter((t) => !isTrue(t.active));
+  ev.record(
+    'Inactive tasks',
+    TABLES.tsk,
+    cnitCommand(TABLES.tsk, { query: 'active=false', fields: TASK_FIELDS }),
+    candidates
+  );
+
+  if (candidates.length === 0) {
+    ev.blocked('No inactive task on the instance; closing one is a one-shot write.');
+    test.skip(true, 'No inactive task available');
+    return;
+  }
+
+  const target = candidates[0];
+  ev.observe(
+    `Target ${target.number} (${target.sys_id}), active=${target.active}, ` +
+      `state=${target.state}, approval=${target.approval || 'empty'}.`
+  );
+
+  // Deliberately the opposite of whatever outcome is already recorded. If the
+  // check were absent this body would overwrite a recorded attestation, which is
+  // the damage the case is asserting against.
+  const outcome = target.approval === 'approved' ? 'rejected' : 'approved';
+
+  ev.step(`Attest it "${outcome}", the opposite of what is recorded.`);
+  const before = readTask(target.sys_id)!;
+  const res = await caf.attest(target.sys_id, { outcome, met_criteria: 'no' });
+  const after = readTask(target.sys_id)!;
+  ev.actual(`HTTP ${res.status} in ${res.ms}ms — ${res.text.slice(0, 200)}`);
+
+  const diff = proveUnmoved(ev, 'TC-INT-033', before, after);
+  const message = caf.errorMessage(res);
+  const findings: string[] = [];
+  if (res.status !== 409) findings.push(`Expected 409, got ${res.status}`);
+  if (!message.includes('is no longer active')) findings.push(`Unexpected message — "${message}"`);
+  if (!message.includes(target.number)) findings.push(`The message does not name the task — "${message}"`);
+  if (diff.length) findings.push(`Task changed — ${diff.join('; ')}`);
+
+  ev.observe(
+    'Regression value: the check reads `active` through a helper accepting both \'1\' and \'true\', because ' +
+      'getValue() on a boolean returns the stored \'1\' while the Table API says "true". The first version ' +
+      'compared against \'true\' alone and refused every attestation on the instance. Asserted here against a ' +
+      `real record — ${target.number} reads active="${target.active}" over the Table API.`
+  );
+
+  findings.forEach((f) => ev.observe(f));
+  findings.length === 0
+    ? ev.pass(`409 naming ${target.number}; the recorded approval "${after.approval}" survives.`)
+    : ev.fail(findings.join(' | '));
+  expect(findings, findings.join('\n')).toEqual([]);
+});
+
+test('TC-INT-034 — Re-attesting with the same outcome', async () => {
+  const ev = new CaseEvidence('TC-INT-034', 'Re-attesting with the same outcome');
+  ev.expect('HTTP 409, "<number> is already approved." (or rejected).');
+  ev.expect('Nothing written.');
+  if (!(await requireApi(ev))) return;
+
+  // The active and In Progress checks both run before this one, so the fixture
+  // must be active, state 2, *and* already carrying an outcome. A closed task
+  // answers with the inactive message instead — which is why the case file warns
+  // that this branch is not reachable from the obvious candidate.
+  ev.step('Find an active, In Progress task whose approval is already approved or rejected.');
+  // approvalINapproved,rejected rather than two ^OR clauses: ^OR binds only to
+  // the condition immediately before it, so approval=approved^ORapproval=rejected
+  // would quietly drop the active and state filters (HANDOFF section 8).
+  const query = 'active=true^state=2^approvalINapproved,rejected';
+  const candidates = readTasks(query).filter(
+    (t) => isTrue(t.active) && t.state === '2' && (t.approval === 'approved' || t.approval === 'rejected')
+  );
+  ev.record('Candidate tasks', TABLES.tsk, cnitCommand(TABLES.tsk, { query, fields: TASK_FIELDS }), candidates);
+
+  if (candidates.length === 0) {
+    const inProgress = readTasks('active=true^state=2');
+    ev.observe(
+      `No fixture available. ${inProgress.length} active In Progress task(s) exist, approvals: ` +
+        `${inProgress.map((t) => `${t.number}=${t.approval || 'empty'}`).join(', ') || 'none'}.`
+    );
+    ev.blocked(
+      'This branch needs an active, In Progress task already carrying an outcome. Every attestation on this ' +
+        'instance closes the task, so the state exists only if approval was set directly — reachable per ' +
+        'TC-SN-033, but manufacturing it is a write. Executable once such a task exists; do not create one ' +
+        'for this case alone.'
+    );
+    test.skip(true, 'No active In Progress task with an outcome already recorded');
+    return;
+  }
+
+  const target = candidates[0];
+  const outcome = target.approval as 'approved' | 'rejected';
+  ev.observe(`Target ${target.number} (${target.sys_id}), approval already "${outcome}". Re-sending the same outcome.`);
+
+  ev.step(`Attest "${outcome}" a second time.`);
+  const before = readTask(target.sys_id)!;
+  const res = await caf.attest(target.sys_id, { outcome, met_criteria: 'yes' });
+  const after = readTask(target.sys_id)!;
+  ev.actual(`HTTP ${res.status} in ${res.ms}ms — ${res.text.slice(0, 200)}`);
+
+  const diff = proveUnmoved(ev, 'TC-INT-034', before, after);
+  const message = caf.errorMessage(res);
+  const findings: string[] = [];
+  if (res.status !== 409) findings.push(`Expected 409, got ${res.status}`);
+  if (!message.includes(`is already ${outcome}`)) findings.push(`Unexpected message — "${message}"`);
+  if (!message.includes(target.number)) findings.push(`The message does not name the task — "${message}"`);
+  if (diff.length) findings.push(`Task changed — ${diff.join('; ')}`);
+
+  findings.forEach((f) => ev.observe(f));
+  findings.length === 0
+    ? ev.pass(`409 "is already ${outcome}"; ${target.number} unmoved.`)
+    : ev.fail(findings.join(' | '));
+  expect(findings, findings.join('\n')).toEqual([]);
+});
+
+test('TC-INT-035 — Invalid outcome and met_criteria values', async () => {
+  const ev = new CaseEvidence('TC-INT-035', 'Invalid outcome and met_criteria values');
+  ev.expect('Every malformed body answers 400.');
+  ev.expect('Validation happens before the record is loaded — proven by addressing a sys_id that does not exist.');
+  ev.expect('met_criteria is mandatory here even though it is optional on the table itself.');
+  if (!(await requireApi(ev))) return;
+
+  ev.step('Confirm the fixture sys_id matches no task, so a 404 would be the honest answer if validation ran late.');
+  const existing = readTasks(`sys_id=${ABSENT_SYS_ID}`);
+  ev.record('Task lookup', TABLES.tsk, cnitCommand(TABLES.tsk, { query: `sys_id=${ABSENT_SYS_ID}` }), existing);
+  expect(existing, 'The fixture sys_id must not exist').toHaveLength(0);
+
+  // Addressing a non-existent record is the whole proof. If any of these
+  // returned 404 the validation would be running *after* the load, and a
+  // malformed attestation would be touching the state machine before being
+  // rejected. A 400 here can only have come from the enum checks.
+  ev.step('Send each malformed body to that sys_id.');
+  const subCases: { label: string; body: unknown; expects: string }[] = [
+    { label: 'outcome: "maybe"', body: { outcome: 'maybe', met_criteria: 'yes' }, expects: 'outcome must be' },
+    { label: 'met_criteria: "probably"', body: { outcome: 'approved', met_criteria: 'probably' }, expects: 'met_criteria must be' },
+    { label: 'outcome missing', body: { met_criteria: 'yes' }, expects: 'outcome must be' },
+    { label: 'met_criteria missing', body: { outcome: 'approved' }, expects: 'met_criteria must be' },
+    { label: 'empty body', body: undefined, expects: 'Empty request body' },
+  ];
+
+  const findings: string[] = [];
+  for (const sub of subCases) {
+    const res = await caf.attest(ABSENT_SYS_ID, sub.body);
+    const message = caf.errorMessage(res);
+    ev.actual(`${sub.label}: HTTP ${res.status} — ${message.slice(0, 160)}`);
+
+    if (res.status === 404) {
+      findings.push(
+        `${sub.label}: answered 404, so the record is loaded before the body is validated — a malformed ` +
+          'attestation reaches the state machine before being refused'
+      );
+    } else if (res.status !== 400) {
+      findings.push(`${sub.label}: expected 400, got ${res.status}`);
+    }
+    if (!message.includes(sub.expects)) findings.push(`${sub.label}: unexpected message — "${message}"`);
+  }
+
+  // The enum check against a real record too, so the case is not resting on a
+  // fixture the resource may treat specially.
+  ev.step('Repeat the invalid-outcome sub-case against a real task and prove it is untouched.');
+  const candidates = readTasks('active=true');
+  if (candidates.length === 0) {
+    ev.observe('No active task available for the real-record repeat; the absent-sys_id sub-cases stand alone.');
+  } else {
+    const target = candidates[0];
+    const before = readTask(target.sys_id)!;
+    const res = await caf.attest(target.sys_id, { outcome: 'maybe', met_criteria: 'probably' });
+    const after = readTask(target.sys_id)!;
+    ev.actual(`${target.number} with outcome "maybe": HTTP ${res.status} — ${res.text.slice(0, 160)}`);
+    const diff = proveUnmoved(ev, 'Real record', before, after);
+    if (res.status !== 400) findings.push(`Real record: expected 400, got ${res.status}`);
+    // outcome is validated first, so met_criteria never reports even though it is
+    // equally invalid. Assert the first message, not both.
+    if (!caf.errorMessage(res).includes('outcome must be')) {
+      findings.push('Real record: outcome is not the first thing validated');
+    }
+    if (diff.length) findings.push(`Real record: task changed — ${diff.join('; ')}`);
+  }
+
+  ev.observe(
+    'met_criteria is mandatory at this endpoint and optional on the table (TC-SN-033). The endpoint is ' +
+      'stricter than the schema, deliberately — an attestation with no criteria verdict is not an attestation.'
+  );
+
+  findings.forEach((f) => ev.observe(f));
+  findings.length === 0
+    ? ev.pass('All five malformed bodies refused with 400 before the record was loaded; the real task is unmoved.')
+    : ev.fail(findings.join(' | '));
+  expect(findings, findings.join('\n')).toEqual([]);
+});
