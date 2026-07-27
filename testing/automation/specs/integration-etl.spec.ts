@@ -407,3 +407,167 @@ test('TC-INT-067 — Denormalised business application is still current', async 
   expect(findings, findings.join('\n')).toEqual([]);
 });
 
+test('TC-INT-068 — The control join resolves, and the name agrees', async () => {
+  const ev = new CaseEvidence('TC-INT-068', 'The control join resolves, and the name agrees');
+  ev.expect('Every CAF_Control_Sys_Id__c resolves to a control that exists.');
+  ev.expect('Every CAF_Control__c matches that control\'s current name.');
+
+  ev.step('Read the control table and the mirrored requests.');
+  const controls = cnitGet(TABLES.control, { fields: ['sys_id', 'name', 'active'] });
+  const ctlName = new Map(controls.map((c) => [c.sys_id, c.name]));
+  const soql =
+    `SELECT SN_Number__c, CAF_Control__c, CAF_Control_Sys_Id__c FROM ${sf.OBJECTS.req} ORDER BY SN_Number__c`;
+  const sfReq = sf.soql(soql);
+  ev.record('Salesforce requests', sf.OBJECTS.req, sf.soqlCommand(soql), sfReq as Record<string, string>[]);
+  ev.record('ServiceNow controls', TABLES.control, cnitCommand(TABLES.control), controls);
+
+  ev.step('Resolve each join key and compare the stored label.');
+  const broken: string[] = [];
+  const staleName: string[] = [];
+  const noKey: string[] = [];
+
+  for (const r of sfReq as any[]) {
+    const number = String(r.SN_Number__c ?? '?');
+    const key = r.CAF_Control_Sys_Id__c;
+    const held = String(r.CAF_Control__c ?? '');
+    if (blank(key)) {
+      // Pushed before CAF_Control_Sys_Id__c existed; the grid falls back to the name.
+      if (!blank(held)) noKey.push(`${number} (falls back to the name "${held}")`);
+      continue;
+    }
+    const current = ctlName.get(String(key));
+    if (current === undefined) {
+      broken.push(`${number} points at ${key}, which resolves to no control`);
+    } else if (current !== held) {
+      staleName.push(`${number}: mirror holds "${held}", the control is now named "${current}"`);
+    }
+  }
+
+  ev.actual(
+    `${sfReq.length} request(s): ${broken.length} broken join(s), ${staleName.length} stale label(s), ` +
+      `${noKey.length} with no join key.`
+  );
+  ev.observe(
+    'The two failure shapes are different. A key resolving nowhere means the request points at a deleted ' +
+      'control and the grid cannot place it in a column. A key resolving to a different name means the label ' +
+      'is stale — the snapshot problem CAF_Control_Sys_Id__c exists to solve.'
+  );
+  if (noKey.length) {
+    ev.observe(`${noKey.length} request(s) carry no join key and rely on the name fallback — ${sample(noKey)}`);
+  }
+
+  const findings = [
+    ...(broken.length ? [`Broken control join — ${sample(broken)}`] : []),
+    ...(staleName.length ? [`Stale control label — ${sample(staleName)}`] : []),
+  ];
+  findings.forEach((f) => ev.observe(f));
+  findings.length === 0
+    ? ev.pass('Every control join resolves and every stored label matches the current control name.')
+    : ev.fail(findings.join(' | '));
+  expect(findings, findings.join('\n')).toEqual([]);
+});
+
+test('TC-INT-069 — The boolean cast survives the round trip', async () => {
+  const ev = new CaseEvidence('TC-INT-069', 'The boolean cast survives the round trip');
+  ev.expect('Active__c equals the ServiceNow active flag for every control.');
+
+  ev.step('Read the active flag on both sides.');
+  const controls = cnitGet(TABLES.control, { fields: ['number', 'name', 'sys_id', 'active'] });
+  const soql =
+    `SELECT Name, Active__c, ServiceNow_Sys_Id__c FROM ${sf.OBJECTS.control} ORDER BY Name`;
+  const sfCtl = sf.soql(soql);
+  ev.record('ServiceNow controls', TABLES.control, cnitCommand(TABLES.control), controls);
+  ev.record('Salesforce catalogue', sf.OBJECTS.control, sf.soqlCommand(soql), sfCtl as Record<string, string>[]);
+
+  ev.step('Compare, accepting both forms the ServiceNow flag can arrive in.');
+  const byId = index(sfCtl as any[], 'ServiceNow_Sys_Id__c');
+  const wrong: string[] = [];
+  const unmirrored: string[] = [];
+  for (const c of controls) {
+    const mirror = byId.get(c.sys_id);
+    if (!mirror) {
+      unmirrored.push(`${c.name} (${c.number})`);
+      continue;
+    }
+    // getValue() returns '1'/'0'; the Table API's JSON says "true"/"false". cnit
+    // reads the Table API, so accept both rather than assuming which one arrived.
+    const snActive = c.active === '1' || c.active === 'true';
+    if (mirror.Active__c !== snActive) {
+      wrong.push(`${c.name}: ServiceNow active="${c.active}" (${snActive}), Salesforce Active__c=${mirror.Active__c}`);
+    }
+  }
+
+  ev.actual(`${controls.length} control(s) compared; ${wrong.length} disagreeing, ${unmirrored.length} unmirrored.`);
+  ev.observe(
+    'The same confusion between \'1\' and "true", in the attest endpoint, refused every attestation on the ' +
+      'instance — which is why this asserts against real records rather than a fixture.'
+  );
+
+  const findings = [
+    ...(wrong.length ? [`Active flag disagrees — ${sample(wrong)}`] : []),
+    ...(unmirrored.length ? [`Control not mirrored at all — ${sample(unmirrored)}`] : []),
+  ];
+  findings.forEach((f) => ev.observe(f));
+  findings.length === 0
+    ? ev.pass('Every control\'s active flag agrees across both platforms.')
+    : ev.fail(findings.join(' | '));
+  expect(findings, findings.join('\n')).toEqual([]);
+});
+
+test('TC-INT-070 — Parent references resolve', async () => {
+  const ev = new CaseEvidence('TC-INT-070', 'Parent references resolve');
+  ev.expect('Every task with a parent in ServiceNow has the same parent in Salesforce.');
+  ev.expect('Every task without one has none in either place.');
+
+  ev.step('Read task parentage on both sides.');
+  const snTsk = cnitGet(TABLES.tsk, { fields: ['number', 'sys_id', 'caf_request'] });
+  const soql =
+    'SELECT SN_Number__c, ServiceNow_Sys_Id__c, CAF_Request__r.ServiceNow_Sys_Id__c, ' +
+    `CAF_Request__r.SN_Number__c FROM ${sf.OBJECTS.tsk} ORDER BY SN_Number__c`;
+  const sfTsk = sf.soql(soql);
+  ev.record('Salesforce tasks', sf.OBJECTS.tsk, sf.soqlCommand(soql), sfTsk as Record<string, string>[]);
+
+  ev.step('Compare the parent key each side records.');
+  const byId = index(sfTsk as any[], 'ServiceNow_Sys_Id__c');
+  const wrong: string[] = [];
+  const orphaned: string[] = [];
+  const unexpected: string[] = [];
+  let compared = 0;
+
+  for (const sn of snTsk) {
+    const mirror = byId.get(sn.sys_id);
+    if (!mirror) continue;
+    compared += 1;
+    const snParent = sn.caf_request ?? '';
+    const sfParent = mirror.CAF_Request__r?.ServiceNow_Sys_Id__c ?? '';
+    if (snParent && !sfParent) {
+      orphaned.push(`${sn.number}: parented in ServiceNow, unlinked in Salesforce`);
+    } else if (!snParent && sfParent) {
+      unexpected.push(`${sn.number}: unparented in ServiceNow, linked in Salesforce`);
+    } else if (snParent && sfParent && snParent !== sfParent) {
+      wrong.push(`${sn.number}: ServiceNow parent ${snParent}, Salesforce parent ${sfParent}`);
+    }
+  }
+
+  const unparented = snTsk.filter((t) => !t.caf_request).map((t) => t.number);
+  ev.actual(
+    `${compared} task(s) compared; ${orphaned.length} unlinked, ${unexpected.length} unexpectedly linked, ` +
+      `${wrong.length} pointing at a different parent. Unparented in ServiceNow: ${unparented.join(', ') || 'none'}.`
+  );
+  ev.observe(
+    'Linking by External Id removes any ordering dependency between the two pushes, so a task can be pushed ' +
+      'before its request. The cost is that a stale parent key fails silently as an unlinked task rather than ' +
+      'as a rejected write.'
+  );
+
+  const findings = [
+    ...(wrong.length ? [`Parent mismatch — ${sample(wrong)}`] : []),
+    ...(orphaned.length ? [`Unlinked in Salesforce — ${sample(orphaned)}`] : []),
+    ...(unexpected.length ? [`Linked in Salesforce but not in ServiceNow — ${sample(unexpected)}`] : []),
+  ];
+  findings.forEach((f) => ev.observe(f));
+  findings.length === 0
+    ? ev.pass('Every task\'s parentage agrees across both platforms.')
+    : ev.fail(findings.join(' | '));
+  expect(findings, findings.join('\n')).toEqual([]);
+});
