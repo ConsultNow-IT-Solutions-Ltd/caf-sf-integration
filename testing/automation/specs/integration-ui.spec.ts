@@ -401,3 +401,228 @@ test('TC-INT-020 — Both lists are shown side by side', async ({ page }) => {
   expect(panel.servicenowAttachments.length, 'ServiceNow column disagrees with sys_attachment').toBe(attachments.length);
 });
 
+test('TC-INT-021 — A count mismatch raises a warning', async ({ page }) => {
+  const ev = new CaseEvidence('TC-INT-021', 'A count mismatch raises a warning');
+  ev.expect(`${SUBJECT.closedTask} carries 1 Salesforce file against 2 ServiceNow attachments.`);
+  ev.expect('The panel shows a warning, and it reads as informative rather than alarming.');
+
+  ev.step(`Open the evidence panel on ${SUBJECT.closedTask}.`);
+  await lx.openDashboard(page);
+  await lx.openRequest(page, SUBJECT.mixedRequest);
+  await lx.openTaskPanel(page, SUBJECT.closedTask, 'evidence');
+  const panel = await lx.readEvidencePanel(page);
+  await ev.shot(page, 'evidence-count-mismatch-warning');
+
+  ev.record('Counts and warning, as rendered', 'cafEvidence', `task ${SUBJECT.closedTask}`, [
+    { salesforce_files: panel.salesforceCount, servicenow_attachments: panel.servicenowCount, warning: panel.warning || '(none shown)' },
+  ]);
+
+  const mismatch = panel.salesforceCount !== panel.servicenowCount;
+  ev.actual(`Salesforce ${panel.salesforceCount} file(s) against ServiceNow ${panel.servicenowCount} attachment(s) — mismatch present: ${mismatch}`);
+  ev.actual(`Warning shown: ${panel.warning || '(none)'}`);
+  ev.observe(
+    'The extra ServiceNow attachment is backup-restore-test.txt, left by a direct-HTTP smoke test. Two copies of ' +
+      'evidence is not a compliance failure, which is why the wording matters more than the fact of the warning.'
+  );
+
+  if (!mismatch) {
+    ev.blocked(
+      `The ready-made subject no longer carries a mismatch: the panel shows ${panel.salesforceCount} Salesforce ` +
+        `file(s) and ${panel.servicenowCount} ServiceNow attachment(s). Producing one requires an upload with the ` +
+        'kill switch off, which is a write. Blocked rather than failed — the component was not exercised.'
+    );
+    return;
+  }
+
+  if (panel.warning) {
+    const alarming = /error|fail|critical|invalid|breach/i.test(panel.warning);
+    ev.actual(`Wording judged ${alarming ? 'alarming' : 'informative'}: "${panel.warning}"`);
+
+    // The case asks whether the wording is right, not merely whether a warning
+    // appeared. It is not: the remediation advice is unconditional and assumes
+    // the mismatch runs the other way.
+    const snHasMore = Number(panel.servicenowCount) > Number(panel.salesforceCount);
+    if (snHasMore && /re-upload/i.test(panel.warning)) {
+      ev.observe(
+        'Finding — the advice is backwards for this mismatch. cafEvidence.mismatchLabel is unconditional: it ' +
+          'always says "Re-upload the missing file to send it to the system of record", which is correct only when ' +
+          'Salesforce holds more than ServiceNow, i.e. a push failed. Here ServiceNow holds more (' +
+          `${panel.servicenowCount} against ${panel.salesforceCount}), so the system of record already has the file ` +
+          'and following the advice would create a third ServiceNow attachment rather than repair anything. ' +
+          'This is the only mismatch state present on the instance today, so it is the one a user will actually ' +
+          'meet. The label needs to branch on which side is short.'
+      );
+    }
+    if (alarming) {
+      ev.fail(`A mismatch is not a compliance failure, but the warning reads as one: "${panel.warning}"`);
+    } else {
+      ev.pass(
+        `Mismatch detected and surfaced informatively: "${panel.warning}". The case's stated expectation is met — ` +
+          'but see the observation on the remediation advice, which is wrong for this direction of mismatch and ' +
+          'should be raised separately.'
+      );
+    }
+    expect(alarming, `warning wording reads as a failure: ${panel.warning}`).toBeFalsy();
+  } else {
+    ev.fail(
+      `Counts differ (${panel.salesforceCount} vs ${panel.servicenowCount}) but the panel raised no warning — a ` +
+        'failed push would be invisible.'
+    );
+    expect(panel.warning, 'a count mismatch must raise a warning').toBeTruthy();
+  }
+});
+
+test('TC-INT-024 — A closed task shows its evidence and takes no more', async ({ page }) => {
+  const ev = new CaseEvidence('TC-INT-024', 'A closed task shows its evidence and takes no more');
+  ev.expect('Row action reads "View evidence".');
+  ev.expect('The panel opens with no upload control.');
+  ev.expect('A closed task’s evidence is exactly what an audit wants to see, so it is still shown in full.');
+
+  ev.step(`Confirm ${SUBJECT.closedTask} is closed on both platforms before judging the UI.`);
+  const snTask = cnitGet(TABLES.tsk, { query: `number=${SUBJECT.closedTask}`, fields: ['number', 'state', 'active', 'approval'] });
+  ev.record('The task in ServiceNow', TABLES.tsk, cnitCommand(TABLES.tsk, { query: `number=${SUBJECT.closedTask}` }), snTask);
+
+  ev.step('Open the drill-in and read the action offered on it.');
+  await lx.openDashboard(page);
+  await lx.openRequest(page, SUBJECT.mixedRequest);
+  const tasks = await lx.readTasks(page);
+  const closed = tasks.find((t) => t.number === SUBJECT.closedTask);
+  expect(closed, `${SUBJECT.closedTask} was not listed in the drill-in`).toBeTruthy();
+  ev.record('Row actions on the closed task', 'cafDashboard', `task ${SUBJECT.closedTask}`, [
+    { number: closed!.number, state: closed!.state, approval: closed!.approval, actions: closed!.actions.join(', ') },
+  ]);
+
+  ev.step('Open the panel and confirm it shows the evidence but offers no upload.');
+  await lx.openTaskPanel(page, SUBJECT.closedTask, 'evidence');
+  const panel = await lx.readEvidencePanel(page);
+  await ev.shot(page, 'closed-task-view-evidence');
+  ev.record('Panel on the closed task', 'cafEvidence', `task ${SUBJECT.closedTask}`, [
+    { heading: panel.heading, upload_control: String(panel.uploadVisible), salesforce_files: panel.salesforceCount, servicenow_attachments: panel.servicenowCount },
+  ]);
+
+  ev.actual(`ServiceNow: state=${snTask[0]?.state}, active=${snTask[0]?.active}, approval=${snTask[0]?.approval}`);
+  ev.actual(`Row actions: ${closed!.actions.join(', ')}`);
+  ev.actual(`Panel heading "${panel.heading}"; upload control present: ${panel.uploadVisible}`);
+  ev.actual(`Evidence still listed: ${panel.salesforceCount} Salesforce file(s), ${panel.servicenowCount} ServiceNow attachment(s).`);
+  ev.observe(
+    'One component serves both modes through the hide-upload flag rather than a second read-only component ' +
+      'existing to say the same things.'
+  );
+
+  const labelled = closed!.actions.some((a) => /view evidence/i.test(a));
+  const noStart = !closed!.actions.some((a) => /^start$/i.test(a));
+  const noAttest = !closed!.actions.some((a) => /attest/i.test(a));
+  const shows = Number(panel.salesforceCount || 0) + Number(panel.servicenowCount || 0) > 0;
+
+  if (labelled && !panel.uploadVisible && noStart && noAttest && shows) {
+    ev.pass('Reads "View evidence", offers no upload, no Start and no Attest, and still shows every file held on both sides.');
+  } else {
+    ev.fail(
+      `Action label correct: ${labelled}; upload hidden: ${!panel.uploadVisible}; Start absent: ${noStart}; ` +
+        `Attest absent: ${noAttest}; evidence still shown: ${shows}`
+    );
+  }
+  expect(labelled, 'the closed task’s action must read "View evidence"').toBeTruthy();
+  expect(panel.uploadVisible, 'a closed task must offer no upload control').toBeFalsy();
+  expect(noAttest, 'a closed task must not offer Attest').toBeTruthy();
+});
+
+// ===========================================================================
+// Suite 10 — regressions raised by earlier runs
+// ===========================================================================
+
+test('TC-INT-071 — Mismatch advice names the side that is short', async ({ page }) => {
+  const ev = new CaseEvidence('TC-INT-071', 'Mismatch advice names the side that is short');
+  ev.expect('When ServiceNow holds fewer files than Salesforce, the advice is to re-upload.');
+  ev.expect(
+    'When Salesforce holds fewer — the state on this instance — the advice does NOT say re-upload, ' +
+      'because the system of record already holds the file and re-uploading creates a third copy.'
+  );
+
+  ev.step(`Open the evidence panel on ${SUBJECT.closedTask} and read the mismatch warning.`);
+  await lx.openDashboard(page);
+  await lx.openRequest(page, SUBJECT.mixedRequest);
+  await lx.openTaskPanel(page, SUBJECT.closedTask, 'evidence');
+  const panel = await lx.readEvidencePanel(page);
+  await ev.shot(page, 'mismatch-advice');
+
+  const sfCount = Number(panel.salesforceCount || 0);
+  const snCount = Number(panel.servicenowCount || 0);
+
+  ev.record('Counts and advice, as rendered', 'cafEvidence', `task ${SUBJECT.closedTask}`, [
+    {
+      salesforce_files: panel.salesforceCount,
+      servicenow_attachments: panel.servicenowCount,
+      short_side: sfCount === snCount ? '(none)' : sfCount < snCount ? 'Salesforce' : 'ServiceNow',
+      advice: panel.warning || '(no warning shown)',
+    },
+  ]);
+
+  // Verify against the record, not only the screen: the panel's counts are what
+  // the component believes, and a case about advice being wrong for a direction
+  // must first establish the direction from something other than the component
+  // under test.
+  ev.step('Confirm the direction of the mismatch against the ServiceNow record.');
+  const attachments = cnitGet(TABLES.attachment, {
+    query: `table_name=${TABLES.tsk}^ORDERBYfile_name`,
+    fields: ['file_name', 'table_sys_id', 'size_bytes'],
+  });
+  const snTask = cnitGet(TABLES.tsk, { query: `number=${SUBJECT.closedTask}`, fields: ['sys_id', 'number'] });
+  const mine = attachments.filter((a) => a.table_sys_id === snTask[0]?.sys_id);
+  ev.record(
+    `ServiceNow attachments on ${SUBJECT.closedTask}`,
+    TABLES.attachment,
+    cnitCommand(TABLES.attachment, { query: `table_name=${TABLES.tsk}` }),
+    mine
+  );
+  ev.actual(
+    `Panel: ${sfCount} Salesforce file(s) against ${snCount} ServiceNow attachment(s). ` +
+      `ServiceNow itself reports ${mine.length} attachment(s) on the task.`
+  );
+
+  if (sfCount === snCount) {
+    ev.blocked(
+      `The counts agree (${sfCount} and ${snCount}), so no advice is rendered and there is nothing to judge. ` +
+        'Producing a mismatch requires an upload, which is a write — blocked rather than failed, because the ' +
+        'component was not exercised.'
+    );
+    return;
+  }
+
+  const advice = panel.warning || '';
+  const saysReupload = /re-?upload/i.test(advice);
+  const salesforceIsShort = sfCount < snCount;
+
+  ev.actual(`Advice rendered: "${advice || '(none)'}"`);
+  ev.observe(
+    'Re-uploading is the correct remedy only when the push to ServiceNow failed, i.e. Salesforce holds MORE. ' +
+      'Where ServiceNow already holds more, the file is safe in the system of record and the advice is not ' +
+      'merely unhelpful — acting on it adds another copy.'
+  );
+
+  if (salesforceIsShort && saysReupload) {
+    ev.fail(
+      `Salesforce is the short side (${sfCount} against ${snCount}) yet the advice is still "re-upload": ` +
+        `"${advice}". cafEvidence.mismatchLabel is unconditional and does not branch on which side is short, ` +
+        'so following it would create a third ServiceNow attachment rather than repair anything. ' +
+        'Fix: branch the label on servicenowCount - salesforceCount.'
+    );
+  } else if (!advice) {
+    ev.fail(
+      `The counts differ (${sfCount} against ${snCount}) but no warning was rendered at all, so a failed push ` +
+        'would be invisible.'
+    );
+  } else {
+    ev.pass(
+      `Advice matches the direction of the mismatch: ${salesforceIsShort ? 'Salesforce' : 'ServiceNow'} is short ` +
+        `and the panel says "${advice}".`
+    );
+  }
+
+  // The assertion the case exists to make. Expected to fail until
+  // cafEvidence.mismatchLabel branches on which side is short.
+  expect(
+    salesforceIsShort && saysReupload,
+    `Advice tells the user to re-upload while Salesforce is the short side (${sfCount} against ${snCount}): "${advice}"`
+  ).toBeFalsy();
+});
