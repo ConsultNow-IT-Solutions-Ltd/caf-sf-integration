@@ -1611,3 +1611,14 @@ passes once the advice is direction-correct; it does not prescribe the wording.
 
 ---
 
+## Highest-value cases, if the run must be cut short
+
+In order: **TC-INT-016** (the reconcile — silent failure, hardest-won fix),
+**TC-INT-027** (the flagship journey), **TC-INT-030** (evidence visible but gate
+refuses), **TC-INT-013** (allow-list refuses the whole call), **TC-INT-058**
+(cleanup recreates what you deleted), **TC-INT-001** (parity by record, not by
+count), **TC-INT-031** (does the spawned task reach Salesforce?).
+
+TC-INT-031 is the one most likely to find a genuine, currently-unknown defect —
+the reasoning in that case suggests the flow-created sibling task may never be
+pushed. It has not been checked.
