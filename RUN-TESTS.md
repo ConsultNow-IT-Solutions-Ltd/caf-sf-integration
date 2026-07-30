@@ -103,3 +103,47 @@ driving it.
 
 ---
 
+## Where the code is
+
+| | |
+|---|---|
+| [testing/automation/specs/integration-ui.spec.ts](testing/automation/specs/integration-ui.spec.ts) | All the Salesforce UI cases, including the four above. One `test(...)` block each. |
+| [testing/TEST-CASES-INTEGRATION.md](testing/TEST-CASES-INTEGRATION.md) | What each case *is* — priority, component, steps, expected result. The Word document takes its "Expected" section from here, so the two cannot drift. |
+| [testing/automation/lib/lightning.ts](testing/automation/lib/lightning.ts) | How the Lightning UI is driven — the grid, the drill-in, the evidence and attestation panels. |
+| [testing/automation/lib/watch.ts](testing/automation/lib/watch.ts) | The narration panel you see in the corner of the browser. |
+| [testing/automation/run-case.mjs](testing/automation/run-case.mjs) | What `.\test.cmd` runs: finds the case, runs it, builds the document. |
+
+---
+
+## Other cases
+
+49 of the 140 specified cases are automated. Ask for one that is not and the
+command lists the ones that are:
+
+```powershell
+.\test.cmd TC-INT-999
+```
+
+The other Salesforce UI cases are **TC-INT-021, TC-INT-024, TC-INT-048** and
+**TC-INT-053**. TC-INT-048 opens a second window for the ServiceNow portal, so
+it is the one that shows both platforms side by side.
+
+To run a whole suite instead of one case:
+
+```powershell
+.\watch.cmd
+```
+
+---
+
+## If something goes wrong
+
+Use `.\test.cmd`, not `npm test`. Windows ships the PowerShell execution policy
+at **Restricted**, and npm on Windows is a `.ps1` script — so `npm test` fails
+with *"npm.ps1 cannot be loaded because running scripts is disabled on this
+system"*. That message names npm, but the policy is what is blocking it.
+`.\test.cmd` sidesteps it entirely and needs no settings change.
+
+**[testing/automation/WATCH-MODE.md](testing/automation/WATCH-MODE.md) is the
+full reference** — every flag, the first-run setup, and four errors that each
+blamed a component that was working correctly.
