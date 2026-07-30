@@ -265,3 +265,281 @@ the daily API budget is **15,000**, not the ~5,000 stated in HANDOFF §1 and bot
 case files; and the snapshot payload names its timestamp `updated_on`, while
 HANDOFF §5 and TC-INT-046 both call it `sys_updated_on`. Nothing reads it today.
 
+## Suite 9 — transform and data quality (ETL), 2026-08-08
+
+**9 cases, 8 PASS / 1 FAIL.** `npm run int:etl` — reads both platforms, writes to
+neither, needs no `sf.integration` credential, so it is re-runnable on any day.
+
+The outbound push is an ETL, and suite 1 only asserts that records *arrive*.
+These assert that what arrived still **means the same thing**: truncation
+headroom, date conversion, the state code-to-label mapping, the denormalised
+business application and control labels, the boolean cast, External Id
+uniqueness, and parent and control join integrity.
+
+**Re-run after the fix below: 9 of 9 PASS.**
+
+### TC-INT-062 FAIL, then fixed — an orphan control column, and the retire rule's first real test
+
+**Found on the first run, by the only check on this build that could have found
+it.** Sync Health reconciles requests and tasks only, so nothing else looks at
+the control catalogue.
+
+`CAF_Control_Catalog__c` holds **Breath BR**, `Active__c = true`, against a
+control that **does not exist in ServiceNow at all** — not inactive, absent. The
+dashboard therefore renders a column of N/A for a control nobody can see.
+
+syslog settles what happened, and it is not what HANDOFF section 6a assumed:
+
+| Time | Event |
+|---|---|
+| 15:10:14 | Control inserted, pushed — `CNFTYPE0001004 -> CAF_Control_Catalog__c, HTTP 201` |
+| 15:10:47 | Control deleted. *CAF - Retire Control in Salesforce* **fired**, and logged `[CAF->SF] token request failed, HTTP 0` at error level |
+| — | No upsert followed. `Active__c` stayed `true` |
+
+**The rule works; the push under it did not.** `_push` returns early when
+`getToken()` yields null, and a failed push is fire-and-forget by design — so the
+error went to the log and the orphan column appeared anyway. That is the exact
+outcome the retire rule was built to prevent, and it is the third orphan control
+on this build after "Renweal" and "Renewal".
+
+Two things worth drawing out:
+
+- **The synchronous retire rule is the most exposed caller of `getToken()`.** It
+  runs inside the delete transaction, so a transport blip there has no retry and
+  no queue behind it. The token succeeded 33 seconds earlier on the insert.
+- **It cannot be repaired from ServiceNow.** Re-firing the rule needs the record,
+  and the record is gone. The repair was a direct Salesforce write —
+  `Active__c = false`, which is what the rule would have done.
+
+### What was changed so it cannot recur silently
+
+The credential was never at fault: a probe 16 minutes later returned `HTTP 200`,
+so the token failure was transient. Three changes, all live and verified:
+
+| Change | Where |
+|---|---|
+| Retry once on a token failure, and once on a transport-level (`status 0`) upsert failure. A 4xx is a rejection and is not retried | `CAFSalesforceSync._push` |
+| Snapshot returns every control, so the catalogue is comparable at all | `CAF Integration - Sync Snapshot` |
+| `/caf/resync` accepts `control` | `CAF Integration - Resync Record` |
+| Sync Health reconciles the catalogue and reports an **active** orphan | `CafSyncHealth.compareControls` |
+| The strip counts controls in its summary | `cafSyncHealth.js` |
+
+**Verified by inducing the defect**, not by assuming: flipping the retired row
+back to `Active__c = true` produced exactly one difference — *"Active in
+Salesforce, deleted in ServiceNow"*, `canResync = false` — and flipping it back
+returned the report to green. Sync Health now compares **56** records: 19
+requests, 31 tasks, 6 controls.
+
+Two details in that comparison are load-bearing. It keys on `sys_id`, because
+control **numbers are not unique** on this instance — `CNFTYPE0001004` and
+`CNFTYPE0001005` each name two different controls. And a *retired* orphan is
+deliberately not a difference: `Active__c = false` with no ServiceNow counterpart
+is the mirrored-delete design working, and reporting it would flag correct
+behaviour as a defect.
+
+*Related and still true: "Renewal" shows `Active__c = false`, so the retire rule
+has also been observed working end to end.*
+
+### The other eight
+
+All PASS. Worth keeping the numbers, because several are early warnings rather
+than assertions that can only ever be true:
+
+- **TC-INT-064** — longest `short_description` is well inside the 255 the
+  transform truncates at, and the longest control name inside 80. If one ever
+  exceeds it, Sync Health compares the raw source against the truncated copy and
+  reports drift **permanently** — Re-sync re-truncates to the identical value, so
+  it can never clear.
+- **TC-INT-065** — every mirrored date matches `_toIso(source)`, and every source
+  matches the `yyyy-MM-dd HH:mm:ss` shape `_toIso` assumes without validating.
+- **TC-INT-066** — every state in use maps to a label. `_stateLabel`'s default
+  branch passes unmapped values through, so a new choice would publish a bare
+  number into a label field rather than failing.
+- **TC-INT-067 / 068** — no stale denormalised business application or control
+  label, and every control join resolves. Both are snapshot-at-push-time values
+  that Sync Health never compares.
+
+## Pending
+
+**37 cases. Every one of them writes.** Nothing here is blocked on tooling or on
+knowledge — the harness covers all three groups, including the write verbs in
+`lib/cafapi.ts`, which are written and unused. What each needs is a decision.
+
+**Negative-path API cases (8) — written; executed 2026-08-08, all 8 BLOCKED.**
+Not a result: the run never reached the endpoints. `GET /caf/snapshot` answered
+**401 "User is not authenticated"** for every case, because the
+`SF_INTEGRATION_PASSWORD` supplied was wrong. Re-run once the correct one is in
+`.env`. Three things that run established, and are worth not rediscovering:
+
+- **The integration itself is healthy.** An Apex probe through the
+  `ServiceNow_CAF` named credential — `NamedUser`, protocol `Password`, username
+  `sf.integration` — returned **200** against the same endpoint. The 401 was the
+  test harness's credential, not the platform's.
+- **Basic auth is restricted on this instance**, enforced from
+  **2026-08-07 11:32:14**: `glide.authenticate.basic_auth.restriction.enforce`
+  and `.active` are true and `allowed_roles` is `snc_basic_auth_api_access`,
+  which only *Telemetry Sync User* holds. **This is why admin basic auth returns
+  401** — the behaviour HANDOFF section 8 records without a cause.
+  `sf.integration` is exempt via `allow_wsao=true` (it is
+  `web_service_access_only`), which is why the named credential is unaffected.
+  Any *new* integration user will need that role or the WSAO flag.
+- **A 401 is indistinguishable from a working refusal at the status-code level**,
+  so the spec now checks reachability once and records BLOCKED rather than
+  letting eight cases report FAIL for one cause. A case that could not run has
+  not failed.
+
+TC-INT-013/014/015,
+TC-INT-032/033/034/035, and the refusal half of TC-INT-029. Every one is
+*expected to be refused*, so none writes anything, and each re-reads the record
+afterwards to prove `sys_updated_on` is unmoved. They send write-shaped HTTP
+though, so they sit behind the write rule in [CLAUDE.md](../CLAUDE.md).
+TC-INT-013 is fourth on the pack's own priority list.
+
+The specs now exist as `specs/integration-negative.spec.ts` on its own
+`int-neg` project, so `npm run int` stays the pass anyone can run on any day and
+opting into these is an explicit act. **Executing them still needs the user's
+confirmation.** Four points worth knowing before that run:
+
+- **Fixtures are discovered, not pinned.** Each case queries for a task in the
+  state it needs, because closing one spawns the next and a pinned `sys_id`
+  would eventually address a task in the wrong state and pass for the wrong
+  reason. Where no suitable task exists the case records **BLOCKED** rather than
+  writing one into existence.
+- **TC-INT-034 is expected to block.** It needs an active, In Progress task
+  already carrying an outcome; every attestation on this instance closes the
+  task, so the state is reachable only by setting `approval` directly.
+- **TC-INT-013 sends a canary first.** The documented body pairs `state` with a
+  refused field, so a broken whole-call refusal would start a task and move its
+  parent request. The canary pairs `comments` with the refused field instead:
+  same branch, and the damage on failure is a stray comment. The six documented
+  sub-cases only run once the canary is refused cleanly.
+- **"Empty body" is not `{}`.** TC-INT-015 sends no body at all. An empty object
+  is truthy, so it passes the resource's emptiness check, reaches `gr.update()`
+  and fires the two reconcile upserts — a no-op write rather than a refusal.
+
+**Reversible writes (12).** TC-INT-002/003/005/007/009/010/011/012,
+TC-INT-039/040/043, TC-INT-052. These change state and change it back — the
+drift demo on `CAFT0001046` is the documented repeatable one.
+TC-INT-009/010/041/043 need the kill switch off and back to `true`.
+
+**One-shot (17).** TC-INT-004/027/028/031/041/042/049B and the write halves of
+the evidence and attestation cases. These consume records that cannot be reset —
+including the flagship journey on `CAFT0001001`, and TC-INT-031, still the case
+most likely to find something genuinely unknown.
+
+### Harness as it now stands — complete
+
+| | |
+|---|---|
+| `lib/cnit.ts` | ServiceNow reads without a browser, `-ExcludeRefLinks` always on |
+| `lib/salesforce.ts` | SOQL, describe, org limits, Tooling API, anonymous Apex |
+| `lib/cafapi.ts` | The inbound Scripted REST API as `sf.integration`; write verbs written and unused |
+| `lib/lightning.ts` | The Lightning UI — grid, Sync Health strip, drill-in, task actions, evidence panel |
+| `auth/salesforce.setup.ts` | Passwordless login via the CLI's OAuth grant |
+
+Four Playwright projects: `sn` (ServiceNow UI), `int` (no login at all),
+`sf-setup`, `sf-ui`. `npm run sf:smoke` exercises every Lightning selector
+read-only and fails loudly if a template rename breaks one — run it before a UI
+pass so a real case never fails for a harness reason.
+
+**Nothing is left to build.** The remaining 44 cases need the decisions above,
+not more tooling.
+
+#### Four things about Lightning worth not rediscovering
+
+- **The LWCs render into *native* shadow roots.** Playwright's CSS engine
+  pierces them, so `page.locator('table.grid')` works. Raw DOM traversal inside
+  `evaluate()` does **not** — `host.querySelector()` returns null for everything
+  in the shadow root, and the scrape reports an empty grid, which reads as "the
+  LWC has no data" rather than "the scrape looked in the wrong place". Every
+  `evaluate()` in `lib/lightning.ts` starts from `shadowRoot ?? el`.
+- **`hasTasks` is false on first render**, so the drill-in panel always shows
+  *"No tasks mirrored for this request yet"* before the `@wire` resolves.
+  Racing the task table against that paragraph always resolves to the
+  paragraph. Wait for the table alone and let the wait expire — an expiry is
+  then a real empty result.
+- **Both `cafDashboard` and `cafSyncHealth` contain a `table`**, and the former
+  contains the latter. Scope every selector to its component root or a
+  confident assertion passes against the wrong table.
+- **`cafEvidence`'s heading is a prop and renders instantly; both file lists
+  arrive later** — Salesforce Files from a wire, ServiceNow attachments from a
+  callout. Waiting on the heading is not waiting on the panel: it reported 0 and
+  0 for a task holding 1 Salesforce file and 2 ServiceNow attachments, which
+  reads as *the integration lost the evidence* rather than *the scrape was
+  early*. Wait for `Reading evidence…` to clear.
+
+  A related trap on the verification side: query task files through
+  **`ContentDocumentLink`**, not `FirstPublishLocationId`. A file uploaded by
+  `lightning-file-upload` is *linked* to the record and its publish location is
+  not necessarily that record, so the wrong query returns zero — and agrees with
+  a broken scrape.
+
+### Constraints that shape the work
+
+- **Developer Edition allows 15,000 API calls per 24 hours** — measured from the
+  org on 2026-08-07, correcting the ~5,000 stated elsewhere in this pack. One
+  end-to-end journey costs ~45; the whole read-only pass costs about 40. `sf`
+  deploys and Workbench draw on the same budget, so do not run a full pass on a
+  heavy build day. `sf org list limits --target-org caf-sf` gives the figure.
+- **Kill switch:** `x_gskn2_caf_compli.sf.enabled = false` stops all outbound
+  push. Several drift cases use it deliberately. **Confirm it is back to `true`
+  before anything else.** Verified `true` on 2026-08-07.
+- **Deletes propagate in neither direction**, and mid-cleanup is hazardous:
+  updating a not-yet-deleted ServiceNow record recreates its Salesforce twin
+  (TC-INT-058).
+- **No Apex test coverage** on the three service classes — fine for DE, blocking
+  for production, since Salesforce requires 75% to deploy.
+
+### Highest-value integration cases, if time is short
+
+**TC-INT-016** (the explicit reconcile — silent failure, hardest-won fix),
+**TC-INT-027** (flagship attestation journey), **TC-INT-030** (evidence visible
+in Salesforce but the gate refuses), **TC-INT-013** (allow-list refuses the whole
+call), **TC-INT-031**.
+
+~~TC-INT-050~~ is **done** — the LWC contradicts ServiceNow rather than
+repeating its defect. See the findings above.
+
+**TC-INT-031 is most likely to find something genuinely unknown.** Closing a task
+spawns the next one via a flow, inside the transaction attributed to
+`sf.integration` — which the echo-loop guard skips. The explicit reconcile pushes
+the attested task and its parent, **not the sibling the flow just created.** So
+flow-spawned tasks may never reach Salesforce. Not checked.
+
+---
+
+## Harness facts worth not rediscovering
+
+- **The Table API needs `X-UserToken`.** Session cookie alone returns 401, and
+  **HTTP basic auth also returns 401** on this instance even with valid
+  credentials. The token is `window.g_ck`, captured at setup and cached. It is
+  present on the landing page, classic list and form pages, and `/caf` — but not
+  on `about:blank` or `/blank.do`.
+- **Playwright restarts its worker after a failed test**, resetting module state.
+  Evidence is therefore written one JSON file per case, never accumulated in
+  memory — the first design silently lost every case before the first failure.
+- **`^OR` binds only to the condition immediately before it.** `name=a^element=x^ORname=b^element=x`
+  does not mean what it reads as; use `nameINa,b^element=x`.
+- **Forms render standalone** at `<table>.do?sys_id=…` — no `gsft_main` iframe,
+  cleaner screenshots. The nav-shell path does not work on this instance.
+- **`g_form` is reachable** from the top-level document, so read-only, mandatory
+  and UI-policy state can be asserted directly and compared against the record.
+- **The `/caf` grid is at `?id=caf_apps`.** Plain `/caf` is a landing page with
+  three tiles; the *View Apps* tile is an Angular `javascript:void(0)` handler
+  that cannot be clicked through reliably.
+- **The generator skips documents open in Word** rather than aborting the build,
+  and names them at the end.
+- Playwright config is **serial, one worker, zero retries** — this suite writes to
+  a live instance with automation on every table, and a retry that passes on the
+  second attempt hides a real flake.
+
+## Data hazards
+
+- **`cnit` has no delete verb.** Cancellation (`state=-1`) is the exit route;
+  records still accumulate.
+- **Two business applications are named "SAP HANA"** — one with data
+  (`6e816834…398`), one `not_ini` (`5470cc85…372`). Select by `sys_id`.
+- **`RCAF0001001`** has no business application and no control, so it never
+  appears in either grid. Expected — do not raise it.
+- Baseline as at 2026-08-07: **19 requests, 30 tasks, 6 active controls, 62 rows
+  in the portal grid.** Verify rather than trusting these before a formal pass.
