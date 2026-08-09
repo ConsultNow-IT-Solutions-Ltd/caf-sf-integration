@@ -470,3 +470,87 @@ describe('c-caf-approvals filters and tiles', () => {
         expect(el.shadowRoot.textContent).not.toContain('Loading the approval queue');
     });
 });
+
+describe('c-caf-approvals review panel inputs', () => {
+    beforeEach(() => {
+        getEvidence.mockImplementation(() => new Promise(() => {}));
+    });
+
+    afterEach(() => {
+        getEvidence.mockImplementation(() => Promise.resolve({ salesforce: [], serviceNow: [] }));
+        while (document.body.firstChild) {
+            document.body.removeChild(document.body.firstChild);
+        }
+        jest.clearAllMocks();
+    });
+
+    const reviewButton = (el, n) => el.shadowRoot.querySelector('button[data-number="CAFT000000' + n + '"]');
+
+    // TC-UNIT-114
+    it('gives both panels the record, sys_id, state and approval of the task under review', async () => {
+        const el = await render([task(1, 'CRM', null, { State__c: 'In Progress', Approval__c: 'requested' })]);
+        reviewButton(el, 1).click();
+        await flush();
+
+        const evidence = el.shadowRoot.querySelector('c-caf-evidence');
+        const attestation = el.shadowRoot.querySelector('c-caf-attestation');
+        expect(evidence.recordId).toBe('a01');
+        expect(evidence.snSysId).toBe('sys1');
+        expect(evidence.taskNumber).toBe('CAFT0000001');
+        expect(attestation.recordId).toBe('a01');
+        expect(attestation.snSysId).toBe('sys1');
+        expect(attestation.taskState).toBe('In Progress');
+        expect(attestation.taskApproval).toBe('requested');
+    });
+
+    // TC-UNIT-115
+    it('keeps the review open when a filter hides its row, and highlights it again when the filter clears', async () => {
+        const el = await render([task(1, 'CRM', null), task(2, 'HR', null)]);
+        reviewButton(el, 2).click();
+        await flush();
+
+        const select = el.shadowRoot.querySelector('select');
+        select.value = 'CRM';
+        select.dispatchEvent(new CustomEvent('change'));
+        await flush();
+        expect(queueRows(el)).toHaveLength(1);
+        expect(el.shadowRoot.querySelector('.tasks__row--active')).toBeNull();
+        expect(el.shadowRoot.querySelector('.review__title').textContent).toBe('Attest CAFT0000002');
+
+        select.value = '';
+        select.dispatchEvent(new CustomEvent('change'));
+        await flush();
+        expect(queueRows(el)[1].className).toBe('tasks__row tasks__row--active');
+    });
+
+    // TC-UNIT-116
+    it('keeps the review open on the same task through a refresh', async () => {
+        const el = await render([task(1, 'CRM', null)]);
+        reviewButton(el, 1).click();
+        await flush();
+
+        el.shadowRoot.querySelector('.view__head button').click();
+        await flush();
+
+        expect(refreshApex).toHaveBeenCalledTimes(2);
+        expect(el.shadowRoot.querySelector('.review__title').textContent).toBe('Attest CAFT0000001');
+        expect(el.shadowRoot.querySelector('c-caf-attestation').snSysId).toBe('sys1');
+    });
+
+    // TC-UNIT-117
+    it('renders rows with no Id, sys_id or number each once, with Review disabled', async () => {
+        const blank = { Short_Description__c: 'No identifiers', CAF_Request__r: { Business_Application__c: 'CRM' } };
+        const consoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
+        const el = await render([{ ...blank }, { ...blank }]);
+
+        expect(queueRows(el)).toHaveLength(2);
+        expect(consoleError.mock.calls.join(' ')).not.toMatch(/key/i);
+        consoleError.mockRestore();
+        const buttons = el.shadowRoot.querySelectorAll('table.queue button');
+        expect(Array.from(buttons).map((b) => b.disabled)).toEqual([true, true]);
+
+        buttons[0].click();
+        await flush();
+        expect(el.shadowRoot.querySelector('section.review')).toBeNull();
+    });
+});

@@ -115,6 +115,10 @@ TC-UNIT-001 covers the direction no live case can reach without an upload.
 | TC-UNIT-111 | Application and Overdue only filters apply together; choosing "All applications" brings the other applications back | |
 | TC-UNIT-112 | Approved and Rejected tiles count only those two values; Updated shows the date part of `LastModifiedDate` | An unknown decision mustn't be counted as either |
 | TC-UNIT-113 | A queue that fails to load shows its message with no filters, table or loading text | |
+| TC-UNIT-114 | Review gives evidence and attestation the task's record Id, sys_id and number, and attestation its state and approval | The decision must go to the task on screen |
+| TC-UNIT-115 | A filter that hides the row under review leaves the panel open; clearing it brings the highlight back | Filtering mustn't lose a review in progress |
+| TC-UNIT-116 | Refresh leaves the review panel open on the same task | |
+| TC-UNIT-117 | Rows with no Id, sys_id or number each render once, with distinct keys and Review disabled, and a click opens nothing | Malformed rows mustn't collapse into one or open an empty panel |
 
 ## LWC: `cafReports` (`salesforce/test/lwc/cafReports.test.js`)
 
