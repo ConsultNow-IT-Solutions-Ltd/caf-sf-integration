@@ -1,0 +1,28 @@
+{
+  "name": "caf-compliance-test-automation",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Playwright automation for the CAF Compliance test pack (ServiceNow and Salesforce).",
+  "scripts": {
+    "spike": "playwright test specs/spike-servicenow.spec.ts --project=sn",
+    "spike:headed": "playwright test specs/spike-servicenow.spec.ts --project=sn --headed",
+    "auth": "playwright test auth/servicenow.setup.ts --project=setup",
+    "sn": "playwright test specs/servicenow-cases.spec.ts --project=sn",
+    "int": "playwright test specs/integration-readonly.spec.ts --project=int",
+    "int:etl": "playwright test specs/integration-etl.spec.ts --project=etl",
+    "int:neg": "playwright test specs/integration-negative.spec.ts --project=int-neg",
+    "sf:auth": "playwright test --project=sf-setup",
+    "sf:smoke": "playwright test specs/probe-lightning.spec.ts --project=sf-ui",
+    "sf:smoke:headed": "playwright test specs/probe-lightning.spec.ts --project=sf-ui --headed",
+    "report": "playwright show-report",
+
+    "test": "node run-case.mjs",
+    "watch": "powershell -NoProfile -ExecutionPolicy Bypass -File watch.ps1",
+    "watch:sf": "powershell -NoProfile -ExecutionPolicy Bypass -File watch.ps1 -Suite sf",
+    "watch:sn": "powershell -NoProfile -ExecutionPolicy Bypass -File watch.ps1 -Suite sn",
+    "report:html": "node report/build-report.mjs --in results/cases --open"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.62.1"
+  }
+}

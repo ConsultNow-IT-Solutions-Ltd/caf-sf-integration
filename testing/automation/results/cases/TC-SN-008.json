@@ -1,0 +1,194 @@
+{
+  "run": {
+    "instance": "https://dev281754.service-now.com",
+    "executedBy": "admin",
+    "executedVia": "Playwright (automated); every assertion cross-checked against the ServiceNow Table API"
+  },
+  "case": {
+    "id": "TC-SN-008",
+    "title": "Choice values match the documented set exactly",
+    "startedAt": "2026-08-07T16:59:31.626Z",
+    "verdict": "PASS",
+    "steps": [
+      {
+        "n": 1,
+        "text": "Read every choice on caf_req and caf_tsk.",
+        "at": "2026-08-07T16:59:31.627Z",
+        "screenshots": []
+      }
+    ],
+    "records": [
+      {
+        "label": "All choices",
+        "table": "sys_choice",
+        "query": "caf_req and caf_tsk",
+        "rows": [
+          {
+            "inactive": "false",
+            "name": "x_gskn2_caf_compli_caf_req",
+            "label": "Compliant",
+            "value": "in_compliance",
+            "element": "caf_status"
+          },
+          {
+            "inactive": "false",
+            "name": "x_gskn2_caf_compli_caf_req",
+            "label": "Approaching Due",
+            "value": "approaching_due",
+            "element": "caf_status"
+          },
+          {
+            "inactive": "false",
+            "name": "x_gskn2_caf_compli_caf_req",
+            "label": "Out of Compliance",
+            "value": "out_of_compliance",
+            "element": "caf_status"
+          },
+          {
+            "inactive": "false",
+            "name": "x_gskn2_caf_compli_caf_req",
+            "label": "Archer Finding Raised",
+            "value": "archer_exception_approved",
+            "element": "caf_status"
+          },
+          {
+            "inactive": "false",
+            "name": "x_gskn2_caf_compli_caf_req",
+            "label": "1 - Critical",
+            "value": "1",
+            "element": "priority"
+          },
+          {
+            "inactive": "false",
+            "name": "x_gskn2_caf_compli_caf_req",
+            "label": "2 - High",
+            "value": "2",
+            "element": "priority"
+          },
+          {
+            "inactive": "false",
+            "name": "x_gskn2_caf_compli_caf_req",
+            "label": "3 - Moderate",
+            "value": "3",
+            "element": "priority"
+          },
+          {
+            "inactive": "false",
+            "name": "x_gskn2_caf_compli_caf_req",
+            "label": "4 - Low",
+            "value": "4",
+            "element": "priority"
+          },
+          {
+            "inactive": "false",
+            "name": "x_gskn2_caf_compli_caf_req",
+            "label": "Open",
+            "value": "1",
+            "element": "state"
+          },
+          {
+            "inactive": "false",
+            "name": "x_gskn2_caf_compli_caf_req",
+            "label": "Work in Progress",
+            "value": "2",
+            "element": "state"
+          },
+          {
+            "inactive": "false",
+            "name": "x_gskn2_caf_compli_caf_req",
+            "label": "Closed Complete",
+            "value": "3",
+            "element": "state"
+          },
+          {
+            "inactive": "false",
+            "name": "x_gskn2_caf_compli_caf_req",
+            "label": "Cancelled",
+            "value": "-1",
+            "element": "state"
+          },
+          {
+            "inactive": "false",
+            "name": "x_gskn2_caf_compli_caf_tsk",
+            "label": "Requested",
+            "value": "requested",
+            "element": "approval"
+          },
+          {
+            "inactive": "false",
+            "name": "x_gskn2_caf_compli_caf_tsk",
+            "label": "Approved",
+            "value": "approved",
+            "element": "approval"
+          },
+          {
+            "inactive": "false",
+            "name": "x_gskn2_caf_compli_caf_tsk",
+            "label": "Rejected",
+            "value": "rejected",
+            "element": "approval"
+          },
+          {
+            "inactive": "false",
+            "name": "x_gskn2_caf_compli_caf_tsk",
+            "label": "Cancelled",
+            "value": "cancelled",
+            "element": "approval"
+          },
+          {
+            "inactive": "false",
+            "name": "x_gskn2_caf_compli_caf_tsk",
+            "label": "Yes",
+            "value": "yes",
+            "element": "met_criteria"
+          },
+          {
+            "inactive": "false",
+            "name": "x_gskn2_caf_compli_caf_tsk",
+            "label": "No",
+            "value": "no",
+            "element": "met_criteria"
+          },
+          {
+            "inactive": "false",
+            "name": "x_gskn2_caf_compli_caf_tsk",
+            "label": "Open",
+            "value": "1",
+            "element": "state"
+          },
+          {
+            "inactive": "false",
+            "name": "x_gskn2_caf_compli_caf_tsk",
+            "label": "Work in Progress",
+            "value": "2",
+            "element": "state"
+          },
+          {
+            "inactive": "false",
+            "name": "x_gskn2_caf_compli_caf_tsk",
+            "label": "Closed Complete",
+            "value": "3",
+            "element": "state"
+          },
+          {
+            "inactive": "false",
+            "name": "x_gskn2_caf_compli_caf_tsk",
+            "label": "Cancelled",
+            "value": "-1",
+            "element": "state"
+          }
+        ],
+        "at": "2026-08-07T16:59:32.210Z"
+      }
+    ],
+    "observations": [],
+    "expected": [
+      "state, caf_status, approval, met_criteria and priority carry exactly the documented values, with no inactive rows."
+    ],
+    "actual": [
+      "22 choice values found; 0 inactive."
+    ],
+    "verdictReason": "All choice sets match, no inactive values.",
+    "finishedAt": "2026-08-07T16:59:32.211Z"
+  }
+}

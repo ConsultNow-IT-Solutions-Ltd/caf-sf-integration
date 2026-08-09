@@ -1,0 +1,370 @@
+import { LightningElement, wire } from 'lwc';
+import { refreshApex } from '@salesforce/apex';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+import getRequests from '@salesforce/apex/CafDashboardController.getRequests';
+import getControls from '@salesforce/apex/CafDashboardController.getControls';
+import getTasks from '@salesforce/apex/CafTaskService.getTasks';
+import applyChange from '@salesforce/apex/CafTaskService.applyChange';
+
+const STATUS = {
+    in_compliance:             { label: 'In compliance',      dot: 'dot dot--green' },
+    approaching_due:           { label: 'Approaching due',    dot: 'dot dot--amber' },
+    out_of_compliance:         { label: 'Out of compliance',  dot: 'dot dot--red' },
+    archer_exception_approved: { label: 'Exception approved', dot: 'dot dot--blue' }
+};
+
+export default class CafDashboard extends LightningElement {
+    columns = [];
+    rows = [];
+    error;
+    loading = true;
+    busy = false;
+
+    selectedSysId;
+    selectedNumber;
+    selectedControl;
+    tasks = [];
+
+    /** The task whose panel is open, if any. */
+    activeTask;
+
+    /** 'evidence' or 'attest' - which of the two jobs the open panel is for. */
+    panelMode;
+
+    /**
+     * Evidence held in ServiceNow for the open task, relayed from cafEvidence
+     * to cafAttestation. Undefined until cafEvidence has looked, which is not
+     * the same as zero - the attestation buttons grey out on zero, not on
+     * not-yet-known.
+     */
+    evidenceCount;
+
+    wiredRequests;
+    wiredControls;
+    wiredTasks;
+
+    /** Raw wire payloads, held because the grid needs both to pivot. */
+    controls;
+    requests;
+
+    @wire(getControls)
+    handleControls(result) {
+        this.wiredControls = result;
+        if (result.data) {
+            this.controls = result.data;
+            this.rebuild();
+        } else if (result.error) {
+            this.error = this.messageOf(result.error);
+            this.loading = false;
+        }
+    }
+
+    @wire(getRequests)
+    handleRequests(result) {
+        this.wiredRequests = result;
+        if (result.data) {
+            this.requests = result.data;
+            this.rebuild();
+        } else if (result.error) {
+            this.error = this.messageOf(result.error);
+            this.loading = false;
+        }
+    }
+
+    /**
+     * Two wires resolve independently and in no guaranteed order, so the pivot
+     * waits for both rather than rendering a half-built grid on whichever
+     * arrives first.
+     */
+    rebuild() {
+        if (!this.controls || !this.requests) {
+            return;
+        }
+        this.build(this.controls, this.requests);
+        this.loading = false;
+    }
+
+    @wire(getTasks, { requestExternalId: '$selectedSysId' })
+    handleTasks(result) {
+        this.wiredTasks = result;
+        if (result.data) {
+            this.tasks = result.data.map((t) => this.decorate(t));
+
+            // A task that closed while its panel was open should not leave a
+            // stale state behind it: refresh what the attestation form reads.
+            if (this.activeTask) {
+                const current = result.data.find(
+                    (t) => t.ServiceNow_Sys_Id__c === this.activeTask.sysId
+                );
+                if (current) {
+                    this.activeTask = {
+                        ...this.activeTask,
+                        state: current.State__c,
+                        approval: current.Approval__c
+                    };
+                }
+            }
+        }
+    }
+
+    /**
+     * Which actions a task can actually take, decided here rather than left to
+     * ServiceNow to refuse.
+     *
+     * Evidence and attestation are separate buttons because they are separate
+     * jobs done by separate people: whoever owns the application gathers the
+     * evidence, and someone else judges it. One button covering both would
+     * imply one person does both, which is the opposite of what an attestation
+     * is for.
+     *
+     * Start is hidden once it cannot succeed - on a task that is not Open it is
+     * a guaranteed error, and there is nothing to learn from being allowed to
+     * press it. Attest is hidden unless the task is In Progress, which is what
+     * the endpoint requires.
+     *
+     * The evidence button is never hidden, only relabelled. Reading the
+     * evidence behind a closed task is the audit view, and it is wanted
+     * precisely when the task can no longer be attested; the panel drops its
+     * upload control in that case rather than disappearing.
+     */
+    decorate(task) {
+        const state = task.State__c;
+        const open = state === 'Open';
+        const inProgress = state === 'In Progress';
+        const active = open || inProgress;
+
+        return {
+            ...task,
+            canStart: open,
+            canAttest: inProgress,
+            evidenceLabel: active ? 'Upload evidence' : 'View evidence',
+            rowClass: this.activeTask && this.activeTask.sysId === task.ServiceNow_Sys_Id__c
+                ? 'tasks__row tasks__row--active'
+                : 'tasks__row'
+        };
+    }
+
+    /**
+     * Pivot requests into apps (rows) x controls (columns).
+     *
+     * Columns come from the control catalogue, not from the requests. That is
+     * what the ServiceNow portal widget does - it queries the control table for
+     * active controls and renders a column for each, showing N/A wherever an
+     * application has no request for that control. Deriving columns from the
+     * requests instead meant a newly created control had no column at all here
+     * until somebody generated a request against it, so the two grids showed
+     * different numbers of columns for the same data.
+     *
+     * Cells join on the control's sys_id, falling back to its name. The name is
+     * a snapshot written at push time, so a control renamed in ServiceNow leaves
+     * the old label stranded on requests already mirrored here - joining on it
+     * alone would drop those requests out of the grid entirely. The fallback
+     * covers requests pushed before CAF_Control_Sys_Id__c existed.
+     */
+    build(controls, records) {
+        const apps = new Map();
+
+        records.forEach((r) => {
+            if (!apps.has(r.Business_Application__c)) {
+                apps.set(r.Business_Application__c, {});
+            }
+            const key = r.CAF_Control_Sys_Id__c || 'name:' + r.CAF_Control__c;
+            apps.get(r.Business_Application__c)[key] = r;
+        });
+
+        this.columns = controls.map((c) => ({
+            key: c.ServiceNow_Sys_Id__c || c.Name,
+            label: c.Name
+        }));
+
+        const rows = [];
+        apps.forEach((byControl, appName) => {
+            let compliant = 0;
+            let assessed = 0;
+
+            const cells = controls.map((control) => {
+                const record =
+                    byControl[control.ServiceNow_Sys_Id__c] ||
+                    byControl['name:' + control.Name];
+                const status = record ? record.CAF_Status__c : null;
+                const meta = STATUS[status];
+
+                if (record) {
+                    assessed += 1;
+                    if (status === 'in_compliance') {
+                        compliant += 1;
+                    }
+                }
+
+                return {
+                    key: appName + '|' + control.Name,
+                    isNa: !record,
+                    dot: meta ? meta.dot : 'dot dot--none',
+                    sysId: record ? record.ServiceNow_Sys_Id__c : null,
+                    number: record ? record.SN_Number__c : '',
+                    control: control.Name,
+                    disabled: !record,
+                    title: record
+                        ? record.SN_Number__c + ' - ' + (meta ? meta.label : status || 'unknown')
+                        : control.Name + ' - not assessed for this application'
+                };
+            });
+
+            // An app is compliant only when every control it has actually been
+            // assessed against is. Controls with no request render N/A and stay
+            // out of the denominator: counting them would mean adding a control
+            // in ServiceNow silently marks every application non-compliant,
+            // which is a scoring change disguised as a display change.
+            const allGreen = assessed > 0 && compliant === assessed;
+
+            let overallClass = 'pill pill--amber';
+            let overallLabel = compliant + ' of ' + assessed;
+
+            if (assessed === 0) {
+                overallClass = 'pill pill--none';
+                overallLabel = 'Not assessed';
+            } else if (allGreen) {
+                overallClass = 'pill pill--green';
+                overallLabel = 'Compliant';
+            }
+
+            rows.push({
+                key: appName,
+                app: appName,
+                cells,
+                overallClass,
+                overallLabel
+            });
+        });
+
+        rows.sort((a, b) => a.app.localeCompare(b.app));
+        this.rows = rows;
+    }
+
+    handleCellClick(event) {
+        const { sysid, number, control } = event.currentTarget.dataset;
+        if (!sysid) {
+            return;
+        }
+        this.selectedSysId = sysid;
+        this.selectedNumber = number;
+        this.selectedControl = control;
+    }
+
+    handleClose() {
+        this.selectedSysId = undefined;
+        this.selectedNumber = undefined;
+        this.tasks = [];
+        this.handleCloseTask();
+    }
+
+    handleOpenTask(event) {
+        const { id, sysid, number, state, approval, mode } = event.currentTarget.dataset;
+        this.evidenceCount = undefined;
+        this.panelMode = mode;
+        this.activeTask = { id, sysId: sysid, number, state, approval };
+    }
+
+    handleCloseTask() {
+        this.activeTask = undefined;
+        this.panelMode = undefined;
+        this.evidenceCount = undefined;
+    }
+
+    /**
+     * cafEvidence reports what ServiceNow holds; cafAttestation needs it to
+     * know whether the gate is satisfied. The two are siblings, so the count
+     * travels through here rather than between them.
+     */
+    handleEvidenceCount(event) {
+        if (this.activeTask && event.detail.sysId === this.activeTask.sysId) {
+            this.evidenceCount = event.detail.count;
+        }
+    }
+
+    /**
+     * An attestation closes the task and moves the parent request's compliance
+     * status, so both wires are stale. The panel stays open: the outcome is
+     * displayed in it, and closing it would take the confirmation away with it.
+     */
+    async handleAttested() {
+        await Promise.all([refreshApex(this.wiredTasks), refreshApex(this.wiredRequests)]);
+    }
+
+    /**
+     * Every action goes to ServiceNow and comes back. Nothing is written to the
+     * local CAF_Task__c record: ServiceNow applies its own rules, then the
+     * inbound API pushes the resulting state — including any derived change to
+     * the parent request — back into Salesforce.
+     */
+    async handleAction(event) {
+        const { sysid, field, value } = event.currentTarget.dataset;
+        this.busy = true;
+        try {
+            await applyChange({ sysId: sysid, field: field, value: value });
+            this.toast('Sent to ServiceNow', 'ServiceNow applied the change and returned the new state.', 'success');
+            await Promise.all([refreshApex(this.wiredTasks), refreshApex(this.wiredRequests)]);
+        } catch (err) {
+            this.toast('ServiceNow rejected the change', this.messageOf(err), 'error');
+        } finally {
+            this.busy = false;
+        }
+    }
+
+    messageOf(err) {
+        if (!err) {
+            return 'Unknown error';
+        }
+        if (err.body && err.body.message) {
+            return err.body.message;
+        }
+        return err.message || String(err);
+    }
+
+    toast(title, message, variant) {
+        this.dispatchEvent(new ShowToastEvent({ title, message, variant }));
+    }
+
+    get hasRows() {
+        return this.rows.length > 0;
+    }
+
+    get hasSelection() {
+        return !!this.selectedSysId;
+    }
+
+    get hasTasks() {
+        return this.tasks.length > 0;
+    }
+
+    get hasActiveTask() {
+        return !!this.activeTask;
+    }
+
+    get isAttestPanel() {
+        return this.panelMode === 'attest';
+    }
+
+    /**
+     * The approver sees the evidence but does not add to it, and a closed task
+     * takes no new evidence at all. Either way the same component renders with
+     * its upload control removed rather than a second read-only component
+     * existing to say the same things.
+     */
+    get evidenceReadOnly() {
+        if (this.isAttestPanel) {
+            return true;
+        }
+        const state = this.activeTask && this.activeTask.state;
+        return state !== 'Open' && state !== 'In Progress';
+    }
+
+    get panelHeading() {
+        if (!this.activeTask) {
+            return '';
+        }
+        return this.isAttestPanel
+            ? 'Attest ' + this.activeTask.number
+            : 'Evidence for ' + this.activeTask.number;
+    }
+}

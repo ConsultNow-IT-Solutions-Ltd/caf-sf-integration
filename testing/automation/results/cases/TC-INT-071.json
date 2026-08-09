@@ -1,0 +1,76 @@
+{
+  "run": {
+    "instance": "https://orgfarm-4938c7f768-dev-ed.develop.lightning.force.com + https://dev281754.service-now.com",
+    "executedBy": "admin.070b86ccf531@agentforce.com (Salesforce) / admin (ServiceNow)",
+    "executedVia": "Playwright driving Lightning Experience. Every screen assertion is cross-checked against the ServiceNow record over cnit and the Salesforce record over the sf CLI. No case in this file writes to either platform."
+  },
+  "case": {
+    "id": "TC-INT-071",
+    "title": "Mismatch advice names the side that is short",
+    "startedAt": "2026-08-08T18:38:11.765Z",
+    "verdict": "FAIL",
+    "steps": [
+      {
+        "n": 1,
+        "text": "Open the evidence panel on CAFT0001022 and read the mismatch warning.",
+        "at": "2026-08-08T18:38:11.766Z",
+        "screenshots": [
+          "C:\\reyan_tech_cap_dev\\dev281754 CAF App Reyan\\testing\\automation\\evidence\\TC-INT-071\\01-mismatch-advice.png"
+        ]
+      },
+      {
+        "n": 2,
+        "text": "Confirm the direction of the mismatch against the ServiceNow record.",
+        "at": "2026-08-08T18:38:18.213Z",
+        "screenshots": []
+      }
+    ],
+    "records": [
+      {
+        "label": "Counts and advice, as rendered",
+        "table": "cafEvidence",
+        "query": "task CAFT0001022",
+        "rows": [
+          {
+            "salesforce_files": "1",
+            "servicenow_attachments": "2",
+            "short_side": "Salesforce",
+            "advice": "1 in Salesforce, 2 in ServiceNow. Re-upload the missing file to send it to the system of record."
+          }
+        ],
+        "at": "2026-08-08T18:38:18.213Z"
+      },
+      {
+        "label": "ServiceNow attachments on CAFT0001022",
+        "table": "sys_attachment",
+        "query": "cnit get sys_attachment -Query \"table_name=x_gskn2_caf_compli_caf_tsk\" -ProfileName caf-reyan",
+        "rows": [
+          {
+            "size_bytes": "58",
+            "file_name": "backup-restore-test.txt",
+            "table_sys_id": "8f936cf483431210bd2a5860ceaad36c"
+          },
+          {
+            "size_bytes": "69",
+            "file_name": "dr-plan-evidence.txt",
+            "table_sys_id": "8f936cf483431210bd2a5860ceaad36c"
+          }
+        ],
+        "at": "2026-08-08T18:38:21.119Z"
+      }
+    ],
+    "observations": [
+      "Re-uploading is the correct remedy only when the push to ServiceNow failed, i.e. Salesforce holds MORE. Where ServiceNow already holds more, the file is safe in the system of record and the advice is not merely unhelpful — acting on it adds another copy."
+    ],
+    "expected": [
+      "When ServiceNow holds fewer files than Salesforce, the advice is to re-upload.",
+      "When Salesforce holds fewer — the state on this instance — the advice does NOT say re-upload, because the system of record already holds the file and re-uploading creates a third copy."
+    ],
+    "actual": [
+      "Panel: 1 Salesforce file(s) against 2 ServiceNow attachment(s). ServiceNow itself reports 2 attachment(s) on the task.",
+      "Advice rendered: \"1 in Salesforce, 2 in ServiceNow. Re-upload the missing file to send it to the system of record.\""
+    ],
+    "verdictReason": "Salesforce is the short side (1 against 2) yet the advice is still \"re-upload\": \"1 in Salesforce, 2 in ServiceNow. Re-upload the missing file to send it to the system of record.\". cafEvidence.mismatchLabel is unconditional and does not branch on which side is short, so following it would create a third ServiceNow attachment rather than repair anything. Fix: branch the label on servicenowCount - salesforceCount.",
+    "finishedAt": "2026-08-08T18:38:21.120Z"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "run": {
+    "instance": "https://dev281754.service-now.com + Salesforce orgfarm-4938c7f768-dev-ed",
+    "executedBy": "admin (ServiceNow, via cnit OAuth) / admin.070b86ccf531@agentforce.com (Salesforce)",
+    "executedVia": "Playwright runner, no browser and no writes. ServiceNow read over cnit, Salesforce over the sf CLI. Each case compares the transform output held in Salesforce against the source record it was built from."
+  },
+  "case": {
+    "id": "TC-INT-069",
+    "title": "The boolean cast survives the round trip",
+    "startedAt": "2026-08-08T16:03:29.000Z",
+    "verdict": "FAIL",
+    "steps": [
+      {
+        "n": 1,
+        "text": "Read the active flag on both sides.",
+        "at": "2026-08-08T16:03:29.000Z",
+        "screenshots": []
+      }
+    ],
+    "records": [],
+    "observations": [],
+    "expected": [
+      "Active__c equals the ServiceNow active flag for every control."
+    ],
+    "actual": [],
+    "verdictReason": "SyntaxError: Expected property name or '}' in JSON at position 1 (line 1 column 2)",
+    "finishedAt": "2026-08-08T16:03:35.121Z"
+  }
+}

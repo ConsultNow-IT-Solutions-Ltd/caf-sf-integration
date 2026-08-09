@@ -1,0 +1,111 @@
+{
+  "run": {
+    "instance": "https://dev281754.service-now.com + Salesforce orgfarm-4938c7f768-dev-ed",
+    "executedBy": "admin (ServiceNow) / admin.070b86ccf531@agentforce.com (Salesforce)",
+    "executedVia": "Playwright runner, no browser: ServiceNow read over cnit and the Scripted REST API as sf.integration, Salesforce read over the sf CLI and anonymous Apex against the deployed classes. Every case reads both sides."
+  },
+  "case": {
+    "id": "TC-INT-049",
+    "title": "Columns are derived from data, not hard-coded",
+    "startedAt": "2026-08-07T17:28:04.762Z",
+    "verdict": "PASS",
+    "steps": [
+      {
+        "n": 1,
+        "text": "List the active CAF Controls — the ServiceNow column source.",
+        "at": "2026-08-07T17:28:04.762Z",
+        "screenshots": []
+      },
+      {
+        "n": 2,
+        "text": "List the distinct controls present in the mirrored request data — the Salesforce column source.",
+        "at": "2026-08-07T17:28:06.109Z",
+        "screenshots": []
+      }
+    ],
+    "records": [
+      {
+        "label": "Active CAF Controls",
+        "table": "x_gskn2_caf_compli_caf_conformance_type",
+        "query": "cnit get x_gskn2_caf_compli_caf_conformance_type -Query \"active=true^ORDERBYname\" -ProfileName caf-reyan",
+        "rows": [
+          {
+            "sys_id": "f1e5e8a61b7925d46f1e76e5d34bcb84",
+            "name": "Confirm & Execute High Availability Plan",
+            "active": "true"
+          },
+          {
+            "sys_id": "95d568ea1b7925d46f1e76e5d34bcb9f",
+            "name": "Confirm Backup & Restore Policy",
+            "active": "true"
+          },
+          {
+            "sys_id": "12952c261b7925d46f1e76e5d34bcb5e",
+            "name": "Confirm Disaster Recovery Plan",
+            "active": "true"
+          },
+          {
+            "sys_id": "4c85e8a21b7925d46f1e76e5d34bcbfb",
+            "name": "Confirm RTO & RPO",
+            "active": "true"
+          },
+          {
+            "sys_id": "fc1288fb1b61a154eede76e5d34bcb81",
+            "name": "Test Backup & Restore",
+            "active": "true"
+          },
+          {
+            "sys_id": "05f10c7f1b61a154eede76e5d34bcb25",
+            "name": "Test Disaster Recovery Plan",
+            "active": "true"
+          }
+        ],
+        "at": "2026-08-07T17:28:06.109Z"
+      },
+      {
+        "label": "Controls represented in Salesforce request data",
+        "table": "CAF_Request__c",
+        "query": "GROUP BY CAF_Control__c",
+        "rows": [
+          {
+            "CAF_Control__c": "Test Disaster Recovery Plan"
+          },
+          {
+            "CAF_Control__c": "Confirm Backup & Restore Policy"
+          },
+          {
+            "CAF_Control__c": "Test Backup & Restore"
+          },
+          {
+            "CAF_Control__c": "Confirm RTO & RPO"
+          },
+          {
+            "CAF_Control__c": "Confirm & Execute High Availability Plan"
+          },
+          {
+            "CAF_Control__c": "Confirm Disaster Recovery Plan"
+          }
+        ],
+        "at": "2026-08-07T17:28:12.139Z"
+      }
+    ],
+    "observations": [
+      "Neither LWC nor widget hard-codes a column list: cafDashboard.build() collects distinct CAF_Control__c from the returned rows and sorts them, so a new control needs no code change on either side.",
+      "The two sources legitimately disagree, and Sync Health will not report it — no mirrored record disagrees, because the control table is not mirrored. Anyone comparing the two grid screenshots without this note will raise the difference as a defect.",
+      "Part B — introducing a request against a control not currently represented, and confirming a column appears with no code change — is ONE-SHOT and needs a write to ServiceNow. Not executed in this pass."
+    ],
+    "expected": [
+      "The ServiceNow grid draws columns from caf_conformance_type where active=true.",
+      "The Salesforce LWC draws columns from the CAF_Request__c data it holds; no control object is mirrored.",
+      "A control with no requests gets a column in ServiceNow and none in Salesforce."
+    ],
+    "actual": [
+      "ServiceNow column set (6): Confirm & Execute High Availability Plan, Confirm Backup & Restore Policy, Confirm Disaster Recovery Plan, Confirm RTO & RPO, Test Backup & Restore, Test Disaster Recovery Plan",
+      "Salesforce column set (6): Confirm & Execute High Availability Plan, Confirm Backup & Restore Policy, Confirm Disaster Recovery Plan, Confirm RTO & RPO, Test Backup & Restore, Test Disaster Recovery Plan",
+      "Columns ServiceNow would show and Salesforce would not: none",
+      "Columns Salesforce would show and ServiceNow would not: none"
+    ],
+    "verdictReason": "Both grids currently derive the same column set from data. The divergence the case documents is latent, not present: every active control happens to have at least one request. Part B not executed (ONE-SHOT).",
+    "finishedAt": "2026-08-07T17:28:12.140Z"
+  }
+}

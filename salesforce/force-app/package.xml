@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <types>
+        <members>CafAttestationService</members>
+        <members>CafDashboardController</members>
+        <members>CafEvidenceService</members>
+        <members>CafSyncHealth</members>
+        <members>CafTaskService</members>
+        <name>ApexClass</name>
+    </types>
+    <types>
+        <members>cafAttestation</members>
+        <members>cafDashboard</members>
+        <members>cafEvidence</members>
+        <members>cafSyncHealth</members>
+        <name>LightningComponentBundle</name>
+    </types>
+    <types>
+        <members>CAF_Dashboard</members>
+        <members>CAF_Task__c</members>
+        <name>CustomTab</name>
+    </types>
+    <types><members>CAF_Integration</members><name>PermissionSet</name></types>
+    <types>
+        <members>CAF_Control_Catalog__c</members>
+        <name>CustomObject</name>
+    </types>
+    <types>
+        <members>CAF_Request__c.CAF_Control_Sys_Id__c</members>
+        <name>CustomField</name>
+    </types>
+    <types>
+        <members>CAF_Control_Catalog__c.All</members>
+        <members>CAF_Request__c.All</members>
+        <members>CAF_Task__c.All</members>
+        <name>ListView</name>
+    </types>
+    <types>
+        <members>CAF_Request__c-CAF Request Layout</members>
+        <members>CAF_Task__c-CAF Task Layout</members>
+        <name>Layout</name>
+    </types>
+    <version>67.0</version>
+</Package>

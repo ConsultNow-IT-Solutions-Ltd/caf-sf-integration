@@ -1,0 +1,188 @@
+<template>
+    <div class="caf">
+        <header class="caf__head">
+            <h1 class="caf__title">CAF Compliance</h1>
+            <p class="caf__sub">Business applications by control &middot; system of record: ServiceNow</p>
+        </header>
+
+        <c-caf-sync-health></c-caf-sync-health>
+
+        <template lwc:if={loading}>
+            <p class="caf__msg">Loading compliance data&hellip;</p>
+        </template>
+
+        <template lwc:elseif={error}>
+            <p class="caf__msg caf__msg--error">{error}</p>
+        </template>
+
+        <template lwc:elseif={hasRows}>
+            <div class="caf__scroll">
+                <table class="grid">
+                    <thead>
+                        <tr>
+                            <th class="grid__app">Business application</th>
+                            <template for:each={columns} for:item="control">
+                                <th key={control.key} class="grid__control"><span>{control.label}</span></th>
+                            </template>
+                            <th class="grid__overall">Overall</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template for:each={rows} for:item="row">
+                            <tr key={row.key}>
+                                <th scope="row" class="grid__app">{row.app}</th>
+                                <template for:each={row.cells} for:item="cell">
+                                    <td key={cell.key} class="grid__cell">
+                                        <template lwc:if={cell.isNa}>
+                                            <span class="na" title={cell.title}>N/A</span>
+                                        </template>
+                                        <template lwc:else>
+                                            <button type="button" class="cellbtn" title={cell.title}
+                                                    disabled={cell.disabled}
+                                                    data-sysid={cell.sysId}
+                                                    data-number={cell.number}
+                                                    data-control={cell.control}
+                                                    onclick={handleCellClick}>
+                                                <span class={cell.dot}></span>
+                                            </button>
+                                        </template>
+                                    </td>
+                                </template>
+                                <td class="grid__overall">
+                                    <span class={row.overallClass}>{row.overallLabel}</span>
+                                </td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+            </div>
+
+            <ul class="legend">
+                <li><span class="dot dot--green"></span>In compliance</li>
+                <li><span class="dot dot--amber"></span>Approaching due</li>
+                <li><span class="dot dot--red"></span>Out of compliance</li>
+                <li><span class="dot dot--blue"></span>Exception approved</li>
+                <li><span class="na">N/A</span>Not assessed</li>
+            </ul>
+        </template>
+
+        <template lwc:else>
+            <p class="caf__msg">No CAF requests found.</p>
+        </template>
+
+        <template lwc:if={hasSelection}>
+            <section class="panel">
+                <div class="panel__head">
+                    <div>
+                        <h2 class="panel__title">{selectedNumber}</h2>
+                        <p class="panel__sub">{selectedControl}</p>
+                    </div>
+                    <button type="button" class="panel__close" onclick={handleClose}>Close</button>
+                </div>
+
+                <template lwc:if={hasTasks}>
+                    <table class="tasks">
+                        <thead>
+                            <tr>
+                                <th>Task</th><th>Description</th><th>State</th>
+                                <th>Approval</th><th>Criteria met</th><th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template for:each={tasks} for:item="t">
+                                <tr key={t.Id} class={t.rowClass}>
+                                    <td>{t.SN_Number__c}</td>
+                                    <td class="tasks__desc">{t.Short_Description__c}</td>
+                                    <td>{t.State__c}</td>
+                                    <td>{t.Approval__c}</td>
+                                    <td>{t.Met_Criteria__c}</td>
+                                    <td class="tasks__actions">
+                                        <template lwc:if={t.canStart}>
+                                            <button type="button" class="act" disabled={busy}
+                                                    data-sysid={t.ServiceNow_Sys_Id__c}
+                                                    data-field="state" data-value="2"
+                                                    onclick={handleAction}>Start</button>
+                                        </template>
+                                        <button type="button" class="act act--ghost" disabled={busy}
+                                                data-id={t.Id}
+                                                data-sysid={t.ServiceNow_Sys_Id__c}
+                                                data-number={t.SN_Number__c}
+                                                data-state={t.State__c}
+                                                data-approval={t.Approval__c}
+                                                data-mode="evidence"
+                                                onclick={handleOpenTask}>{t.evidenceLabel}</button>
+                                        <template lwc:if={t.canAttest}>
+                                            <button type="button" class="act" disabled={busy}
+                                                    data-id={t.Id}
+                                                    data-sysid={t.ServiceNow_Sys_Id__c}
+                                                    data-number={t.SN_Number__c}
+                                                    data-state={t.State__c}
+                                                    data-approval={t.Approval__c}
+                                                    data-mode="attest"
+                                                    onclick={handleOpenTask}>Attest</button>
+                                        </template>
+                                    </td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                    <p class="panel__note">
+                        Actions are applied by ServiceNow, not here. Salesforce sends the change,
+                        ServiceNow runs its own rules, and the resulting state is pushed back.
+                    </p>
+
+                    <template lwc:if={hasActiveTask}>
+                        <section class="attest">
+                            <div class="attest__head">
+                                <h3 class="attest__title">{panelHeading}</h3>
+                                <button type="button" class="panel__close"
+                                        onclick={handleCloseTask}>Done</button>
+                            </div>
+
+                            <template lwc:if={isAttestPanel}>
+                                <p class="attest__who">
+                                    Reviewing evidence someone else gathered. This panel cannot
+                                    add to it.
+                                </p>
+                                <div class="attest__cols">
+                                    <c-caf-evidence
+                                        record-id={activeTask.id}
+                                        sn-sys-id={activeTask.sysId}
+                                        task-number={activeTask.number}
+                                        hide-upload={evidenceReadOnly}
+                                        onevidencecount={handleEvidenceCount}>
+                                    </c-caf-evidence>
+                                    <c-caf-attestation
+                                        record-id={activeTask.id}
+                                        sn-sys-id={activeTask.sysId}
+                                        task-number={activeTask.number}
+                                        task-state={activeTask.state}
+                                        task-approval={activeTask.approval}
+                                        evidence-count={evidenceCount}
+                                        onattested={handleAttested}>
+                                    </c-caf-attestation>
+                                </div>
+                            </template>
+
+                            <template lwc:else>
+                                <c-caf-evidence
+                                    record-id={activeTask.id}
+                                    sn-sys-id={activeTask.sysId}
+                                    task-number={activeTask.number}
+                                    hide-upload={evidenceReadOnly}>
+                                </c-caf-evidence>
+                            </template>
+                        </section>
+                    </template>
+                </template>
+
+                <template lwc:else>
+                    <p class="caf__msg">
+                        No tasks mirrored for this request yet. Tasks arrive in Salesforce when they
+                        are created or updated in ServiceNow.
+                    </p>
+                </template>
+            </section>
+        </template>
+    </div>
+</template>

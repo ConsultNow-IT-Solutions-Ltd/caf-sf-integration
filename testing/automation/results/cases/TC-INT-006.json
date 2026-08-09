@@ -1,0 +1,378 @@
+{
+  "run": {
+    "instance": "https://dev281754.service-now.com + Salesforce orgfarm-4938c7f768-dev-ed",
+    "executedBy": "admin (ServiceNow) / admin.070b86ccf531@agentforce.com (Salesforce)",
+    "executedVia": "Playwright runner, no browser: ServiceNow read over cnit and the Scripted REST API as sf.integration, Salesforce read over the sf CLI and anonymous Apex against the deployed classes. Every case reads both sides."
+  },
+  "case": {
+    "id": "TC-INT-006",
+    "title": "No Salesforce Id is ever stored in ServiceNow",
+    "startedAt": "2026-08-07T17:27:01.307Z",
+    "verdict": "PASS",
+    "steps": [
+      {
+        "n": 1,
+        "text": "List every dictionary entry on the two mirrored tables.",
+        "at": "2026-08-07T17:27:01.307Z",
+        "screenshots": []
+      },
+      {
+        "n": 2,
+        "text": "Look for anything that could hold a Salesforce identifier.",
+        "at": "2026-08-07T17:27:03.269Z",
+        "screenshots": []
+      },
+      {
+        "n": 3,
+        "text": "Scan the stored values of every string field for Salesforce Id shapes.",
+        "at": "2026-08-07T17:27:03.270Z",
+        "screenshots": []
+      }
+    ],
+    "records": [
+      {
+        "label": "Dictionary entries on the mirrored tables",
+        "table": "sys_dictionary",
+        "query": "cnit get sys_dictionary -Query \"nameINx_gskn2_caf_compli_caf_req,x_gskn2_caf_compli_caf_tsk^elementISNOTEMPTY\" -ProfileName caf-reyan",
+        "rows": [
+          {
+            "column_label": "Next due date",
+            "name": "x_gskn2_caf_compli_caf_req",
+            "internal_type": "glide_date_time",
+            "element": "next_due_date"
+          },
+          {
+            "column_label": "CAF status",
+            "name": "x_gskn2_caf_compli_caf_req",
+            "internal_type": "choice",
+            "element": "caf_status"
+          },
+          {
+            "column_label": "Updates",
+            "name": "x_gskn2_caf_compli_caf_req",
+            "internal_type": "integer",
+            "element": "sys_mod_count"
+          },
+          {
+            "column_label": "Archer Finding Number (FND-XXXX)",
+            "name": "x_gskn2_caf_compli_caf_req",
+            "internal_type": "string",
+            "element": "archer_finding_number"
+          },
+          {
+            "column_label": "Allow any Control to be selected",
+            "name": "x_gskn2_caf_compli_caf_req",
+            "internal_type": "boolean",
+            "element": "allow_all_controls"
+          },
+          {
+            "column_label": "Priority",
+            "name": "x_gskn2_caf_compli_caf_req",
+            "internal_type": "integer",
+            "element": "priority"
+          },
+          {
+            "column_label": "Updated by",
+            "name": "x_gskn2_caf_compli_caf_req",
+            "internal_type": "string",
+            "element": "sys_updated_by"
+          },
+          {
+            "column_label": "Short description",
+            "name": "x_gskn2_caf_compli_caf_tsk",
+            "internal_type": "string",
+            "element": "short_description"
+          },
+          {
+            "column_label": "Number",
+            "name": "x_gskn2_caf_compli_caf_tsk",
+            "internal_type": "string",
+            "element": "number"
+          },
+          {
+            "column_label": "VQD link 2",
+            "name": "x_gskn2_caf_compli_caf_tsk",
+            "internal_type": "url",
+            "element": "vqd_link_2"
+          },
+          {
+            "column_label": "Planned Start Date",
+            "name": "x_gskn2_caf_compli_caf_tsk",
+            "internal_type": "glide_date_time",
+            "element": "planned_start_date"
+          },
+          {
+            "column_label": "Description",
+            "name": "x_gskn2_caf_compli_caf_tsk",
+            "internal_type": "string",
+            "element": "description"
+          },
+          {
+            "column_label": "Created by",
+            "name": "x_gskn2_caf_compli_caf_tsk",
+            "internal_type": "string",
+            "element": "sys_created_by"
+          },
+          {
+            "column_label": "Business application",
+            "name": "x_gskn2_caf_compli_caf_req",
+            "internal_type": "reference",
+            "element": "business_application"
+          },
+          {
+            "column_label": "Short description",
+            "name": "x_gskn2_caf_compli_caf_req",
+            "internal_type": "string",
+            "element": "short_description"
+          },
+          {
+            "column_label": "Updated",
+            "name": "x_gskn2_caf_compli_caf_req",
+            "internal_type": "glide_date_time",
+            "element": "sys_updated_on"
+          },
+          {
+            "column_label": "Additional comments",
+            "name": "x_gskn2_caf_compli_caf_req",
+            "internal_type": "journal_input",
+            "element": "comments"
+          },
+          {
+            "column_label": "Active",
+            "name": "x_gskn2_caf_compli_caf_req",
+            "internal_type": "boolean",
+            "element": "active"
+          },
+          {
+            "column_label": "Business Application",
+            "name": "x_gskn2_caf_compli_caf_tsk",
+            "internal_type": "reference",
+            "element": "business_application"
+          },
+          {
+            "column_label": "Met criteria",
+            "name": "x_gskn2_caf_compli_caf_tsk",
+            "internal_type": "choice",
+            "element": "met_criteria"
+          },
+          {
+            "column_label": "Active",
+            "name": "x_gskn2_caf_compli_caf_tsk",
+            "internal_type": "boolean",
+            "element": "active"
+          },
+          {
+            "column_label": "Created",
+            "name": "x_gskn2_caf_compli_caf_tsk",
+            "internal_type": "glide_date_time",
+            "element": "sys_created_on"
+          },
+          {
+            "column_label": "Priority",
+            "name": "x_gskn2_caf_compli_caf_tsk",
+            "internal_type": "integer",
+            "element": "priority"
+          },
+          {
+            "column_label": "Planned Completion Date",
+            "name": "x_gskn2_caf_compli_caf_tsk",
+            "internal_type": "glide_date_time",
+            "element": "planned_completion_date"
+          },
+          {
+            "column_label": "Assigned to",
+            "name": "x_gskn2_caf_compli_caf_tsk",
+            "internal_type": "reference",
+            "element": "assigned_to"
+          },
+          {
+            "column_label": "Sys ID",
+            "name": "x_gskn2_caf_compli_caf_tsk",
+            "internal_type": "GUID",
+            "element": "sys_id"
+          },
+          {
+            "column_label": "Actual start date",
+            "name": "x_gskn2_caf_compli_caf_req",
+            "internal_type": "glide_date_time",
+            "element": "actual_start_date"
+          },
+          {
+            "column_label": "Description",
+            "name": "x_gskn2_caf_compli_caf_req",
+            "internal_type": "string",
+            "element": "description"
+          },
+          {
+            "column_label": "State",
+            "name": "x_gskn2_caf_compli_caf_req",
+            "internal_type": "integer",
+            "element": "state"
+          },
+          {
+            "column_label": "Planned start date",
+            "name": "x_gskn2_caf_compli_caf_req",
+            "internal_type": "glide_date_time",
+            "element": "planned_start_date"
+          },
+          {
+            "column_label": "Created by",
+            "name": "x_gskn2_caf_compli_caf_req",
+            "internal_type": "string",
+            "element": "sys_created_by"
+          },
+          {
+            "column_label": "Planned completion date",
+            "name": "x_gskn2_caf_compli_caf_req",
+            "internal_type": "glide_date_time",
+            "element": "planned_completion_date"
+          },
+          {
+            "column_label": "Class",
+            "name": "x_gskn2_caf_compli_caf_req",
+            "internal_type": "sys_class_name",
+            "element": "sys_class_name"
+          },
+          {
+            "column_label": "Additional comments",
+            "name": "x_gskn2_caf_compli_caf_tsk",
+            "internal_type": "journal_input",
+            "element": "comments"
+          },
+          {
+            "column_label": "VQD link",
+            "name": "x_gskn2_caf_compli_caf_tsk",
+            "internal_type": "url",
+            "element": "vqd_link"
+          },
+          {
+            "column_label": "Updated by",
+            "name": "x_gskn2_caf_compli_caf_tsk",
+            "internal_type": "string",
+            "element": "sys_updated_by"
+          },
+          {
+            "column_label": "Actual Start Date",
+            "name": "x_gskn2_caf_compli_caf_tsk",
+            "internal_type": "glide_date_time",
+            "element": "actual_start_date"
+          },
+          {
+            "column_label": "Updates",
+            "name": "x_gskn2_caf_compli_caf_tsk",
+            "internal_type": "integer",
+            "element": "sys_mod_count"
+          },
+          {
+            "column_label": "Approval",
+            "name": "x_gskn2_caf_compli_caf_tsk",
+            "internal_type": "choice",
+            "element": "approval"
+          },
+          {
+            "column_label": "Actual Completion Date",
+            "name": "x_gskn2_caf_compli_caf_tsk",
+            "internal_type": "glide_date_time",
+            "element": "actual_completion_date"
+          },
+          {
+            "column_label": "CAF control name",
+            "name": "x_gskn2_caf_compli_caf_req",
+            "internal_type": "reference",
+            "element": "caf_conformance_type"
+          },
+          {
+            "column_label": "Actual completion date",
+            "name": "x_gskn2_caf_compli_caf_req",
+            "internal_type": "glide_date_time",
+            "element": "actual_completion_date"
+          },
+          {
+            "column_label": "Number",
+            "name": "x_gskn2_caf_compli_caf_req",
+            "internal_type": "string",
+            "element": "number"
+          },
+          {
+            "column_label": "Sys ID",
+            "name": "x_gskn2_caf_compli_caf_req",
+            "internal_type": "GUID",
+            "element": "sys_id"
+          },
+          {
+            "column_label": "Assigned to",
+            "name": "x_gskn2_caf_compli_caf_req",
+            "internal_type": "reference",
+            "element": "assigned_to"
+          },
+          {
+            "column_label": "Managed by",
+            "name": "x_gskn2_caf_compli_caf_req",
+            "internal_type": "reference",
+            "element": "managed_by"
+          },
+          {
+            "column_label": "Created",
+            "name": "x_gskn2_caf_compli_caf_req",
+            "internal_type": "glide_date_time",
+            "element": "sys_created_on"
+          },
+          {
+            "column_label": "Archer Finding Approved",
+            "name": "x_gskn2_caf_compli_caf_req",
+            "internal_type": "boolean",
+            "element": "archer_exception_approved"
+          },
+          {
+            "column_label": "Business owner",
+            "name": "x_gskn2_caf_compli_caf_req",
+            "internal_type": "reference",
+            "element": "process_control_owner"
+          },
+          {
+            "column_label": "Success criteria",
+            "name": "x_gskn2_caf_compli_caf_tsk",
+            "internal_type": "html",
+            "element": "success_criteria"
+          },
+          {
+            "column_label": "Class",
+            "name": "x_gskn2_caf_compli_caf_tsk",
+            "internal_type": "sys_class_name",
+            "element": "sys_class_name"
+          },
+          {
+            "column_label": "CAF Request",
+            "name": "x_gskn2_caf_compli_caf_tsk",
+            "internal_type": "reference",
+            "element": "caf_request"
+          },
+          {
+            "column_label": "Updated",
+            "name": "x_gskn2_caf_compli_caf_tsk",
+            "internal_type": "glide_date_time",
+            "element": "sys_updated_on"
+          },
+          {
+            "column_label": "State",
+            "name": "x_gskn2_caf_compli_caf_tsk",
+            "internal_type": "integer",
+            "element": "state"
+          }
+        ],
+        "at": "2026-08-07T17:27:03.269Z"
+      }
+    ],
+    "observations": [],
+    "expected": [
+      "No field on caf_req or caf_tsk holds a Salesforce Id.",
+      "Correlation is one-directional, which is what makes a Salesforce org rebuild survivable."
+    ],
+    "actual": [
+      "54 field(s) examined; 0 with a Salesforce-suggestive name or label.",
+      "No value on any sampled record has the shape of a Salesforce Id."
+    ],
+    "verdictReason": "Correlation is one-directional: ServiceNow stores no Salesforce identifier of any kind.",
+    "finishedAt": "2026-08-07T17:27:06.336Z"
+  }
+}

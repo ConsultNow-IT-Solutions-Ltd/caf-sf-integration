@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    The CAF Control catalogue, mirrored from x_gskn2_caf_compli_caf_conformance_type.
+
+    This object holds no compliance data and is never edited in Salesforce. It
+    exists so the dashboard can render a column for a control that has no
+    requests against it yet, which is what the ServiceNow portal widget does -
+    it builds its columns from the control table, not from the requests, and
+    shows N/A in the cells. Deriving columns from requests alone made a newly
+    created control invisible in Salesforce until someone generated a request.
+
+    Named CAF_Control_Catalog__c rather than CAF_Control__c because
+    CAF_Request__c already carries a FIELD of that API name. Salesforce keeps
+    objects and fields in separate namespaces so both would deploy, but a SOQL
+    line mentioning each would be genuinely ambiguous to read.
+-->
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <deploymentStatus>Deployed</deploymentStatus>
+    <description>Mirror of the ServiceNow CAF Control catalogue. Read-only in Salesforce; written only by the integration user.</description>
+    <enableActivities>false</enableActivities>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>false</enableHistory>
+    <enableReports>true</enableReports>
+    <enableSearch>false</enableSearch>
+    <label>CAF Control</label>
+    <nameField>
+        <label>Control Name</label>
+        <type>Text</type>
+    </nameField>
+    <pluralLabel>CAF Controls</pluralLabel>
+    <sharingModel>ReadWrite</sharingModel>
+
+    <fields>
+        <fullName>ServiceNow_Sys_Id__c</fullName>
+        <description>sys_id of the caf_conformance_type record. External Id, so every push is an idempotent upsert - the same correlation key the request and task objects use.</description>
+        <externalId>true</externalId>
+        <label>ServiceNow Sys Id</label>
+        <length>32</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>true</unique>
+    </fields>
+
+    <fields>
+        <fullName>SN_Number__c</fullName>
+        <description>The CNFTYPE number from ServiceNow.</description>
+        <externalId>false</externalId>
+        <label>SN Number</label>
+        <length>40</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+
+    <fields>
+        <fullName>Active__c</fullName>
+        <defaultValue>true</defaultValue>
+        <description>Mirrors the active flag. The dashboard renders a column only for active controls, matching the ServiceNow widget's active=true filter.</description>
+        <label>Active</label>
+        <type>Checkbox</type>
+    </fields>
+
+    <listViews>
+        <fullName>All</fullName>
+        <columns>NAME</columns>
+        <columns>SN_Number__c</columns>
+        <columns>Active__c</columns>
+        <columns>ServiceNow_Sys_Id__c</columns>
+        <filterScope>Everything</filterScope>
+        <label>All</label>
+    </listViews>
+</CustomObject>

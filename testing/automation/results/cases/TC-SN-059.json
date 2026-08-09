@@ -1,0 +1,296 @@
+{
+  "run": {
+    "instance": "https://dev281754.service-now.com",
+    "executedBy": "admin",
+    "executedVia": "Playwright (automated); every assertion cross-checked against the ServiceNow Table API"
+  },
+  "case": {
+    "id": "TC-SN-059",
+    "title": "Approval records are created consistently for attestation tasks",
+    "startedAt": "2026-08-07T16:59:40.644Z",
+    "verdict": "FAIL",
+    "steps": [
+      {
+        "n": 1,
+        "text": "List every approval record pointing at a CAF Task.",
+        "at": "2026-08-07T16:59:40.644Z",
+        "screenshots": []
+      },
+      {
+        "n": 2,
+        "text": "List the attestation tasks the flow has created, to compare against.",
+        "at": "2026-08-07T16:59:41.343Z",
+        "screenshots": []
+      },
+      {
+        "n": 3,
+        "text": "Reconcile: which attestation tasks have an approver, and which do not.",
+        "at": "2026-08-07T16:59:41.531Z",
+        "screenshots": []
+      },
+      {
+        "n": 4,
+        "text": "Confirm the state of the rule and notification the design document credits with this.",
+        "at": "2026-08-07T16:59:41.531Z",
+        "screenshots": []
+      }
+    ],
+    "records": [
+      {
+        "label": "Approval records for CAF Tasks",
+        "table": "sysapproval_approver",
+        "query": "source_table=x_gskn2_caf_compli_caf_tsk",
+        "rows": [
+          {
+            "approver": "b6826bf03710200044e0bfc8bcbe5df8",
+            "sys_id": "22b829bd83a6c310c67233d6feaad33e",
+            "sys_created_on": "2026-08-07 13:56:11",
+            "state": "requested",
+            "document_id": "dab829bd83a6c310c67233d6feaad33c",
+            "source_table": "x_gskn2_caf_compli_caf_tsk",
+            "sys_created_by": "system"
+          }
+        ],
+        "at": "2026-08-07T16:59:41.343Z"
+      },
+      {
+        "label": "Attestation tasks",
+        "table": "x_gskn2_caf_compli_caf_tsk",
+        "query": "short_description=IT Application Owner Attestation",
+        "rows": [
+          {
+            "sys_id": "deb3603883431210bd2a5860ceaad356",
+            "number": "CAFT0001025",
+            "approval": "requested",
+            "sys_created_on": "2025-01-09 14:18:43",
+            "active": "true",
+            "state": "1",
+            "sys_created_by": "system"
+          },
+          {
+            "sys_id": "91442c3883431210bd2a5860ceaad37e",
+            "number": "CAFT0001026",
+            "approval": "requested",
+            "sys_created_on": "2025-01-09 14:21:06",
+            "active": "true",
+            "state": "2",
+            "sys_created_by": "system"
+          },
+          {
+            "sys_id": "bab4647883431210bd2a5860ceaad3c0",
+            "number": "CAFT0001027",
+            "approval": "approved",
+            "sys_created_on": "2025-01-09 14:23:08",
+            "active": "false",
+            "state": "3",
+            "sys_created_by": "system"
+          },
+          {
+            "sys_id": "b839a0fc83431210bd2a5860ceaad3c4",
+            "number": "CAFT0001040",
+            "approval": "approved",
+            "sys_created_on": "2025-01-09 14:42:39",
+            "active": "false",
+            "state": "3",
+            "sys_created_by": "system"
+          },
+          {
+            "sys_id": "cd49e0fc83431210bd2a5860ceaad370",
+            "number": "CAFT0001041",
+            "approval": "approved",
+            "sys_created_on": "2025-01-09 14:42:56",
+            "active": "false",
+            "state": "3",
+            "sys_created_by": "system"
+          },
+          {
+            "sys_id": "1359a4fc83431210bd2a5860ceaad39e",
+            "number": "CAFT0001042",
+            "approval": "approved",
+            "sys_created_on": "2025-01-09 14:43:22",
+            "active": "false",
+            "state": "3",
+            "sys_created_by": "system"
+          },
+          {
+            "sys_id": "c07928fc83431210bd2a5860ceaad313",
+            "number": "CAFT0001043",
+            "approval": "approved",
+            "sys_created_on": "2025-01-09 14:43:41",
+            "active": "false",
+            "state": "3",
+            "sys_created_by": "system"
+          },
+          {
+            "sys_id": "ff7968fc83431210bd2a5860ceaad34c",
+            "number": "CAFT0001044",
+            "approval": "approved",
+            "sys_created_on": "2025-01-09 14:43:57",
+            "active": "false",
+            "state": "3",
+            "sys_created_by": "system"
+          },
+          {
+            "sys_id": "8c99e8fc83431210bd2a5860ceaad360",
+            "number": "CAFT0001045",
+            "approval": "approved",
+            "sys_created_on": "2025-01-09 14:44:14",
+            "active": "false",
+            "state": "3",
+            "sys_created_by": "system"
+          },
+          {
+            "sys_id": "e99621b983a6c310c67233d6feaad3d3",
+            "number": "CAFT0001001",
+            "approval": "requested",
+            "sys_created_on": "2026-08-07 13:46:51",
+            "active": "true",
+            "state": "1",
+            "sys_created_by": "system"
+          },
+          {
+            "sys_id": "dab829bd83a6c310c67233d6feaad33c",
+            "number": "CAFT0001002",
+            "approval": "requested",
+            "sys_created_on": "2026-08-07 13:56:11",
+            "active": "true",
+            "state": "1",
+            "sys_created_by": "system"
+          },
+          {
+            "sys_id": "2ccb693583e6c310c67233d6feaad346",
+            "number": "CAFT0001003",
+            "approval": "requested",
+            "sys_created_on": "2026-08-07 14:09:26",
+            "active": "true",
+            "state": "1",
+            "sys_created_by": "system"
+          }
+        ],
+        "at": "2026-08-07T16:59:41.531Z"
+      },
+      {
+        "label": "Reconciliation",
+        "table": "(derived)",
+        "query": "attestation tasks vs approval records",
+        "rows": [
+          {
+            "task": "CAFT0001025",
+            "created": "2025-01-09 14:18:43",
+            "state": "1",
+            "has_approval_record": "no"
+          },
+          {
+            "task": "CAFT0001026",
+            "created": "2025-01-09 14:21:06",
+            "state": "2",
+            "has_approval_record": "no"
+          },
+          {
+            "task": "CAFT0001027",
+            "created": "2025-01-09 14:23:08",
+            "state": "3",
+            "has_approval_record": "no"
+          },
+          {
+            "task": "CAFT0001040",
+            "created": "2025-01-09 14:42:39",
+            "state": "3",
+            "has_approval_record": "no"
+          },
+          {
+            "task": "CAFT0001041",
+            "created": "2025-01-09 14:42:56",
+            "state": "3",
+            "has_approval_record": "no"
+          },
+          {
+            "task": "CAFT0001042",
+            "created": "2025-01-09 14:43:22",
+            "state": "3",
+            "has_approval_record": "no"
+          },
+          {
+            "task": "CAFT0001043",
+            "created": "2025-01-09 14:43:41",
+            "state": "3",
+            "has_approval_record": "no"
+          },
+          {
+            "task": "CAFT0001044",
+            "created": "2025-01-09 14:43:57",
+            "state": "3",
+            "has_approval_record": "no"
+          },
+          {
+            "task": "CAFT0001045",
+            "created": "2025-01-09 14:44:14",
+            "state": "3",
+            "has_approval_record": "no"
+          },
+          {
+            "task": "CAFT0001001",
+            "created": "2026-08-07 13:46:51",
+            "state": "1",
+            "has_approval_record": "no"
+          },
+          {
+            "task": "CAFT0001002",
+            "created": "2026-08-07 13:56:11",
+            "state": "1",
+            "has_approval_record": "YES"
+          },
+          {
+            "task": "CAFT0001003",
+            "created": "2026-08-07 14:09:26",
+            "state": "1",
+            "has_approval_record": "no"
+          }
+        ],
+        "at": "2026-08-07T16:59:41.531Z"
+      },
+      {
+        "label": "Business rule \"CAF - Approval Task\"",
+        "table": "sys_script",
+        "query": "name=CAF - Approval Task",
+        "rows": [
+          {
+            "name": "CAF - Approval Task",
+            "active": "false",
+            "collection": "sysapproval_approver",
+            "when": "after"
+          }
+        ],
+        "at": "2026-08-07T16:59:41.782Z"
+      },
+      {
+        "label": "Notification \"CAF - Approval Requested\"",
+        "table": "sysevent_email_action",
+        "query": "name=CAF - Approval Requested",
+        "rows": [
+          {
+            "name": "CAF - Approval Requested",
+            "active": "true",
+            "event_name": "AccountAggregate_submitted_FYI.email",
+            "collection": "sysapproval_approver"
+          }
+        ],
+        "at": "2026-08-07T16:59:41.978Z"
+      }
+    ],
+    "observations": [
+      "HANDOFF section 6 states \"sysapproval_approver holds no CAF records at all\". That is no longer true — 1 record(s) now exist, created by \"system\", i.e. by the flow rather than by the inactive business rule \"CAF - Approval Task\".",
+      "The problem is not that approvals exist; it is that they exist for SOME attestation tasks and not others. Identical tasks from the same template, created by the same process, are being treated differently.",
+      "Consequence: notification \"CAF - Approval Requested\" fires for a minority of attestations and stays silent for the rest, so an approver is emailed sometimes and not others, with no visible reason. Tasks with no approval record still have no named approver at all — HANDOFF open item 2."
+    ],
+    "expected": [
+      "Every \"IT Application Owner Attestation\" task spawned by the flow is treated the same way: either they all get a sysapproval_approver record with a named approver, or none of them do.",
+      "Whatever the rule is, it is applied uniformly — an approver on some tasks and not others is not a defensible audit trail."
+    ],
+    "actual": [
+      "1 approval record(s) exist. Of 12 attestation task(s), 1 have an approval record and 11 do not."
+    ],
+    "verdictReason": "Approval creation is inconsistent: 1 of 12 attestation tasks have an approver record. Determine what distinguishes them before this reaches a client.",
+    "finishedAt": "2026-08-07T16:59:41.979Z"
+  }
+}

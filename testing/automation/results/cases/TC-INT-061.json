@@ -1,0 +1,152 @@
+{
+  "run": {
+    "instance": "https://dev281754.service-now.com + Salesforce orgfarm-4938c7f768-dev-ed",
+    "executedBy": "admin (ServiceNow) / admin.070b86ccf531@agentforce.com (Salesforce)",
+    "executedVia": "Playwright runner, no browser: ServiceNow read over cnit and the Scripted REST API as sf.integration, Salesforce read over the sf CLI and anonymous Apex against the deployed classes. Every case reads both sides."
+  },
+  "case": {
+    "id": "TC-INT-061",
+    "title": "No Apex test coverage exists",
+    "startedAt": "2026-08-07T17:28:56.069Z",
+    "verdict": "PASS",
+    "steps": [
+      {
+        "n": 1,
+        "text": "List the Apex classes in the org.",
+        "at": "2026-08-07T17:28:56.069Z",
+        "screenshots": []
+      },
+      {
+        "n": 2,
+        "text": "Look for any test class belonging to this org rather than to an installed package.",
+        "at": "2026-08-07T17:29:02.016Z",
+        "screenshots": []
+      },
+      {
+        "n": 3,
+        "text": "Read the stored coverage figures.",
+        "at": "2026-08-07T17:29:08.152Z",
+        "screenshots": []
+      }
+    ],
+    "records": [
+      {
+        "label": "Apex classes",
+        "table": "ApexClass",
+        "query": "Tooling API",
+        "rows": [
+          {
+            "Name": "CafAttestationService",
+            "NamespacePrefix": null,
+            "ApiVersion": 67,
+            "LengthWithoutComments": 3433
+          },
+          {
+            "Name": "CafDashboardController",
+            "NamespacePrefix": null,
+            "ApiVersion": 67,
+            "LengthWithoutComments": 594
+          },
+          {
+            "Name": "CafEvidenceService",
+            "NamespacePrefix": null,
+            "ApiVersion": 67,
+            "LengthWithoutComments": 8623
+          },
+          {
+            "Name": "CafSyncHealth",
+            "NamespacePrefix": null,
+            "ApiVersion": 67,
+            "LengthWithoutComments": 8618
+          },
+          {
+            "Name": "CafTaskService",
+            "NamespacePrefix": null,
+            "ApiVersion": 67,
+            "LengthWithoutComments": 1609
+          },
+          {
+            "Name": "DeveloperEditionUtils",
+            "NamespacePrefix": "devedapp",
+            "ApiVersion": 64,
+            "LengthWithoutComments": 164
+          },
+          {
+            "Name": "DeveloperEditionUtilsTest",
+            "NamespacePrefix": "devedapp",
+            "ApiVersion": 64,
+            "LengthWithoutComments": 261
+          },
+          {
+            "Name": "PostInstallScript",
+            "NamespacePrefix": "devedapp",
+            "ApiVersion": 64,
+            "LengthWithoutComments": 2175
+          },
+          {
+            "Name": "PostInstallScriptTest",
+            "NamespacePrefix": "devedapp",
+            "ApiVersion": 64,
+            "LengthWithoutComments": 781
+          }
+        ],
+        "at": "2026-08-07T17:29:02.016Z"
+      },
+      {
+        "label": "Unmanaged classes carrying @isTest",
+        "table": "ApexClass",
+        "query": "Tooling API, NamespacePrefix = null, SymbolTable modifiers contain isTest",
+        "rows": [],
+        "at": "2026-08-07T17:29:08.152Z"
+      },
+      {
+        "label": "Stored code coverage",
+        "table": "ApexCodeCoverageAggregate",
+        "query": "Tooling API",
+        "rows": [
+          {
+            "class": "CafDashboardController",
+            "covered": "0",
+            "uncovered": "2"
+          },
+          {
+            "class": "CafTaskService",
+            "covered": "0",
+            "uncovered": "22"
+          },
+          {
+            "class": "CafSyncHealth",
+            "covered": "0",
+            "uncovered": "133"
+          },
+          {
+            "class": "CafAttestationService",
+            "covered": "0",
+            "uncovered": "50"
+          },
+          {
+            "class": "CafEvidenceService",
+            "covered": "0",
+            "uncovered": "132"
+          }
+        ],
+        "at": "2026-08-07T17:29:14.309Z"
+      }
+    ],
+    "observations": [
+      "The org ships four `devedapp` classes of its own, two of them named *Test. They are packaged, cover nothing in this project, and do not count toward the org-wide figure the same way — filtering on the name alone would report test coverage that does not exist. Note also that CafAttestationService contains the substring \"test\", so a name-based filter claims the class under test is its own test.",
+      "Fine for a Developer Edition org, blocking for any move toward production: Salesforce requires 75% org-wide coverage to deploy. This belongs in the test summary as a release risk, not in the defect list. HANDOFF open item 5."
+    ],
+    "expected": [
+      "Coverage on CafSyncHealth, CafEvidenceService and CafAttestationService is zero.",
+      "Reported as a release gate, not a defect: Salesforce requires 75% to deploy to production."
+    ],
+    "actual": [
+      "9 Apex class(es) in the org: CafAttestationService, CafDashboardController, CafEvidenceService, CafSyncHealth, CafTaskService (plus 4 packaged: devedapp.DeveloperEditionUtils, devedapp.DeveloperEditionUtilsTest, devedapp.PostInstallScript, devedapp.PostInstallScriptTest).",
+      "0 unmanaged test class(es) — none.",
+      "CafSyncHealth: 0 covered / 133 uncovered; CafAttestationService: 0 covered / 50 uncovered; CafEvidenceService: 0 covered / 132 uncovered"
+    ],
+    "verdictReason": "Zero test classes and zero coverage on all three service classes — confirmed as a release gate.",
+    "finishedAt": "2026-08-07T17:29:14.309Z"
+  }
+}

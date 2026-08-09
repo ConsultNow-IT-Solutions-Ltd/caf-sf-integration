@@ -1,0 +1,30 @@
+{
+  "run": {
+    "instance": "https://dev281754.service-now.com + Salesforce orgfarm-4938c7f768-dev-ed",
+    "executedBy": "admin (ServiceNow, via cnit OAuth) / admin.070b86ccf531@agentforce.com (Salesforce)",
+    "executedVia": "Playwright runner, no browser and no writes. ServiceNow read over cnit, Salesforce over the sf CLI. Each case compares the transform output held in Salesforce against the source record it was built from."
+  },
+  "case": {
+    "id": "TC-INT-068",
+    "title": "The control join resolves, and the name agrees",
+    "startedAt": "2026-08-08T16:03:22.304Z",
+    "verdict": "FAIL",
+    "steps": [
+      {
+        "n": 1,
+        "text": "Read the control table and the mirrored requests.",
+        "at": "2026-08-08T16:03:22.304Z",
+        "screenshots": []
+      }
+    ],
+    "records": [],
+    "observations": [],
+    "expected": [
+      "Every CAF_Control_Sys_Id__c resolves to a control that exists.",
+      "Every CAF_Control__c matches that control's current name."
+    ],
+    "actual": [],
+    "verdictReason": "SyntaxError: Expected property name or '}' in JSON at position 1 (line 1 column 2)",
+    "finishedAt": "2026-08-08T16:03:28.491Z"
+  }
+}

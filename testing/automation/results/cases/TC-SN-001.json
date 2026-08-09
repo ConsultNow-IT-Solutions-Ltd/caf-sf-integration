@@ -1,0 +1,85 @@
+{
+  "run": {
+    "instance": "https://dev281754.service-now.com",
+    "executedBy": "admin",
+    "executedVia": "Playwright (automated); every assertion cross-checked against the ServiceNow Table API"
+  },
+  "case": {
+    "id": "TC-SN-001",
+    "title": "caf_conformance_type on a request references a relationship, not a control",
+    "startedAt": "2026-08-07T16:59:24.405Z",
+    "verdict": "PASS",
+    "steps": [
+      {
+        "n": 1,
+        "text": "Read the dictionary entry for caf_req.caf_conformance_type.",
+        "at": "2026-08-07T16:59:24.405Z",
+        "screenshots": []
+      },
+      {
+        "n": 2,
+        "text": "Take a live request and attempt to resolve its caf_conformance_type in the control table.",
+        "at": "2026-08-07T16:59:25.100Z",
+        "screenshots": []
+      },
+      {
+        "n": 3,
+        "text": "Resolve the same value in the relationship table.",
+        "at": "2026-08-07T16:59:25.470Z",
+        "screenshots": []
+      }
+    ],
+    "records": [
+      {
+        "label": "Dictionary entry",
+        "table": "sys_dictionary",
+        "query": "name=x_gskn2_caf_compli_caf_req^element=caf_conformance_type",
+        "rows": [
+          {
+            "reference": "x_gskn2_caf_compli_caf_relationship",
+            "column_label": "CAF control name",
+            "name": "x_gskn2_caf_compli_caf_req",
+            "internal_type": "reference",
+            "element": "caf_conformance_type"
+          }
+        ],
+        "at": "2026-08-07T16:59:25.100Z"
+      },
+      {
+        "label": "Lookup in the CONTROL table",
+        "table": "x_gskn2_caf_compli_caf_conformance_type",
+        "query": "sys_id=58c62c6e1bb925d46f1e76e5d34bcba1",
+        "rows": [],
+        "at": "2026-08-07T16:59:25.470Z"
+      },
+      {
+        "label": "Lookup in the RELATIONSHIP table",
+        "table": "x_gskn2_caf_compli_caf_relationship",
+        "query": "sys_id=58c62c6e1bb925d46f1e76e5d34bcba1",
+        "rows": [
+          {
+            "sys_id": "58c62c6e1bb925d46f1e76e5d34bcba1",
+            "tier": "Tier 0",
+            "crown_jewels": "Yes",
+            "caf_conformance_type": "12952c261b7925d46f1e76e5d34bcb5e",
+            "frequency": "365"
+          }
+        ],
+        "at": "2026-08-07T16:59:25.693Z"
+      }
+    ],
+    "observations": [
+      "The field is named and labelled after the control table but points at the relationship table. A query written from the design document's data model returns zero rows and reads as missing data."
+    ],
+    "expected": [
+      "The dictionary reference is x_gskn2_caf_compli_caf_relationship, despite the field name and the \"CAF control name\" label.",
+      "A request's caf_conformance_type value resolves in the relationship table and NOT in the control table."
+    ],
+    "actual": [
+      "reference = x_gskn2_caf_compli_caf_relationship; column_label = \"CAF control name\"",
+      "Control-table lookup returned 0 row(s); relationship-table lookup returned 1 row(s)."
+    ],
+    "verdictReason": "Behaviour confirmed. Raise as a documentation defect against the design document, not as a code change — renaming the field would break the task-creation flow.",
+    "finishedAt": "2026-08-07T16:59:25.695Z"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell($env:Path = [System.Environment]::GetEnvironmentVariable\\('Path','Machine'\\) + ';' + [System.Environment]::GetEnvironmentVariable\\('Path','User'\\); Set-Location \"c:\\\\audit\\\\dev281754 CAF App Reyan\\\\testing\\\\automation\"; npx playwright test --list --project=int-neg)",
+      "PowerShell(& \"C:\\\\audit\\\\cnit-instance-tools-main\\\\cnit.ps1\" get x_gskn2_caf_compli_caf_tsk -ProfileName caf-reyan -ExcludeRefLinks -Fields number,state,active,approval -Limit 5)"
+    ]
+  }
+}

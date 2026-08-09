@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    List view for CAF_Request__c.
+
+    The object was built through the UI wizard, so unlike CAF_Task__c it had an
+    "All" list view from the start - but with no columns declared, which renders
+    as a list showing nothing but Name. Same visible symptom as a missing list
+    view, different cause.
+
+    SN_Number__c is deliberately not a column: CAFSalesforceSync writes the
+    ServiceNow number into both Name and SN_Number__c, so showing both would put
+    the same value in two adjacent columns.
+-->
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <!--
+        The control's ServiceNow sys_id, added so the dashboard can join a
+        request to a catalogue column on something stable. CAF_Control__c holds
+        the control NAME as it stood when the record was last pushed, which
+        makes it a snapshot rather than a key: renaming a control in ServiceNow
+        strands the old label on every request already mirrored here. That has
+        already happened - three requests still read "Test Disaster Recovery
+        Plan", a control that no longer exists in ServiceNow.
+
+        CAF_Control__c is kept as the display label and the list-view column.
+    -->
+    <fields>
+        <fullName>CAF_Control_Sys_Id__c</fullName>
+        <description>sys_id of the caf_conformance_type record behind this request. Join key to CAF_Control_Catalog__c; CAF_Control__c remains the display name.</description>
+        <externalId>false</externalId>
+        <label>CAF Control Sys Id</label>
+        <length>32</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+
+    <listViews>
+        <fullName>All</fullName>
+        <columns>NAME</columns>
+        <columns>Business_Application__c</columns>
+        <columns>CAF_Control__c</columns>
+        <columns>CAF_Status__c</columns>
+        <columns>State__c</columns>
+        <columns>Short_Description__c</columns>
+        <columns>Planned_Completion_Date__c</columns>
+        <filterScope>Everything</filterScope>
+        <label>All</label>
+    </listViews>
+</CustomObject>

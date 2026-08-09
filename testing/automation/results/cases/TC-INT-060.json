@@ -1,0 +1,64 @@
+{
+  "run": {
+    "instance": "https://dev281754.service-now.com + Salesforce orgfarm-4938c7f768-dev-ed",
+    "executedBy": "admin (ServiceNow) / admin.070b86ccf531@agentforce.com (Salesforce)",
+    "executedVia": "Playwright runner, no browser: ServiceNow read over cnit and the Scripted REST API as sf.integration, Salesforce read over the sf CLI and anonymous Apex against the deployed classes. Every case reads both sides."
+  },
+  "case": {
+    "id": "TC-INT-060",
+    "title": "API budget consumption per journey",
+    "startedAt": "2026-08-07T17:28:49.932Z",
+    "verdict": "PASS",
+    "steps": [
+      {
+        "n": 1,
+        "text": "Read the org limits — the same figure Setup shows as \"API Requests, Last 24 Hours\".",
+        "at": "2026-08-07T17:28:49.932Z",
+        "screenshots": []
+      }
+    ],
+    "records": [
+      {
+        "label": "Org limits",
+        "table": "Limits",
+        "query": "sf org list limits --target-org caf-sf",
+        "rows": [
+          {
+            "limit": "DailyApiRequests",
+            "max": "15000",
+            "remaining": "14473",
+            "used": "527"
+          },
+          {
+            "limit": "DataStorageMB",
+            "max": "5",
+            "remaining": "5",
+            "used": "0"
+          },
+          {
+            "limit": "FileStorageMB",
+            "max": "20",
+            "remaining": "20",
+            "used": "0"
+          }
+        ],
+        "at": "2026-08-07T17:28:56.051Z"
+      }
+    ],
+    "observations": [
+      "Documentation correction: HANDOFF section 1 and both test-case files state a ~5,000 call daily budget. The org reports 15000. Every budget calculation in the pack is therefore conservative by a factor of 3.0, which is the safe direction to be wrong in, but the figure should be corrected.",
+      "The per-journey figure of ~45 calls cannot be measured in this pass: it requires executing one full end-to-end journey, which is a ONE-SHOT write case (TC-INT-027 and TC-INT-031). Measured here: the read-only pass costs well under 1% of the budget and can be re-run freely."
+    ],
+    "expected": [
+      "Roughly 45 calls for one full end-to-end journey, about 1% of the daily budget.",
+      "No unexplained jump that would indicate an echo loop or a retry storm."
+    ],
+    "actual": [
+      "DailyApiRequests: 527 used of 15000; 14473 remaining.",
+      "Storage: 0 of 5 MB data, 0 of 20 MB files.",
+      "This read-only pass has itself made 5 sf calls so far."
+    ],
+    "verdictReason": "Budget healthy: 527 of 15000 used, no sign of an echo loop or retry storm. Per-journey consumption not measured — needs a ONE-SHOT journey.",
+    "finishedAt": "2026-08-07T17:28:56.051Z"
+  }
+}

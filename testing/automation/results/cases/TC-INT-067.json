@@ -1,0 +1,29 @@
+{
+  "run": {
+    "instance": "https://dev281754.service-now.com + Salesforce orgfarm-4938c7f768-dev-ed",
+    "executedBy": "admin (ServiceNow, via cnit OAuth) / admin.070b86ccf531@agentforce.com (Salesforce)",
+    "executedVia": "Playwright runner, no browser and no writes. ServiceNow read over cnit, Salesforce over the sf CLI. Each case compares the transform output held in Salesforce against the source record it was built from."
+  },
+  "case": {
+    "id": "TC-INT-067",
+    "title": "Denormalised business application is still current",
+    "startedAt": "2026-08-08T16:03:13.935Z",
+    "verdict": "FAIL",
+    "steps": [
+      {
+        "n": 1,
+        "text": "Read requests with their business application reference, and the business application names.",
+        "at": "2026-08-08T16:03:13.935Z",
+        "screenshots": []
+      }
+    ],
+    "records": [],
+    "observations": [],
+    "expected": [
+      "Business_Application__c equals the display value its reference resolves to now."
+    ],
+    "actual": [],
+    "verdictReason": "SyntaxError: Expected property name or '}' in JSON at position 1 (line 1 column 2)",
+    "finishedAt": "2026-08-08T16:03:21.767Z"
+  }
+}

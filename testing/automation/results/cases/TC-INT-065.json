@@ -1,0 +1,31 @@
+{
+  "run": {
+    "instance": "https://dev281754.service-now.com + Salesforce orgfarm-4938c7f768-dev-ed",
+    "executedBy": "admin (ServiceNow, via cnit OAuth) / admin.070b86ccf531@agentforce.com (Salesforce)",
+    "executedVia": "Playwright runner, no browser and no writes. ServiceNow read over cnit, Salesforce over the sf CLI. Each case compares the transform output held in Salesforce against the source record it was built from."
+  },
+  "case": {
+    "id": "TC-INT-065",
+    "title": "Date conversion fidelity",
+    "startedAt": "2026-08-08T16:03:02.104Z",
+    "verdict": "FAIL",
+    "steps": [
+      {
+        "n": 1,
+        "text": "Establish the Salesforce field type — a date silently drops the time a datetime would keep.",
+        "at": "2026-08-08T16:03:02.104Z",
+        "screenshots": []
+      }
+    ],
+    "records": [],
+    "observations": [],
+    "expected": [
+      "Planned_Completion_Date__c equals _toIso(planned_completion_date) for every mirrored record.",
+      "An empty source is empty in the mirror — not epoch, not today.",
+      "Every source value matches the yyyy-MM-dd HH:mm:ss shape _toIso assumes."
+    ],
+    "actual": [],
+    "verdictReason": "SyntaxError: Expected property name or '}' in JSON at position 1 (line 1 column 2)",
+    "finishedAt": "2026-08-08T16:03:06.731Z"
+  }
+}

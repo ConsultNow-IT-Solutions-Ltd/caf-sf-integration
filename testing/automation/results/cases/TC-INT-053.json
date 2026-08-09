@@ -1,0 +1,80 @@
+{
+  "run": {
+    "instance": "https://orgfarm-4938c7f768-dev-ed.develop.lightning.force.com + https://dev281754.service-now.com",
+    "executedBy": "admin.070b86ccf531@agentforce.com (Salesforce) / admin (ServiceNow)",
+    "executedVia": "Playwright driving Lightning Experience. Every screen assertion is cross-checked against the ServiceNow record over cnit and the Salesforce record over the sf CLI. No case in this file writes to either platform."
+  },
+  "case": {
+    "id": "TC-INT-053",
+    "title": "Sync Health strip sits above the grid",
+    "startedAt": "2026-08-07T17:51:29.498Z",
+    "verdict": "PASS",
+    "steps": [
+      {
+        "n": 1,
+        "text": "Open the CAF Dashboard tab and let it settle.",
+        "at": "2026-08-07T17:51:29.499Z",
+        "screenshots": []
+      },
+      {
+        "n": 2,
+        "text": "Read the strip, and measure where it sits relative to the grid.",
+        "at": "2026-08-07T17:51:34.077Z",
+        "screenshots": [
+          "C:\\Users\\patel\\Documents\\ServiceNow Work Project Docs\\Personal AI Assisted\\dev281754 CAF App Reyan\\testing\\automation\\evidence\\TC-INT-053\\02-dashboard-with-sync-strip.png"
+        ]
+      }
+    ],
+    "records": [
+      {
+        "label": "Sync Health strip, as rendered",
+        "table": "cafSyncHealth",
+        "query": "CAF Dashboard tab",
+        "rows": [
+          {
+            "headline": "In sync",
+            "colour": "green",
+            "summary": "49 records verified · 19 requests · 30 tasks",
+            "differences": "0"
+          }
+        ],
+        "at": "2026-08-07T17:51:34.582Z"
+      },
+      {
+        "label": "Layout",
+        "table": "CAF Dashboard tab",
+        "query": "bounding boxes in CSS pixels",
+        "rows": [
+          {
+            "element": "c-caf-sync-health",
+            "top": "255",
+            "height": "76",
+            "in_first_viewport": "true"
+          },
+          {
+            "element": "table.grid",
+            "top": "347",
+            "height": "178",
+            "in_first_viewport": "true"
+          }
+        ],
+        "at": "2026-08-07T17:51:34.582Z"
+      }
+    ],
+    "observations": [
+      "It ran on load without Re-check being pressed — the headline had resolved from \"Checking ServiceNow…\" to a verdict by the time the grid was readable."
+    ],
+    "expected": [
+      "cafSyncHealth renders above cafDashboard’s grid.",
+      "It runs on load, without being asked.",
+      "Its state is legible at a glance, and visible without scrolling."
+    ],
+    "actual": [
+      "Strip reads \"In sync\" (green) — 49 records verified · 19 requests · 30 tasks",
+      "Strip top 255px, grid top 347px; strip is above the grid: true",
+      "Strip visible without scrolling: true"
+    ],
+    "verdictReason": "Strip renders above the grid at 255px, in the first viewport, already resolved to \"In sync\".",
+    "finishedAt": "2026-08-07T17:51:34.582Z"
+  }
+}

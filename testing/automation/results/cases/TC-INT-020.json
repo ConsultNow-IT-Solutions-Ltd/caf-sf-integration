@@ -1,0 +1,92 @@
+{
+  "run": {
+    "instance": "https://orgfarm-4938c7f768-dev-ed.develop.lightning.force.com + https://dev281754.service-now.com",
+    "executedBy": "admin.070b86ccf531@agentforce.com (Salesforce) / admin (ServiceNow)",
+    "executedVia": "Playwright driving Lightning Experience. Every screen assertion is cross-checked against the ServiceNow record over cnit and the Salesforce record over the sf CLI. No case in this file writes to either platform."
+  },
+  "case": {
+    "id": "TC-INT-020",
+    "title": "Both lists are shown side by side",
+    "startedAt": "2026-08-08T18:35:46.022Z",
+    "verdict": "PASS",
+    "steps": [
+      {
+        "n": 1,
+        "text": "Open the evidence panel on CAFT0001022, which holds files on both sides.",
+        "at": "2026-08-08T18:35:46.022Z",
+        "screenshots": [
+          "C:\\reyan_tech_cap_dev\\dev281754 CAF App Reyan\\testing\\automation\\evidence\\TC-INT-020\\01-evidence-both-lists.png"
+        ]
+      },
+      {
+        "n": 2,
+        "text": "Confirm each column against its own platform.",
+        "at": "2026-08-08T18:35:52.575Z",
+        "screenshots": []
+      }
+    ],
+    "records": [
+      {
+        "label": "Evidence panel",
+        "table": "cafEvidence",
+        "query": "task CAFT0001022",
+        "rows": [
+          {
+            "column": "Salesforce Files",
+            "count": "1",
+            "items": "dr-plan-evidence.txt\n69 B · Reyan Technologies · 2026-08-07 14:45"
+          },
+          {
+            "column": "ServiceNow attachments",
+            "count": "2",
+            "items": "dr-plan-evidence.txt\n69 B · sf.integration · 2026-08-07 13:45:39 | backup-restore-test.txt\n58 B · sf.integration · 2026-08-07 13:40:47"
+          }
+        ],
+        "at": "2026-08-08T18:35:52.575Z"
+      },
+      {
+        "label": "sys_attachment in ServiceNow",
+        "table": "sys_attachment",
+        "query": "cnit get sys_attachment -Query \"table_name=x_gskn2_caf_compli_caf_tsk^table_sys_id=8f936cf483431210bd2a5860ceaad36c\" -ProfileName caf-reyan",
+        "rows": [
+          {
+            "size_bytes": "58",
+            "file_name": "backup-restore-test.txt"
+          },
+          {
+            "size_bytes": "69",
+            "file_name": "dr-plan-evidence.txt"
+          }
+        ],
+        "at": "2026-08-08T18:35:55.379Z"
+      },
+      {
+        "label": "Files linked to the task in Salesforce",
+        "table": "ContentDocumentLink",
+        "query": "sf data query --query \"SELECT ContentDocument.Title, ContentDocument.ContentSize FROM ContentDocumentLink WHERE LinkedEntityId IN (SELECT Id FROM CAF_Task__c WHERE SN_Number__c = 'CAFT0001022')\" --target-org caf-sf",
+        "rows": [
+          {
+            "title": "dr-plan-evidence",
+            "size": "69"
+          }
+        ],
+        "at": "2026-08-08T18:36:00.036Z"
+      }
+    ],
+    "observations": [
+      "Two copies on purpose, and not reconciled. Salesforce’s copy makes preview and download work with no round trip; ServiceNow’s is the copy an auditor is entitled to and the only one the attestation gate counts."
+    ],
+    "expected": [
+      "The panel lists Salesforce files and ServiceNow attachments separately.",
+      "A failed push is therefore visible rather than inferred."
+    ],
+    "actual": [
+      "Panel shows two separate columns: \"Salesforce Files\" (1) and \"ServiceNow attachments\" (2).",
+      "Salesforce column lists: dr-plan-evidence.txt\n69 B · Reyan Technologies · 2026-08-07 14:45",
+      "ServiceNow column lists: dr-plan-evidence.txt\n69 B · sf.integration · 2026-08-07 13:45:39 | backup-restore-test.txt\n58 B · sf.integration · 2026-08-07 13:40:47",
+      "Underneath: 1 ContentVersion(s) and 2 sys_attachment(s)."
+    ],
+    "verdictReason": "Two labelled columns, each agreeing with its own platform — a failed push would show as an empty column beside a populated one.",
+    "finishedAt": "2026-08-08T18:36:00.036Z"
+  }
+}
