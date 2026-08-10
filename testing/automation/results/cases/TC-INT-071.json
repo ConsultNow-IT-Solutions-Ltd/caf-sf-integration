@@ -7,13 +7,13 @@
   "case": {
     "id": "TC-INT-071",
     "title": "Mismatch advice names the side that is short",
-    "startedAt": "2026-08-08T18:38:11.765Z",
+    "startedAt": "2026-08-10T14:47:52.070Z",
     "verdict": "FAIL",
     "steps": [
       {
         "n": 1,
         "text": "Open the evidence panel on CAFT0001022 and read the mismatch warning.",
-        "at": "2026-08-08T18:38:11.766Z",
+        "at": "2026-08-10T14:47:52.071Z",
         "screenshots": [
           "C:\\reyan_tech_cap_dev\\dev281754 CAF App Reyan\\testing\\automation\\evidence\\TC-INT-071\\01-mismatch-advice.png"
         ]
@@ -21,7 +21,7 @@
       {
         "n": 2,
         "text": "Confirm the direction of the mismatch against the ServiceNow record.",
-        "at": "2026-08-08T18:38:18.213Z",
+        "at": "2026-08-10T14:47:58.096Z",
         "screenshots": []
       }
     ],
@@ -38,7 +38,7 @@
             "advice": "1 in Salesforce, 2 in ServiceNow. Re-upload the missing file to send it to the system of record."
           }
         ],
-        "at": "2026-08-08T18:38:18.213Z"
+        "at": "2026-08-10T14:47:58.096Z"
       },
       {
         "label": "ServiceNow attachments on CAFT0001022",
@@ -56,7 +56,7 @@
             "table_sys_id": "8f936cf483431210bd2a5860ceaad36c"
           }
         ],
-        "at": "2026-08-08T18:38:21.119Z"
+        "at": "2026-08-10T14:48:02.460Z"
       }
     ],
     "observations": [
@@ -71,6 +71,6 @@
       "Advice rendered: \"1 in Salesforce, 2 in ServiceNow. Re-upload the missing file to send it to the system of record.\""
     ],
     "verdictReason": "Salesforce is the short side (1 against 2) yet the advice is still \"re-upload\": \"1 in Salesforce, 2 in ServiceNow. Re-upload the missing file to send it to the system of record.\". cafEvidence.mismatchLabel is unconditional and does not branch on which side is short, so following it would create a third ServiceNow attachment rather than repair anything. Fix: branch the label on servicenowCount - salesforceCount.",
-    "finishedAt": "2026-08-08T18:38:21.120Z"
+    "finishedAt": "2026-08-10T14:48:02.461Z"
   }
 }

@@ -7,21 +7,21 @@
   "case": {
     "id": "TC-INT-053",
     "title": "Sync Health strip sits above the grid",
-    "startedAt": "2026-08-07T17:51:29.498Z",
+    "startedAt": "2026-08-10T14:46:53.980Z",
     "verdict": "PASS",
     "steps": [
       {
         "n": 1,
         "text": "Open the CAF Dashboard tab and let it settle.",
-        "at": "2026-08-07T17:51:29.499Z",
+        "at": "2026-08-10T14:46:53.980Z",
         "screenshots": []
       },
       {
         "n": 2,
         "text": "Read the strip, and measure where it sits relative to the grid.",
-        "at": "2026-08-07T17:51:34.077Z",
+        "at": "2026-08-10T14:46:58.127Z",
         "screenshots": [
-          "C:\\Users\\patel\\Documents\\ServiceNow Work Project Docs\\Personal AI Assisted\\dev281754 CAF App Reyan\\testing\\automation\\evidence\\TC-INT-053\\02-dashboard-with-sync-strip.png"
+          "C:\\reyan_tech_cap_dev\\dev281754 CAF App Reyan\\testing\\automation\\evidence\\TC-INT-053\\02-dashboard-with-sync-strip.png"
         ]
       }
     ],
@@ -34,11 +34,11 @@
           {
             "headline": "In sync",
             "colour": "green",
-            "summary": "49 records verified · 19 requests · 30 tasks",
+            "summary": "297 records verified · 109 requests · 182 tasks · 6 controls",
             "differences": "0"
           }
         ],
-        "at": "2026-08-07T17:51:34.582Z"
+        "at": "2026-08-10T14:46:59.026Z"
       },
       {
         "label": "Layout",
@@ -54,11 +54,11 @@
           {
             "element": "table.grid",
             "top": "347",
-            "height": "178",
+            "height": "872",
             "in_first_viewport": "true"
           }
         ],
-        "at": "2026-08-07T17:51:34.582Z"
+        "at": "2026-08-10T14:46:59.026Z"
       }
     ],
     "observations": [
@@ -70,11 +70,11 @@
       "Its state is legible at a glance, and visible without scrolling."
     ],
     "actual": [
-      "Strip reads \"In sync\" (green) — 49 records verified · 19 requests · 30 tasks",
+      "Strip reads \"In sync\" (green) — 297 records verified · 109 requests · 182 tasks · 6 controls",
       "Strip top 255px, grid top 347px; strip is above the grid: true",
       "Strip visible without scrolling: true"
     ],
     "verdictReason": "Strip renders above the grid at 255px, in the first viewport, already resolved to \"In sync\".",
-    "finishedAt": "2026-08-07T17:51:34.582Z"
+    "finishedAt": "2026-08-10T14:46:59.026Z"
   }
 }

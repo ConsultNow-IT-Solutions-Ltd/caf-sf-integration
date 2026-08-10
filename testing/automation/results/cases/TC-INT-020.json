@@ -7,13 +7,13 @@
   "case": {
     "id": "TC-INT-020",
     "title": "Both lists are shown side by side",
-    "startedAt": "2026-08-08T18:35:46.022Z",
+    "startedAt": "2026-08-10T09:07:24.817Z",
     "verdict": "PASS",
     "steps": [
       {
         "n": 1,
         "text": "Open the evidence panel on CAFT0001022, which holds files on both sides.",
-        "at": "2026-08-08T18:35:46.022Z",
+        "at": "2026-08-10T09:07:24.817Z",
         "screenshots": [
           "C:\\reyan_tech_cap_dev\\dev281754 CAF App Reyan\\testing\\automation\\evidence\\TC-INT-020\\01-evidence-both-lists.png"
         ]
@@ -21,7 +21,7 @@
       {
         "n": 2,
         "text": "Confirm each column against its own platform.",
-        "at": "2026-08-08T18:35:52.575Z",
+        "at": "2026-08-10T09:07:31.308Z",
         "screenshots": []
       }
     ],
@@ -42,7 +42,7 @@
             "items": "dr-plan-evidence.txt\n69 B · sf.integration · 2026-08-07 13:45:39 | backup-restore-test.txt\n58 B · sf.integration · 2026-08-07 13:40:47"
           }
         ],
-        "at": "2026-08-08T18:35:52.575Z"
+        "at": "2026-08-10T09:07:31.308Z"
       },
       {
         "label": "sys_attachment in ServiceNow",
@@ -58,7 +58,7 @@
             "file_name": "dr-plan-evidence.txt"
           }
         ],
-        "at": "2026-08-08T18:35:55.379Z"
+        "at": "2026-08-10T09:07:35.179Z"
       },
       {
         "label": "Files linked to the task in Salesforce",
@@ -70,7 +70,7 @@
             "size": "69"
           }
         ],
-        "at": "2026-08-08T18:36:00.036Z"
+        "at": "2026-08-10T09:07:39.788Z"
       }
     ],
     "observations": [
@@ -87,6 +87,6 @@
       "Underneath: 1 ContentVersion(s) and 2 sys_attachment(s)."
     ],
     "verdictReason": "Two labelled columns, each agreeing with its own platform — a failed push would show as an empty column beside a populated one.",
-    "finishedAt": "2026-08-08T18:36:00.036Z"
+    "finishedAt": "2026-08-10T09:07:39.789Z"
   }
 }
