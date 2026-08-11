@@ -4,7 +4,7 @@ Two, for two audiences. Both 16:9, both Reyan Technologies branding.
 
 | | |
 |---|---|
-| **CAF Compliance - Business Overview.pptx** | 13-slide executive decision brief. Built 2026-08-07. |
+| **CAF Compliance - Business Overview.pptx** | 13-slide executive decision brief. Built 2026-08-09. |
 | **CAF Compliance - Technical Architecture.pptx** | 14-slide engineering brief — the integration contract. Built 2026-08-08. |
 | **CAF Compliance - Plain English Summary.pptx** | 7 slides, no jargon, for an audience that works with neither system. Built 2026-08-08. |
 
@@ -30,6 +30,13 @@ same images the test evidence pack cites, so a screen in the deck and a screen
 in an evidence record are the same pixels. `crops.py` names a region of each
 capture and trims any uniform border left over; nothing is composited or
 retouched.
+
+Captures come in two viewport widths, because the harness changed between
+passes — 1600px for the dashboard and the ServiceNow portal grid, 1425px for
+the four task-panel screens. Crop boxes are therefore per-capture and are not
+interchangeable; re-running a spec at the other width means re-deriving its box.
+The attestation panel is placed narrower than the content width and centred,
+because at 1425px its taller column no longer fits above the caption.
 
 The two grids on the findings slide are **contiguous** regions of their
 captures, cropped to the same two applications. No row is edited out, so the
