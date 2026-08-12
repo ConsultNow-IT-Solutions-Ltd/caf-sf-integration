@@ -305,6 +305,13 @@ CAFSalesforceSync.prototype = {
      * keeps the Salesforce side readable without a second lookup.
      */
     _stateLabel: function(value) {
+        // An unset state is pushed as empty rather than falling through to the
+        // default. '' + null is the four-character string "null", and that is
+        // what State__c ended up holding - a value the grid renders as though
+        // the record genuinely had a state called null.
+        if (value === null || value === undefined || value === '') {
+            return '';
+        }
         switch ('' + value) {
             case '1':  return 'Open';
             case '2':  return 'In Progress';
