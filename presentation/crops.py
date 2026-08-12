@@ -1,11 +1,16 @@
 """
 Screenshot preparation for the CAF Compliance business deck.
 
-The raw Playwright captures are 1600px-wide full-page shots with a lot of
-background below the fold, and a business slide wants the panel, not the page.
-Each entry below is a named region of a captured screen; `trim()` then removes
-any uniform border left over, so a crop box that is slightly generous
-self-corrects rather than leaving a grey band down one side.
+The raw Playwright captures are full-page shots with a lot of background below
+the fold, and a business slide wants the panel, not the page. Each entry below
+is a named region of a captured screen; `trim()` then removes any uniform
+border left over, so a crop box that is slightly generous self-corrects rather
+than leaving a grey band down one side.
+
+Two capture widths are in play, because the harness viewport changed between
+passes: the dashboard and portal-grid captures are 1600px wide, the four
+task-panel captures are 1425px. Boxes are therefore per-capture and are not
+interchangeable between the two sets.
 
 Sources are the UI evidence from testing/automation/evidence/ — the same
 captures the test pack cites, so a screen in the deck and a screen in the
@@ -34,17 +39,22 @@ REGIONS = {
     "sf-grid-pair": ("TC-INT-053/02-dashboard-with-sync-strip.png", (33, 345, 1570, 481)),
     "sn-grid-pair": ("TC-INT-048/02-servicenow-portal-grid.png", (240, 348, 1362, 515)),
 
+    # The four task-panel captures below are from the 1425px-wide pass. Each
+    # page carries the compliance grid above the panel and a sticky Salesforce
+    # nav strip across it, so the box starts below both and frames the panel
+    # only — the section heading down to its closing note.
+
     # Drill-in: a request's tasks with the actions available in each state.
-    "drill-in": ("TC-INT-051/01-drill-in-task-list.png", (33, 578, 1570, 815)),
+    "drill-in": ("TC-INT-051/01-drill-in-task-list.png", (30, 1275, 1400, 1520)),
 
     # Owner's view — upload evidence, both copies listed.
-    "evidence-owner": ("TC-INT-036/03-evidence-panel-owner-view.png", (33, 788, 1570, 1118)),
+    "evidence-owner": ("TC-INT-036/03-evidence-panel-owner-view.png", (30, 1482, 1400, 1800)),
 
     # Approver's view — evidence read-only beside the attestation form.
-    "attest-approver": ("TC-INT-036/04-attest-panel-approver-view.png", (33, 788, 1570, 1268)),
+    "attest-approver": ("TC-INT-036/04-attest-panel-approver-view.png", (30, 1482, 1420, 2010)),
 
     # Two copies of every file, side by side.
-    "evidence-both": ("TC-INT-020/01-evidence-both-lists.png", (52, 880, 1555, 1165)),
+    "evidence-both": ("TC-INT-020/01-evidence-both-lists.png", (40, 1592, 1400, 1870)),
 
     # ServiceNow's own portal grid — the admin/audit view, and the finding.
     "sn-portal-grid": ("TC-INT-048/02-servicenow-portal-grid.png", (240, 348, 1362, 592)),

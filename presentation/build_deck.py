@@ -333,7 +333,12 @@ def attestation(prs):
            "The approver sees the evidence read-only beside the attestation — enough to judge it, "
            "with no ability to add to it.")
 
-    picture(slide, "attest-approver", Inches(2.16))
+    # Narrower than content width, and centred: this panel is two columns of
+    # unequal height, so at full width it runs past the caption. Scaling to fit
+    # the space above the caption keeps the whole panel rather than cropping the
+    # Reject note off the bottom of the taller column.
+    attest_w = Inches(10.3)
+    picture(slide, "attest-approver", Inches(2.16), width=attest_w, left=(W - attest_w) // 2)
     caption(slide, "Gathering evidence and attesting to it are separate panels because they are separate jobs. "
                    "An attestation with no evidence behind it is refused outright.", Inches(6.24))
 

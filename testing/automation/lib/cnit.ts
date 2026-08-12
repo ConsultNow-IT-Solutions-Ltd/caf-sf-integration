@@ -1,5 +1,6 @@
 import { execFileSync } from 'child_process';
 import fs from 'fs';
+import { parseSfJson } from './sfjson';
 
 /**
  * ServiceNow reads for the integration suite, through `cnit`.
@@ -102,14 +103,23 @@ export function cnitGet(table: string, opts: CnitOptions = {}): Record<string, s
     windowsHide: true,
   });
 
-  const start = raw.indexOf('{');
-  if (start < 0) throw new Error(`cnit returned no JSON for ${table}:\n${raw.slice(0, 500)}`);
-  const parsed = JSON.parse(raw.slice(start));
+  // Extracted with parseSfJson rather than by slicing from the first '{' to the
+  // end of the buffer. cnit is a PowerShell script and PowerShell writes its own
+  // trailing material — a progress record flushed after the body, an update
+  // notice — which the old slice swallowed into the parse and reported as
+  // malformed JSON from the instance. parseSfJson takes the span to the last '}'
+  // and strips ANSI first, and it names the command in the failure text.
+  const parsed = parseSfJson(raw, `cnit get ${table}`);
   return parsed.result ?? [];
 }
 
 /** Read a single system property's value, or null when it is not set. */
 export function property(name: string): string | null {
   const rows = cnitGet(TABLES.properties, { query: `name=${name}`, fields: ['name', 'value'] });
-  return rows.length ? rows[0].value : null;
+  // ?? null, because a row can come back without the column: -Fields is a
+  // request, not a guarantee, and a property row whose value is empty arrives
+  // with the key absent rather than as ''. The signature says string | null, so
+  // returning undefined here made `=== null` checks in the callers miss it and
+  // pushed an undefined into the assertion message instead of "not set".
+  return rows.length ? rows[0].value ?? null : null;
 }
