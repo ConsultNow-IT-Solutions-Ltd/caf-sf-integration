@@ -47,13 +47,24 @@ caf_short_desc.prototype = Object.extendsObject(global.AbstractAjaxProcessor, {
             type = rel.caf_conformance_type.getDisplayValue() || '';
         }
 
-        var sd;
-        if (drp_date !== '') {
-            sd = name + ' - ' + drp_date + ' - ' + type;
-        } else {
-            sd = name + ' - ' + type;
+        // Composed from whatever is actually present, rather than by branching
+        // on the date alone. A business app that no longer exists leaves name
+        // empty and a relationship with no conformance type leaves type empty,
+        // and either one used to produce a description with a dangling ' - ' on
+        // one end - which the client script writes straight into the form field.
+        //
+        // Each part is coerced with '' + before the comparison: getDisplayValue()
+        // returns a Java string, and an empty one is not === '' in this engine,
+        // so an untouched check passes it through as a separate part.
+        var parts = [];
+        var candidates = [name, drp_date, type];
+        for (var i = 0; i < candidates.length; i++) {
+            var value = ('' + (candidates[i] || '')).trim();
+            if (value !== '') {
+                parts.push(value);
+            }
         }
-        return sd.toString();
+        return parts.join(' - ');
     },
 
     type: 'caf_short_desc'
