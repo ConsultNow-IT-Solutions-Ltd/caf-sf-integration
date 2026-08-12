@@ -1,5 +1,6 @@
 import { execFileSync } from 'child_process';
 import fs from 'fs';
+import { parseSfJson } from './sfjson';
 
 /**
  * ServiceNow reads for the integration suite, through `cnit`.
@@ -102,9 +103,13 @@ export function cnitGet(table: string, opts: CnitOptions = {}): Record<string, s
     windowsHide: true,
   });
 
-  const start = raw.indexOf('{');
-  if (start < 0) throw new Error(`cnit returned no JSON for ${table}:\n${raw.slice(0, 500)}`);
-  const parsed = JSON.parse(raw.slice(start));
+  // Extracted with parseSfJson rather than by slicing from the first '{' to the
+  // end of the buffer. cnit is a PowerShell script and PowerShell writes its own
+  // trailing material — a progress record flushed after the body, an update
+  // notice — which the old slice swallowed into the parse and reported as
+  // malformed JSON from the instance. parseSfJson takes the span to the last '}'
+  // and strips ANSI first, and it names the command in the failure text.
+  const parsed = parseSfJson(raw, `cnit get ${table}`);
   return parsed.result ?? [];
 }
 
