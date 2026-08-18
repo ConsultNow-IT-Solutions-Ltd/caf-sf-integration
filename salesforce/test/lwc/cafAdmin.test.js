@@ -49,10 +49,11 @@ describe('c-caf-admin', () => {
         jest.clearAllMocks();
     });
 
+    // TC-UNIT-050
     it('summarises the callout log and filters to failures', async () => {
         const el = await render(overview());
         const values = Array.from(el.shadowRoot.querySelectorAll('.tile__value')).map((t) => t.textContent);
-        expect(values).toEqual(['2', '1', '50%', '200 ms', '300 ms']);
+        expect(values).toEqual(['2', '1', '50%', '200 ms', '300 ms', '2026-10-19 09:00']);
 
         const box = el.shadowRoot.querySelector('input[type="checkbox"]');
         box.checked = true;
@@ -64,21 +65,55 @@ describe('c-caf-admin', () => {
         expect(logRows[0].textContent).toContain('boom');
     });
 
+    // TC-UNIT-051
     it('explains the missing permission instead of failing when the log is not readable', async () => {
         const el = await render(overview({ logAccess: false, calls: [] }));
         expect(el.shadowRoot.textContent).toContain('needs the CAF Admin permission set');
         expect(el.shadowRoot.textContent).toContain('Backup');
     });
 
+    // TC-UNIT-052
     it('flags settings where the value in use is not the value stored', async () => {
         const el = await render(overview());
         const flags = Array.from(el.shadowRoot.querySelectorAll('.pill--amber, .pill--blue')).map((p) => p.textContent);
         expect(flags).toEqual(['Adjusted by CafConfig', 'No record - default in use']);
     });
 
+    // TC-UNIT-053
     it('notes inactive controls that still have requests', async () => {
         const el = await render(overview());
         expect(el.shadowRoot.textContent).toContain('Inactive but still has requests');
         expect(el.shadowRoot.textContent).toContain('1 active');
+    });
+
+    // TC-UNIT-054
+    it('warns that the log has stopped when Logging_Enabled is false', async () => {
+        const data = overview();
+        data.settings = data.settings.map((s) =>
+            s.name === 'Logging_Enabled' ? { ...s, configured: 'false', effective: 'false', hasRecord: true } : s
+        );
+        const el = await render(data);
+        expect(el.shadowRoot.querySelector('.logging-off')).not.toBeNull();
+
+        const on = await render(overview());
+        expect(on.shadowRoot.querySelector('.logging-off')).toBeNull();
+    });
+
+    // TC-UNIT-055
+    it('cuts long errors in the table and keeps the full text as the tooltip', async () => {
+        const long = 'x'.repeat(400);
+        const data = overview();
+        data.calls[1] = { ...data.calls[1], Error__c: long };
+        const el = await render(data);
+
+        const cell = el.shadowRoot.querySelector('td.err[title]');
+        expect(cell.title).toBe(long);
+        expect(cell.textContent.length).toBe(141);
+    });
+
+    // TC-UNIT-056
+    it('shows when the newest logged call was made', async () => {
+        const el = await render(overview());
+        expect(el.shadowRoot.textContent).toContain('2026-10-19 09:00');
     });
 });

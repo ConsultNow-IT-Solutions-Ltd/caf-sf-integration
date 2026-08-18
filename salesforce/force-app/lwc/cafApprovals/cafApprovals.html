@@ -50,7 +50,19 @@
                     <input type="search" class="filters__input" placeholder="Task, request, control or description"
                            value={search} oninput={handleSearch} />
                 </label>
+                <label class="filters__check">
+                    <input type="checkbox" class="filters__overdue" checked={overdueOnly}
+                           onchange={handleOverdueOnly} />
+                    Overdue only
+                </label>
             </div>
+
+            <template lwc:if={queueCapped}>
+                <p class="msg msg--warn">
+                    Showing the first {queueLimit} tasks, soonest due first. More may be waiting;
+                    narrow the list from the CAF Tasks tab.
+                </p>
+            </template>
 
             <template lwc:if={hasQueue}>
                 <div class="scroll">
@@ -124,7 +136,10 @@
             </template>
 
             <h3 class="section">Recently decided</h3>
-            <template lwc:if={hasDecisions}>
+            <template lwc:if={decisionsError}>
+                <p class="msg msg--error">Recent decisions could not be loaded: {decisionsError}</p>
+            </template>
+            <template lwc:elseif={hasDecisions}>
                 <div class="scroll">
                     <table class="tasks">
                         <thead>

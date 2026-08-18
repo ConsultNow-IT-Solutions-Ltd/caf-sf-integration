@@ -19,6 +19,7 @@ const SETTLED = new Set(['in_compliance', 'archer_exception_approved']);
 const TASK_STATES = ['Open', 'In Progress', 'Closed Complete', 'Cancelled'];
 const UPCOMING_DAYS = 30;
 const DAY_MS = 86400000;
+const ALL = '';
 
 function isoOf(d) {
     const pad = (n) => String(n).padStart(2, '0');
@@ -29,8 +30,17 @@ function pct(part, whole) {
     return whole ? Math.round((part / whole) * 100) : 0;
 }
 
-function csvCell(v) {
-    const s = v === null || v === undefined ? '' : String(v);
+/**
+ * One CSV cell. Quoted when it holds a separator, and defused when it starts
+ * with a character a spreadsheet reads as a formula: descriptions come from
+ * ServiceNow, where anyone who can edit a request can type "=HYPERLINK(...)",
+ * and opening the export must not run it.
+ */
+export function csvCell(v) {
+    let s = v === null || v === undefined ? '' : String(v);
+    if (/^[=+\-@\t\r]/.test(s)) {
+        s = "'" + s;
+    }
     return /[",\r\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
 }
 
@@ -42,13 +52,20 @@ function csvCell(v) {
  * "Compliance rate" here is requests in compliance over requests assessed -
  * the request-level view. The grid's Overall column is the application-level
  * view (compliant only when every assessed control is), and the By application
- * table below uses that rule so it reads the same as the grid.
+ * table uses that rule so it reads the same as the grid.
+ *
+ * Figures are computed once, in rebuild(), whenever the data or the filter
+ * changes - not in getters, which the template calls on every render.
  */
 export default class CafReports extends LightningElement {
     requests;
     controls;
     taskBuckets = [];
     error;
+    taskError;
+
+    appFilter = ALL;
+    report = { kpis: [], byControl: [], byApplication: [], dueRows: [], overdue: 0, dueSoon: 0 };
 
     wiredRequests;
     wiredControls;
@@ -59,6 +76,7 @@ export default class CafReports extends LightningElement {
         this.wiredRequests = result;
         if (result.data) {
             this.requests = result.data;
+            this.rebuild();
         } else if (result.error) {
             this.error = this.messageOf(result.error);
         }
@@ -69,16 +87,25 @@ export default class CafReports extends LightningElement {
         this.wiredControls = result;
         if (result.data) {
             this.controls = result.data;
+            this.rebuild();
         } else if (result.error) {
             this.error = this.messageOf(result.error);
         }
     }
 
+    /**
+     * Task counts are a side panel. If they fail the rest of the report still
+     * stands, so the error is shown in that panel rather than over the page.
+     */
     @wire(getTaskSummary)
     handleTasks(result) {
         this.wiredTasks = result;
         if (result.data) {
             this.taskBuckets = result.data;
+            this.taskError = undefined;
+        } else if (result.error) {
+            this.taskBuckets = [];
+            this.taskError = this.messageOf(result.error);
         }
     }
 
@@ -86,18 +113,52 @@ export default class CafReports extends LightningElement {
         return !this.error && (!this.requests || !this.controls);
     }
 
-    get ready() {
-        return !this.loading && !this.error;
+    // -------------------------------------------------------------- filter
+
+    get appOptions() {
+        const apps = [...new Set((this.requests || []).map((r) => r.Business_Application__c))].sort((a, b) =>
+            a.localeCompare(b)
+        );
+        return [{ value: ALL, label: 'All applications', selected: this.appFilter === ALL }].concat(
+            apps.map((a) => ({ value: a, label: a, selected: this.appFilter === a }))
+        );
     }
 
+    get isFiltered() {
+        return this.appFilter !== ALL;
+    }
+
+    handleAppFilter(event) {
+        this.appFilter = event.target.value;
+        this.rebuild();
+    }
+
+    /** The rows every figure is computed from, after the filter. */
     get rows() {
-        return this.requests || [];
+        const all = this.requests || [];
+        return this.appFilter === ALL ? all : all.filter((r) => r.Business_Application__c === this.appFilter);
     }
 
-    // ------------------------------------------------------------ headline
+    // ------------------------------------------------------------- compute
 
-    get kpis() {
+    rebuild() {
+        if (!this.requests || !this.controls) {
+            return;
+        }
         const rows = this.rows;
+        const dueRows = this.computeDue(rows);
+        const overdue = dueRows.filter((r) => r.late).length;
+        this.report = {
+            kpis: this.computeKpis(rows),
+            byControl: this.computeByControl(rows),
+            byApplication: this.computeByApplication(rows),
+            dueRows,
+            overdue,
+            dueSoon: dueRows.length - overdue
+        };
+    }
+
+    computeKpis(rows) {
         const count = (k) => rows.filter((r) => r.CAF_Status__c === k).length;
         const compliant = count('in_compliance');
         const apps = new Set(rows.map((r) => r.Business_Application__c)).size;
@@ -116,19 +177,13 @@ export default class CafReports extends LightningElement {
         ];
     }
 
-    get legend() {
-        return STATUSES.map((s) => ({ key: s.key, label: s.label, cls: s.seg + ' seg--key' }));
-    }
-
-    // ---------------------------------------------------------- by control
-
     /**
      * One stacked bar per active control. A request joins its control on
      * sys_id and falls back to the name, as the grid does; anything that joins
      * to no active control is gathered into one extra row rather than dropped,
      * so the bars always add up to the request total.
      */
-    get byControl() {
+    computeByControl(rows) {
         const controls = this.controls || [];
         const groups = controls.map((c) => ({ key: c.ServiceNow_Sys_Id__c || c.Name, name: c.Name, rows: [] }));
         const bySysId = new Map();
@@ -141,7 +196,7 @@ export default class CafReports extends LightningElement {
         });
 
         const orphan = { key: '__orphan', name: 'Not in the active catalogue', rows: [] };
-        this.rows.forEach((r) => {
+        rows.forEach((r) => {
             const g = bySysId.get(r.CAF_Control_Sys_Id__c) || byName.get(r.CAF_Control__c) || orphan;
             g.rows.push(r);
         });
@@ -184,12 +239,10 @@ export default class CafReports extends LightningElement {
         };
     }
 
-    // ------------------------------------------------------ by application
-
     /** Least compliant first: the list is for deciding where to look next. */
-    get byApplication() {
+    computeByApplication(rows) {
         const apps = new Map();
-        this.rows.forEach((r) => {
+        rows.forEach((r) => {
             if (!apps.has(r.Business_Application__c)) {
                 apps.set(r.Business_Application__c, []);
             }
@@ -197,21 +250,21 @@ export default class CafReports extends LightningElement {
         });
 
         const out = [];
-        apps.forEach((rows, app) => {
-            const compliant = rows.filter((r) => r.CAF_Status__c === 'in_compliance').length;
-            const failing = rows.filter((r) => r.CAF_Status__c === 'out_of_compliance').length;
-            const rate = pct(compliant, rows.length);
-            const allGreen = compliant === rows.length;
+        apps.forEach((appRows, app) => {
+            const compliant = appRows.filter((r) => r.CAF_Status__c === 'in_compliance').length;
+            const failing = appRows.filter((r) => r.CAF_Status__c === 'out_of_compliance').length;
+            const rate = pct(compliant, appRows.length);
+            const allGreen = compliant === appRows.length;
             out.push({
                 key: app,
                 app,
-                assessed: rows.length,
+                assessed: appRows.length,
                 compliant,
                 failing,
                 rate,
                 rateLabel: rate + '%',
                 meterStyle: 'width:' + rate + '%',
-                overallLabel: allGreen ? 'Compliant' : compliant + ' of ' + rows.length,
+                overallLabel: allGreen ? 'Compliant' : compliant + ' of ' + appRows.length,
                 overallClass: allGreen ? 'pill pill--green' : 'pill pill--amber'
             });
         });
@@ -219,16 +272,14 @@ export default class CafReports extends LightningElement {
         return out;
     }
 
-    // ------------------------------------------------------------ due dates
-
     /**
      * Overdue: planned completion is in the past and the request is not in a
      * settled status. Due soon: the same, within the next 30 days.
      */
-    get dueRows() {
+    computeDue(rows) {
         const today = isoOf(new Date());
         const horizon = isoOf(new Date(Date.now() + UPCOMING_DAYS * DAY_MS));
-        return this.rows
+        return rows
             .filter((r) => r.Planned_Completion_Date__c && !SETTLED.has(r.CAF_Status__c))
             .filter((r) => r.Planned_Completion_Date__c <= horizon)
             .map((r) => {
@@ -249,20 +300,44 @@ export default class CafReports extends LightningElement {
             .sort((a, b) => a.date.localeCompare(b.date));
     }
 
+    // ------------------------------------------------------------- getters
+
+    get kpis() {
+        return this.report.kpis;
+    }
+
+    get legend() {
+        return STATUSES.map((s) => ({ key: s.key, label: s.label, cls: s.seg + ' seg--key' }));
+    }
+
+    get byControl() {
+        return this.report.byControl;
+    }
+
+    get byApplication() {
+        return this.report.byApplication;
+    }
+
+    get dueRows() {
+        return this.report.dueRows;
+    }
+
     get overdueCount() {
-        return this.dueRows.filter((r) => r.late).length;
+        return this.report.overdue;
     }
 
     get dueSoonCount() {
-        return this.dueRows.length - this.overdueCount;
+        return this.report.dueSoon;
     }
 
     get hasDueRows() {
-        return this.dueRows.length > 0;
+        return this.report.dueRows.length > 0;
     }
 
-    // --------------------------------------------------------------- tasks
-
+    /**
+     * Tasks are counted across every request, filter or not: the summary is
+     * an aggregate in Apex, and it carries no application to filter on.
+     */
     get taskStates() {
         const totals = new Map();
         let approved = 0;
@@ -291,7 +366,7 @@ export default class CafReports extends LightningElement {
     }
 
     get hasTasks() {
-        return this.taskStates.states.length > 0;
+        return this.taskBuckets.length > 0;
     }
 
     // -------------------------------------------------------------- actions
@@ -303,8 +378,8 @@ export default class CafReports extends LightningElement {
     }
 
     /**
-     * The request rows behind every figure on the page, as CSV, so a number
-     * on this screen can be checked or taken elsewhere.
+     * The request rows behind the figures on screen - filtered when the page
+     * is - as CSV, so a number here can be checked or taken elsewhere.
      */
     handleExport() {
         const header = ['Request', 'Business application', 'Control', 'CAF status', 'State', 'Planned completion', 'Description'];
@@ -323,9 +398,10 @@ export default class CafReports extends LightningElement {
                     .join(',')
             )
         );
+        const suffix = this.isFiltered ? '-' + this.appFilter.replace(/[^a-z0-9]+/gi, '-').toLowerCase() : '';
         const link = document.createElement('a');
         link.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(lines.join('\r\n'));
-        link.download = 'caf-compliance-' + isoOf(new Date()) + '.csv';
+        link.download = 'caf-compliance' + suffix + '-' + isoOf(new Date()) + '.csv';
         link.style.display = 'none';
         this.template.querySelector('.export').appendChild(link);
         link.click();

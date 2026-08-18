@@ -1,7 +1,7 @@
 import { LightningElement, wire } from 'lwc';
 import { refreshApex } from '@salesforce/apex';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
-import { CurrentPageReference } from 'lightning/navigation';
+import { CurrentPageReference, NavigationMixin } from 'lightning/navigation';
 import getRequests from '@salesforce/apex/CafDashboardController.getRequests';
 import getControls from '@salesforce/apex/CafDashboardController.getControls';
 import getTasks from '@salesforce/apex/CafTaskService.getTasks';
@@ -27,9 +27,15 @@ const VIEWS = [
     { key: 'admin', label: 'Admin' }
 ];
 
-export default class CafDashboard extends LightningElement {
+export default class CafDashboard extends NavigationMixin(LightningElement) {
     /** Which screen is showing; c__view in the URL selects one on arrival. */
     view = 'compliance';
+
+    /** The page this tab is on, kept so selectView can write c__view into it. */
+    pageRef;
+
+    /** Set by an arrow key so the newly selected tab takes focus once rendered. */
+    focusPending = false;
 
     columns = [];
     rows = [];
@@ -70,6 +76,7 @@ export default class CafDashboard extends LightningElement {
      */
     @wire(CurrentPageReference)
     handlePageReference(ref) {
+        this.pageRef = ref;
         const wanted = ref && ref.state && ref.state.c__view;
         if (wanted && VIEWS.some((v) => v.key === wanted)) {
             this.view = wanted;
@@ -80,6 +87,8 @@ export default class CafDashboard extends LightningElement {
         return VIEWS.map((v) => ({
             ...v,
             selected: String(v.key === this.view),
+            // Roving tabindex: Tab lands on the selected screen, arrows move along.
+            tabIndex: v.key === this.view ? '0' : '-1',
             className: v.key === this.view ? 'views__tab views__tab--on' : 'views__tab'
         }));
     }
@@ -97,7 +106,59 @@ export default class CafDashboard extends LightningElement {
     }
 
     handleView(event) {
-        this.view = event.currentTarget.dataset.view;
+        this.selectView(event.currentTarget.dataset.view);
+    }
+
+    /** ARIA tabs pattern: Left/Right wrap, Home/End jump. */
+    handleViewKey(event) {
+        const keys = { ArrowLeft: -1, ArrowRight: 1, Home: 'first', End: 'last' };
+        const move = keys[event.key];
+        if (move === undefined) {
+            return;
+        }
+        event.preventDefault();
+        const i = VIEWS.findIndex((v) => v.key === this.view);
+        let next;
+        if (move === 'first') {
+            next = 0;
+        } else if (move === 'last') {
+            next = VIEWS.length - 1;
+        } else {
+            next = (i + move + VIEWS.length) % VIEWS.length;
+        }
+        this.focusPending = true;
+        this.selectView(VIEWS[next].key);
+    }
+
+    /**
+     * Writes the screen into the URL with replace, so a refresh or a copied
+     * link lands back on it without each tab click adding a history entry.
+     * Compliance is the default and is left out of the URL.
+     */
+    selectView(key) {
+        if (!VIEWS.some((v) => v.key === key) || key === this.view) {
+            return;
+        }
+        this.view = key;
+        if (this.pageRef) {
+            const state = { ...(this.pageRef.state || {}) };
+            if (key === 'compliance') {
+                delete state.c__view;
+            } else {
+                state.c__view = key;
+            }
+            this[NavigationMixin.Navigate]({ ...this.pageRef, state }, true);
+        }
+    }
+
+    renderedCallback() {
+        if (this.focusPending) {
+            this.focusPending = false;
+            const tab = this.template.querySelector('.views__tab--on');
+            if (tab) {
+                tab.focus();
+            }
+        }
     }
 
     /**
