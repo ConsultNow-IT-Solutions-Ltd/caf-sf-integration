@@ -2,6 +2,7 @@ import { createElement } from 'lwc';
 import CafApprovals from 'c/cafApprovals';
 import getQueue from '@salesforce/apex/CafApprovalsController.getQueue';
 import getRecentDecisions from '@salesforce/apex/CafApprovalsController.getRecentDecisions';
+import getEvidence from '@salesforce/apex/CafEvidenceService.getEvidence';
 
 jest.mock(
     '@salesforce/apex/CafApprovalsController.getQueue',
@@ -190,6 +191,82 @@ describe('c-caf-approvals', () => {
         expect(queueRows(el)).toHaveLength(0);
         expect(el.shadowRoot.textContent).toContain('No tasks match the filter.');
         expect(el.shadowRoot.textContent).not.toContain('Nothing is waiting on an attestation');
+    });
+});
+
+describe('c-caf-approvals review panel', () => {
+    // Held pending so cafEvidence never announces a count of its own; every
+    // count these tests see is one they sent.
+    beforeEach(() => {
+        getEvidence.mockImplementation(() => new Promise(() => {}));
+    });
+
+    afterEach(() => {
+        getEvidence.mockImplementation(() => Promise.resolve({ salesforce: [], serviceNow: [] }));
+        while (document.body.firstChild) {
+            document.body.removeChild(document.body.firstChild);
+        }
+        jest.clearAllMocks();
+    });
+
+    const reviewButton = (el, n) => el.shadowRoot.querySelector('button[data-number="CAFT000000' + n + '"]');
+
+    // TC-UNIT-103
+    it('highlights the row under review and Done closes the panel', async () => {
+        const el = await render([task(1, 'CRM', null), task(2, 'CRM', null)]);
+        reviewButton(el, 2).click();
+        await flush();
+
+        expect(el.shadowRoot.querySelector('.review__title').textContent).toBe('Attest CAFT0000002');
+        expect(queueRows(el)[0].className).toBe('tasks__row');
+        expect(queueRows(el)[1].className).toBe('tasks__row tasks__row--active');
+
+        el.shadowRoot.querySelector('.review__head button').click();
+        await flush();
+
+        expect(el.shadowRoot.querySelector('section.review')).toBeNull();
+        expect(el.shadowRoot.querySelector('.tasks__row--active')).toBeNull();
+    });
+
+    // TC-UNIT-104
+    it('passes the evidence count to attestation only for the task under review', async () => {
+        const el = await render([task(1, 'CRM', null)]);
+        reviewButton(el, 1).click();
+        await flush();
+
+        const evidence = el.shadowRoot.querySelector('c-caf-evidence');
+        const attestation = () => el.shadowRoot.querySelector('c-caf-attestation');
+
+        evidence.dispatchEvent(new CustomEvent('evidencecount', { detail: { sysId: 'sys-other', count: 4 } }));
+        await flush();
+        expect(attestation().evidenceCount).toBeUndefined();
+
+        evidence.dispatchEvent(new CustomEvent('evidencecount', { detail: { sysId: 'sys1', count: 2 } }));
+        await flush();
+        expect(attestation().evidenceCount).toBe(2);
+
+        evidence.dispatchEvent(new CustomEvent('evidencecount', { detail: { sysId: 'sys1', count: '2' } }));
+        await flush();
+        expect(attestation().evidenceCount).toBeUndefined();
+    });
+
+    // TC-UNIT-105
+    it('starts the next review with no evidence count carried over', async () => {
+        const el = await render([task(1, 'CRM', null), task(2, 'CRM', null)]);
+        reviewButton(el, 1).click();
+        await flush();
+        el.shadowRoot
+            .querySelector('c-caf-evidence')
+            .dispatchEvent(new CustomEvent('evidencecount', { detail: { sysId: 'sys1', count: 3 } }));
+        await flush();
+        expect(el.shadowRoot.querySelector('c-caf-attestation').evidenceCount).toBe(3);
+
+        reviewButton(el, 2).click();
+        await flush();
+
+        const attestation = el.shadowRoot.querySelector('c-caf-attestation');
+        expect(attestation.snSysId).toBe('sys2');
+        expect(attestation.evidenceCount).toBeUndefined();
     });
 });
 
