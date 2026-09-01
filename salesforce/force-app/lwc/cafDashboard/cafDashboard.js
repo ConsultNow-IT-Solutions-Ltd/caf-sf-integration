@@ -88,8 +88,6 @@ export default class CafDashboard extends LightningElement {
     handleTasks(result) {
         this.wiredTasks = result;
         if (result.data) {
-            this.tasks = result.data.map((t) => this.decorate(t));
-
             // A task that closed while its panel was open should not leave a
             // stale state behind it: refresh what the attestation form reads.
             if (this.activeTask) {
@@ -104,6 +102,8 @@ export default class CafDashboard extends LightningElement {
                     };
                 }
             }
+
+            this.tasks = result.data.map((t) => this.decorate(t));
         }
     }
 
@@ -120,7 +120,8 @@ export default class CafDashboard extends LightningElement {
      * Start is hidden once it cannot succeed - on a task that is not Open it is
      * a guaranteed error, and there is nothing to learn from being allowed to
      * press it. Attest is hidden unless the task is In Progress, which is what
-     * the endpoint requires.
+     * the endpoint requires. Both are hidden on a task with no ServiceNow
+     * sys_id, because there is nothing to address the change to.
      *
      * The evidence button is never hidden, only relabelled. Reading the
      * evidence behind a closed task is the audit view, and it is wanted
@@ -132,16 +133,33 @@ export default class CafDashboard extends LightningElement {
         const open = state === 'Open';
         const inProgress = state === 'In Progress';
         const active = open || inProgress;
+        const linked = !!task.ServiceNow_Sys_Id__c;
 
         return {
             ...task,
-            canStart: open,
-            canAttest: inProgress,
+            canStart: linked && open,
+            canAttest: linked && inProgress,
             evidenceLabel: active ? 'Upload evidence' : 'View evidence',
-            rowClass: this.activeTask && this.activeTask.sysId === task.ServiceNow_Sys_Id__c
-                ? 'tasks__row tasks__row--active'
-                : 'tasks__row'
+            rowClass: this.rowClassFor(task.ServiceNow_Sys_Id__c)
         };
+    }
+
+    rowClassFor(sysId) {
+        return this.activeTask && this.activeTask.sysId === sysId
+            ? 'tasks__row tasks__row--active'
+            : 'tasks__row';
+    }
+
+    /**
+     * The highlight was worked out only when the tasks wire delivered, so
+     * opening or closing a panel never moved it. Recompute it whenever the
+     * active task changes.
+     */
+    markActiveRow() {
+        this.tasks = this.tasks.map((t) => ({
+            ...t,
+            rowClass: this.rowClassFor(t.ServiceNow_Sys_Id__c)
+        }));
     }
 
     /**
@@ -241,10 +259,18 @@ export default class CafDashboard extends LightningElement {
         this.rows = rows;
     }
 
+    /**
+     * Moving to another request closes the task panel. The panel belongs to a
+     * task of the previous request, and left open it sat under the new
+     * request's task list as though it were one of them.
+     */
     handleCellClick(event) {
         const { sysid, number, control } = event.currentTarget.dataset;
         if (!sysid) {
             return;
+        }
+        if (sysid !== this.selectedSysId) {
+            this.handleCloseTask();
         }
         this.selectedSysId = sysid;
         this.selectedNumber = number;
@@ -263,12 +289,14 @@ export default class CafDashboard extends LightningElement {
         this.evidenceCount = undefined;
         this.panelMode = mode;
         this.activeTask = { id, sysId: sysid, number, state, approval };
+        this.markActiveRow();
     }
 
     handleCloseTask() {
         this.activeTask = undefined;
         this.panelMode = undefined;
         this.evidenceCount = undefined;
+        this.markActiveRow();
     }
 
     /**
@@ -299,6 +327,9 @@ export default class CafDashboard extends LightningElement {
      */
     async handleAction(event) {
         const { sysid, field, value } = event.currentTarget.dataset;
+        if (this.busy || !sysid) {
+            return;
+        }
         this.busy = true;
         try {
             await applyChange({ sysId: sysid, field: field, value: value });
