@@ -1,0 +1,14 @@
+{
+  "name": "caf-salesforce-lwc-tests",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Offline Jest unit tests for the CAF Lightning Web Components. Nothing here talks to an org.",
+  "scripts": {
+    "test:unit": "sfdx-lwc-jest",
+    "test:unit:watch": "sfdx-lwc-jest --watch",
+    "test:unit:coverage": "sfdx-lwc-jest --coverage"
+  },
+  "devDependencies": {
+    "@salesforce/sfdx-lwc-jest": "^7.0.1"
+  }
+}
