@@ -54,6 +54,47 @@ private class CafEvidenceServiceTest {
     }
 
     @IsTest
+    static void replyWithoutFileListIsNotReportedAsAnOutage() {
+        User caf = CafTestSupport.cafUser();
+        System.runAs(caf) {
+            CafTestSupport.respondWith(200, '{"result":{}}');
+
+            Test.startTest();
+            CafEvidenceService.EvidenceView view = CafEvidenceService.getEvidence(null, 'tsk1');
+            Test.stopTest();
+
+            Assert.areEqual(0, view.serviceNowCount);
+            Assert.isTrue(view.serviceNowError.contains('could not be read'));
+            Assert.isFalse(view.serviceNowError.contains('Could not reach'));
+        }
+    }
+
+    @IsTest
+    static void replyThatIsNotJsonIsNotReportedAsAnOutage() {
+        User caf = CafTestSupport.cafUser();
+        System.runAs(caf) {
+            CafTestSupport.respondWith(200, '<html>Session expired</html>');
+
+            Test.startTest();
+            CafEvidenceService.EvidenceView view = CafEvidenceService.getEvidence(null, 'tsk1');
+            Test.stopTest();
+
+            Assert.areEqual(0, view.serviceNowCount);
+            Assert.isTrue(view.serviceNowError.contains('could not be read'));
+        }
+    }
+
+    @IsTest
+    static void entriesThatAreNotObjectsAreSkipped() {
+        List<CafEvidenceService.EvidenceFile> files = CafEvidenceService.readServiceNowFiles(
+            '{"result":{"files":[null, "junk", {"sys_id":"att2","size_bytes":"10"}]}}');
+
+        Assert.areEqual(1, files.size());
+        Assert.areEqual('att2', files[0].id);
+        Assert.areEqual('(unnamed attachment)', files[0].name);
+    }
+
+    @IsTest
     static void taskWithoutSysIdMakesNoCallout() {
         CafTestSupport.ServiceNowMock mock = CafTestSupport.respondWith(200, ONE_FILE);
 
