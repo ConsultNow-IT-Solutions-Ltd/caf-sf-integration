@@ -119,6 +119,14 @@ data, which is worse than either being wrong alone.
   - Shows how long ago it checked ("· 3 min ago").
   - Only the row being repaired reads "Re-syncing…".
   - A reply with no differences list no longer throws, and an empty reply reads "Could not check" rather than "In sync".
+- **Grid, second pass:**
+  - **Sort** by application name (the default, matching the portal) or least compliant first.
+  - The sort and **Needs attention only** are remembered per viewer in browser storage, ignored if storage is unavailable.
+  - A red ring on cells past their planned date that aren't in compliance or exception approved, counted in the legend. The tooltip gives the date.
+  - The cell whose tasks are open is highlighted.
+  - The task panel shows a one-line count of tasks by state.
+- **Sync Health:** the differences counted by record type above the table.
+- **Attestation:** comments are capped at 4000 characters, with a counter.
 - **Evidence:** a **Reload** button, for files attached in ServiceNow directly.
 - **Attestation:** Approve and Reject ask for confirmation first, naming the task and the criteria. Rejecting also warns that the request goes out of compliance. A dialog that can't open counts as no.
 

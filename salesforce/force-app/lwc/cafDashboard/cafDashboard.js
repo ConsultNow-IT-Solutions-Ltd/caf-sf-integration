@@ -14,6 +14,29 @@ const STATUS = {
     archer_exception_approved: { label: 'Exception approved', dot: 'dot dot--blue' }
 };
 
+/** Statuses with nothing owed, so a past planned date on them is not overdue. */
+const SETTLED = new Set(['in_compliance', 'archer_exception_approved']);
+
+/** Grid sort orders. Name is the default and the order the ServiceNow portal uses. */
+const SORTS = [
+    { value: 'name', label: 'Application name' },
+    { value: 'least', label: 'Least compliant first' }
+];
+
+/** Where this viewer's grid preferences are kept between visits. */
+const PREFS_KEY = 'caf.dashboard.grid';
+
+/**
+ * Today as YYYY-MM-DD in the viewer's zone, the format Date fields arrive in.
+ *
+ * @returns {string}
+ */
+function todayIso() {
+    const d = new Date();
+    const pad = (n) => String(n).padStart(2, '0');
+    return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+}
+
 /**
  * The screens under the CAF Dashboard tab. Compliance is the grid this
  * component has always been; the others are their own components, mounted
@@ -45,6 +68,9 @@ export default class CafDashboard extends NavigationMixin(LightningElement) {
 
     /** Grid filter: hide applications whose Overall reads Compliant. */
     attentionOnly = false;
+
+    /** Grid order: 'name' (default) or 'least'. */
+    sortBy = 'name';
 
     /**
      * Per-control and per-status counts over every row, worked out in build()
@@ -385,6 +411,7 @@ export default class CafDashboard extends NavigationMixin(LightningElement) {
             label: c.Name
         }));
 
+        const today = todayIso();
         const rows = [];
         apps.forEach((byControl, appName) => {
             let compliant = 0;
@@ -396,6 +423,11 @@ export default class CafDashboard extends NavigationMixin(LightningElement) {
                     byControl['name:' + control.Name];
                 const status = record ? record.CAF_Status__c : null;
                 const meta = STATUS[status];
+                const due = record && typeof record.Planned_Completion_Date__c === 'string'
+                    ? record.Planned_Completion_Date__c
+                    : '';
+                // ISO dates compare as strings. Settled statuses owe nothing.
+                const overdue = !!due && due < today && !SETTLED.has(status);
 
                 if (record) {
                     assessed += 1;
@@ -413,8 +445,10 @@ export default class CafDashboard extends NavigationMixin(LightningElement) {
                     number: record ? record.SN_Number__c : '',
                     control: control.Name,
                     disabled: !record,
+                    overdue,
                     title: record
-                        ? record.SN_Number__c + ' - ' + (meta ? meta.label : status || 'unknown')
+                        ? record.SN_Number__c + ' - ' + (meta ? meta.label : status || 'unknown') +
+                          (due ? ' - due ' + due : '') + (overdue ? ' (overdue)' : '')
                         : control.Name + ' - not assessed for this application'
                 };
             });
@@ -440,6 +474,8 @@ export default class CafDashboard extends NavigationMixin(LightningElement) {
             rows.push({
                 key: appName,
                 app: appName,
+                assessed,
+                rate: assessed ? compliant / assessed : null,
                 cells,
                 overallClass,
                 overallLabel,
@@ -508,11 +544,128 @@ export default class CafDashboard extends NavigationMixin(LightningElement) {
      */
     get visibleRows() {
         const needle = (this.appSearch || '').trim().toLowerCase();
-        return this.rows.filter(
+        const rows = this.rows.filter(
             (r) =>
                 (!needle || String(r.app).toLowerCase().includes(needle)) &&
                 (!this.attentionOnly || r.needsAttention)
         );
+        if (this.sortBy === 'least') {
+            // Lowest share compliant first; unassessed applications last, as
+            // they have nothing to fix yet. Name breaks ties.
+            rows.sort((a, b) => {
+                const ra = a.rate === null ? 2 : a.rate;
+                const rb = b.rate === null ? 2 : b.rate;
+                return ra - rb || String(a.app).localeCompare(String(b.app));
+            });
+        }
+        // Cell classes depend on the selection, which changes without a rebuild.
+        return rows.map((r) => ({
+            ...r,
+            cells: r.cells.map((c) => ({ ...c, cls: this.cellClassFor(c) }))
+        }));
+    }
+
+    /**
+     * The cell button's classes: an overdue ring where the planned date has
+     * passed, and a highlight on the cell whose tasks are open below. Both are
+     * classes, not extra elements, so the dot stays the first span in the
+     * button for anything that reads the grid.
+     *
+     * @param {object} cell a cell from build()
+     * @returns {string}
+     */
+    cellClassFor(cell) {
+        let cls = 'cellbtn';
+        if (cell.overdue) {
+            cls += ' cellbtn--overdue';
+        }
+        if (cell.sysId && cell.sysId === this.selectedSysId) {
+            cls += ' cellbtn--selected';
+        }
+        return cls;
+    }
+
+    /** @returns {object[]} the sort dropdown's options */
+    get sortOptions() {
+        return SORTS.map((s) => ({ ...s, selected: s.value === this.sortBy }));
+    }
+
+    /** @returns {number} assessed cells past their planned date and not settled */
+    get overdueCount() {
+        return this.rows.reduce((n, r) => n + r.cells.filter((c) => c.overdue).length, 0);
+    }
+
+    /**
+     * Sort changed. Only the two known orders are accepted.
+     *
+     * @param {Event} event change event from the select
+     */
+    handleSort(event) {
+        const value = event && event.target && event.target.value;
+        this.sortBy = SORTS.some((s) => s.value === value) ? value : 'name';
+        this.savePrefs();
+    }
+
+    /**
+     * Restores this viewer's sort and "Needs attention only" from the last
+     * visit. Browser storage can be absent or blocked; then the defaults stand.
+     */
+    loadPrefs() {
+        try {
+            const raw = window.localStorage && window.localStorage.getItem(PREFS_KEY);
+            if (!raw) {
+                return;
+            }
+            const prefs = JSON.parse(raw);
+            if (prefs && SORTS.some((s) => s.value === prefs.sortBy)) {
+                this.sortBy = prefs.sortBy;
+            }
+            if (prefs && typeof prefs.attentionOnly === 'boolean') {
+                this.attentionOnly = prefs.attentionOnly;
+            }
+        } catch (e) {
+            // Unreadable or blocked storage: keep the defaults.
+        }
+    }
+
+    /** Remembers the sort and "Needs attention only". The search is not kept. */
+    savePrefs() {
+        try {
+            if (window.localStorage) {
+                window.localStorage.setItem(
+                    PREFS_KEY,
+                    JSON.stringify({ sortBy: this.sortBy, attentionOnly: this.attentionOnly })
+                );
+            }
+        } catch (e) {
+            // Blocked storage only costs the preference, never the grid.
+        }
+    }
+
+    /** Restores saved grid preferences before the first render. */
+    connectedCallback() {
+        this.loadPrefs();
+    }
+
+    /**
+     * One line under the panel heading: how many tasks the request has, by
+     * state, so the shape of the work is visible before reading the table.
+     *
+     * @returns {string} e.g. "3 tasks · 1 Open · 2 Closed Complete"
+     */
+    get taskSummary() {
+        const tasks = this.tasks || [];
+        if (!tasks.length) {
+            return '';
+        }
+        const byState = new Map();
+        tasks.forEach((t) => {
+            const state = (t && t.State__c) || 'No state';
+            byState.set(state, (byState.get(state) || 0) + 1);
+        });
+        const parts = [tasks.length + (tasks.length === 1 ? ' task' : ' tasks')];
+        byState.forEach((n, state) => parts.push(n + ' ' + state));
+        return parts.join(' \u00b7 ');
     }
 
     /** @returns {boolean} whether any row survives the grid filters */
@@ -569,6 +722,7 @@ export default class CafDashboard extends NavigationMixin(LightningElement) {
      */
     handleAttentionOnly(event) {
         this.attentionOnly = !!(event && event.target && event.target.checked);
+        this.savePrefs();
     }
 
     /**
