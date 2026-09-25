@@ -1,0 +1,13 @@
+@import 'c/cafTheme';
+
+.view { padding: 1rem; background: #ffffff; }
+
+/* The shared .tile, made into a button: whole tile is the target. */
+.tile--link {
+    width: 100%;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+.tile--link:hover { border-color: #0a3176; background: #f3f6fd; }
+.tile--link:focus-visible { outline: 2px solid #0a3176; outline-offset: 2px; }
