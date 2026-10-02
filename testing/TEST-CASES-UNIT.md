@@ -21,6 +21,8 @@ so a regression shows up in seconds rather than on the next live run.
 | TC-UNIT-004 | ServiceNow unreadable → error shown, no mismatch warning | An outage isn't reported as a count mismatch |
 | TC-UNIT-005 | `evidencecount` carries the ServiceNow count | The attestation gate counts the system-of-record copy |
 | TC-UNIT-006 | `hideUpload` removes the upload control and changes the empty message | Approver and closed-task view |
+| TC-UNIT-007 | Reload reads both lists again | Picks up a file attached in ServiceNow directly |
+| TC-UNIT-008 | Reload is disabled while a read is in flight | No overlapping reads |
 
 TC-UNIT-001 covers the direction no live case can reach without an upload.
 `HANDOVER.md` for CAF-173 lists it as a by-hand check, and this replaces that.
@@ -37,6 +39,37 @@ TC-UNIT-001 covers the direction no live case can reach without an upload.
 | TC-UNIT-015 | Rows sorted by application name, ignoring case | Stable grid order |
 | TC-UNIT-016 | Only one wire answered → still loading, no grid | No half-built pivot |
 | TC-UNIT-017 | A wire error → error message shown | Failure is visible |
+
+## LWC: `cafDashboard` grid filters, totals and panel (`salesforce/test/lwc/cafDashboard.test.js`)
+
+| ID | Case | Guards |
+|---|---|---|
+| TC-UNIT-070 | Search narrows rows by application name; count reads "Showing 2 of 3 applications" | |
+| TC-UNIT-071 | "Needs attention only" hides Compliant rows | Unassessed apps aren't flagged as needing attention |
+| TC-UNIT-072 | No match → message, filter bar stays | The user can clear the filter |
+| TC-UNIT-073 | Footer totals compliant/assessed per control, unchanged by the filter | Footer describes the estate, agrees with Reports |
+| TC-UNIT-074 | Legend counts each status and N/A | |
+| TC-UNIT-075 | Task panel takes focus on open; Escape closes it | Panel below the fold was easy to miss |
+
+## LWC: `cafSyncHealth` (`salesforce/test/lwc/cafSyncHealth.test.js`)
+
+| ID | Case | Guards |
+|---|---|---|
+| TC-UNIT-080 | Out of sync with a null differences list reads "Out of sync" | It threw on `.length` |
+| TC-UNIT-081 | Missing counts show "?", never "null" | Doesn't claim a count it didn't get |
+| TC-UNIT-082 | Empty reply is "Could not check", not "In sync" | |
+| TC-UNIT-083 | Only the pressed row reads "Re-syncing…"; every Re-sync disabled until it finishes; re-checks after | No racing pushes |
+| TC-UNIT-084 | "checked … · N min ago"; unparseable time omitted | A stale check is visible |
+
+## LWC: `cafAttestation` (`salesforce/test/lwc/cafAttestation.test.js`)
+
+| ID | Case | Guards |
+|---|---|---|
+| TC-UNIT-090 | Cancelling the confirmation sends nothing | Approve/Reject close the task irreversibly |
+| TC-UNIT-091 | Confirmed Approve sends once; dialog names the task and the criteria | |
+| TC-UNIT-092 | Reject with no comment asks for a reason before any dialog | |
+| TC-UNIT-093 | Reject dialog warns the request goes out of compliance | |
+| TC-UNIT-094 | A dialog that can't open counts as no | Fails safe |
 
 ## LWC: `cafDashboard` screen tabs (`salesforce/test/lwc/cafDashboard.test.js`)
 
@@ -131,7 +164,8 @@ and that only came to light after the run.
 
 ## Not covered here
 
-- `cafAttestation` and `cafSyncHealth` have no unit tests yet.
+- `cafAttestation` is tested for its confirmation step only. Its blocked-state
+  messages (not started, closed, no evidence) are still checked live only.
 - Apex has none in this branch. Those are in CAF-235 / CAF-236.
 - The ServiceNow business rule behind CAF-175 isn't in the repo, so it can't be
   unit-tested here. TC-SN-017 and TC-INT-050 keep checking it live.

@@ -241,6 +241,21 @@ export default class CafEvidence extends LightningElement {
         this.dispatchEvent(new ShowToastEvent({ title, message, variant }));
     }
 
+    /**
+     * Reload pressed. Reads both lists again - for a file attached in
+     * ServiceNow directly, which nothing here would otherwise notice.
+     */
+    handleReload() {
+        if (!this.loading && !this.uploading) {
+            this.load();
+        }
+    }
+
+    /** @returns {boolean} no reload while a read or an upload is in flight, or with nothing to read */
+    get reloadDisabled() {
+        return this.loading || this.uploading || (!this.recordId && !this.sysId);
+    }
+
     get showUpload() {
         return !this.hideUpload;
     }

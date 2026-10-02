@@ -108,6 +108,20 @@ mean inventing a column contract the client then has to trust.
 widget. Softening that here would make the two views disagree about the same
 data, which is worse than either being wrong alone.
 
+## Changes to the original screens (2026-10-19, not yet deployed)
+
+- **Grid:**
+  - **Find application** search and a **Needs attention only** toggle. These change which rows are drawn, not the data.
+  - A footer row of compliant/assessed per control.
+  - Status counts in the legend. The footer and the legend always describe every row, so they agree with Reports.
+- **Task panel:** scrolls into view and takes focus when a cell opens it. **Escape** closes the open task, then the panel.
+- **Sync Health:**
+  - Shows how long ago it checked ("· 3 min ago").
+  - Only the row being repaired reads "Re-syncing…".
+  - A reply with no differences list no longer throws, and an empty reply reads "Could not check" rather than "In sync".
+- **Evidence:** a **Reload** button, for files attached in ServiceNow directly.
+- **Attestation:** Approve and Reject ask for confirmation first, naming the task and the criteria. Rejecting also warns that the request goes out of compliance. A dialog that can't open counts as no.
+
 ## Screens: Compliance, Approvals, Reports, Admin
 
 **Not yet deployed (2026-10-19).** The CAF Dashboard tab now has a tab bar
