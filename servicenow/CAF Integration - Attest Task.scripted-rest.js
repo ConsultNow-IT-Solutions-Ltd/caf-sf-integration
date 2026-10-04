@@ -43,7 +43,9 @@
     var sysId = request.pathParams.sysId;
     var body  = request.body ? request.body.data : null;
 
-    if (!body) {
+    // A request with no body arrives as {}, not null, so a truthiness test
+    // never fires: count the keys instead. Measured on dev249570 (TC-INT-035).
+    if (!body || typeof body !== 'object' || Object.keys(body).length === 0) {
         response.setStatus(400);
         return { error: 'Empty request body' };
     }
