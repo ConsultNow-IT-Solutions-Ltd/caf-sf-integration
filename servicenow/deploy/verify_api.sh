@@ -72,9 +72,10 @@ c 200 "POST /attest valid" -X POST "$B/task/$TASK/attest" \
 echo "=== Resync ==="
 c 400 "POST /resync bad type" -X POST "$B/resync/badtype/$REQ"
 c 404 "POST /resync unknown request" -X POST "$B/resync/request/$BAD"
-# 502 while sf.enabled is false: a refused push must surface, not be swallowed.
-# Once the connected-app credentials are in and sf.enabled is true, this is 200.
-c 502 "POST /resync/request (502 = push refused, sf.enabled=false)" \
+# 200 now that the connected-app credentials are in and sf.enabled is true
+# (since 2026-10-04). With sf.enabled=false a refused push must surface as 502,
+# not be swallowed - run with RESYNC_EXPECT=502 to check that side.
+c "${RESYNC_EXPECT:-200}" "POST /resync/request (200 pushed; 502 if sf.enabled=false)" \
   -X POST "$B/resync/request/$REQ"
 
 echo "=== Snapshot after the writes ==="
