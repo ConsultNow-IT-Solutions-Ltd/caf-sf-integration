@@ -4,7 +4,7 @@ import { cnitGet, cnitCommand, TABLES } from '../lib/cnit';
 import * as sf from '../lib/salesforce';
 import * as lx from '../lib/lightning';
 import { openPortal, PORTAL_PAGES, readComplianceGrid } from '../lib/servicenow';
-import { AUTH_STATE, SF_LIGHTNING } from '../playwright.config';
+import { AUTH_STATE, SF_LIGHTNING, SN_INSTANCE } from '../playwright.config';
 import path from 'path';
 
 /**
@@ -21,9 +21,14 @@ import path from 'path';
  * nothing else.
  *
  * The subjects are chosen so the states the cases need already exist:
- *   RCAF0001022  holds CAFT0001001 (Open) and CAFT0001022 (Closed, approved,
- *                and carrying 1 Salesforce file against 2 ServiceNow
- *                attachments — the ready-made mismatch)
+ *   RCAF0001039  holds CAFT0001048 (Open) and CAFT0001052 (Closed, approved,
+ *                and carrying 0 Salesforce files against 1 ServiceNow
+ *                attachment — the ready-made mismatch, ServiceNow the long side)
+ *
+ * Re-pinned on dev249570, 2026-10-04. On dev281754 these were RCAF0001022,
+ * CAFT0001001 and CAFT0001022; on the new instance those numbers belong to
+ * different records, and CAFT0001022 is Open with no ServiceNow file, so the
+ * closed-task cases failed and TC-INT-071 passed for the wrong reason.
  *   RCAF0001037  holds CAFT0001046 (In Progress)
  */
 
@@ -31,16 +36,16 @@ const RESULTS = path.join(__dirname, '..', 'results');
 
 const SUBJECT = {
   /** Open + Closed tasks on one request. */
-  mixedRequest: 'RCAF0001022',
-  openTask: 'CAFT0001001',
-  closedTask: 'CAFT0001022',
+  mixedRequest: 'RCAF0001039',
+  openTask: 'CAFT0001048',
+  closedTask: 'CAFT0001052',
   /** The In Progress task, and its parent. */
   inProgressRequest: 'RCAF0001037',
   inProgressTask: 'CAFT0001046',
 } as const;
 
 describeRun({
-  instance: `${SF_LIGHTNING} + https://dev281754.service-now.com`,
+  instance: `${SF_LIGHTNING} + ${SN_INSTANCE}`,
   executedBy: 'admin.070b86ccf531@agentforce.com (Salesforce) / admin (ServiceNow)',
   executedVia:
     'Playwright driving Lightning Experience. Every screen assertion is cross-checked against the ' +
@@ -265,7 +270,7 @@ test('TC-INT-036 — Evidence and attestation are separate panels for separate p
   ev.record(
     'Row actions offered, by task state',
     'cafDashboard',
-    'drill-in on RCAF0001022 and RCAF0001037',
+    `drill-in on ${SUBJECT.mixedRequest} and ${SUBJECT.inProgressRequest}`,
     [...byState.entries()].map(([state, actions]) => ({ state, actions: actions.join(', ') }))
   );
   await ev.shot(page, 'row-actions-in-progress');
@@ -403,7 +408,7 @@ test('TC-INT-020 — Both lists are shown side by side', async ({ page }) => {
 
 test('TC-INT-021 — A count mismatch raises a warning', async ({ page }) => {
   const ev = new CaseEvidence('TC-INT-021', 'A count mismatch raises a warning');
-  ev.expect(`${SUBJECT.closedTask} carries 1 Salesforce file against 2 ServiceNow attachments.`);
+  ev.expect(`${SUBJECT.closedTask} carries 0 Salesforce files against 1 ServiceNow attachment.`);
   ev.expect('The panel shows a warning, and it reads as informative rather than alarming.');
 
   ev.step(`Open the evidence panel on ${SUBJECT.closedTask}.`);
@@ -421,8 +426,9 @@ test('TC-INT-021 — A count mismatch raises a warning', async ({ page }) => {
   ev.actual(`Salesforce ${panel.salesforceCount} file(s) against ServiceNow ${panel.servicenowCount} attachment(s) — mismatch present: ${mismatch}`);
   ev.actual(`Warning shown: ${panel.warning || '(none)'}`);
   ev.observe(
-    'The extra ServiceNow attachment is backup-restore-test.txt, left by a direct-HTTP smoke test. Two copies of ' +
-      'evidence is not a compliance failure, which is why the wording matters more than the fact of the warning.'
+    'The ServiceNow attachment is encryption-config.txt, uploaded straight to ServiceNow by verify_api.sh, so it ' +
+      'never reached Salesforce. That is not a compliance failure, which is why the wording matters more than the ' +
+      'fact of the warning.'
   );
 
   if (!mismatch) {

@@ -1,21 +1,21 @@
 {
   "run": {
-    "instance": "https://orgfarm-4938c7f768-dev-ed.develop.lightning.force.com + https://dev281754.service-now.com",
+    "instance": "https://orgfarm-4938c7f768-dev-ed.develop.lightning.force.com + https://dev249570.service-now.com",
     "executedBy": "admin.070b86ccf531@agentforce.com (Salesforce) / admin (ServiceNow)",
     "executedVia": "Playwright driving Lightning Experience. Every screen assertion is cross-checked against the ServiceNow record over cnit and the Salesforce record over the sf CLI. No case in this file writes to either platform."
   },
   "case": {
     "id": "TC-INT-021",
     "title": "A count mismatch raises a warning",
-    "startedAt": "2026-08-08T17:35:09.526Z",
+    "startedAt": "2026-10-04T15:47:18.661Z",
     "verdict": "PASS",
     "steps": [
       {
         "n": 1,
-        "text": "Open the evidence panel on CAFT0001022.",
-        "at": "2026-08-08T17:35:09.527Z",
+        "text": "Open the evidence panel on CAFT0001052.",
+        "at": "2026-10-04T15:47:18.661Z",
         "screenshots": [
-          "C:\\audit\\dev281754 CAF App Reyan\\testing\\automation\\evidence\\TC-INT-021\\01-evidence-count-mismatch-warning.png"
+          "C:\\reyan_tech_cap_dev\\dev281754 CAF App Reyan\\testing\\automation\\evidence\\TC-INT-021\\01-evidence-count-mismatch-warning.png"
         ]
       }
     ],
@@ -23,31 +23,31 @@
       {
         "label": "Counts and warning, as rendered",
         "table": "cafEvidence",
-        "query": "task CAFT0001022",
+        "query": "task CAFT0001052",
         "rows": [
           {
-            "salesforce_files": "1",
-            "servicenow_attachments": "2",
-            "warning": "1 in Salesforce, 2 in ServiceNow. Re-upload the missing file to send it to the system of record."
+            "salesforce_files": "0",
+            "servicenow_attachments": "1",
+            "warning": "0 in Salesforce, 1 in ServiceNow. Re-upload the missing file to send it to the system of record."
           }
         ],
-        "at": "2026-08-08T17:35:21.919Z"
+        "at": "2026-10-04T15:47:25.133Z"
       }
     ],
     "observations": [
-      "The extra ServiceNow attachment is backup-restore-test.txt, left by a direct-HTTP smoke test. Two copies of evidence is not a compliance failure, which is why the wording matters more than the fact of the warning.",
-      "Finding — the advice is backwards for this mismatch. cafEvidence.mismatchLabel is unconditional: it always says \"Re-upload the missing file to send it to the system of record\", which is correct only when Salesforce holds more than ServiceNow, i.e. a push failed. Here ServiceNow holds more (2 against 1), so the system of record already has the file and following the advice would create a third ServiceNow attachment rather than repair anything. This is the only mismatch state present on the instance today, so it is the one a user will actually meet. The label needs to branch on which side is short."
+      "The ServiceNow attachment is encryption-config.txt, uploaded straight to ServiceNow by verify_api.sh, so it never reached Salesforce. That is not a compliance failure, which is why the wording matters more than the fact of the warning.",
+      "Finding — the advice is backwards for this mismatch. cafEvidence.mismatchLabel is unconditional: it always says \"Re-upload the missing file to send it to the system of record\", which is correct only when Salesforce holds more than ServiceNow, i.e. a push failed. Here ServiceNow holds more (1 against 0), so the system of record already has the file and following the advice would create a third ServiceNow attachment rather than repair anything. This is the only mismatch state present on the instance today, so it is the one a user will actually meet. The label needs to branch on which side is short."
     ],
     "expected": [
-      "CAFT0001022 carries 1 Salesforce file against 2 ServiceNow attachments.",
+      "CAFT0001052 carries 0 Salesforce files against 1 ServiceNow attachment.",
       "The panel shows a warning, and it reads as informative rather than alarming."
     ],
     "actual": [
-      "Salesforce 1 file(s) against ServiceNow 2 attachment(s) — mismatch present: true",
-      "Warning shown: 1 in Salesforce, 2 in ServiceNow. Re-upload the missing file to send it to the system of record.",
-      "Wording judged informative: \"1 in Salesforce, 2 in ServiceNow. Re-upload the missing file to send it to the system of record.\""
+      "Salesforce 0 file(s) against ServiceNow 1 attachment(s) — mismatch present: true",
+      "Warning shown: 0 in Salesforce, 1 in ServiceNow. Re-upload the missing file to send it to the system of record.",
+      "Wording judged informative: \"0 in Salesforce, 1 in ServiceNow. Re-upload the missing file to send it to the system of record.\""
     ],
-    "verdictReason": "Mismatch detected and surfaced informatively: \"1 in Salesforce, 2 in ServiceNow. Re-upload the missing file to send it to the system of record.\". The case's stated expectation is met — but see the observation on the remediation advice, which is wrong for this direction of mismatch and should be raised separately.",
-    "finishedAt": "2026-08-08T17:35:21.923Z"
+    "verdictReason": "Mismatch detected and surfaced informatively: \"0 in Salesforce, 1 in ServiceNow. Re-upload the missing file to send it to the system of record.\". The case's stated expectation is met — but see the observation on the remediation advice, which is wrong for this direction of mismatch and should be raised separately.",
+    "finishedAt": "2026-10-04T15:47:25.133Z"
   }
 }

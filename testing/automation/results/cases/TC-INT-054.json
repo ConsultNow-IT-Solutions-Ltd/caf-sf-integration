@@ -1,31 +1,31 @@
 {
   "run": {
-    "instance": "https://dev281754.service-now.com + Salesforce orgfarm-4938c7f768-dev-ed",
+    "instance": "https://dev249570.service-now.com + Salesforce orgfarm-4938c7f768-dev-ed",
     "executedBy": "admin (ServiceNow) / admin.070b86ccf531@agentforce.com (Salesforce)",
     "executedVia": "Playwright runner, no browser: ServiceNow read over cnit and the Scripted REST API as sf.integration, Salesforce read over the sf CLI and anonymous Apex against the deployed classes. Every case reads both sides."
   },
   "case": {
     "id": "TC-INT-054",
     "title": "The orphan request appears in neither grid",
-    "startedAt": "2026-08-07T17:28:22.732Z",
+    "startedAt": "2026-10-04T15:31:32.179Z",
     "verdict": "PASS",
     "steps": [
       {
         "n": 1,
         "text": "Confirm the record exists in ServiceNow with no business application and no control.",
-        "at": "2026-08-07T17:28:22.732Z",
+        "at": "2026-10-04T15:31:32.179Z",
         "screenshots": []
       },
       {
         "n": 2,
         "text": "Confirm it is mirrored into Salesforce.",
-        "at": "2026-08-07T17:28:24.039Z",
+        "at": "2026-10-04T15:31:34.438Z",
         "screenshots": []
       },
       {
         "n": 3,
         "text": "Confirm the Salesforce grid query excludes it.",
-        "at": "2026-08-07T17:28:30.066Z",
+        "at": "2026-10-04T15:31:43.588Z",
         "screenshots": []
       }
     ],
@@ -33,17 +33,17 @@
       {
         "label": "The orphan in ServiceNow",
         "table": "x_gskn2_caf_compli_caf_req",
-        "query": "cnit get x_gskn2_caf_compli_caf_req -Query \"number=RCAF0001001\" -ProfileName caf-reyan",
+        "query": "cnit get x_gskn2_caf_compli_caf_req -Query \"number=RCAF0001001\" -ProfileName caf-dev249570",
         "rows": [
           {
             "number": "RCAF0001001",
             "sys_id": "cc67fc481b5ee5d0a3d187b8e34bcbf9",
             "business_application": "",
-            "caf_status": "out_of_compliance",
+            "caf_status": "approaching_due",
             "caf_conformance_type": ""
           }
         ],
-        "at": "2026-08-07T17:28:24.039Z"
+        "at": "2026-10-04T15:31:34.438Z"
       },
       {
         "label": "The orphan in Salesforce",
@@ -56,7 +56,7 @@
             "CAF_Control__c": null
           }
         ],
-        "at": "2026-08-07T17:28:30.066Z"
+        "at": "2026-10-04T15:31:43.588Z"
       },
       {
         "label": "Requests the Salesforce grid draws",
@@ -118,7 +118,7 @@
             "SN_Number__c": "RCAF0001031"
           }
         ],
-        "at": "2026-08-07T17:28:36.091Z"
+        "at": "2026-10-04T15:31:50.461Z"
       }
     ],
     "observations": [
@@ -134,6 +134,6 @@
       "Appears in the Salesforce grid: false. Grid draws 18 of the mirrored request(s)."
     ],
     "verdictReason": "Present in both stores, drawn by neither grid — both sides filter identically.",
-    "finishedAt": "2026-08-07T17:28:36.092Z"
+    "finishedAt": "2026-10-04T15:31:50.461Z"
   }
 }

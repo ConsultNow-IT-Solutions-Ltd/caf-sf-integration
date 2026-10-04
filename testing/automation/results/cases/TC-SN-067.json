@@ -1,25 +1,25 @@
 {
   "run": {
-    "instance": "https://dev281754.service-now.com",
+    "instance": "https://dev249570.service-now.com",
     "executedBy": "admin",
     "executedVia": "Playwright (automated); every assertion cross-checked against the ServiceNow Table API"
   },
   "case": {
     "id": "TC-SN-067",
     "title": "The orphan request never appears in the portal grid",
-    "startedAt": "2026-08-07T16:59:49.085Z",
+    "startedAt": "2026-10-04T15:41:14.935Z",
     "verdict": "PASS",
     "steps": [
       {
         "n": 1,
         "text": "Confirm the orphan exists and is genuinely unlinked.",
-        "at": "2026-08-07T16:59:49.085Z",
+        "at": "2026-10-04T15:41:14.935Z",
         "screenshots": []
       },
       {
         "n": 2,
         "text": "Count all requests, and those that would qualify for the grid.",
-        "at": "2026-08-07T16:59:49.237Z",
+        "at": "2026-10-04T15:41:15.079Z",
         "screenshots": []
       }
     ],
@@ -32,13 +32,13 @@
           {
             "number": "RCAF0001001",
             "business_application": "",
-            "caf_status": "out_of_compliance",
+            "caf_status": "approaching_due",
             "active": "true",
             "caf_conformance_type": "",
             "state": "1"
           }
         ],
-        "at": "2026-08-07T16:59:49.235Z"
+        "at": "2026-10-04T15:41:15.077Z"
       },
       {
         "label": "Request totals",
@@ -51,7 +51,7 @@
             "orphaned": "1"
           }
         ],
-        "at": "2026-08-07T16:59:49.559Z"
+        "at": "2026-10-04T15:41:15.363Z"
       }
     ],
     "observations": [
@@ -66,6 +66,6 @@
       "19 requests in the table, 18 linked to a business application."
     ],
     "verdictReason": "Orphan present in the table, correctly excluded from the grid.",
-    "finishedAt": "2026-08-07T16:59:49.559Z"
+    "finishedAt": "2026-10-04T15:41:15.363Z"
   }
 }

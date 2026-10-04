@@ -1,26 +1,101 @@
 {
   "run": {
-    "instance": "https://dev281754.service-now.com",
+    "instance": "https://dev249570.service-now.com",
     "executedBy": "sf.integration (ServiceNow Scripted REST API)",
     "executedVia": "Playwright runner, no browser. Each case calls the inbound API as sf.integration — the same user the named credential uses, because the echo-loop guard keys off it — and re-reads the task over cnit before and after to prove nothing was written."
   },
   "case": {
     "id": "TC-INT-035",
     "title": "Invalid outcome and met_criteria values",
-    "startedAt": "2026-08-08T14:04:20.802Z",
-    "verdict": "BLOCKED",
-    "steps": [],
-    "records": [],
+    "startedAt": "2026-10-04T15:13:49.839Z",
+    "verdict": "PASS",
+    "steps": [
+      {
+        "n": 1,
+        "text": "Confirm the fixture sys_id matches no task, so a 404 would be the honest answer if validation ran late.",
+        "at": "2026-10-04T15:13:49.839Z",
+        "screenshots": []
+      },
+      {
+        "n": 2,
+        "text": "Send each malformed body to that sys_id.",
+        "at": "2026-10-04T15:13:51.423Z",
+        "screenshots": []
+      },
+      {
+        "n": 3,
+        "text": "Repeat the invalid-outcome sub-case against a real task and prove it is untouched.",
+        "at": "2026-10-04T15:13:52.421Z",
+        "screenshots": []
+      }
+    ],
+    "records": [
+      {
+        "label": "Task lookup",
+        "table": "x_gskn2_caf_compli_caf_tsk",
+        "query": "cnit get x_gskn2_caf_compli_caf_tsk -Query \"sys_id=deadbeefdeadbeefdeadbeefdeadbeef\" -ProfileName caf-dev249570",
+        "rows": [],
+        "at": "2026-10-04T15:13:51.419Z"
+      },
+      {
+        "label": "Real record — before",
+        "table": "x_gskn2_caf_compli_caf_tsk",
+        "query": "cnit get x_gskn2_caf_compli_caf_tsk -Query \"sys_id=2832a47483431210bd2a5860ceaad3bb\" -Fields number,sys_id,state,active,approval,met_criteria,comments,actual_start_date,sys_updated_on,sys_mod_count -ProfileName caf-dev249570",
+        "rows": [
+          {
+            "number": "CAFT0001001",
+            "sys_id": "2832a47483431210bd2a5860ceaad3bb",
+            "comments": "",
+            "actual_start_date": "",
+            "approval": "requested",
+            "met_criteria": "",
+            "sys_mod_count": "0",
+            "active": "true",
+            "state": "1",
+            "sys_updated_on": "2025-01-09 14:12:02"
+          }
+        ],
+        "at": "2026-10-04T15:13:58.220Z"
+      },
+      {
+        "label": "Real record — after",
+        "table": "x_gskn2_caf_compli_caf_tsk",
+        "query": "cnit get x_gskn2_caf_compli_caf_tsk -Query \"sys_id=2832a47483431210bd2a5860ceaad3bb\" -Fields number,sys_id,state,active,approval,met_criteria,comments,actual_start_date,sys_updated_on,sys_mod_count -ProfileName caf-dev249570",
+        "rows": [
+          {
+            "number": "CAFT0001001",
+            "sys_id": "2832a47483431210bd2a5860ceaad3bb",
+            "comments": "",
+            "actual_start_date": "",
+            "approval": "requested",
+            "met_criteria": "",
+            "sys_mod_count": "0",
+            "active": "true",
+            "state": "1",
+            "sys_updated_on": "2025-01-09 14:12:02"
+          }
+        ],
+        "at": "2026-10-04T15:13:58.220Z"
+      }
+    ],
     "observations": [
-      "GET /caf/snapshot answered 401 as sf.integration — \"User is not authenticated — Required to provide Auth information\". Every case in this file authenticates the same way, so none of them can reach the branch it tests."
+      "met_criteria is mandatory at this endpoint and optional on the table (TC-SN-033). The endpoint is stricter than the schema, deliberately — an attestation with no criteria verdict is not an attestation."
     ],
     "expected": [
       "Every malformed body answers 400.",
       "Validation happens before the record is loaded — proven by addressing a sys_id that does not exist.",
       "met_criteria is mandatory here even though it is optional on the table itself."
     ],
-    "actual": [],
-    "verdictReason": "GET /caf/snapshot answered 401 as sf.integration — \"User is not authenticated — Required to provide Auth information\". Every case in this file authenticates the same way, so none of them can reach the branch it tests. Diagnose the credential before reading anything into this run — a 401 is indistinguishable from a working refusal at the status-code level, and treating it as one would certify a check that never ran.",
-    "finishedAt": "2026-08-08T14:04:20.802Z"
+    "actual": [
+      "outcome: \"maybe\": HTTP 400 — outcome must be \"approved\" or \"rejected\"",
+      "met_criteria: \"probably\": HTTP 400 — met_criteria must be \"yes\" or \"no\"",
+      "outcome missing: HTTP 400 — outcome must be \"approved\" or \"rejected\"",
+      "met_criteria missing: HTTP 400 — met_criteria must be \"yes\" or \"no\"",
+      "empty body: HTTP 400 — Empty request body",
+      "CAFT0001001 with outcome \"maybe\": HTTP 400 — {\"result\":{\"error\":\"outcome must be \\\"approved\\\" or \\\"rejected\\\"\"}}",
+      "CAFT0001001: every compared field unmoved, sys_mod_count still 0."
+    ],
+    "verdictReason": "All five malformed bodies refused with 400 before the record was loaded; the real task is unmoved.",
+    "finishedAt": "2026-10-04T15:13:58.221Z"
   }
 }

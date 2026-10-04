@@ -1,25 +1,53 @@
 {
   "run": {
-    "instance": "https://dev281754.service-now.com",
+    "instance": "https://dev249570.service-now.com",
     "executedBy": "sf.integration (ServiceNow Scripted REST API)",
     "executedVia": "Playwright runner, no browser. Each case calls the inbound API as sf.integration — the same user the named credential uses, because the echo-loop guard keys off it — and re-reads the task over cnit before and after to prove nothing was written."
   },
   "case": {
     "id": "TC-INT-014",
     "title": "Unknown sys_id returns 404",
-    "startedAt": "2026-08-08T14:04:20.709Z",
-    "verdict": "BLOCKED",
-    "steps": [],
-    "records": [],
-    "observations": [
-      "GET /caf/snapshot answered 401 as sf.integration — \"User is not authenticated — Required to provide Auth information\". Every case in this file authenticates the same way, so none of them can reach the branch it tests."
+    "startedAt": "2026-10-04T15:13:12.407Z",
+    "verdict": "PASS",
+    "steps": [
+      {
+        "n": 1,
+        "text": "Confirm the sys_id matches no CAF Task, so the case cannot accidentally address a real record.",
+        "at": "2026-10-04T15:13:12.407Z",
+        "screenshots": []
+      },
+      {
+        "n": 2,
+        "text": "PATCH the unknown sys_id with an otherwise entirely valid, allow-listed body.",
+        "at": "2026-10-04T15:13:14.325Z",
+        "screenshots": []
+      },
+      {
+        "n": 3,
+        "text": "Confirm no task anywhere picked up the body.",
+        "at": "2026-10-04T15:13:14.500Z",
+        "screenshots": []
+      }
     ],
+    "records": [
+      {
+        "label": "Task lookup",
+        "table": "x_gskn2_caf_compli_caf_tsk",
+        "query": "cnit get x_gskn2_caf_compli_caf_tsk -Query \"sys_id=deadbeefdeadbeefdeadbeefdeadbeef\" -ProfileName caf-dev249570",
+        "rows": [],
+        "at": "2026-10-04T15:13:14.324Z"
+      }
+    ],
+    "observations": [],
     "expected": [
       "HTTP 404, body \"CAF Task not found: deadbeefdeadbeefdeadbeefdeadbeef\".",
       "The 404 is decided before the allow-list, so a body of writable fields still writes nothing."
     ],
-    "actual": [],
-    "verdictReason": "GET /caf/snapshot answered 401 as sf.integration — \"User is not authenticated — Required to provide Auth information\". Every case in this file authenticates the same way, so none of them can reach the branch it tests. Diagnose the credential before reading anything into this run — a 401 is indistinguishable from a working refusal at the status-code level, and treating it as one would certify a check that never ran.",
-    "finishedAt": "2026-08-08T14:04:20.709Z"
+    "actual": [
+      "HTTP 404 in 172ms — {\"result\":{\"error\":\"CAF Task not found: deadbeefdeadbeefdeadbeefdeadbeef\"}}",
+      "No task on the instance holds the canary comment."
+    ],
+    "verdictReason": "404 with the sys_id named in the message; the valid body wrote nowhere.",
+    "finishedAt": "2026-10-04T15:13:16.367Z"
   }
 }

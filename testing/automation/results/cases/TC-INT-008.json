@@ -1,25 +1,25 @@
 {
   "run": {
-    "instance": "https://dev281754.service-now.com + Salesforce orgfarm-4938c7f768-dev-ed",
+    "instance": "https://dev249570.service-now.com + Salesforce orgfarm-4938c7f768-dev-ed",
     "executedBy": "admin (ServiceNow) / admin.070b86ccf531@agentforce.com (Salesforce)",
     "executedVia": "Playwright runner, no browser: ServiceNow read over cnit and the Scripted REST API as sf.integration, Salesforce read over the sf CLI and anonymous Apex against the deployed classes. Every case reads both sides."
   },
   "case": {
     "id": "TC-INT-008",
     "title": "Blank and null are treated as equal",
-    "startedAt": "2026-08-07T17:27:06.353Z",
+    "startedAt": "2026-10-04T15:29:54.547Z",
     "verdict": "PASS",
     "steps": [
       {
         "n": 1,
         "text": "Count records that currently have an empty mirrored optional field on at least one side.",
-        "at": "2026-08-07T17:27:06.353Z",
+        "at": "2026-10-04T15:29:54.547Z",
         "screenshots": []
       },
       {
         "n": 2,
         "text": "Run the real comparison — CafSyncHealth.check() — and see whether any of them is reported.",
-        "at": "2026-08-07T17:27:14.138Z",
+        "at": "2026-10-04T15:30:04.912Z",
         "screenshots": []
       }
     ],
@@ -27,7 +27,7 @@
       {
         "label": "Tasks with an empty mirrored optional field",
         "table": "x_gskn2_caf_compli_caf_tsk",
-        "query": "cnit get x_gskn2_caf_compli_caf_tsk -Fields number,approval,met_criteria -ProfileName caf-reyan",
+        "query": "cnit get x_gskn2_caf_compli_caf_tsk -Fields number,approval,met_criteria -ProfileName caf-dev249570",
         "rows": [
           {
             "number": "CAFT0001024",
@@ -45,12 +45,37 @@
             "met_criteria": ""
           },
           {
+            "number": "CAFT0001007",
+            "approval": "requested",
+            "met_criteria": ""
+          },
+          {
             "number": "CAFT0001036",
             "approval": "requested",
             "met_criteria": ""
           },
           {
-            "number": "CAFT0001003",
+            "number": "CAFT0001011",
+            "approval": "requested",
+            "met_criteria": ""
+          },
+          {
+            "number": "CAFT0001001",
+            "approval": "requested",
+            "met_criteria": ""
+          },
+          {
+            "number": "CAFT0001002",
+            "approval": "requested",
+            "met_criteria": ""
+          },
+          {
+            "number": "CAFT0001004",
+            "approval": "requested",
+            "met_criteria": ""
+          },
+          {
+            "number": "CAFT0001032",
             "approval": "requested",
             "met_criteria": ""
           },
@@ -70,6 +95,31 @@
             "met_criteria": ""
           },
           {
+            "number": "CAFT0001006",
+            "approval": "requested",
+            "met_criteria": ""
+          },
+          {
+            "number": "CAFT0001009",
+            "approval": "requested",
+            "met_criteria": ""
+          },
+          {
+            "number": "CAFT0001029",
+            "approval": "requested",
+            "met_criteria": ""
+          },
+          {
+            "number": "CAFT0001033",
+            "approval": "requested",
+            "met_criteria": ""
+          },
+          {
+            "number": "CAFT0001028",
+            "approval": "requested",
+            "met_criteria": ""
+          },
+          {
             "number": "CAFT0001045",
             "approval": "approved",
             "met_criteria": ""
@@ -80,7 +130,52 @@
             "met_criteria": ""
           },
           {
+            "number": "CAFT0001022",
+            "approval": "requested",
+            "met_criteria": ""
+          },
+          {
+            "number": "CAFT0001026",
+            "approval": "requested",
+            "met_criteria": ""
+          },
+          {
+            "number": "CAFT0001017",
+            "approval": "requested",
+            "met_criteria": ""
+          },
+          {
+            "number": "CAFT0001003",
+            "approval": "requested",
+            "met_criteria": ""
+          },
+          {
             "number": "CAFT0001046",
+            "approval": "requested",
+            "met_criteria": ""
+          },
+          {
+            "number": "CAFT0001010",
+            "approval": "requested",
+            "met_criteria": ""
+          },
+          {
+            "number": "CAFT0001012",
+            "approval": "requested",
+            "met_criteria": ""
+          },
+          {
+            "number": "CAFT0001050",
+            "approval": "requested",
+            "met_criteria": ""
+          },
+          {
+            "number": "CAFT0001016",
+            "approval": "requested",
+            "met_criteria": ""
+          },
+          {
+            "number": "CAFT0001018",
             "approval": "requested",
             "met_criteria": ""
           },
@@ -120,47 +215,22 @@
             "met_criteria": ""
           },
           {
+            "number": "CAFT0001030",
+            "approval": "requested",
+            "met_criteria": ""
+          },
+          {
             "number": "CAFT0001023",
             "approval": "requested",
             "met_criteria": ""
           },
           {
-            "number": "CAFT0001041",
-            "approval": "approved",
-            "met_criteria": ""
-          },
-          {
-            "number": "CAFT0001002",
+            "number": "CAFT0001031",
             "approval": "requested",
-            "met_criteria": ""
-          },
-          {
-            "number": "CAFT0001025",
-            "approval": "requested",
-            "met_criteria": ""
-          },
-          {
-            "number": "CAFT0001049",
-            "approval": "requested",
-            "met_criteria": ""
-          },
-          {
-            "number": "CAFT0001048",
-            "approval": "requested",
-            "met_criteria": ""
-          },
-          {
-            "number": "CAFT0001001",
-            "approval": "requested",
-            "met_criteria": ""
-          },
-          {
-            "number": "CAFT0001044",
-            "approval": "approved",
             "met_criteria": ""
           }
         ],
-        "at": "2026-08-07T17:27:14.138Z"
+        "at": "2026-10-04T15:30:04.912Z"
       },
       {
         "label": "CafSyncHealth.check() result",
@@ -168,12 +238,12 @@
         "query": "sf apex run — CafSyncHealth.check()",
         "rows": [
           {
-            "compared": "49",
+            "compared": "77",
             "inSync": "true",
             "differences": "0"
           }
         ],
-        "at": "2026-08-07T17:27:21.155Z"
+        "at": "2026-10-04T15:30:13.008Z"
       }
     ],
     "observations": [
@@ -184,10 +254,10 @@
       "This is the single most likely source of false-positive drift."
     ],
     "actual": [
-      "26 of 30 task(s) have at least one empty mirrored optional field.",
-      "Zero differences attributable to an empty value, across 26 record(s) that hold one."
+      "51 of 52 task(s) have at least one empty mirrored optional field.",
+      "Zero differences attributable to an empty value, across 51 record(s) that hold one."
     ],
     "verdictReason": "No false-positive drift from blank-versus-null.",
-    "finishedAt": "2026-08-07T17:27:21.155Z"
+    "finishedAt": "2026-10-04T15:30:13.008Z"
   }
 }

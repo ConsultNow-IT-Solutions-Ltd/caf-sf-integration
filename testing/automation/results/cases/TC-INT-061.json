@@ -1,31 +1,31 @@
 {
   "run": {
-    "instance": "https://dev281754.service-now.com + Salesforce orgfarm-4938c7f768-dev-ed",
+    "instance": "https://dev249570.service-now.com + Salesforce orgfarm-4938c7f768-dev-ed",
     "executedBy": "admin (ServiceNow) / admin.070b86ccf531@agentforce.com (Salesforce)",
     "executedVia": "Playwright runner, no browser: ServiceNow read over cnit and the Scripted REST API as sf.integration, Salesforce read over the sf CLI and anonymous Apex against the deployed classes. Every case reads both sides."
   },
   "case": {
     "id": "TC-INT-061",
     "title": "No Apex test coverage exists",
-    "startedAt": "2026-08-07T17:28:56.069Z",
+    "startedAt": "2026-10-04T15:32:16.098Z",
     "verdict": "PASS",
     "steps": [
       {
         "n": 1,
         "text": "List the Apex classes in the org.",
-        "at": "2026-08-07T17:28:56.069Z",
+        "at": "2026-10-04T15:32:16.098Z",
         "screenshots": []
       },
       {
         "n": 2,
         "text": "Look for any test class belonging to this org rather than to an installed package.",
-        "at": "2026-08-07T17:29:02.016Z",
+        "at": "2026-10-04T15:32:24.729Z",
         "screenshots": []
       },
       {
         "n": 3,
         "text": "Read the stored coverage figures.",
-        "at": "2026-08-07T17:29:08.152Z",
+        "at": "2026-10-04T15:32:31.401Z",
         "screenshots": []
       }
     ],
@@ -45,7 +45,7 @@
             "Name": "CafDashboardController",
             "NamespacePrefix": null,
             "ApiVersion": 67,
-            "LengthWithoutComments": 594
+            "LengthWithoutComments": 934
           },
           {
             "Name": "CafEvidenceService",
@@ -57,7 +57,7 @@
             "Name": "CafSyncHealth",
             "NamespacePrefix": null,
             "ApiVersion": 67,
-            "LengthWithoutComments": 8618
+            "LengthWithoutComments": 10792
           },
           {
             "Name": "CafTaskService",
@@ -90,14 +90,14 @@
             "LengthWithoutComments": 781
           }
         ],
-        "at": "2026-08-07T17:29:02.016Z"
+        "at": "2026-10-04T15:32:24.729Z"
       },
       {
         "label": "Unmanaged classes carrying @isTest",
         "table": "ApexClass",
         "query": "Tooling API, NamespacePrefix = null, SymbolTable modifiers contain isTest",
         "rows": [],
-        "at": "2026-08-07T17:29:08.152Z"
+        "at": "2026-10-04T15:32:31.400Z"
       },
       {
         "label": "Stored code coverage",
@@ -107,7 +107,7 @@
           {
             "class": "CafDashboardController",
             "covered": "0",
-            "uncovered": "2"
+            "uncovered": "4"
           },
           {
             "class": "CafTaskService",
@@ -117,7 +117,7 @@
           {
             "class": "CafSyncHealth",
             "covered": "0",
-            "uncovered": "133"
+            "uncovered": "167"
           },
           {
             "class": "CafAttestationService",
@@ -130,7 +130,7 @@
             "uncovered": "132"
           }
         ],
-        "at": "2026-08-07T17:29:14.309Z"
+        "at": "2026-10-04T15:32:38.133Z"
       }
     ],
     "observations": [
@@ -144,9 +144,9 @@
     "actual": [
       "9 Apex class(es) in the org: CafAttestationService, CafDashboardController, CafEvidenceService, CafSyncHealth, CafTaskService (plus 4 packaged: devedapp.DeveloperEditionUtils, devedapp.DeveloperEditionUtilsTest, devedapp.PostInstallScript, devedapp.PostInstallScriptTest).",
       "0 unmanaged test class(es) — none.",
-      "CafSyncHealth: 0 covered / 133 uncovered; CafAttestationService: 0 covered / 50 uncovered; CafEvidenceService: 0 covered / 132 uncovered"
+      "CafSyncHealth: 0 covered / 167 uncovered; CafAttestationService: 0 covered / 50 uncovered; CafEvidenceService: 0 covered / 132 uncovered"
     ],
     "verdictReason": "Zero test classes and zero coverage on all three service classes — confirmed as a release gate.",
-    "finishedAt": "2026-08-07T17:29:14.309Z"
+    "finishedAt": "2026-10-04T15:32:38.133Z"
   }
 }

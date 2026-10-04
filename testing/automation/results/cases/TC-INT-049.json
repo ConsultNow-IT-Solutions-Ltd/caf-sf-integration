@@ -1,25 +1,25 @@
 {
   "run": {
-    "instance": "https://dev281754.service-now.com + Salesforce orgfarm-4938c7f768-dev-ed",
+    "instance": "https://dev249570.service-now.com + Salesforce orgfarm-4938c7f768-dev-ed",
     "executedBy": "admin (ServiceNow) / admin.070b86ccf531@agentforce.com (Salesforce)",
     "executedVia": "Playwright runner, no browser: ServiceNow read over cnit and the Scripted REST API as sf.integration, Salesforce read over the sf CLI and anonymous Apex against the deployed classes. Every case reads both sides."
   },
   "case": {
     "id": "TC-INT-049",
     "title": "Columns are derived from data, not hard-coded",
-    "startedAt": "2026-08-07T17:28:04.762Z",
+    "startedAt": "2026-10-04T15:31:07.745Z",
     "verdict": "PASS",
     "steps": [
       {
         "n": 1,
         "text": "List the active CAF Controls — the ServiceNow column source.",
-        "at": "2026-08-07T17:28:04.762Z",
+        "at": "2026-10-04T15:31:07.745Z",
         "screenshots": []
       },
       {
         "n": 2,
         "text": "List the distinct controls present in the mirrored request data — the Salesforce column source.",
-        "at": "2026-08-07T17:28:06.109Z",
+        "at": "2026-10-04T15:31:09.538Z",
         "screenshots": []
       }
     ],
@@ -27,7 +27,7 @@
       {
         "label": "Active CAF Controls",
         "table": "x_gskn2_caf_compli_caf_conformance_type",
-        "query": "cnit get x_gskn2_caf_compli_caf_conformance_type -Query \"active=true^ORDERBYname\" -ProfileName caf-reyan",
+        "query": "cnit get x_gskn2_caf_compli_caf_conformance_type -Query \"active=true^ORDERBYname\" -ProfileName caf-dev249570",
         "rows": [
           {
             "sys_id": "f1e5e8a61b7925d46f1e76e5d34bcb84",
@@ -60,7 +60,7 @@
             "active": "true"
           }
         ],
-        "at": "2026-08-07T17:28:06.109Z"
+        "at": "2026-10-04T15:31:09.538Z"
       },
       {
         "label": "Controls represented in Salesforce request data",
@@ -86,7 +86,7 @@
             "CAF_Control__c": "Confirm Disaster Recovery Plan"
           }
         ],
-        "at": "2026-08-07T17:28:12.139Z"
+        "at": "2026-10-04T15:31:17.263Z"
       }
     ],
     "observations": [
@@ -106,6 +106,6 @@
       "Columns Salesforce would show and ServiceNow would not: none"
     ],
     "verdictReason": "Both grids currently derive the same column set from data. The divergence the case documents is latent, not present: every active control happens to have at least one request. Part B not executed (ONE-SHOT).",
-    "finishedAt": "2026-08-07T17:28:12.140Z"
+    "finishedAt": "2026-10-04T15:31:17.264Z"
   }
 }

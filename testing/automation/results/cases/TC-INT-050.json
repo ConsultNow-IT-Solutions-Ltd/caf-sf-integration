@@ -1,31 +1,31 @@
 {
   "run": {
-    "instance": "https://dev281754.service-now.com + Salesforce orgfarm-4938c7f768-dev-ed",
+    "instance": "https://dev249570.service-now.com + Salesforce orgfarm-4938c7f768-dev-ed",
     "executedBy": "admin (ServiceNow) / admin.070b86ccf531@agentforce.com (Salesforce)",
     "executedVia": "Playwright runner, no browser: ServiceNow read over cnit and the Scripted REST API as sf.integration, Salesforce read over the sf CLI and anonymous Apex against the deployed classes. Every case reads both sides."
   },
   "case": {
     "id": "TC-INT-050",
     "title": "Compliant only when every control is compliant",
-    "startedAt": "2026-08-07T17:28:12.165Z",
+    "startedAt": "2026-10-04T15:31:17.288Z",
     "verdict": "FAIL",
     "steps": [
       {
         "n": 1,
         "text": "Run the deployed CafDashboardController.getRequests() and apply the LWC roll-up to its output.",
-        "at": "2026-08-07T17:28:12.166Z",
+        "at": "2026-10-04T15:31:17.288Z",
         "screenshots": []
       },
       {
         "n": 2,
         "text": "Read what ServiceNow holds for the same applications.",
-        "at": "2026-08-07T17:28:18.376Z",
+        "at": "2026-10-04T15:31:25.310Z",
         "screenshots": []
       },
       {
         "n": 3,
         "text": "Compare the two verdicts application by application.",
-        "at": "2026-08-07T17:28:21.968Z",
+        "at": "2026-10-04T15:31:29.413Z",
         "screenshots": []
       }
     ],
@@ -39,25 +39,25 @@
             "SN_Number__c": "RCAF0001024",
             "Business_Application__c": "SAP Fiori",
             "CAF_Control__c": "Confirm & Execute High Availability Plan",
-            "CAF_Status__c": "out_of_compliance"
+            "CAF_Status__c": "approaching_due"
           },
           {
             "SN_Number__c": "RCAF0001020",
             "Business_Application__c": "SAP Fiori",
             "CAF_Control__c": "Confirm Backup & Restore Policy",
-            "CAF_Status__c": "out_of_compliance"
+            "CAF_Status__c": "approaching_due"
           },
           {
             "SN_Number__c": "RCAF0001022",
             "Business_Application__c": "SAP Fiori",
             "CAF_Control__c": "Confirm Disaster Recovery Plan",
-            "CAF_Status__c": "in_compliance"
+            "CAF_Status__c": "approaching_due"
           },
           {
             "SN_Number__c": "RCAF0001019",
             "Business_Application__c": "SAP Fiori",
             "CAF_Control__c": "Confirm RTO & RPO",
-            "CAF_Status__c": "out_of_compliance"
+            "CAF_Status__c": "approaching_due"
           },
           {
             "SN_Number__c": "RCAF0001021",
@@ -69,43 +69,43 @@
             "SN_Number__c": "RCAF0001023",
             "Business_Application__c": "SAP Fiori",
             "CAF_Control__c": "Test Disaster Recovery Plan",
-            "CAF_Status__c": "out_of_compliance"
+            "CAF_Status__c": "approaching_due"
           },
           {
             "SN_Number__c": "RCAF0001042",
             "Business_Application__c": "SAP HANA",
             "CAF_Control__c": "Confirm & Execute High Availability Plan",
-            "CAF_Status__c": "in_compliance"
+            "CAF_Status__c": "approaching_due"
           },
           {
             "SN_Number__c": "RCAF0001038",
             "Business_Application__c": "SAP HANA",
             "CAF_Control__c": "Confirm Backup & Restore Policy",
-            "CAF_Status__c": "in_compliance"
+            "CAF_Status__c": "approaching_due"
           },
           {
             "SN_Number__c": "RCAF0001040",
             "Business_Application__c": "SAP HANA",
             "CAF_Control__c": "Confirm Disaster Recovery Plan",
-            "CAF_Status__c": "out_of_compliance"
+            "CAF_Status__c": "approaching_due"
           },
           {
             "SN_Number__c": "RCAF0001037",
             "Business_Application__c": "SAP HANA",
             "CAF_Control__c": "Confirm RTO & RPO",
-            "CAF_Status__c": "out_of_compliance"
+            "CAF_Status__c": "approaching_due"
           },
           {
             "SN_Number__c": "RCAF0001039",
             "Business_Application__c": "SAP HANA",
             "CAF_Control__c": "Test Backup & Restore",
-            "CAF_Status__c": "out_of_compliance"
+            "CAF_Status__c": "in_compliance"
           },
           {
             "SN_Number__c": "RCAF0001041",
             "Business_Application__c": "SAP HANA",
             "CAF_Control__c": "Test Disaster Recovery Plan",
-            "CAF_Status__c": "out_of_compliance"
+            "CAF_Status__c": "approaching_due"
           },
           {
             "SN_Number__c": "RCAF0001036",
@@ -144,7 +144,7 @@
             "CAF_Status__c": "in_compliance"
           }
         ],
-        "at": "2026-08-07T17:28:18.363Z"
+        "at": "2026-10-04T15:31:25.300Z"
       },
       {
         "label": "What the Salesforce LWC renders",
@@ -153,15 +153,15 @@
         "rows": [
           {
             "application": "SAP Fiori",
-            "compliant_controls": "2",
+            "compliant_controls": "1",
             "total_columns": "6",
-            "lwc_label": "2 of 6"
+            "lwc_label": "1 of 6"
           },
           {
             "application": "SAP HANA",
-            "compliant_controls": "2",
+            "compliant_controls": "1",
             "total_columns": "6",
-            "lwc_label": "2 of 6"
+            "lwc_label": "1 of 6"
           },
           {
             "application": "Zscalar App",
@@ -170,325 +170,14 @@
             "lwc_label": "Compliant"
           }
         ],
-        "at": "2026-08-07T17:28:18.376Z"
+        "at": "2026-10-04T15:31:25.310Z"
       },
       {
         "label": "ServiceNow business applications carrying a CAF compliance status",
         "table": "cmdb_ci_business_app",
-        "query": "cnit get cmdb_ci_business_app -Fields sys_id,name,u_caf_compliance_status -ProfileName caf-reyan",
-        "rows": [
-          {
-            "sys_id": "0328a2f983d31210bd2a5860ceaad3d4",
-            "u_caf_compliance_status": "not_ini",
-            "name": "SAP Human Resources"
-          },
-          {
-            "sys_id": "0728e2f983d31210bd2a5860ceaad31f",
-            "u_caf_compliance_status": "not_ini",
-            "name": "PeopleSoft Financials"
-          },
-          {
-            "sys_id": "0b28a2f983d31210bd2a5860ceaad3d9",
-            "u_caf_compliance_status": "not_ini",
-            "name": "IT Services"
-          },
-          {
-            "sys_id": "0b28e2f983d31210bd2a5860ceaad31c",
-            "u_caf_compliance_status": "not_ini",
-            "name": "PeopleSoft Enterprise Services"
-          },
-          {
-            "sys_id": "0f28a2f983d31210bd2a5860ceaad3d6",
-            "u_caf_compliance_status": "not_ini",
-            "name": "Electronic Messaging"
-          },
-          {
-            "sys_id": "0f28e2f983d31210bd2a5860ceaad319",
-            "u_caf_compliance_status": "not_ini",
-            "name": "Retail Client Registration"
-          },
-          {
-            "sys_id": "1328e2f983d31210bd2a5860ceaad322",
-            "u_caf_compliance_status": "not_ini",
-            "name": "PeopleSoft Reporting"
-          },
-          {
-            "sys_id": "1328e2f983d31210bd2a5860ceaad336",
-            "u_caf_compliance_status": "not_ini",
-            "name": "External Networking (Internet)"
-          },
-          {
-            "sys_id": "1728e2f983d31210bd2a5860ceaad333",
-            "u_caf_compliance_status": "not_ini",
-            "name": "Unix Server Hosting"
-          },
-          {
-            "sys_id": "1728e2f983d31210bd2a5860ceaad33e",
-            "u_caf_compliance_status": "not_ini",
-            "name": "This Service-now instance"
-          },
-          {
-            "sys_id": "1b28e2f983d31210bd2a5860ceaad33b",
-            "u_caf_compliance_status": "not_ini",
-            "name": "Workday Enterprise Services"
-          },
-          {
-            "sys_id": "1f28e2f983d31210bd2a5860ceaad324",
-            "u_caf_compliance_status": "not_ini",
-            "name": "IIS Web Hosting"
-          },
-          {
-            "sys_id": "1f28e2f983d31210bd2a5860ceaad338",
-            "u_caf_compliance_status": "not_ini",
-            "name": "OpenText Enterprise Services"
-          },
-          {
-            "sys_id": "41b1e83483431210bd2a5860ceaad366",
-            "u_caf_compliance_status": "compliant",
-            "name": "Zscalar App"
-          },
-          {
-            "sys_id": "4328a2f983d31210bd2a5860ceaad3d6",
-            "u_caf_compliance_status": "not_ini",
-            "name": "SAP Plant Maintenance"
-          },
-          {
-            "sys_id": "4328e2f983d31210bd2a5860ceaad319",
-            "u_caf_compliance_status": "not_ini",
-            "name": "Retail POS (Point of Sale)"
-          },
-          {
-            "sys_id": "4728a2f983d31210bd2a5860ceaad3d3",
-            "u_caf_compliance_status": "not_ini",
-            "name": "SAP Controlling"
-          },
-          {
-            "sys_id": "4b28e2f983d31210bd2a5860ceaad31e",
-            "u_caf_compliance_status": "not_ini",
-            "name": "PeopleSoft Asset Lifecycle Management"
-          },
-          {
-            "sys_id": "4f28a2f983d31210bd2a5860ceaad3d8",
-            "u_caf_compliance_status": "not_ini",
-            "name": "Windows Mobile"
-          },
-          {
-            "sys_id": "4f28e2f983d31210bd2a5860ceaad31b",
-            "u_caf_compliance_status": "not_ini",
-            "name": "E-Commerce"
-          },
-          {
-            "sys_id": "5227088d83171210bd2a5860ceaad35e",
-            "u_caf_compliance_status": "out_of_compliance",
-            "name": "Test Tier 1 app"
-          },
-          {
-            "sys_id": "5328e2f983d31210bd2a5860ceaad324",
-            "u_caf_compliance_status": "not_ini",
-            "name": "Voice Communication"
-          },
-          {
-            "sys_id": "5328e2f983d31210bd2a5860ceaad338",
-            "u_caf_compliance_status": "not_ini",
-            "name": "Printing Services"
-          },
-          {
-            "sys_id": "5470cc8583d31210bd2a5860ceaad372",
-            "u_caf_compliance_status": "not_ini",
-            "name": "SAP HANA"
-          },
-          {
-            "sys_id": "557febf083d31210bd2a5860ceaad315",
-            "u_caf_compliance_status": "out_of_compliance",
-            "name": "Test1"
-          },
-          {
-            "sys_id": "5728e2f983d31210bd2a5860ceaad321",
-            "u_caf_compliance_status": "not_ini",
-            "name": "PeopleSoft Governance"
-          },
-          {
-            "sys_id": "5728e2f983d31210bd2a5860ceaad335",
-            "u_caf_compliance_status": "not_ini",
-            "name": "Inter-Site Networking (WAN)"
-          },
-          {
-            "sys_id": "5b28e2f983d31210bd2a5860ceaad332",
-            "u_caf_compliance_status": "not_ini",
-            "name": "Oracle Database Hosting"
-          },
-          {
-            "sys_id": "5b28e2f983d31210bd2a5860ceaad33d",
-            "u_caf_compliance_status": "not_ini",
-            "name": "Jobvite Enterprise Recruitment Services"
-          },
-          {
-            "sys_id": "5f28e2f983d31210bd2a5860ceaad33a",
-            "u_caf_compliance_status": "not_ini",
-            "name": "Bond Trading - DR"
-          },
-          {
-            "sys_id": "6e81683483431210bd2a5860ceaad398",
-            "u_caf_compliance_status": "compliant",
-            "name": "SAP HANA"
-          },
-          {
-            "sys_id": "7661e43483431210bd2a5860ceaad360",
-            "u_caf_compliance_status": "compliant",
-            "name": "SAP Fiori"
-          },
-          {
-            "sys_id": "8328a2f983d31210bd2a5860ceaad3d8",
-            "u_caf_compliance_status": "out_of_compliance",
-            "name": "Outlook Web Access (OWA)"
-          },
-          {
-            "sys_id": "8328e2f983d31210bd2a5860ceaad31b",
-            "u_caf_compliance_status": "not_ini",
-            "name": "Retail Adding Points"
-          },
-          {
-            "sys_id": "8728a2f983d31210bd2a5860ceaad3d5",
-            "u_caf_compliance_status": "not_ini",
-            "name": "SAP Labor Distribution"
-          },
-          {
-            "sys_id": "8b28a2f983d31210bd2a5860ceaad3d2",
-            "u_caf_compliance_status": "not_ini",
-            "name": "SAP Materials Management"
-          },
-          {
-            "sys_id": "8b28e2f983d31210bd2a5860ceaad320",
-            "u_caf_compliance_status": "not_ini",
-            "name": "PeopleSoft Portals"
-          },
-          {
-            "sys_id": "8f28e2f983d31210bd2a5860ceaad31d",
-            "u_caf_compliance_status": "not_ini",
-            "name": "PeopleSoft Supply Chain Management"
-          },
-          {
-            "sys_id": "9328e2f983d31210bd2a5860ceaad33a",
-            "u_caf_compliance_status": "not_ini",
-            "name": "Securities Lending"
-          },
-          {
-            "sys_id": "9728e2f983d31210bd2a5860ceaad323",
-            "u_caf_compliance_status": "not_ini",
-            "name": "Tibco ESB"
-          },
-          {
-            "sys_id": "9728e2f983d31210bd2a5860ceaad337",
-            "u_caf_compliance_status": "not_ini",
-            "name": "Desktop Support"
-          },
-          {
-            "sys_id": "9b28e2f983d31210bd2a5860ceaad334",
-            "u_caf_compliance_status": "not_ini",
-            "name": "Campus Network (LAN)"
-          },
-          {
-            "sys_id": "9f28e2f983d31210bd2a5860ceaad331",
-            "u_caf_compliance_status": "not_ini",
-            "name": "Windows Server Hosting"
-          },
-          {
-            "sys_id": "9f28e2f983d31210bd2a5860ceaad33c",
-            "u_caf_compliance_status": "not_ini",
-            "name": "Sales Force Automation"
-          },
-          {
-            "sys_id": "a0ed06e583ea4310c67233d6feaad306",
-            "u_caf_compliance_status": "out_of_compliance",
-            "name": ""
-          },
-          {
-            "sys_id": "b1e6808d83171210bd2a5860ceaad3a9",
-            "u_caf_compliance_status": "out_of_compliance",
-            "name": "Test EU"
-          },
-          {
-            "sys_id": "c328a2f983d31210bd2a5860ceaad3da",
-            "u_caf_compliance_status": "not_ini",
-            "name": "Retail"
-          },
-          {
-            "sys_id": "c328e2f983d31210bd2a5860ceaad31d",
-            "u_caf_compliance_status": "out_of_compliance",
-            "name": "PeopleSoft CRM"
-          },
-          {
-            "sys_id": "c728a2f983d31210bd2a5860ceaad3d7",
-            "u_caf_compliance_status": "not_ini",
-            "name": "Email"
-          },
-          {
-            "sys_id": "c728e2f983d31210bd2a5860ceaad31a",
-            "u_caf_compliance_status": "not_ini",
-            "name": "Retail Client Lookup"
-          },
-          {
-            "sys_id": "c791a43483431210bd2a5860ceaad3e7",
-            "u_caf_compliance_status": "not_ini",
-            "name": "Zoho HR System"
-          },
-          {
-            "sys_id": "cb28a2f983d31210bd2a5860ceaad3d4",
-            "u_caf_compliance_status": "not_ini",
-            "name": "SAP Payroll"
-          },
-          {
-            "sys_id": "cf28a2f983d31210bd2a5860ceaad3d0",
-            "u_caf_compliance_status": "not_ini",
-            "name": "SAP Enterprise Services"
-          },
-          {
-            "sys_id": "cf28a2f983d31210bd2a5860ceaad3d1",
-            "u_caf_compliance_status": "not_ini",
-            "name": "SAP Financial Accounting"
-          },
-          {
-            "sys_id": "cf28e2f983d31210bd2a5860ceaad31f",
-            "u_caf_compliance_status": "out_of_compliance",
-            "name": "PeopleSoft HRMS"
-          },
-          {
-            "sys_id": "d328e2f983d31210bd2a5860ceaad33c",
-            "u_caf_compliance_status": "not_ini",
-            "name": "ServiceNow Enterprise Services"
-          },
-          {
-            "sys_id": "d3f244c583171210bd2a5860ceaad3b2",
-            "u_caf_compliance_status": "out_of_compliance",
-            "name": "Zoho Email"
-          },
-          {
-            "sys_id": "d728e2f983d31210bd2a5860ceaad339",
-            "u_caf_compliance_status": "not_ini",
-            "name": "Client Services"
-          },
-          {
-            "sys_id": "db28e2f983d31210bd2a5860ceaad322",
-            "u_caf_compliance_status": "not_ini",
-            "name": "Bond Trading"
-          },
-          {
-            "sys_id": "db28e2f983d31210bd2a5860ceaad336",
-            "u_caf_compliance_status": "not_ini",
-            "name": "Shared Storage (SAN)"
-          },
-          {
-            "sys_id": "df28e2f983d31210bd2a5860ceaad333",
-            "u_caf_compliance_status": "not_ini",
-            "name": "z/OS Platform Hosting"
-          },
-          {
-            "sys_id": "df28e2f983d31210bd2a5860ceaad33e",
-            "u_caf_compliance_status": "not_ini",
-            "name": "Apache Web Hosting"
-          }
-        ],
-        "at": "2026-08-07T17:28:20.406Z"
+        "query": "cnit get cmdb_ci_business_app -Fields sys_id,name,u_caf_compliance_status -ProfileName caf-dev249570",
+        "rows": [],
+        "at": "2026-10-04T15:31:27.569Z"
       },
       {
         "label": "ServiceNow roll-up versus the stored status field",
@@ -498,30 +187,30 @@
           {
             "application": "SAP Fiori",
             "sys_id": "7661e43483431210bd2a5860ceaad360",
-            "in_compliance": "2",
+            "in_compliance": "1",
             "total_requests": "6",
-            "u_caf_compliance_status": "compliant"
+            "u_caf_compliance_status": "(empty)"
           },
           {
             "application": "SAP HANA",
             "sys_id": "6e81683483431210bd2a5860ceaad398",
-            "in_compliance": "2",
+            "in_compliance": "1",
             "total_requests": "6",
-            "u_caf_compliance_status": "compliant"
+            "u_caf_compliance_status": "(empty)"
           },
           {
             "application": "Zscalar App",
             "sys_id": "41b1e83483431210bd2a5860ceaad366",
             "in_compliance": "6",
             "total_requests": "6",
-            "u_caf_compliance_status": "compliant"
+            "u_caf_compliance_status": "(empty)"
           }
         ],
-        "at": "2026-08-07T17:28:21.968Z"
+        "at": "2026-10-04T15:31:29.413Z"
       }
     ],
     "observations": [
-      "Every business-application lookup in this case is keyed by sys_id. Two applications are named \"SAP HANA\" — 5470cc8583d31210bd2a5860ceaad372 (not_ini), 6e81683483431210bd2a5860ceaad398 (compliant) — so a lookup by name reads a status belonging to the other record.",
+      "Every business-application lookup in this case is keyed by sys_id. Two applications are named \"SAP HANA\" — 5470cc8583d31210bd2a5860ceaad372 (empty), 6e81683483431210bd2a5860ceaad398 (empty) — so a lookup by name reads a status belonging to the other record.",
       "The LWC computes its own roll-up in cafDashboard.build() from the mirrored CAF_Status__c values. It never reads u_caf_compliance_status, which is the field TC-SN-017 found wrong — so the two surfaces are answering from different data, not from one shared answer.",
       "Separate observation worth raising on its own: allGreen compares against controls.length, the count of columns across the whole grid rather than the count of controls that application actually has a request for. An application with fewer requests than there are columns can therefore never read Compliant, regardless of its own compliance."
     ],
@@ -530,11 +219,11 @@
       "An application reads Compliant only when every one of its controls is in_compliance."
     ],
     "actual": [
-      "SAP Fiori — LWC \"2 of 6\"; ServiceNow stored status \"compliant\"; 2 of 6 request(s) in compliance.",
-      "SAP HANA — LWC \"2 of 6\"; ServiceNow stored status \"compliant\"; 2 of 6 request(s) in compliance.",
-      "Zscalar App — LWC \"Compliant\"; ServiceNow stored status \"compliant\"; 6 of 6 request(s) in compliance."
+      "SAP Fiori — LWC \"1 of 6\"; ServiceNow stored status \"(empty)\"; 1 of 6 request(s) in compliance.",
+      "SAP HANA — LWC \"1 of 6\"; ServiceNow stored status \"(empty)\"; 1 of 6 request(s) in compliance.",
+      "Zscalar App — LWC \"Compliant\"; ServiceNow stored status \"(empty)\"; 6 of 6 request(s) in compliance."
     ],
-    "verdictReason": "The two platforms visibly disagree about identical data — the split-brain outcome the case calls the worse of the two. SAP Fiori: ServiceNow u_caf_compliance_status = \"compliant\", Salesforce LWC renders \"2 of 6\" (2 of 6 requests in compliance) | SAP HANA: ServiceNow u_caf_compliance_status = \"compliant\", Salesforce LWC renders \"2 of 6\" (2 of 6 requests in compliance). The LWC is giving the arithmetically correct answer and ServiceNow the wrong one; the defect is in the ServiceNow business rule CAF - update BA when req compliant, not in the mirror.",
-    "finishedAt": "2026-08-07T17:28:21.968Z"
+    "verdictReason": "The two platforms visibly disagree about identical data — the split-brain outcome the case calls the worse of the two. Zscalar App: ServiceNow u_caf_compliance_status = \"(empty)\", Salesforce LWC renders \"Compliant\" (6 of 6 requests in compliance). The LWC is giving the arithmetically correct answer and ServiceNow the wrong one; the defect is in the ServiceNow business rule CAF - update BA when req compliant, not in the mirror.",
+    "finishedAt": "2026-10-04T15:31:29.413Z"
   }
 }

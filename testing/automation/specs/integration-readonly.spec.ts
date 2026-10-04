@@ -384,7 +384,7 @@ test('TC-INT-037 — There is no named approver', async () => {
 test('TC-INT-038 — Clean state reports zero differences', async () => {
   const ev = new CaseEvidence('TC-INT-038', 'Clean state reports zero differences');
   ev.expect('Zero differences reported.');
-  ev.expect('The number compared equals requests + tasks.');
+  ev.expect('The number compared equals requests + tasks + controls.');
 
   ev.step('Run CafSyncHealth.check() — the deployed class the LWC calls, not a reimplementation of it.');
   const run = sf.runApex(`
@@ -399,6 +399,7 @@ out.put('snRequests', r.snRequests);
 out.put('snTasks', r.snTasks);
 out.put('sfRequests', r.sfRequests);
 out.put('sfTasks', r.sfTasks);
+out.put('snControls', r.snControls);
 out.put('compared', r.comparedCount);
 out.put('differences', diffs);
 System.debug('${sf.APEX_MARK}' + JSON.serialize(out));
@@ -413,6 +414,7 @@ System.debug('${sf.APEX_MARK}' + JSON.serialize(out));
       snTasks: String(r.snTasks),
       sfRequests: String(r.sfRequests),
       sfTasks: String(r.sfTasks),
+      snControls: String(r.snControls),
       comparedCount: String(r.compared),
       differences: String(r.differences.length),
     },
@@ -428,12 +430,15 @@ System.debug('${sf.APEX_MARK}' + JSON.serialize(out));
 
   ev.actual(`inSync = ${r.inSync}; ${r.compared} record(s) compared; ${r.differences.length} difference(s).`);
   ev.actual(`ServiceNow ${r.snRequests} requests / ${r.snTasks} tasks; Salesforce ${r.sfRequests} / ${r.sfTasks}.`);
+  // CafSyncHealth adds controls to comparedCount whenever the snapshot carries
+  // them. dev281754's did not; dev249570's does, so the sum includes them.
+  const expected = r.snRequests + r.snTasks + (r.snControls ?? 0);
   ev.observe(
-    `comparedCount is snRequests + snTasks = ${r.snRequests + r.snTasks}; the case's baseline figure of 49 was ` +
-      'captured on 2026-08-07 and moves whenever the engine spawns a task.'
+    `comparedCount is snRequests + snTasks + snControls = ${expected}; the case's baseline figure of 49 was ` +
+      'captured on 2026-08-07 on dev281754, whose snapshot carried no controls, and moves whenever the engine spawns a task.'
   );
 
-  expect(r.compared).toBe(r.snRequests + r.snTasks);
+  expect(r.compared).toBe(expected);
   if (r.inSync) ev.pass(`Green: ${r.compared} records compared, zero differences.`);
   else ev.fail(`${r.differences.length} difference(s): ${(r.differences as string[]).join(' | ')}`);
   expect(r.differences).toEqual([]);

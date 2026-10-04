@@ -1,31 +1,31 @@
 {
   "run": {
-    "instance": "https://dev281754.service-now.com",
+    "instance": "https://dev249570.service-now.com",
     "executedBy": "admin",
     "executedVia": "Playwright (automated); every assertion cross-checked against the ServiceNow Table API"
   },
   "case": {
     "id": "TC-SN-001",
     "title": "caf_conformance_type on a request references a relationship, not a control",
-    "startedAt": "2026-08-07T16:59:24.405Z",
+    "startedAt": "2026-10-04T15:40:36.440Z",
     "verdict": "PASS",
     "steps": [
       {
         "n": 1,
         "text": "Read the dictionary entry for caf_req.caf_conformance_type.",
-        "at": "2026-08-07T16:59:24.405Z",
+        "at": "2026-10-04T15:40:36.440Z",
         "screenshots": []
       },
       {
         "n": 2,
         "text": "Take a live request and attempt to resolve its caf_conformance_type in the control table.",
-        "at": "2026-08-07T16:59:25.100Z",
+        "at": "2026-10-04T15:40:36.908Z",
         "screenshots": []
       },
       {
         "n": 3,
         "text": "Resolve the same value in the relationship table.",
-        "at": "2026-08-07T16:59:25.470Z",
+        "at": "2026-10-04T15:40:37.179Z",
         "screenshots": []
       }
     ],
@@ -43,14 +43,14 @@
             "element": "caf_conformance_type"
           }
         ],
-        "at": "2026-08-07T16:59:25.100Z"
+        "at": "2026-10-04T15:40:36.907Z"
       },
       {
         "label": "Lookup in the CONTROL table",
         "table": "x_gskn2_caf_compli_caf_conformance_type",
         "query": "sys_id=58c62c6e1bb925d46f1e76e5d34bcba1",
         "rows": [],
-        "at": "2026-08-07T16:59:25.470Z"
+        "at": "2026-10-04T15:40:37.179Z"
       },
       {
         "label": "Lookup in the RELATIONSHIP table",
@@ -65,7 +65,7 @@
             "frequency": "365"
           }
         ],
-        "at": "2026-08-07T16:59:25.693Z"
+        "at": "2026-10-04T15:40:37.319Z"
       }
     ],
     "observations": [
@@ -80,6 +80,6 @@
       "Control-table lookup returned 0 row(s); relationship-table lookup returned 1 row(s)."
     ],
     "verdictReason": "Behaviour confirmed. Raise as a documentation defect against the design document, not as a code change — renaming the field would break the task-creation flow.",
-    "finishedAt": "2026-08-07T16:59:25.695Z"
+    "finishedAt": "2026-10-04T15:40:37.322Z"
   }
 }

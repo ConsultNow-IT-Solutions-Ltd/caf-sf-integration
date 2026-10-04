@@ -1,30 +1,129 @@
 {
   "run": {
-    "instance": "https://dev281754.service-now.com + Salesforce orgfarm-4938c7f768-dev-ed",
+    "instance": "https://dev249570.service-now.com + Salesforce orgfarm-4938c7f768-dev-ed",
     "executedBy": "admin (ServiceNow, via cnit OAuth) / admin.070b86ccf531@agentforce.com (Salesforce)",
     "executedVia": "Playwright runner, no browser and no writes. ServiceNow read over cnit, Salesforce over the sf CLI. Each case compares the transform output held in Salesforce against the source record it was built from."
   },
   "case": {
     "id": "TC-INT-062",
     "title": "The control catalogue is reconciled by nothing",
-    "startedAt": "2026-08-08T16:02:44.429Z",
-    "verdict": "FAIL",
+    "startedAt": "2026-10-04T15:32:42.611Z",
+    "verdict": "PASS",
     "steps": [
       {
         "n": 1,
         "text": "Read active controls from ServiceNow and the mirrored catalogue from Salesforce.",
-        "at": "2026-08-08T16:02:44.429Z",
+        "at": "2026-10-04T15:32:42.612Z",
+        "screenshots": []
+      },
+      {
+        "n": 2,
+        "text": "Compare as sets of sys_id, and check the active flag on each mirrored row.",
+        "at": "2026-10-04T15:32:51.162Z",
         "screenshots": []
       }
     ],
-    "records": [],
-    "observations": [],
+    "records": [
+      {
+        "label": "ServiceNow controls",
+        "table": "x_gskn2_caf_compli_caf_conformance_type",
+        "query": "cnit get x_gskn2_caf_compli_caf_conformance_type -Query \"active=true\" -ProfileName caf-dev249570",
+        "rows": [
+          {
+            "number": "CNFTYPE0001004",
+            "sys_id": "05f10c7f1b61a154eede76e5d34bcb25",
+            "name": "Test Disaster Recovery Plan",
+            "active": "true"
+          },
+          {
+            "number": "CNFTYPE0001003",
+            "sys_id": "12952c261b7925d46f1e76e5d34bcb5e",
+            "name": "Confirm Disaster Recovery Plan",
+            "active": "true"
+          },
+          {
+            "number": "CNFTYPE0001002",
+            "sys_id": "4c85e8a21b7925d46f1e76e5d34bcbfb",
+            "name": "Confirm RTO & RPO",
+            "active": "true"
+          },
+          {
+            "number": "CNFTYPE0001006",
+            "sys_id": "95d568ea1b7925d46f1e76e5d34bcb9f",
+            "name": "Confirm Backup & Restore Policy",
+            "active": "true"
+          },
+          {
+            "number": "CNFTYPE0001007",
+            "sys_id": "f1e5e8a61b7925d46f1e76e5d34bcb84",
+            "name": "Confirm & Execute High Availability Plan",
+            "active": "true"
+          },
+          {
+            "number": "CNFTYPE0001005",
+            "sys_id": "fc1288fb1b61a154eede76e5d34bcb81",
+            "name": "Test Backup & Restore",
+            "active": "true"
+          }
+        ],
+        "at": "2026-10-04T15:32:51.162Z"
+      },
+      {
+        "label": "Salesforce catalogue",
+        "table": "CAF_Control_Catalog__c",
+        "query": "sf data query --query \"SELECT Name, SN_Number__c, Active__c, ServiceNow_Sys_Id__c FROM CAF_Control_Catalog__c ORDER BY Name\" --target-org caf-sf",
+        "rows": [
+          {
+            "Name": "Confirm & Execute High Availability Plan",
+            "SN_Number__c": "CNFTYPE0001007",
+            "Active__c": true,
+            "ServiceNow_Sys_Id__c": "f1e5e8a61b7925d46f1e76e5d34bcb84"
+          },
+          {
+            "Name": "Confirm Backup & Restore Policy",
+            "SN_Number__c": "CNFTYPE0001006",
+            "Active__c": true,
+            "ServiceNow_Sys_Id__c": "95d568ea1b7925d46f1e76e5d34bcb9f"
+          },
+          {
+            "Name": "Confirm Disaster Recovery Plan",
+            "SN_Number__c": "CNFTYPE0001003",
+            "Active__c": true,
+            "ServiceNow_Sys_Id__c": "12952c261b7925d46f1e76e5d34bcb5e"
+          },
+          {
+            "Name": "Confirm RTO & RPO",
+            "SN_Number__c": "CNFTYPE0001002",
+            "Active__c": true,
+            "ServiceNow_Sys_Id__c": "4c85e8a21b7925d46f1e76e5d34bcbfb"
+          },
+          {
+            "Name": "Test Backup & Restore",
+            "SN_Number__c": "CNFTYPE0001005",
+            "Active__c": true,
+            "ServiceNow_Sys_Id__c": "fc1288fb1b61a154eede76e5d34bcb81"
+          },
+          {
+            "Name": "Test Disaster Recovery Plan",
+            "SN_Number__c": "CNFTYPE0001004",
+            "Active__c": true,
+            "ServiceNow_Sys_Id__c": "05f10c7f1b61a154eede76e5d34bcb25"
+          }
+        ],
+        "at": "2026-10-04T15:32:51.162Z"
+      }
+    ],
+    "observations": [
+      "Sync Health reconciles requests and tasks only, so nothing else on this build would report a catalogue difference — and a catalogue row is a visible dashboard column."
+    ],
     "expected": [
       "Active controls in ServiceNow and CAF_Control_Catalog__c are set-for-set identical by sys_id.",
       "Every mirrored row for an active control carries Active__c = true."
     ],
-    "actual": [],
-    "verdictReason": "SyntaxError: Expected property name or '}' in JSON at position 1 (line 1 column 2)",
-    "finishedAt": "2026-08-08T16:02:51.821Z"
+    "actual": [
+      "ServiceNow 6 active control(s); Salesforce 6 row(s), 6 active. 0 missing, 0 orphaned."
+    ],
+    "verdictReason": "6 controls, set-for-set identical by sys_id, all active on both sides.",
+    "finishedAt": "2026-10-04T15:32:51.163Z"
   }
 }

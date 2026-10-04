@@ -1,25 +1,295 @@
 {
   "run": {
-    "instance": "https://dev281754.service-now.com",
+    "instance": "https://dev249570.service-now.com",
     "executedBy": "sf.integration (ServiceNow Scripted REST API)",
     "executedVia": "Playwright runner, no browser. Each case calls the inbound API as sf.integration — the same user the named credential uses, because the echo-loop guard keys off it — and re-reads the task over cnit before and after to prove nothing was written."
   },
   "case": {
     "id": "TC-INT-033",
     "title": "Attesting an inactive task",
-    "startedAt": "2026-08-08T14:04:20.772Z",
-    "verdict": "BLOCKED",
-    "steps": [],
-    "records": [],
+    "startedAt": "2026-10-04T15:13:40.259Z",
+    "verdict": "PASS",
+    "steps": [
+      {
+        "n": 1,
+        "text": "Find an inactive task.",
+        "at": "2026-10-04T15:13:40.259Z",
+        "screenshots": []
+      },
+      {
+        "n": 2,
+        "text": "Attest it \"approved\", the opposite of what is recorded.",
+        "at": "2026-10-04T15:13:42.472Z",
+        "screenshots": []
+      }
+    ],
+    "records": [
+      {
+        "label": "Inactive tasks",
+        "table": "x_gskn2_caf_compli_caf_tsk",
+        "query": "cnit get x_gskn2_caf_compli_caf_tsk -Query \"active=false\" -Fields number,sys_id,state,active,approval,met_criteria,comments,actual_start_date,sys_updated_on,sys_mod_count -ProfileName caf-dev249570",
+        "rows": [
+          {
+            "number": "CAFT0001019",
+            "sys_id": "43936cf483431210bd2a5860ceaad363",
+            "comments": "",
+            "actual_start_date": "2025-01-09 14:18:29",
+            "approval": "requested",
+            "met_criteria": "",
+            "sys_mod_count": "2",
+            "active": "false",
+            "state": "3",
+            "sys_updated_on": "2025-01-09 14:18:38"
+          },
+          {
+            "number": "CAFT0001020",
+            "sys_id": "8f932cf483431210bd2a5860ceaad3a5",
+            "comments": "",
+            "actual_start_date": "2025-01-09 14:20:59",
+            "approval": "requested",
+            "met_criteria": "",
+            "sys_mod_count": "2",
+            "active": "false",
+            "state": "3",
+            "sys_updated_on": "2025-01-09 14:21:05"
+          },
+          {
+            "number": "CAFT0001021",
+            "sys_id": "47932cf483431210bd2a5860ceaad3b1",
+            "comments": "",
+            "actual_start_date": "2025-01-09 14:23:01",
+            "approval": "requested",
+            "met_criteria": "",
+            "sys_mod_count": "3",
+            "active": "false",
+            "state": "3",
+            "sys_updated_on": "2025-01-09 14:23:05"
+          },
+          {
+            "number": "CAFT0001027",
+            "sys_id": "bab4647883431210bd2a5860ceaad3c0",
+            "comments": "",
+            "actual_start_date": "2025-01-09 22:23:06",
+            "approval": "approved",
+            "met_criteria": "",
+            "sys_mod_count": "3",
+            "active": "false",
+            "state": "3",
+            "sys_updated_on": "2025-01-09 14:41:17"
+          },
+          {
+            "number": "CAFT0001034",
+            "sys_id": "221920fc83431210bd2a5860ceaad336",
+            "comments": "",
+            "actual_start_date": "2025-01-09 14:42:32",
+            "approval": "requested",
+            "met_criteria": "",
+            "sys_mod_count": "3",
+            "active": "false",
+            "state": "3",
+            "sys_updated_on": "2025-01-09 14:42:38"
+          },
+          {
+            "number": "CAFT0001035",
+            "sys_id": "ae19ecbc83431210bd2a5860ceaad37d",
+            "comments": "",
+            "actual_start_date": "2025-01-09 14:42:51",
+            "approval": "requested",
+            "met_criteria": "",
+            "sys_mod_count": "3",
+            "active": "false",
+            "state": "3",
+            "sys_updated_on": "2025-01-09 14:42:55"
+          },
+          {
+            "number": "CAFT0001036",
+            "sys_id": "261920fc83431210bd2a5860ceaad343",
+            "comments": "",
+            "actual_start_date": "2025-01-09 14:43:16",
+            "approval": "requested",
+            "met_criteria": "",
+            "sys_mod_count": "3",
+            "active": "false",
+            "state": "3",
+            "sys_updated_on": "2025-01-09 14:43:20"
+          },
+          {
+            "number": "CAFT0001037",
+            "sys_id": "b21920fc83431210bd2a5860ceaad371",
+            "comments": "",
+            "actual_start_date": "2025-01-09 14:43:36",
+            "approval": "requested",
+            "met_criteria": "",
+            "sys_mod_count": "3",
+            "active": "false",
+            "state": "3",
+            "sys_updated_on": "2025-01-09 14:43:40"
+          },
+          {
+            "number": "CAFT0001038",
+            "sys_id": "b21920fc83431210bd2a5860ceaad367",
+            "comments": "",
+            "actual_start_date": "2025-01-09 14:43:51",
+            "approval": "requested",
+            "met_criteria": "",
+            "sys_mod_count": "3",
+            "active": "false",
+            "state": "3",
+            "sys_updated_on": "2025-01-09 14:43:56"
+          },
+          {
+            "number": "CAFT0001039",
+            "sys_id": "b61920fc83431210bd2a5860ceaad37e",
+            "comments": "",
+            "actual_start_date": "2025-01-09 14:44:07",
+            "approval": "requested",
+            "met_criteria": "",
+            "sys_mod_count": "3",
+            "active": "false",
+            "state": "3",
+            "sys_updated_on": "2025-01-09 14:44:13"
+          },
+          {
+            "number": "CAFT0001040",
+            "sys_id": "b839a0fc83431210bd2a5860ceaad3c4",
+            "comments": "",
+            "actual_start_date": "2025-01-09 22:42:38",
+            "approval": "approved",
+            "met_criteria": "",
+            "sys_mod_count": "3",
+            "active": "false",
+            "state": "3",
+            "sys_updated_on": "2025-01-09 14:44:34"
+          },
+          {
+            "number": "CAFT0001041",
+            "sys_id": "cd49e0fc83431210bd2a5860ceaad370",
+            "comments": "",
+            "actual_start_date": "2025-01-09 22:42:55",
+            "approval": "approved",
+            "met_criteria": "",
+            "sys_mod_count": "3",
+            "active": "false",
+            "state": "3",
+            "sys_updated_on": "2025-01-09 14:44:40"
+          },
+          {
+            "number": "CAFT0001042",
+            "sys_id": "1359a4fc83431210bd2a5860ceaad39e",
+            "comments": "",
+            "actual_start_date": "2025-01-09 22:43:20",
+            "approval": "approved",
+            "met_criteria": "",
+            "sys_mod_count": "3",
+            "active": "false",
+            "state": "3",
+            "sys_updated_on": "2025-01-09 14:44:45"
+          },
+          {
+            "number": "CAFT0001043",
+            "sys_id": "c07928fc83431210bd2a5860ceaad313",
+            "comments": "",
+            "actual_start_date": "2025-01-09 22:43:40",
+            "approval": "approved",
+            "met_criteria": "",
+            "sys_mod_count": "3",
+            "active": "false",
+            "state": "3",
+            "sys_updated_on": "2025-01-09 14:44:49"
+          },
+          {
+            "number": "CAFT0001044",
+            "sys_id": "ff7968fc83431210bd2a5860ceaad34c",
+            "comments": "",
+            "actual_start_date": "2025-01-09 22:43:57",
+            "approval": "approved",
+            "met_criteria": "",
+            "sys_mod_count": "3",
+            "active": "false",
+            "state": "3",
+            "sys_updated_on": "2025-01-09 14:44:56"
+          },
+          {
+            "number": "CAFT0001045",
+            "sys_id": "8c99e8fc83431210bd2a5860ceaad360",
+            "comments": "",
+            "actual_start_date": "2025-01-09 22:44:13",
+            "approval": "approved",
+            "met_criteria": "",
+            "sys_mod_count": "3",
+            "active": "false",
+            "state": "3",
+            "sys_updated_on": "2025-01-09 14:45:01"
+          },
+          {
+            "number": "CAFT0001052",
+            "sys_id": "c75dd86cc37b8354d0087405e4013132",
+            "comments": "",
+            "actual_start_date": "2026-10-04 14:33:12",
+            "approval": "approved",
+            "met_criteria": "yes",
+            "sys_mod_count": "4",
+            "active": "false",
+            "state": "3",
+            "sys_updated_on": "2026-10-04 14:43:45"
+          }
+        ],
+        "at": "2026-10-04T15:13:42.472Z"
+      },
+      {
+        "label": "TC-INT-033 — before",
+        "table": "x_gskn2_caf_compli_caf_tsk",
+        "query": "cnit get x_gskn2_caf_compli_caf_tsk -Query \"sys_id=43936cf483431210bd2a5860ceaad363\" -Fields number,sys_id,state,active,approval,met_criteria,comments,actual_start_date,sys_updated_on,sys_mod_count -ProfileName caf-dev249570",
+        "rows": [
+          {
+            "number": "CAFT0001019",
+            "sys_id": "43936cf483431210bd2a5860ceaad363",
+            "comments": "",
+            "actual_start_date": "2025-01-09 14:18:29",
+            "approval": "requested",
+            "met_criteria": "",
+            "sys_mod_count": "2",
+            "active": "false",
+            "state": "3",
+            "sys_updated_on": "2025-01-09 14:18:38"
+          }
+        ],
+        "at": "2026-10-04T15:13:46.256Z"
+      },
+      {
+        "label": "TC-INT-033 — after",
+        "table": "x_gskn2_caf_compli_caf_tsk",
+        "query": "cnit get x_gskn2_caf_compli_caf_tsk -Query \"sys_id=43936cf483431210bd2a5860ceaad363\" -Fields number,sys_id,state,active,approval,met_criteria,comments,actual_start_date,sys_updated_on,sys_mod_count -ProfileName caf-dev249570",
+        "rows": [
+          {
+            "number": "CAFT0001019",
+            "sys_id": "43936cf483431210bd2a5860ceaad363",
+            "comments": "",
+            "actual_start_date": "2025-01-09 14:18:29",
+            "approval": "requested",
+            "met_criteria": "",
+            "sys_mod_count": "2",
+            "active": "false",
+            "state": "3",
+            "sys_updated_on": "2025-01-09 14:18:38"
+          }
+        ],
+        "at": "2026-10-04T15:13:46.256Z"
+      }
+    ],
     "observations": [
-      "GET /caf/snapshot answered 401 as sf.integration — \"User is not authenticated — Required to provide Auth information\". Every case in this file authenticates the same way, so none of them can reach the branch it tests."
+      "Target CAFT0001019 (43936cf483431210bd2a5860ceaad363), active=false, state=3, approval=requested.",
+      "Regression value: the check reads `active` through a helper accepting both '1' and 'true', because getValue() on a boolean returns the stored '1' while the Table API says \"true\". The first version compared against 'true' alone and refused every attestation on the instance. Asserted here against a real record — CAFT0001019 reads active=\"false\" over the Table API."
     ],
     "expected": [
       "HTTP 409, \"<number> is no longer active; its outcome is already recorded.\"",
       "Nothing written — the recorded outcome is not overwritten."
     ],
-    "actual": [],
-    "verdictReason": "GET /caf/snapshot answered 401 as sf.integration — \"User is not authenticated — Required to provide Auth information\". Every case in this file authenticates the same way, so none of them can reach the branch it tests. Diagnose the credential before reading anything into this run — a 401 is indistinguishable from a working refusal at the status-code level, and treating it as one would certify a check that never ran.",
-    "finishedAt": "2026-08-08T14:04:20.772Z"
+    "actual": [
+      "HTTP 409 in 170ms — {\"result\":{\"error\":\"CAFT0001019 is no longer active; its outcome is already recorded.\"}}",
+      "CAFT0001019: every compared field unmoved, sys_mod_count still 2."
+    ],
+    "verdictReason": "409 naming CAFT0001019; the recorded approval \"requested\" survives.",
+    "finishedAt": "2026-10-04T15:13:46.256Z"
   }
 }

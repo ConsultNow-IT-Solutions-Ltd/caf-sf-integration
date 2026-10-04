@@ -1,25 +1,25 @@
 {
   "run": {
-    "instance": "https://dev281754.service-now.com + Salesforce orgfarm-4938c7f768-dev-ed",
+    "instance": "https://dev249570.service-now.com + Salesforce orgfarm-4938c7f768-dev-ed",
     "executedBy": "admin (ServiceNow) / admin.070b86ccf531@agentforce.com (Salesforce)",
     "executedVia": "Playwright runner, no browser: ServiceNow read over cnit and the Scripted REST API as sf.integration, Salesforce read over the sf CLI and anonymous Apex against the deployed classes. Every case reads both sides."
   },
   "case": {
     "id": "TC-INT-055",
     "title": "LWCs are droppable on an Experience Cloud page",
-    "startedAt": "2026-08-07T17:28:36.121Z",
+    "startedAt": "2026-10-04T15:31:50.502Z",
     "verdict": "BLOCKED",
     "steps": [
       {
         "n": 1,
         "text": "Read the component metadata for both LWCs.",
-        "at": "2026-08-07T17:28:36.121Z",
+        "at": "2026-10-04T15:31:50.502Z",
         "screenshots": []
       },
       {
         "n": 2,
         "text": "Check whether the org has an Experience Cloud site at all.",
-        "at": "2026-08-07T17:28:36.126Z",
+        "at": "2026-10-04T15:31:50.504Z",
         "screenshots": []
       }
     ],
@@ -50,14 +50,14 @@
             "targets": "lightning__AppPage, lightning__HomePage, lightning__Tab"
           }
         ],
-        "at": "2026-08-07T17:28:36.126Z"
+        "at": "2026-10-04T15:31:50.504Z"
       },
       {
         "label": "Experience Cloud sites",
         "table": "Network",
         "query": "sf data query --query \"SELECT Name, Status FROM Network\" --target-org caf-sf",
         "rows": [],
-        "at": "2026-08-07T17:28:42.145Z"
+        "at": "2026-10-04T15:31:57.305Z"
       }
     ],
     "observations": [
@@ -73,6 +73,6 @@
       "No Experience Cloud in this org — querying Network failed: SOQL failed: "
     ],
     "verdictReason": "Both components carry the target and would appear in the palette, but there is no Experience Cloud site in the org to place them on, so the case cannot be completed. Blocked, not failed.",
-    "finishedAt": "2026-08-07T17:28:42.161Z"
+    "finishedAt": "2026-10-04T15:31:57.315Z"
   }
 }
