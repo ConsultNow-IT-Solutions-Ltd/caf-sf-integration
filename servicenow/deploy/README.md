@@ -36,7 +36,17 @@ basic auth, and gives you `sn_bg`, `sn_bgs` and `sn_api`.
 | 7 | `07_navigation.js` | `sn_bg` | the **CAF Compliance** menu and its 5 modules |
 | 8 | `09_deploy_code.py` | `python` | 2 Script Includes, 4 Business Rules, the Scripted REST API |
 | 9 | `08_seed_demo_data.js` | `sn_bgs <scope_id>` | one control, relationship, request and two tasks |
-| 10 | `verify_api.sh` | `sh` | exercises all six inbound resources |
+| 10 | `10_ba_fields_global.js` | `sn_bg` | `u_emergency_tier`, `u_caf_compliance_status` on the CMDB business app, in **global** scope |
+| 11 | `verify_api.sh` | `sh` | exercises all six inbound resources |
+
+**Run `10_ba_fields_global.js` even though steps 4 and 5 appear to add the two
+business-app fields.** They stamp the CAF scope on the dictionary row, and a
+scoped app may not add a `u_` column to a global table. The insert fails without
+an error, the choices are still created, and every write to the fields is
+dropped. dev249570 ran that way from 2026-09-04 to 2026-10-04: no business app
+could hold a tier, so tier-based request generation had nothing to match. The
+platform's own `emergency_tier` (no `u_`; mission/business/non critical) is a
+different field and not a substitute.
 
 Steps 1-7 are `sn_bg` (global scope). Step 9 is `sn_bgs` and needs the scope
 sys_id from `sn_scope_id` - a global script is refused against the scoped CAF
