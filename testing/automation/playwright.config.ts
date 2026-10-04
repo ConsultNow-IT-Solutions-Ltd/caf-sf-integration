@@ -11,7 +11,7 @@ try {
   /* no .env, or an older Node — fall through to real environment variables */
 }
 
-export const SN_INSTANCE = (process.env.SN_INSTANCE || 'https://dev281754.service-now.com').replace(/\/$/, '');
+export const SN_INSTANCE = (process.env.SN_INSTANCE || 'https://dev249570.service-now.com').replace(/\/$/, '');
 export const AUTH_STATE = path.join(__dirname, '.auth', 'servicenow.json');
 // The session's user token (g_ck). Travels with AUTH_STATE and is useless
 // without it — see the note in lib/servicenow.ts on why the Table API needs it.
