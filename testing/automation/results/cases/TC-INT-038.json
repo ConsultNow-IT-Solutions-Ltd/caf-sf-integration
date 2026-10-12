@@ -7,13 +7,13 @@
   "case": {
     "id": "TC-INT-038",
     "title": "Clean state reports zero differences",
-    "startedAt": "2026-10-04T15:39:13.715Z",
+    "startedAt": "2026-10-04T16:17:54.619Z",
     "verdict": "PASS",
     "steps": [
       {
         "n": 1,
         "text": "Run CafSyncHealth.check() — the deployed class the LWC calls, not a reimplementation of it.",
-        "at": "2026-10-04T15:39:13.716Z",
+        "at": "2026-10-04T16:17:54.619Z",
         "screenshots": []
       }
     ],
@@ -25,30 +25,30 @@
         "rows": [
           {
             "inSync": "true",
-            "snRequests": "19",
-            "snTasks": "52",
-            "sfRequests": "19",
-            "sfTasks": "52",
+            "snRequests": "132",
+            "snTasks": "165",
+            "sfRequests": "132",
+            "sfTasks": "165",
             "snControls": "6",
-            "comparedCount": "77",
+            "comparedCount": "303",
             "differences": "0"
           }
         ],
-        "at": "2026-10-04T15:39:21.550Z"
+        "at": "2026-10-04T16:18:01.936Z"
       }
     ],
     "observations": [
-      "comparedCount is snRequests + snTasks + snControls = 77; the case's baseline figure of 49 was captured on 2026-08-07 on dev281754, whose snapshot carried no controls, and moves whenever the engine spawns a task."
+      "comparedCount is snRequests + snTasks + snControls = 303; the case's baseline figure of 49 was captured on 2026-08-07 on dev281754, whose snapshot carried no controls, and moves whenever the engine spawns a task."
     ],
     "expected": [
       "Zero differences reported.",
       "The number compared equals requests + tasks + controls."
     ],
     "actual": [
-      "inSync = true; 77 record(s) compared; 0 difference(s).",
-      "ServiceNow 19 requests / 52 tasks; Salesforce 19 / 52."
+      "inSync = true; 303 record(s) compared; 0 difference(s).",
+      "ServiceNow 132 requests / 165 tasks; Salesforce 132 / 165."
     ],
-    "verdictReason": "Green: 77 records compared, zero differences.",
-    "finishedAt": "2026-10-04T15:39:21.552Z"
+    "verdictReason": "Green: 303 records compared, zero differences.",
+    "finishedAt": "2026-10-04T16:18:01.937Z"
   }
 }

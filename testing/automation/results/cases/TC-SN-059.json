@@ -7,31 +7,31 @@
   "case": {
     "id": "TC-SN-059",
     "title": "Approval records are created consistently for attestation tasks",
-    "startedAt": "2026-10-04T15:41:06.084Z",
+    "startedAt": "2026-10-04T16:27:24.696Z",
     "verdict": "PASS",
     "steps": [
       {
         "n": 1,
         "text": "List every approval record pointing at a CAF Task.",
-        "at": "2026-10-04T15:41:06.084Z",
+        "at": "2026-10-04T16:27:24.696Z",
         "screenshots": []
       },
       {
         "n": 2,
         "text": "List the attestation tasks the flow has created, to compare against.",
-        "at": "2026-10-04T15:41:06.233Z",
+        "at": "2026-10-04T16:27:24.832Z",
         "screenshots": []
       },
       {
         "n": 3,
         "text": "Reconcile: which attestation tasks have an approver, and which do not.",
-        "at": "2026-10-04T15:41:06.365Z",
+        "at": "2026-10-04T16:27:24.975Z",
         "screenshots": []
       },
       {
         "n": 4,
         "text": "Confirm the state of the rule and notification the design document credits with this.",
-        "at": "2026-10-04T15:41:06.365Z",
+        "at": "2026-10-04T16:27:24.975Z",
         "screenshots": []
       }
     ],
@@ -41,7 +41,7 @@
         "table": "sysapproval_approver",
         "query": "source_table=x_gskn2_caf_compli_caf_tsk",
         "rows": [],
-        "at": "2026-10-04T15:41:06.233Z"
+        "at": "2026-10-04T16:27:24.832Z"
       },
       {
         "label": "Attestation tasks",
@@ -130,7 +130,7 @@
             "sys_created_by": "system"
           }
         ],
-        "at": "2026-10-04T15:41:06.365Z"
+        "at": "2026-10-04T16:27:24.974Z"
       },
       {
         "label": "Reconciliation",
@@ -192,7 +192,7 @@
             "has_approval_record": "no"
           }
         ],
-        "at": "2026-10-04T15:41:06.365Z"
+        "at": "2026-10-04T16:27:24.975Z"
       },
       {
         "label": "Business rule \"CAF - Approval Task\"",
@@ -206,7 +206,7 @@
             "when": "after"
           }
         ],
-        "at": "2026-10-04T15:41:06.556Z"
+        "at": "2026-10-04T16:27:25.161Z"
       },
       {
         "label": "Notification \"CAF - Approval Requested\"",
@@ -220,7 +220,7 @@
             "collection": "sysapproval_approver"
           }
         ],
-        "at": "2026-10-04T15:41:06.956Z"
+        "at": "2026-10-04T16:27:25.307Z"
       }
     ],
     "observations": [
@@ -234,6 +234,6 @@
       "0 approval record(s) exist. Of 9 attestation task(s), 0 have an approval record and 9 do not."
     ],
     "verdictReason": "Consistent: no attestation task carries an approver. Report as a known gap, not a defect.",
-    "finishedAt": "2026-10-04T15:41:06.956Z"
+    "finishedAt": "2026-10-04T16:27:25.307Z"
   }
 }

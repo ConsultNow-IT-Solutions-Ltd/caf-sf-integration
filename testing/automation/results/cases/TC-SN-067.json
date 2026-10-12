@@ -7,19 +7,19 @@
   "case": {
     "id": "TC-SN-067",
     "title": "The orphan request never appears in the portal grid",
-    "startedAt": "2026-10-04T15:41:14.935Z",
+    "startedAt": "2026-10-04T16:27:35.437Z",
     "verdict": "PASS",
     "steps": [
       {
         "n": 1,
         "text": "Confirm the orphan exists and is genuinely unlinked.",
-        "at": "2026-10-04T15:41:14.935Z",
+        "at": "2026-10-04T16:27:35.437Z",
         "screenshots": []
       },
       {
         "n": 2,
         "text": "Count all requests, and those that would qualify for the grid.",
-        "at": "2026-10-04T15:41:15.079Z",
+        "at": "2026-10-04T16:27:35.619Z",
         "screenshots": []
       }
     ],
@@ -38,7 +38,7 @@
             "state": "1"
           }
         ],
-        "at": "2026-10-04T15:41:15.077Z"
+        "at": "2026-10-04T16:27:35.615Z"
       },
       {
         "label": "Request totals",
@@ -46,12 +46,12 @@
         "query": "all vs business_applicationISNOTEMPTY",
         "rows": [
           {
-            "total_requests": "19",
-            "with_business_application": "18",
+            "total_requests": "132",
+            "with_business_application": "131",
             "orphaned": "1"
           }
         ],
-        "at": "2026-10-04T15:41:15.363Z"
+        "at": "2026-10-04T16:27:36.204Z"
       }
     ],
     "observations": [
@@ -63,9 +63,9 @@
       "It remains present in the caf_req table — filtered from a view, not deleted."
     ],
     "actual": [
-      "19 requests in the table, 18 linked to a business application."
+      "132 requests in the table, 131 linked to a business application."
     ],
     "verdictReason": "Orphan present in the table, correctly excluded from the grid.",
-    "finishedAt": "2026-10-04T15:41:15.363Z"
+    "finishedAt": "2026-10-04T16:27:36.204Z"
   }
 }

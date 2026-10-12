@@ -7,25 +7,25 @@
   "case": {
     "id": "TC-INT-001",
     "title": "Full mirror parity by record, not by count",
-    "startedAt": "2026-10-04T15:29:29.207Z",
+    "startedAt": "2026-10-04T16:17:38.555Z",
     "verdict": "PASS",
     "steps": [
       {
         "n": 1,
         "text": "Read every CAF Request and CAF Task from ServiceNow.",
-        "at": "2026-10-04T15:29:29.207Z",
+        "at": "2026-10-04T16:17:38.555Z",
         "screenshots": []
       },
       {
         "n": 2,
         "text": "Read every mirrored record from Salesforce.",
-        "at": "2026-10-04T15:29:33.317Z",
+        "at": "2026-10-04T16:17:42.992Z",
         "screenshots": []
       },
       {
         "n": 3,
         "text": "Compare as sets of numbers, then separately as sets of sys_id.",
-        "at": "2026-10-04T15:29:47.853Z",
+        "at": "2026-10-04T16:17:54.597Z",
         "screenshots": []
       }
     ],
@@ -35,6 +35,26 @@
         "table": "x_gskn2_caf_compli_caf_req",
         "query": "cnit get x_gskn2_caf_compli_caf_req -Fields number,sys_id -ProfileName caf-dev249570",
         "rows": [
+          {
+            "number": "RCAF0001061",
+            "sys_id": "03a134a8c33f8354d0087405e40131a4"
+          },
+          {
+            "number": "RCAF0001113",
+            "sys_id": "06f47860c37f8354d0087405e4013110"
+          },
+          {
+            "number": "RCAF0001089",
+            "sys_id": "0ae4f060c37f8354d0087405e40131d8"
+          },
+          {
+            "number": "RCAF0001100",
+            "sys_id": "0cf4b460c37f8354d0087405e401316e"
+          },
+          {
+            "number": "RCAF0001057",
+            "sys_id": "11a1f0a8c33f8354d0087405e4013119"
+          },
           {
             "number": "RCAF0001032",
             "sys_id": "1219acbc83431210bd2a5860ceaad382"
@@ -48,12 +68,72 @@
             "sys_id": "1219acbc83431210bd2a5860ceaad388"
           },
           {
+            "number": "RCAF0001121",
+            "sys_id": "13f4b860c37f8354d0087405e4013198"
+          },
+          {
             "number": "RCAF0001039",
             "sys_id": "14d9a03083831210bd2a5860ceaad3ce"
           },
           {
+            "number": "RCAF0001135",
+            "sys_id": "15057c60c37f8354d0087405e401318d"
+          },
+          {
+            "number": "RCAF0001048",
+            "sys_id": "1591bc68c33f8354d0087405e401313e"
+          },
+          {
+            "number": "RCAF0001050",
+            "sys_id": "1691fc68c33f8354d0087405e4013148"
+          },
+          {
+            "number": "RCAF0001149",
+            "sys_id": "170530a0c37f8354d0087405e4013175"
+          },
+          {
+            "number": "RCAF0001120",
+            "sys_id": "17f4b860c37f8354d0087405e4013184"
+          },
+          {
             "number": "RCAF0001038",
             "sys_id": "18d9acfc83431210bd2a5860ceaad35f"
+          },
+          {
+            "number": "RCAF0001077",
+            "sys_id": "18e43060c37f8354d0087405e401319c"
+          },
+          {
+            "number": "RCAF0001108",
+            "sys_id": "19f43860c37f8354d0087405e401311b"
+          },
+          {
+            "number": "RCAF0001141",
+            "sys_id": "1e05bc60c37f8354d0087405e40131e9"
+          },
+          {
+            "number": "RCAF0001143",
+            "sys_id": "2605fc60c37f8354d0087405e4013170"
+          },
+          {
+            "number": "RCAF0001079",
+            "sys_id": "28e43060c37f8354d0087405e40131f6"
+          },
+          {
+            "number": "RCAF0001064",
+            "sys_id": "2ad4fc20c37f8354d0087405e4013172"
+          },
+          {
+            "number": "RCAF0001098",
+            "sys_id": "2be47460c37f8354d0087405e40131b6"
+          },
+          {
+            "number": "RCAF0001047",
+            "sys_id": "30917c68c33f8354d0087405e40131d8"
+          },
+          {
+            "number": "RCAF0001137",
+            "sys_id": "3105bc60c37f8354d0087405e4013104"
           },
           {
             "number": "RCAF0001019",
@@ -68,20 +148,336 @@
             "sys_id": "32932cf483431210bd2a5860ceaad3ce"
           },
           {
+            "number": "RCAF0001152",
+            "sys_id": "330570a0c37f8354d0087405e40131be"
+          },
+          {
+            "number": "RCAF0001125",
+            "sys_id": "33f4f860c37f8354d0087405e40131dc"
+          },
+          {
+            "number": "RCAF0001111",
+            "sys_id": "35f43860c37f8354d0087405e40131b6"
+          },
+          {
+            "number": "RCAF0001146",
+            "sys_id": "36057c60c37f8354d0087405e4013109"
+          },
+          {
+            "number": "RCAF0001117",
+            "sys_id": "36f47860c37f8354d0087405e40131cc"
+          },
+          {
+            "number": "RCAF0001074",
+            "sys_id": "37d43060c37f8354d0087405e401317e"
+          },
+          {
+            "number": "RCAF0001124",
+            "sys_id": "37f4f860c37f8354d0087405e401317d"
+          },
+          {
+            "number": "RCAF0001058",
+            "sys_id": "3da1f0a8c33f8354d0087405e401317b"
+          },
+          {
+            "number": "RCAF0001086",
+            "sys_id": "3de4f060c37f8354d0087405e401311f"
+          },
+          {
+            "number": "RCAF0001118",
+            "sys_id": "3ef4b460c37f8354d0087405e40131c8"
+          },
+          {
+            "number": "RCAF0001140",
+            "sys_id": "4205bc60c37f8354d0087405e40131e2"
+          },
+          {
+            "number": "RCAF0001088",
+            "sys_id": "42e4f060c37f8354d0087405e401319f"
+          },
+          {
+            "number": "RCAF0001043",
+            "sys_id": "4381f868c33f8354d0087405e40131d9"
+          },
+          {
+            "number": "RCAF0001105",
+            "sys_id": "45f4f460c37f8354d0087405e4013156"
+          },
+          {
+            "number": "RCAF0001069",
+            "sys_id": "47d43060c37f8354d0087405e401312b"
+          },
+          {
+            "number": "RCAF0001095",
+            "sys_id": "4fe47460c37f8354d0087405e4013154"
+          },
+          {
+            "number": "RCAF0001119",
+            "sys_id": "4ff4b860c37f8354d0087405e4013131"
+          },
+          {
             "number": "RCAF0001042",
             "sys_id": "50d9a03083831210bd2a5860ceaad3d7"
+          },
+          {
+            "number": "RCAF0001129",
+            "sys_id": "54053c60c37f8354d0087405e4013149"
+          },
+          {
+            "number": "RCAF0001134",
+            "sys_id": "59057c60c37f8354d0087405e4013185"
+          },
+          {
+            "number": "RCAF0001084",
+            "sys_id": "59e47060c37f8354d0087405e40131f7"
+          },
+          {
+            "number": "RCAF0001148",
+            "sys_id": "5b0530a0c37f8354d0087405e401316d"
+          },
+          {
+            "number": "RCAF0001107",
+            "sys_id": "5df43860c37f8354d0087405e4013113"
+          },
+          {
+            "number": "RCAF0001063",
+            "sys_id": "5ed4fc20c37f8354d0087405e4013138"
+          },
+          {
+            "number": "RCAF0001114",
+            "sys_id": "5ef47860c37f8354d0087405e4013130"
+          },
+          {
+            "number": "RCAF0001097",
+            "sys_id": "5fe47460c37f8354d0087405e40131ae"
+          },
+          {
+            "number": "RCAF0001109",
+            "sys_id": "61f43860c37f8354d0087405e401313c"
+          },
+          {
+            "number": "RCAF0001130",
+            "sys_id": "64053c60c37f8354d0087405e4013176"
+          },
+          {
+            "number": "RCAF0001092",
+            "sys_id": "66e43460c37f8354d0087405e40131b1"
+          },
+          {
+            "number": "RCAF0001055",
+            "sys_id": "68a1bc68c33f8354d0087405e4013119"
+          },
+          {
+            "number": "RCAF0001142",
+            "sys_id": "6a05fc60c37f8354d0087405e4013168"
+          },
+          {
+            "number": "RCAF0001116",
+            "sys_id": "6af47860c37f8354d0087405e40131c4"
+          },
+          {
+            "number": "RCAF0001078",
+            "sys_id": "6ce43060c37f8354d0087405e40131ee"
+          },
+          {
+            "number": "RCAF0001103",
+            "sys_id": "6cf43060c37f8354d0087405e4013111"
+          },
+          {
+            "number": "RCAF0001085",
+            "sys_id": "6de4b060c37f8354d0087405e4013182"
+          },
+          {
+            "number": "RCAF0001091",
+            "sys_id": "6ee43460c37f8354d0087405e4013120"
+          },
+          {
+            "number": "RCAF0001151",
+            "sys_id": "6f0530a0c37f8354d0087405e40131c2"
+          },
+          {
+            "number": "RCAF0001053",
+            "sys_id": "6f9130a8c33f8354d0087405e4013195"
+          },
+          {
+            "number": "RCAF0001080",
+            "sys_id": "70e47060c37f8354d0087405e4013117"
+          },
+          {
+            "number": "RCAF0001145",
+            "sys_id": "7205fc60c37f8354d0087405e401318c"
+          },
+          {
+            "number": "RCAF0001081",
+            "sys_id": "81e47060c37f8354d0087405e4013164"
+          },
+          {
+            "number": "RCAF0001147",
+            "sys_id": "830530a0c37f8354d0087405e4013134"
+          },
+          {
+            "number": "RCAF0001054",
+            "sys_id": "84a170a8c33f8354d0087405e4013181"
+          },
+          {
+            "number": "RCAF0001133",
+            "sys_id": "85057c60c37f8354d0087405e401311a"
+          },
+          {
+            "number": "RCAF0001056",
+            "sys_id": "85a1b0a8c33f8354d0087405e40131b6"
+          },
+          {
+            "number": "RCAF0001076",
+            "sys_id": "88e43060c37f8354d0087405e401318d"
+          },
+          {
+            "number": "RCAF0001068",
+            "sys_id": "8bd47820c37f8354d0087405e4013124"
+          },
+          {
+            "number": "RCAF0001139",
+            "sys_id": "8e05bc60c37f8354d0087405e4013176"
           },
           {
             "number": "RCAF0001024",
             "sys_id": "8f932cf483431210bd2a5860ceaad3d3"
           },
           {
+            "number": "RCAF0001155",
+            "sys_id": "9015b0a0c37f8354d0087405e401312c"
+          },
+          {
             "number": "RCAF0001041",
             "sys_id": "90d9a03083831210bd2a5860ceaad3d4"
           },
           {
+            "number": "RCAF0001083",
+            "sys_id": "91e47060c37f8354d0087405e40131be"
+          },
+          {
+            "number": "RCAF0001090",
+            "sys_id": "92e43460c37f8354d0087405e4013119"
+          },
+          {
+            "number": "RCAF0001071",
+            "sys_id": "93d43060c37f8354d0087405e4013147"
+          },
+          {
+            "number": "RCAF0001096",
+            "sys_id": "93e47460c37f8354d0087405e40131a7"
+          },
+          {
+            "number": "RCAF0001128",
+            "sys_id": "98053c60c37f8354d0087405e4013141"
+          },
+          {
+            "number": "RCAF0001046",
+            "sys_id": "98917c68c33f8354d0087405e4013147"
+          },
+          {
+            "number": "RCAF0001102",
+            "sys_id": "9cf4b820c37f8354d0087405e4013130"
+          },
+          {
+            "number": "RCAF0001136",
+            "sys_id": "a105b860c37f8354d0087405e4013112"
+          },
+          {
+            "number": "RCAF0001150",
+            "sys_id": "a30530a0c37f8354d0087405e40131bb"
+          },
+          {
+            "number": "RCAF0001099",
+            "sys_id": "a3e4b460c37f8354d0087405e401312e"
+          },
+          {
+            "number": "RCAF0001044",
+            "sys_id": "a7813c68c33f8354d0087405e401311e"
+          },
+          {
+            "number": "RCAF0001062",
+            "sys_id": "a7a174a8c33f8354d0087405e4013151"
+          },
+          {
+            "number": "RCAF0001065",
+            "sys_id": "aad4fc20c37f8354d0087405e4013186"
+          },
+          {
+            "number": "RCAF0001115",
+            "sys_id": "aef47860c37f8354d0087405e401317d"
+          },
+          {
+            "number": "RCAF0001051",
+            "sys_id": "b291fc68c33f8354d0087405e4013192"
+          },
+          {
+            "number": "RCAF0001073",
+            "sys_id": "b3d43060c37f8354d0087405e401316a"
+          },
+          {
+            "number": "RCAF0001144",
+            "sys_id": "b605fc60c37f8354d0087405e4013184"
+          },
+          {
+            "number": "RCAF0001104",
+            "sys_id": "b8f47460c37f8354d0087405e4013130"
+          },
+          {
+            "number": "RCAF0001067",
+            "sys_id": "bad4fc20c37f8354d0087405e40131ed"
+          },
+          {
+            "number": "RCAF0001094",
+            "sys_id": "bae43820c37f8354d0087405e40131b0"
+          },
+          {
+            "number": "RCAF0001066",
+            "sys_id": "bed4fc20c37f8354d0087405e401318e"
+          },
+          {
+            "number": "RCAF0001154",
+            "sys_id": "c415b0a0c37f8354d0087405e4013124"
+          },
+          {
+            "number": "RCAF0001101",
+            "sys_id": "c4f4b460c37f8354d0087405e4013176"
+          },
+          {
+            "number": "RCAF0001082",
+            "sys_id": "c5e47060c37f8354d0087405e40131b6"
+          },
+          {
+            "number": "RCAF0001127",
+            "sys_id": "c8053c60c37f8354d0087405e4013110"
+          },
+          {
+            "number": "RCAF0001126",
+            "sys_id": "c805f860c37f8354d0087405e40131e3"
+          },
+          {
+            "number": "RCAF0001153",
+            "sys_id": "c81570a0c37f8354d0087405e40131c5"
+          },
+          {
+            "number": "RCAF0001132",
+            "sys_id": "c9057c60c37f8354d0087405e4013112"
+          },
+          {
             "number": "RCAF0001001",
             "sys_id": "cc67fc481b5ee5d0a3d187b8e34bcbf9"
+          },
+          {
+            "number": "RCAF0001075",
+            "sys_id": "cce43060c37f8354d0087405e4013185"
+          },
+          {
+            "number": "RCAF0001106",
+            "sys_id": "cdf4f460c37f8354d0087405e40131cd"
+          },
+          {
+            "number": "RCAF0001112",
+            "sys_id": "cef43860c37f8354d0087405e40131bd"
           },
           {
             "number": "RCAF0001023",
@@ -100,6 +496,14 @@
             "sys_id": "d219ecbc83431210bd2a5860ceaad393"
           },
           {
+            "number": "RCAF0001052",
+            "sys_id": "d39130a8c33f8354d0087405e401311a"
+          },
+          {
+            "number": "RCAF0001070",
+            "sys_id": "d7d43060c37f8354d0087405e401313f"
+          },
+          {
             "number": "RCAF0001037",
             "sys_id": "dcd9acfc83431210bd2a5860ceaad35b"
           },
@@ -108,11 +512,59 @@
             "sys_id": "de19acbc83431210bd2a5860ceaad37e"
           },
           {
+            "number": "RCAF0001059",
+            "sys_id": "dea1f0a8c33f8354d0087405e40131ea"
+          },
+          {
+            "number": "RCAF0001072",
+            "sys_id": "e7d43060c37f8354d0087405e4013162"
+          },
+          {
+            "number": "RCAF0001122",
+            "sys_id": "ebf4b860c37f8354d0087405e401319f"
+          },
+          {
+            "number": "RCAF0001131",
+            "sys_id": "f0053c60c37f8354d0087405e40131bc"
+          },
+          {
+            "number": "RCAF0001138",
+            "sys_id": "f105bc60c37f8354d0087405e401316f"
+          },
+          {
+            "number": "RCAF0001049",
+            "sys_id": "f191bc68c33f8354d0087405e40131b7"
+          },
+          {
+            "number": "RCAF0001123",
+            "sys_id": "f3f4b860c37f8354d0087405e40131f9"
+          },
+          {
+            "number": "RCAF0001087",
+            "sys_id": "f5e4f060c37f8354d0087405e4013127"
+          },
+          {
+            "number": "RCAF0001045",
+            "sys_id": "f7813c68c33f8354d0087405e40131a6"
+          },
+          {
+            "number": "RCAF0001110",
+            "sys_id": "f9f43860c37f8354d0087405e4013195"
+          },
+          {
+            "number": "RCAF0001060",
+            "sys_id": "faa134a8c33f8354d0087405e401314d"
+          },
+          {
             "number": "RCAF0001021",
             "sys_id": "fe932cf483431210bd2a5860ceaad31c"
+          },
+          {
+            "number": "RCAF0001093",
+            "sys_id": "fee47460c37f8354d0087405e4013128"
           }
         ],
-        "at": "2026-10-04T15:29:33.317Z"
+        "at": "2026-10-04T16:17:42.992Z"
       },
       {
         "label": "ServiceNow tasks",
@@ -120,24 +572,116 @@
         "query": "cnit get x_gskn2_caf_compli_caf_tsk -Fields number,sys_id -ProfileName caf-dev249570",
         "rows": [
           {
+            "number": "CAFT0001140",
+            "sys_id": "02f43860c37f8354d0087405e40131a3"
+          },
+          {
+            "number": "CAFT0001142",
+            "sys_id": "02f47860c37f8354d0087405e401311b"
+          },
+          {
+            "number": "CAFT0001135",
+            "sys_id": "05f4f460c37f8354d0087405e40131d4"
+          },
+          {
+            "number": "CAFT0001084",
+            "sys_id": "06a130a8c33f8354d0087405e4013103"
+          },
+          {
+            "number": "CAFT0001154",
+            "sys_id": "0805f860c37f8354d0087405e40131ca"
+          },
+          {
+            "number": "CAFT0001080",
+            "sys_id": "09a1b0a8c33f8354d0087405e40131ce"
+          },
+          {
+            "number": "CAFT0001079",
+            "sys_id": "09a1b0a8c33f8354d0087405e40131e4"
+          },
+          {
+            "number": "CAFT0001153",
+            "sys_id": "0c05f860c37f8354d0087405e40131f5"
+          },
+          {
+            "number": "CAFT0001074",
+            "sys_id": "0ca170a8c33f8354d0087405e40131a3"
+          },
+          {
+            "number": "CAFT0001130",
+            "sys_id": "0cf4b460c37f8354d0087405e40131ac"
+          },
+          {
             "number": "CAFT0001024",
             "sys_id": "0f936cf483431210bd2a5860ceaad382"
+          },
+          {
+            "number": "CAFT0001088",
+            "sys_id": "0fa134a8c33f8354d0087405e4013197"
+          },
+          {
+            "number": "CAFT0001124",
+            "sys_id": "0fe47460c37f8354d0087405e401317f"
+          },
+          {
+            "number": "CAFT0001162",
+            "sys_id": "11057c60c37f8354d0087405e401319d"
+          },
+          {
+            "number": "CAFT0001118",
+            "sys_id": "12e43460c37f8354d0087405e4013128"
           },
           {
             "number": "CAFT0001042",
             "sys_id": "1359a4fc83431210bd2a5860ceaad39e"
           },
           {
+            "number": "CAFT0001098",
+            "sys_id": "15e47060c37f8354d0087405e40131ff"
+          },
+          {
+            "number": "CAFT0001182",
+            "sys_id": "1815b0a0c37f8354d0087405e401319c"
+          },
+          {
+            "number": "CAFT0001163",
+            "sys_id": "19057c60c37f8354d0087405e4013157"
+          },
+          {
+            "number": "CAFT0001184",
+            "sys_id": "1c15b0a0c37f8354d0087405e4013134"
+          },
+          {
+            "number": "CAFT0001119",
+            "sys_id": "1ee43460c37f8354d0087405e4013114"
+          },
+          {
+            "number": "CAFT0001108",
+            "sys_id": "21e4b060c37f8354d0087405e401316c"
+          },
+          {
             "number": "CAFT0001034",
             "sys_id": "221920fc83431210bd2a5860ceaad336"
+          },
+          {
+            "number": "CAFT0001121",
+            "sys_id": "22e43460c37f8354d0087405e40131ec"
           },
           {
             "number": "CAFT0001007",
             "sys_id": "2342687483431210bd2a5860ceaad309"
           },
           {
+            "number": "CAFT0001152",
+            "sys_id": "23f4b860c37f8354d0087405e40131ff"
+          },
+          {
             "number": "CAFT0001036",
             "sys_id": "261920fc83431210bd2a5860ceaad343"
+          },
+          {
+            "number": "CAFT0001120",
+            "sys_id": "26e43460c37f8354d0087405e40131df"
           },
           {
             "number": "CAFT0001011",
@@ -148,12 +692,60 @@
             "sys_id": "2832a47483431210bd2a5860ceaad3bb"
           },
           {
+            "number": "CAFT0001137",
+            "sys_id": "29f43860c37f8354d0087405e4013146"
+          },
+          {
+            "number": "CAFT0001072",
+            "sys_id": "2b9130a8c33f8354d0087405e401319c"
+          },
+          {
+            "number": "CAFT0001157",
+            "sys_id": "2c053c60c37f8354d0087405e4013123"
+          },
+          {
             "number": "CAFT0001002",
             "sys_id": "2c32a47483431210bd2a5860ceaad38c"
           },
           {
             "number": "CAFT0001004",
             "sys_id": "2c32a47483431210bd2a5860ceaad3de"
+          },
+          {
+            "number": "CAFT0001114",
+            "sys_id": "2de4b060c37f8354d0087405e40131c6"
+          },
+          {
+            "number": "CAFT0001138",
+            "sys_id": "2df43860c37f8354d0087405e4013152"
+          },
+          {
+            "number": "CAFT0001166",
+            "sys_id": "31057c60c37f8354d0087405e40131f1"
+          },
+          {
+            "number": "CAFT0001173",
+            "sys_id": "3a05fc60c37f8354d0087405e4013163"
+          },
+          {
+            "number": "CAFT0001133",
+            "sys_id": "3cf4f460c37f8354d0087405e4013134"
+          },
+          {
+            "number": "CAFT0001064",
+            "sys_id": "3d91bc68c33f8354d0087405e40131a9"
+          },
+          {
+            "number": "CAFT0001172",
+            "sys_id": "3e05fc60c37f8354d0087405e40131a9"
+          },
+          {
+            "number": "CAFT0001096",
+            "sys_id": "3ed43060c37f8354d0087405e4013101"
+          },
+          {
+            "number": "CAFT0001181",
+            "sys_id": "3f0570a0c37f8354d0087405e40131a7"
           },
           {
             "number": "CAFT0001032",
@@ -164,20 +756,136 @@
             "sys_id": "43936cf483431210bd2a5860ceaad363"
           },
           {
+            "number": "CAFT0001148",
+            "sys_id": "43f4b860c37f8354d0087405e4013136"
+          },
+          {
+            "number": "CAFT0001160",
+            "sys_id": "45053c60c37f8354d0087405e40131fe"
+          },
+          {
             "number": "CAFT0001021",
             "sys_id": "47932cf483431210bd2a5860ceaad3b1"
+          },
+          {
+            "number": "CAFT0001122",
+            "sys_id": "47e43460c37f8354d0087405e40131fe"
+          },
+          {
+            "number": "CAFT0001070",
+            "sys_id": "4b91fc68c33f8354d0087405e40131d0"
+          },
+          {
+            "number": "CAFT0001123",
+            "sys_id": "4be47460c37f8354d0087405e4013173"
+          },
+          {
+            "number": "CAFT0001155",
+            "sys_id": "4c05f860c37f8354d0087405e40131fd"
+          },
+          {
+            "number": "CAFT0001075",
+            "sys_id": "54a1b0a8c33f8354d0087405e401310f"
+          },
+          {
+            "number": "CAFT0001101",
+            "sys_id": "55e4b060c37f8354d0087405e4013107"
+          },
+          {
+            "number": "CAFT0001169",
+            "sys_id": "5605bc60c37f8354d0087405e40131c4"
+          },
+          {
+            "number": "CAFT0001177",
+            "sys_id": "570530a0c37f8354d0087405e401311f"
+          },
+          {
+            "number": "CAFT0001185",
+            "sys_id": "5815b0a0c37f8354d0087405e40131a4"
+          },
+          {
+            "number": "CAFT0001100",
+            "sys_id": "59e4b060c37f8354d0087405e4013112"
+          },
+          {
+            "number": "CAFT0001171",
+            "sys_id": "5a05bc60c37f8354d0087405e40131dd"
+          },
+          {
+            "number": "CAFT0001131",
+            "sys_id": "5cf4b460c37f8354d0087405e40131b4"
+          },
+          {
+            "number": "CAFT0001099",
+            "sys_id": "5de4fc20c37f8354d0087405e40131fe"
           },
           {
             "number": "CAFT0001051",
             "sys_id": "60d9e03083831210bd2a5860ceaad310"
           },
           {
+            "number": "CAFT0001144",
+            "sys_id": "66f47860c37f8354d0087405e401318a"
+          },
+          {
+            "number": "CAFT0001127",
+            "sys_id": "67e4b460c37f8354d0087405e401310a"
+          },
+          {
+            "number": "CAFT0001149",
+            "sys_id": "67f4b860c37f8354d0087405e40131ac"
+          },
+          {
             "number": "CAFT0001006",
             "sys_id": "6832a47483431210bd2a5860ceaad3e5"
           },
           {
+            "number": "CAFT0001151",
+            "sys_id": "6bf4b860c37f8354d0087405e40131d8"
+          },
+          {
+            "number": "CAFT0001132",
+            "sys_id": "6cf4f460c37f8354d0087405e4013113"
+          },
+          {
+            "number": "CAFT0001111",
+            "sys_id": "6de4b060c37f8354d0087405e40131a5"
+          },
+          {
             "number": "CAFT0001009",
             "sys_id": "6f42687483431210bd2a5860ceaad3a1"
+          },
+          {
+            "number": "CAFT0001094",
+            "sys_id": "72d4fc20c37f8354d0087405e40131af"
+          },
+          {
+            "number": "CAFT0001060",
+            "sys_id": "74917c68c33f8354d0087405e401317d"
+          },
+          {
+            "number": "CAFT0001061",
+            "sys_id": "74917c68c33f8354d0087405e40131f5"
+          },
+          {
+            "number": "CAFT0001168",
+            "sys_id": "7505bc60c37f8354d0087405e401318e"
+          },
+          {
+            "number": "CAFT0001174",
+            "sys_id": "7605fc60c37f8354d0087405e40131cb"
+          },
+          {
+            "number": "CAFT0001180",
+            "sys_id": "770570a0c37f8354d0087405e40131b2"
+          },
+          {
+            "number": "CAFT0001175",
+            "sys_id": "7e05fc60c37f8354d0087405e40131b1"
+          },
+          {
+            "number": "CAFT0001095",
+            "sys_id": "7ed4fc20c37f8354d0087405e40131d1"
           },
           {
             "number": "CAFT0001029",
@@ -188,12 +896,32 @@
             "sys_id": "81f82cbc83431210bd2a5860ceaad371"
           },
           {
+            "number": "CAFT0001066",
+            "sys_id": "8691fc68c33f8354d0087405e4013131"
+          },
+          {
             "number": "CAFT0001028",
             "sys_id": "89f82cbc83431210bd2a5860ceaad360"
           },
           {
+            "number": "CAFT0001055",
+            "sys_id": "8c913c68c33f8354d0087405e40131b0"
+          },
+          {
+            "number": "CAFT0001056",
+            "sys_id": "8c913c68c33f8354d0087405e40131bd"
+          },
+          {
+            "number": "CAFT0001058",
+            "sys_id": "8c917c68c33f8354d0087405e4013128"
+          },
+          {
             "number": "CAFT0001045",
             "sys_id": "8c99e8fc83431210bd2a5860ceaad360"
+          },
+          {
+            "number": "CAFT0001134",
+            "sys_id": "8df4f460c37f8354d0087405e40131a6"
           },
           {
             "number": "CAFT0001020",
@@ -208,16 +936,80 @@
             "sys_id": "91442c3883431210bd2a5860ceaad37e"
           },
           {
+            "number": "CAFT0001103",
+            "sys_id": "91e4b060c37f8354d0087405e4013141"
+          },
+          {
+            "number": "CAFT0001117",
+            "sys_id": "92e43460c37f8354d0087405e4013102"
+          },
+          {
+            "number": "CAFT0001164",
+            "sys_id": "95057c60c37f8354d0087405e4013164"
+          },
+          {
+            "number": "CAFT0001104",
+            "sys_id": "95e4b060c37f8354d0087405e401314c"
+          },
+          {
+            "number": "CAFT0001097",
+            "sys_id": "99e47060c37f8354d0087405e40131f1"
+          },
+          {
+            "number": "CAFT0001183",
+            "sys_id": "9c15b0a0c37f8354d0087405e401314c"
+          },
+          {
+            "number": "CAFT0001115",
+            "sys_id": "9ee4f060c37f8354d0087405e40131c8"
+          },
+          {
             "number": "CAFT0001017",
             "sys_id": "a16328f483431210bd2a5860ceaad35f"
+          },
+          {
+            "number": "CAFT0001143",
+            "sys_id": "a2f47860c37f8354d0087405e401312b"
+          },
+          {
+            "number": "CAFT0001156",
+            "sys_id": "a4053c60c37f8354d0087405e401315c"
           },
           {
             "number": "CAFT0001003",
             "sys_id": "a432a47483431210bd2a5860ceaad3e8"
           },
           {
+            "number": "CAFT0001106",
+            "sys_id": "a5e4b060c37f8354d0087405e4013187"
+          },
+          {
+            "number": "CAFT0001112",
+            "sys_id": "a5e4b060c37f8354d0087405e40131b0"
+          },
+          {
+            "number": "CAFT0001145",
+            "sys_id": "a6f47860c37f8354d0087405e4013192"
+          },
+          {
+            "number": "CAFT0001179",
+            "sys_id": "a70530a0c37f8354d0087405e40131c5"
+          },
+          {
+            "number": "CAFT0001090",
+            "sys_id": "a7a134a8c33f8354d0087405e4013162"
+          },
+          {
             "number": "CAFT0001046",
             "sys_id": "a8d9a03083831210bd2a5860ceaad3fd"
+          },
+          {
+            "number": "CAFT0001165",
+            "sys_id": "a9057c60c37f8354d0087405e40131b6"
+          },
+          {
+            "number": "CAFT0001113",
+            "sys_id": "a9e4b060c37f8354d0087405e40131bb"
           },
           {
             "number": "CAFT0001010",
@@ -226,6 +1018,10 @@
           {
             "number": "CAFT0001012",
             "sys_id": "ab42687483431210bd2a5860ceaad3a8"
+          },
+          {
+            "number": "CAFT0001125",
+            "sys_id": "abe47460c37f8354d0087405e40131e6"
           },
           {
             "number": "CAFT0001050",
@@ -244,12 +1040,32 @@
             "sys_id": "ae19ecbc83431210bd2a5860ceaad37d"
           },
           {
+            "number": "CAFT0001086",
+            "sys_id": "aea1f0a8c33f8354d0087405e40131b4"
+          },
+          {
+            "number": "CAFT0001126",
+            "sys_id": "afe47460c37f8354d0087405e40131a2"
+          },
+          {
+            "number": "CAFT0001128",
+            "sys_id": "afe4b460c37f8354d0087405e401311a"
+          },
+          {
+            "number": "CAFT0001167",
+            "sys_id": "b105bc60c37f8354d0087405e4013194"
+          },
+          {
             "number": "CAFT0001038",
             "sys_id": "b21920fc83431210bd2a5860ceaad367"
           },
           {
             "number": "CAFT0001037",
             "sys_id": "b21920fc83431210bd2a5860ceaad371"
+          },
+          {
+            "number": "CAFT0001093",
+            "sys_id": "b2d4fc20c37f8354d0087405e40131dc"
           },
           {
             "number": "CAFT0001039",
@@ -268,12 +1084,28 @@
             "sys_id": "c07928fc83431210bd2a5860ceaad313"
           },
           {
+            "number": "CAFT0001129",
+            "sys_id": "c0f4b460c37f8354d0087405e4013167"
+          },
+          {
+            "number": "CAFT0001161",
+            "sys_id": "c1053c60c37f8354d0087405e40131f2"
+          },
+          {
             "number": "CAFT0001030",
             "sys_id": "c1f82cbc83431210bd2a5860ceaad368"
           },
           {
             "number": "CAFT0001023",
             "sys_id": "c3936cf483431210bd2a5860ceaad38e"
+          },
+          {
+            "number": "CAFT0001146",
+            "sys_id": "c3f47860c37f8354d0087405e40131db"
+          },
+          {
+            "number": "CAFT0001147",
+            "sys_id": "c3f4b860c37f8354d0087405e4013109"
           },
           {
             "number": "CAFT0001052",
@@ -288,8 +1120,40 @@
             "sys_id": "cd49e0fc83431210bd2a5860ceaad370"
           },
           {
+            "number": "CAFT0001141",
+            "sys_id": "cef43860c37f8354d0087405e40131df"
+          },
+          {
+            "number": "CAFT0001176",
+            "sys_id": "cf0530a0c37f8354d0087405e4013110"
+          },
+          {
+            "number": "CAFT0001170",
+            "sys_id": "d205fc60c37f8354d0087405e4013122"
+          },
+          {
+            "number": "CAFT0001102",
+            "sys_id": "d9e4b060c37f8354d0087405e401311d"
+          },
+          {
+            "number": "CAFT0001116",
+            "sys_id": "dae43460c37f8354d0087405e401310c"
+          },
+          {
+            "number": "CAFT0001105",
+            "sys_id": "dde4b060c37f8354d0087405e4013163"
+          },
+          {
             "number": "CAFT0001025",
             "sys_id": "deb3603883431210bd2a5860ceaad356"
+          },
+          {
+            "number": "CAFT0001178",
+            "sys_id": "df0530a0c37f8354d0087405e4013140"
+          },
+          {
+            "number": "CAFT0001159",
+            "sys_id": "e0053c60c37f8354d0087405e4013196"
           },
           {
             "number": "CAFT0001005",
@@ -304,6 +1168,14 @@
             "sys_id": "e16328f483431210bd2a5860ceaad336"
           },
           {
+            "number": "CAFT0001091",
+            "sys_id": "e3a174a8c33f8354d0087405e4013163"
+          },
+          {
+            "number": "CAFT0001158",
+            "sys_id": "e4053c60c37f8354d0087405e401310c"
+          },
+          {
             "number": "CAFT0001048",
             "sys_id": "e4d9a03083831210bd2a5860ceaad3af"
           },
@@ -312,8 +1184,20 @@
             "sys_id": "e4d9a03083831210bd2a5860ceaad3f6"
           },
           {
+            "number": "CAFT0001107",
+            "sys_id": "e5e4b060c37f8354d0087405e4013154"
+          },
+          {
+            "number": "CAFT0001109",
+            "sys_id": "e5e4b060c37f8354d0087405e401318f"
+          },
+          {
             "number": "CAFT0001008",
             "sys_id": "e742687483431210bd2a5860ceaad389"
+          },
+          {
+            "number": "CAFT0001150",
+            "sys_id": "e7f4b860c37f8354d0087405e40131cd"
           },
           {
             "number": "CAFT0001013",
@@ -324,11 +1208,31 @@
             "sys_id": "e96328f483431210bd2a5860ceaad355"
           },
           {
+            "number": "CAFT0001110",
+            "sys_id": "e9e4b060c37f8354d0087405e401319a"
+          },
+          {
+            "number": "CAFT0001136",
+            "sys_id": "e9f43860c37f8354d0087405e4013131"
+          },
+          {
+            "number": "CAFT0001082",
+            "sys_id": "eda1f0a8c33f8354d0087405e4013132"
+          },
+          {
+            "number": "CAFT0001139",
+            "sys_id": "edf43860c37f8354d0087405e4013177"
+          },
+          {
+            "number": "CAFT0001068",
+            "sys_id": "ee91fc68c33f8354d0087405e4013195"
+          },
+          {
             "number": "CAFT0001044",
             "sys_id": "ff7968fc83431210bd2a5860ceaad34c"
           }
         ],
-        "at": "2026-10-04T15:29:33.317Z"
+        "at": "2026-10-04T16:17:42.992Z"
       },
       {
         "label": "Salesforce requests",
@@ -410,9 +1314,461 @@
           {
             "SN_Number__c": "RCAF0001042",
             "ServiceNow_Sys_Id__c": "50d9a03083831210bd2a5860ceaad3d7"
+          },
+          {
+            "SN_Number__c": "RCAF0001043",
+            "ServiceNow_Sys_Id__c": "4381f868c33f8354d0087405e40131d9"
+          },
+          {
+            "SN_Number__c": "RCAF0001044",
+            "ServiceNow_Sys_Id__c": "a7813c68c33f8354d0087405e401311e"
+          },
+          {
+            "SN_Number__c": "RCAF0001045",
+            "ServiceNow_Sys_Id__c": "f7813c68c33f8354d0087405e40131a6"
+          },
+          {
+            "SN_Number__c": "RCAF0001046",
+            "ServiceNow_Sys_Id__c": "98917c68c33f8354d0087405e4013147"
+          },
+          {
+            "SN_Number__c": "RCAF0001047",
+            "ServiceNow_Sys_Id__c": "30917c68c33f8354d0087405e40131d8"
+          },
+          {
+            "SN_Number__c": "RCAF0001048",
+            "ServiceNow_Sys_Id__c": "1591bc68c33f8354d0087405e401313e"
+          },
+          {
+            "SN_Number__c": "RCAF0001049",
+            "ServiceNow_Sys_Id__c": "f191bc68c33f8354d0087405e40131b7"
+          },
+          {
+            "SN_Number__c": "RCAF0001050",
+            "ServiceNow_Sys_Id__c": "1691fc68c33f8354d0087405e4013148"
+          },
+          {
+            "SN_Number__c": "RCAF0001051",
+            "ServiceNow_Sys_Id__c": "b291fc68c33f8354d0087405e4013192"
+          },
+          {
+            "SN_Number__c": "RCAF0001052",
+            "ServiceNow_Sys_Id__c": "d39130a8c33f8354d0087405e401311a"
+          },
+          {
+            "SN_Number__c": "RCAF0001053",
+            "ServiceNow_Sys_Id__c": "6f9130a8c33f8354d0087405e4013195"
+          },
+          {
+            "SN_Number__c": "RCAF0001054",
+            "ServiceNow_Sys_Id__c": "84a170a8c33f8354d0087405e4013181"
+          },
+          {
+            "SN_Number__c": "RCAF0001055",
+            "ServiceNow_Sys_Id__c": "68a1bc68c33f8354d0087405e4013119"
+          },
+          {
+            "SN_Number__c": "RCAF0001056",
+            "ServiceNow_Sys_Id__c": "85a1b0a8c33f8354d0087405e40131b6"
+          },
+          {
+            "SN_Number__c": "RCAF0001057",
+            "ServiceNow_Sys_Id__c": "11a1f0a8c33f8354d0087405e4013119"
+          },
+          {
+            "SN_Number__c": "RCAF0001058",
+            "ServiceNow_Sys_Id__c": "3da1f0a8c33f8354d0087405e401317b"
+          },
+          {
+            "SN_Number__c": "RCAF0001059",
+            "ServiceNow_Sys_Id__c": "dea1f0a8c33f8354d0087405e40131ea"
+          },
+          {
+            "SN_Number__c": "RCAF0001060",
+            "ServiceNow_Sys_Id__c": "faa134a8c33f8354d0087405e401314d"
+          },
+          {
+            "SN_Number__c": "RCAF0001061",
+            "ServiceNow_Sys_Id__c": "03a134a8c33f8354d0087405e40131a4"
+          },
+          {
+            "SN_Number__c": "RCAF0001062",
+            "ServiceNow_Sys_Id__c": "a7a174a8c33f8354d0087405e4013151"
+          },
+          {
+            "SN_Number__c": "RCAF0001063",
+            "ServiceNow_Sys_Id__c": "5ed4fc20c37f8354d0087405e4013138"
+          },
+          {
+            "SN_Number__c": "RCAF0001064",
+            "ServiceNow_Sys_Id__c": "2ad4fc20c37f8354d0087405e4013172"
+          },
+          {
+            "SN_Number__c": "RCAF0001065",
+            "ServiceNow_Sys_Id__c": "aad4fc20c37f8354d0087405e4013186"
+          },
+          {
+            "SN_Number__c": "RCAF0001066",
+            "ServiceNow_Sys_Id__c": "bed4fc20c37f8354d0087405e401318e"
+          },
+          {
+            "SN_Number__c": "RCAF0001067",
+            "ServiceNow_Sys_Id__c": "bad4fc20c37f8354d0087405e40131ed"
+          },
+          {
+            "SN_Number__c": "RCAF0001068",
+            "ServiceNow_Sys_Id__c": "8bd47820c37f8354d0087405e4013124"
+          },
+          {
+            "SN_Number__c": "RCAF0001069",
+            "ServiceNow_Sys_Id__c": "47d43060c37f8354d0087405e401312b"
+          },
+          {
+            "SN_Number__c": "RCAF0001070",
+            "ServiceNow_Sys_Id__c": "d7d43060c37f8354d0087405e401313f"
+          },
+          {
+            "SN_Number__c": "RCAF0001071",
+            "ServiceNow_Sys_Id__c": "93d43060c37f8354d0087405e4013147"
+          },
+          {
+            "SN_Number__c": "RCAF0001072",
+            "ServiceNow_Sys_Id__c": "e7d43060c37f8354d0087405e4013162"
+          },
+          {
+            "SN_Number__c": "RCAF0001073",
+            "ServiceNow_Sys_Id__c": "b3d43060c37f8354d0087405e401316a"
+          },
+          {
+            "SN_Number__c": "RCAF0001074",
+            "ServiceNow_Sys_Id__c": "37d43060c37f8354d0087405e401317e"
+          },
+          {
+            "SN_Number__c": "RCAF0001075",
+            "ServiceNow_Sys_Id__c": "cce43060c37f8354d0087405e4013185"
+          },
+          {
+            "SN_Number__c": "RCAF0001076",
+            "ServiceNow_Sys_Id__c": "88e43060c37f8354d0087405e401318d"
+          },
+          {
+            "SN_Number__c": "RCAF0001077",
+            "ServiceNow_Sys_Id__c": "18e43060c37f8354d0087405e401319c"
+          },
+          {
+            "SN_Number__c": "RCAF0001078",
+            "ServiceNow_Sys_Id__c": "6ce43060c37f8354d0087405e40131ee"
+          },
+          {
+            "SN_Number__c": "RCAF0001079",
+            "ServiceNow_Sys_Id__c": "28e43060c37f8354d0087405e40131f6"
+          },
+          {
+            "SN_Number__c": "RCAF0001080",
+            "ServiceNow_Sys_Id__c": "70e47060c37f8354d0087405e4013117"
+          },
+          {
+            "SN_Number__c": "RCAF0001081",
+            "ServiceNow_Sys_Id__c": "81e47060c37f8354d0087405e4013164"
+          },
+          {
+            "SN_Number__c": "RCAF0001082",
+            "ServiceNow_Sys_Id__c": "c5e47060c37f8354d0087405e40131b6"
+          },
+          {
+            "SN_Number__c": "RCAF0001083",
+            "ServiceNow_Sys_Id__c": "91e47060c37f8354d0087405e40131be"
+          },
+          {
+            "SN_Number__c": "RCAF0001084",
+            "ServiceNow_Sys_Id__c": "59e47060c37f8354d0087405e40131f7"
+          },
+          {
+            "SN_Number__c": "RCAF0001085",
+            "ServiceNow_Sys_Id__c": "6de4b060c37f8354d0087405e4013182"
+          },
+          {
+            "SN_Number__c": "RCAF0001086",
+            "ServiceNow_Sys_Id__c": "3de4f060c37f8354d0087405e401311f"
+          },
+          {
+            "SN_Number__c": "RCAF0001087",
+            "ServiceNow_Sys_Id__c": "f5e4f060c37f8354d0087405e4013127"
+          },
+          {
+            "SN_Number__c": "RCAF0001088",
+            "ServiceNow_Sys_Id__c": "42e4f060c37f8354d0087405e401319f"
+          },
+          {
+            "SN_Number__c": "RCAF0001089",
+            "ServiceNow_Sys_Id__c": "0ae4f060c37f8354d0087405e40131d8"
+          },
+          {
+            "SN_Number__c": "RCAF0001090",
+            "ServiceNow_Sys_Id__c": "92e43460c37f8354d0087405e4013119"
+          },
+          {
+            "SN_Number__c": "RCAF0001091",
+            "ServiceNow_Sys_Id__c": "6ee43460c37f8354d0087405e4013120"
+          },
+          {
+            "SN_Number__c": "RCAF0001092",
+            "ServiceNow_Sys_Id__c": "66e43460c37f8354d0087405e40131b1"
+          },
+          {
+            "SN_Number__c": "RCAF0001093",
+            "ServiceNow_Sys_Id__c": "fee47460c37f8354d0087405e4013128"
+          },
+          {
+            "SN_Number__c": "RCAF0001094",
+            "ServiceNow_Sys_Id__c": "bae43820c37f8354d0087405e40131b0"
+          },
+          {
+            "SN_Number__c": "RCAF0001095",
+            "ServiceNow_Sys_Id__c": "4fe47460c37f8354d0087405e4013154"
+          },
+          {
+            "SN_Number__c": "RCAF0001096",
+            "ServiceNow_Sys_Id__c": "93e47460c37f8354d0087405e40131a7"
+          },
+          {
+            "SN_Number__c": "RCAF0001097",
+            "ServiceNow_Sys_Id__c": "5fe47460c37f8354d0087405e40131ae"
+          },
+          {
+            "SN_Number__c": "RCAF0001098",
+            "ServiceNow_Sys_Id__c": "2be47460c37f8354d0087405e40131b6"
+          },
+          {
+            "SN_Number__c": "RCAF0001099",
+            "ServiceNow_Sys_Id__c": "a3e4b460c37f8354d0087405e401312e"
+          },
+          {
+            "SN_Number__c": "RCAF0001100",
+            "ServiceNow_Sys_Id__c": "0cf4b460c37f8354d0087405e401316e"
+          },
+          {
+            "SN_Number__c": "RCAF0001101",
+            "ServiceNow_Sys_Id__c": "c4f4b460c37f8354d0087405e4013176"
+          },
+          {
+            "SN_Number__c": "RCAF0001102",
+            "ServiceNow_Sys_Id__c": "9cf4b820c37f8354d0087405e4013130"
+          },
+          {
+            "SN_Number__c": "RCAF0001103",
+            "ServiceNow_Sys_Id__c": "6cf43060c37f8354d0087405e4013111"
+          },
+          {
+            "SN_Number__c": "RCAF0001104",
+            "ServiceNow_Sys_Id__c": "b8f47460c37f8354d0087405e4013130"
+          },
+          {
+            "SN_Number__c": "RCAF0001105",
+            "ServiceNow_Sys_Id__c": "45f4f460c37f8354d0087405e4013156"
+          },
+          {
+            "SN_Number__c": "RCAF0001106",
+            "ServiceNow_Sys_Id__c": "cdf4f460c37f8354d0087405e40131cd"
+          },
+          {
+            "SN_Number__c": "RCAF0001107",
+            "ServiceNow_Sys_Id__c": "5df43860c37f8354d0087405e4013113"
+          },
+          {
+            "SN_Number__c": "RCAF0001108",
+            "ServiceNow_Sys_Id__c": "19f43860c37f8354d0087405e401311b"
+          },
+          {
+            "SN_Number__c": "RCAF0001109",
+            "ServiceNow_Sys_Id__c": "61f43860c37f8354d0087405e401313c"
+          },
+          {
+            "SN_Number__c": "RCAF0001110",
+            "ServiceNow_Sys_Id__c": "f9f43860c37f8354d0087405e4013195"
+          },
+          {
+            "SN_Number__c": "RCAF0001111",
+            "ServiceNow_Sys_Id__c": "35f43860c37f8354d0087405e40131b6"
+          },
+          {
+            "SN_Number__c": "RCAF0001112",
+            "ServiceNow_Sys_Id__c": "cef43860c37f8354d0087405e40131bd"
+          },
+          {
+            "SN_Number__c": "RCAF0001113",
+            "ServiceNow_Sys_Id__c": "06f47860c37f8354d0087405e4013110"
+          },
+          {
+            "SN_Number__c": "RCAF0001114",
+            "ServiceNow_Sys_Id__c": "5ef47860c37f8354d0087405e4013130"
+          },
+          {
+            "SN_Number__c": "RCAF0001115",
+            "ServiceNow_Sys_Id__c": "aef47860c37f8354d0087405e401317d"
+          },
+          {
+            "SN_Number__c": "RCAF0001116",
+            "ServiceNow_Sys_Id__c": "6af47860c37f8354d0087405e40131c4"
+          },
+          {
+            "SN_Number__c": "RCAF0001117",
+            "ServiceNow_Sys_Id__c": "36f47860c37f8354d0087405e40131cc"
+          },
+          {
+            "SN_Number__c": "RCAF0001118",
+            "ServiceNow_Sys_Id__c": "3ef4b460c37f8354d0087405e40131c8"
+          },
+          {
+            "SN_Number__c": "RCAF0001119",
+            "ServiceNow_Sys_Id__c": "4ff4b860c37f8354d0087405e4013131"
+          },
+          {
+            "SN_Number__c": "RCAF0001120",
+            "ServiceNow_Sys_Id__c": "17f4b860c37f8354d0087405e4013184"
+          },
+          {
+            "SN_Number__c": "RCAF0001121",
+            "ServiceNow_Sys_Id__c": "13f4b860c37f8354d0087405e4013198"
+          },
+          {
+            "SN_Number__c": "RCAF0001122",
+            "ServiceNow_Sys_Id__c": "ebf4b860c37f8354d0087405e401319f"
+          },
+          {
+            "SN_Number__c": "RCAF0001123",
+            "ServiceNow_Sys_Id__c": "f3f4b860c37f8354d0087405e40131f9"
+          },
+          {
+            "SN_Number__c": "RCAF0001124",
+            "ServiceNow_Sys_Id__c": "37f4f860c37f8354d0087405e401317d"
+          },
+          {
+            "SN_Number__c": "RCAF0001125",
+            "ServiceNow_Sys_Id__c": "33f4f860c37f8354d0087405e40131dc"
+          },
+          {
+            "SN_Number__c": "RCAF0001126",
+            "ServiceNow_Sys_Id__c": "c805f860c37f8354d0087405e40131e3"
+          },
+          {
+            "SN_Number__c": "RCAF0001127",
+            "ServiceNow_Sys_Id__c": "c8053c60c37f8354d0087405e4013110"
+          },
+          {
+            "SN_Number__c": "RCAF0001128",
+            "ServiceNow_Sys_Id__c": "98053c60c37f8354d0087405e4013141"
+          },
+          {
+            "SN_Number__c": "RCAF0001129",
+            "ServiceNow_Sys_Id__c": "54053c60c37f8354d0087405e4013149"
+          },
+          {
+            "SN_Number__c": "RCAF0001130",
+            "ServiceNow_Sys_Id__c": "64053c60c37f8354d0087405e4013176"
+          },
+          {
+            "SN_Number__c": "RCAF0001131",
+            "ServiceNow_Sys_Id__c": "f0053c60c37f8354d0087405e40131bc"
+          },
+          {
+            "SN_Number__c": "RCAF0001132",
+            "ServiceNow_Sys_Id__c": "c9057c60c37f8354d0087405e4013112"
+          },
+          {
+            "SN_Number__c": "RCAF0001133",
+            "ServiceNow_Sys_Id__c": "85057c60c37f8354d0087405e401311a"
+          },
+          {
+            "SN_Number__c": "RCAF0001134",
+            "ServiceNow_Sys_Id__c": "59057c60c37f8354d0087405e4013185"
+          },
+          {
+            "SN_Number__c": "RCAF0001135",
+            "ServiceNow_Sys_Id__c": "15057c60c37f8354d0087405e401318d"
+          },
+          {
+            "SN_Number__c": "RCAF0001136",
+            "ServiceNow_Sys_Id__c": "a105b860c37f8354d0087405e4013112"
+          },
+          {
+            "SN_Number__c": "RCAF0001137",
+            "ServiceNow_Sys_Id__c": "3105bc60c37f8354d0087405e4013104"
+          },
+          {
+            "SN_Number__c": "RCAF0001138",
+            "ServiceNow_Sys_Id__c": "f105bc60c37f8354d0087405e401316f"
+          },
+          {
+            "SN_Number__c": "RCAF0001139",
+            "ServiceNow_Sys_Id__c": "8e05bc60c37f8354d0087405e4013176"
+          },
+          {
+            "SN_Number__c": "RCAF0001140",
+            "ServiceNow_Sys_Id__c": "4205bc60c37f8354d0087405e40131e2"
+          },
+          {
+            "SN_Number__c": "RCAF0001141",
+            "ServiceNow_Sys_Id__c": "1e05bc60c37f8354d0087405e40131e9"
+          },
+          {
+            "SN_Number__c": "RCAF0001142",
+            "ServiceNow_Sys_Id__c": "6a05fc60c37f8354d0087405e4013168"
+          },
+          {
+            "SN_Number__c": "RCAF0001143",
+            "ServiceNow_Sys_Id__c": "2605fc60c37f8354d0087405e4013170"
+          },
+          {
+            "SN_Number__c": "RCAF0001144",
+            "ServiceNow_Sys_Id__c": "b605fc60c37f8354d0087405e4013184"
+          },
+          {
+            "SN_Number__c": "RCAF0001145",
+            "ServiceNow_Sys_Id__c": "7205fc60c37f8354d0087405e401318c"
+          },
+          {
+            "SN_Number__c": "RCAF0001146",
+            "ServiceNow_Sys_Id__c": "36057c60c37f8354d0087405e4013109"
+          },
+          {
+            "SN_Number__c": "RCAF0001147",
+            "ServiceNow_Sys_Id__c": "830530a0c37f8354d0087405e4013134"
+          },
+          {
+            "SN_Number__c": "RCAF0001148",
+            "ServiceNow_Sys_Id__c": "5b0530a0c37f8354d0087405e401316d"
+          },
+          {
+            "SN_Number__c": "RCAF0001149",
+            "ServiceNow_Sys_Id__c": "170530a0c37f8354d0087405e4013175"
+          },
+          {
+            "SN_Number__c": "RCAF0001150",
+            "ServiceNow_Sys_Id__c": "a30530a0c37f8354d0087405e40131bb"
+          },
+          {
+            "SN_Number__c": "RCAF0001151",
+            "ServiceNow_Sys_Id__c": "6f0530a0c37f8354d0087405e40131c2"
+          },
+          {
+            "SN_Number__c": "RCAF0001152",
+            "ServiceNow_Sys_Id__c": "330570a0c37f8354d0087405e40131be"
+          },
+          {
+            "SN_Number__c": "RCAF0001153",
+            "ServiceNow_Sys_Id__c": "c81570a0c37f8354d0087405e40131c5"
+          },
+          {
+            "SN_Number__c": "RCAF0001154",
+            "ServiceNow_Sys_Id__c": "c415b0a0c37f8354d0087405e4013124"
+          },
+          {
+            "SN_Number__c": "RCAF0001155",
+            "ServiceNow_Sys_Id__c": "9015b0a0c37f8354d0087405e401312c"
           }
         ],
-        "at": "2026-10-04T15:29:47.853Z"
+        "at": "2026-10-04T16:17:54.597Z"
       },
       {
         "label": "Salesforce tasks",
@@ -626,13 +1982,465 @@
           {
             "SN_Number__c": "CAFT0001052",
             "ServiceNow_Sys_Id__c": "c75dd86cc37b8354d0087405e4013132"
+          },
+          {
+            "SN_Number__c": "CAFT0001055",
+            "ServiceNow_Sys_Id__c": "8c913c68c33f8354d0087405e40131b0"
+          },
+          {
+            "SN_Number__c": "CAFT0001056",
+            "ServiceNow_Sys_Id__c": "8c913c68c33f8354d0087405e40131bd"
+          },
+          {
+            "SN_Number__c": "CAFT0001058",
+            "ServiceNow_Sys_Id__c": "8c917c68c33f8354d0087405e4013128"
+          },
+          {
+            "SN_Number__c": "CAFT0001060",
+            "ServiceNow_Sys_Id__c": "74917c68c33f8354d0087405e401317d"
+          },
+          {
+            "SN_Number__c": "CAFT0001061",
+            "ServiceNow_Sys_Id__c": "74917c68c33f8354d0087405e40131f5"
+          },
+          {
+            "SN_Number__c": "CAFT0001064",
+            "ServiceNow_Sys_Id__c": "3d91bc68c33f8354d0087405e40131a9"
+          },
+          {
+            "SN_Number__c": "CAFT0001066",
+            "ServiceNow_Sys_Id__c": "8691fc68c33f8354d0087405e4013131"
+          },
+          {
+            "SN_Number__c": "CAFT0001068",
+            "ServiceNow_Sys_Id__c": "ee91fc68c33f8354d0087405e4013195"
+          },
+          {
+            "SN_Number__c": "CAFT0001070",
+            "ServiceNow_Sys_Id__c": "4b91fc68c33f8354d0087405e40131d0"
+          },
+          {
+            "SN_Number__c": "CAFT0001072",
+            "ServiceNow_Sys_Id__c": "2b9130a8c33f8354d0087405e401319c"
+          },
+          {
+            "SN_Number__c": "CAFT0001074",
+            "ServiceNow_Sys_Id__c": "0ca170a8c33f8354d0087405e40131a3"
+          },
+          {
+            "SN_Number__c": "CAFT0001075",
+            "ServiceNow_Sys_Id__c": "54a1b0a8c33f8354d0087405e401310f"
+          },
+          {
+            "SN_Number__c": "CAFT0001079",
+            "ServiceNow_Sys_Id__c": "09a1b0a8c33f8354d0087405e40131e4"
+          },
+          {
+            "SN_Number__c": "CAFT0001080",
+            "ServiceNow_Sys_Id__c": "09a1b0a8c33f8354d0087405e40131ce"
+          },
+          {
+            "SN_Number__c": "CAFT0001082",
+            "ServiceNow_Sys_Id__c": "eda1f0a8c33f8354d0087405e4013132"
+          },
+          {
+            "SN_Number__c": "CAFT0001084",
+            "ServiceNow_Sys_Id__c": "06a130a8c33f8354d0087405e4013103"
+          },
+          {
+            "SN_Number__c": "CAFT0001086",
+            "ServiceNow_Sys_Id__c": "aea1f0a8c33f8354d0087405e40131b4"
+          },
+          {
+            "SN_Number__c": "CAFT0001088",
+            "ServiceNow_Sys_Id__c": "0fa134a8c33f8354d0087405e4013197"
+          },
+          {
+            "SN_Number__c": "CAFT0001090",
+            "ServiceNow_Sys_Id__c": "a7a134a8c33f8354d0087405e4013162"
+          },
+          {
+            "SN_Number__c": "CAFT0001091",
+            "ServiceNow_Sys_Id__c": "e3a174a8c33f8354d0087405e4013163"
+          },
+          {
+            "SN_Number__c": "CAFT0001093",
+            "ServiceNow_Sys_Id__c": "b2d4fc20c37f8354d0087405e40131dc"
+          },
+          {
+            "SN_Number__c": "CAFT0001094",
+            "ServiceNow_Sys_Id__c": "72d4fc20c37f8354d0087405e40131af"
+          },
+          {
+            "SN_Number__c": "CAFT0001095",
+            "ServiceNow_Sys_Id__c": "7ed4fc20c37f8354d0087405e40131d1"
+          },
+          {
+            "SN_Number__c": "CAFT0001096",
+            "ServiceNow_Sys_Id__c": "3ed43060c37f8354d0087405e4013101"
+          },
+          {
+            "SN_Number__c": "CAFT0001097",
+            "ServiceNow_Sys_Id__c": "99e47060c37f8354d0087405e40131f1"
+          },
+          {
+            "SN_Number__c": "CAFT0001098",
+            "ServiceNow_Sys_Id__c": "15e47060c37f8354d0087405e40131ff"
+          },
+          {
+            "SN_Number__c": "CAFT0001099",
+            "ServiceNow_Sys_Id__c": "5de4fc20c37f8354d0087405e40131fe"
+          },
+          {
+            "SN_Number__c": "CAFT0001100",
+            "ServiceNow_Sys_Id__c": "59e4b060c37f8354d0087405e4013112"
+          },
+          {
+            "SN_Number__c": "CAFT0001101",
+            "ServiceNow_Sys_Id__c": "55e4b060c37f8354d0087405e4013107"
+          },
+          {
+            "SN_Number__c": "CAFT0001102",
+            "ServiceNow_Sys_Id__c": "d9e4b060c37f8354d0087405e401311d"
+          },
+          {
+            "SN_Number__c": "CAFT0001103",
+            "ServiceNow_Sys_Id__c": "91e4b060c37f8354d0087405e4013141"
+          },
+          {
+            "SN_Number__c": "CAFT0001104",
+            "ServiceNow_Sys_Id__c": "95e4b060c37f8354d0087405e401314c"
+          },
+          {
+            "SN_Number__c": "CAFT0001105",
+            "ServiceNow_Sys_Id__c": "dde4b060c37f8354d0087405e4013163"
+          },
+          {
+            "SN_Number__c": "CAFT0001106",
+            "ServiceNow_Sys_Id__c": "a5e4b060c37f8354d0087405e4013187"
+          },
+          {
+            "SN_Number__c": "CAFT0001107",
+            "ServiceNow_Sys_Id__c": "e5e4b060c37f8354d0087405e4013154"
+          },
+          {
+            "SN_Number__c": "CAFT0001108",
+            "ServiceNow_Sys_Id__c": "21e4b060c37f8354d0087405e401316c"
+          },
+          {
+            "SN_Number__c": "CAFT0001109",
+            "ServiceNow_Sys_Id__c": "e5e4b060c37f8354d0087405e401318f"
+          },
+          {
+            "SN_Number__c": "CAFT0001110",
+            "ServiceNow_Sys_Id__c": "e9e4b060c37f8354d0087405e401319a"
+          },
+          {
+            "SN_Number__c": "CAFT0001111",
+            "ServiceNow_Sys_Id__c": "6de4b060c37f8354d0087405e40131a5"
+          },
+          {
+            "SN_Number__c": "CAFT0001112",
+            "ServiceNow_Sys_Id__c": "a5e4b060c37f8354d0087405e40131b0"
+          },
+          {
+            "SN_Number__c": "CAFT0001113",
+            "ServiceNow_Sys_Id__c": "a9e4b060c37f8354d0087405e40131bb"
+          },
+          {
+            "SN_Number__c": "CAFT0001114",
+            "ServiceNow_Sys_Id__c": "2de4b060c37f8354d0087405e40131c6"
+          },
+          {
+            "SN_Number__c": "CAFT0001115",
+            "ServiceNow_Sys_Id__c": "9ee4f060c37f8354d0087405e40131c8"
+          },
+          {
+            "SN_Number__c": "CAFT0001116",
+            "ServiceNow_Sys_Id__c": "dae43460c37f8354d0087405e401310c"
+          },
+          {
+            "SN_Number__c": "CAFT0001117",
+            "ServiceNow_Sys_Id__c": "92e43460c37f8354d0087405e4013102"
+          },
+          {
+            "SN_Number__c": "CAFT0001118",
+            "ServiceNow_Sys_Id__c": "12e43460c37f8354d0087405e4013128"
+          },
+          {
+            "SN_Number__c": "CAFT0001119",
+            "ServiceNow_Sys_Id__c": "1ee43460c37f8354d0087405e4013114"
+          },
+          {
+            "SN_Number__c": "CAFT0001120",
+            "ServiceNow_Sys_Id__c": "26e43460c37f8354d0087405e40131df"
+          },
+          {
+            "SN_Number__c": "CAFT0001121",
+            "ServiceNow_Sys_Id__c": "22e43460c37f8354d0087405e40131ec"
+          },
+          {
+            "SN_Number__c": "CAFT0001122",
+            "ServiceNow_Sys_Id__c": "47e43460c37f8354d0087405e40131fe"
+          },
+          {
+            "SN_Number__c": "CAFT0001123",
+            "ServiceNow_Sys_Id__c": "4be47460c37f8354d0087405e4013173"
+          },
+          {
+            "SN_Number__c": "CAFT0001124",
+            "ServiceNow_Sys_Id__c": "0fe47460c37f8354d0087405e401317f"
+          },
+          {
+            "SN_Number__c": "CAFT0001125",
+            "ServiceNow_Sys_Id__c": "abe47460c37f8354d0087405e40131e6"
+          },
+          {
+            "SN_Number__c": "CAFT0001126",
+            "ServiceNow_Sys_Id__c": "afe47460c37f8354d0087405e40131a2"
+          },
+          {
+            "SN_Number__c": "CAFT0001127",
+            "ServiceNow_Sys_Id__c": "67e4b460c37f8354d0087405e401310a"
+          },
+          {
+            "SN_Number__c": "CAFT0001128",
+            "ServiceNow_Sys_Id__c": "afe4b460c37f8354d0087405e401311a"
+          },
+          {
+            "SN_Number__c": "CAFT0001129",
+            "ServiceNow_Sys_Id__c": "c0f4b460c37f8354d0087405e4013167"
+          },
+          {
+            "SN_Number__c": "CAFT0001130",
+            "ServiceNow_Sys_Id__c": "0cf4b460c37f8354d0087405e40131ac"
+          },
+          {
+            "SN_Number__c": "CAFT0001131",
+            "ServiceNow_Sys_Id__c": "5cf4b460c37f8354d0087405e40131b4"
+          },
+          {
+            "SN_Number__c": "CAFT0001132",
+            "ServiceNow_Sys_Id__c": "6cf4f460c37f8354d0087405e4013113"
+          },
+          {
+            "SN_Number__c": "CAFT0001133",
+            "ServiceNow_Sys_Id__c": "3cf4f460c37f8354d0087405e4013134"
+          },
+          {
+            "SN_Number__c": "CAFT0001134",
+            "ServiceNow_Sys_Id__c": "8df4f460c37f8354d0087405e40131a6"
+          },
+          {
+            "SN_Number__c": "CAFT0001135",
+            "ServiceNow_Sys_Id__c": "05f4f460c37f8354d0087405e40131d4"
+          },
+          {
+            "SN_Number__c": "CAFT0001136",
+            "ServiceNow_Sys_Id__c": "e9f43860c37f8354d0087405e4013131"
+          },
+          {
+            "SN_Number__c": "CAFT0001137",
+            "ServiceNow_Sys_Id__c": "29f43860c37f8354d0087405e4013146"
+          },
+          {
+            "SN_Number__c": "CAFT0001138",
+            "ServiceNow_Sys_Id__c": "2df43860c37f8354d0087405e4013152"
+          },
+          {
+            "SN_Number__c": "CAFT0001139",
+            "ServiceNow_Sys_Id__c": "edf43860c37f8354d0087405e4013177"
+          },
+          {
+            "SN_Number__c": "CAFT0001140",
+            "ServiceNow_Sys_Id__c": "02f43860c37f8354d0087405e40131a3"
+          },
+          {
+            "SN_Number__c": "CAFT0001141",
+            "ServiceNow_Sys_Id__c": "cef43860c37f8354d0087405e40131df"
+          },
+          {
+            "SN_Number__c": "CAFT0001142",
+            "ServiceNow_Sys_Id__c": "02f47860c37f8354d0087405e401311b"
+          },
+          {
+            "SN_Number__c": "CAFT0001143",
+            "ServiceNow_Sys_Id__c": "a2f47860c37f8354d0087405e401312b"
+          },
+          {
+            "SN_Number__c": "CAFT0001144",
+            "ServiceNow_Sys_Id__c": "66f47860c37f8354d0087405e401318a"
+          },
+          {
+            "SN_Number__c": "CAFT0001145",
+            "ServiceNow_Sys_Id__c": "a6f47860c37f8354d0087405e4013192"
+          },
+          {
+            "SN_Number__c": "CAFT0001146",
+            "ServiceNow_Sys_Id__c": "c3f47860c37f8354d0087405e40131db"
+          },
+          {
+            "SN_Number__c": "CAFT0001147",
+            "ServiceNow_Sys_Id__c": "c3f4b860c37f8354d0087405e4013109"
+          },
+          {
+            "SN_Number__c": "CAFT0001148",
+            "ServiceNow_Sys_Id__c": "43f4b860c37f8354d0087405e4013136"
+          },
+          {
+            "SN_Number__c": "CAFT0001149",
+            "ServiceNow_Sys_Id__c": "67f4b860c37f8354d0087405e40131ac"
+          },
+          {
+            "SN_Number__c": "CAFT0001150",
+            "ServiceNow_Sys_Id__c": "e7f4b860c37f8354d0087405e40131cd"
+          },
+          {
+            "SN_Number__c": "CAFT0001151",
+            "ServiceNow_Sys_Id__c": "6bf4b860c37f8354d0087405e40131d8"
+          },
+          {
+            "SN_Number__c": "CAFT0001152",
+            "ServiceNow_Sys_Id__c": "23f4b860c37f8354d0087405e40131ff"
+          },
+          {
+            "SN_Number__c": "CAFT0001153",
+            "ServiceNow_Sys_Id__c": "0c05f860c37f8354d0087405e40131f5"
+          },
+          {
+            "SN_Number__c": "CAFT0001154",
+            "ServiceNow_Sys_Id__c": "0805f860c37f8354d0087405e40131ca"
+          },
+          {
+            "SN_Number__c": "CAFT0001155",
+            "ServiceNow_Sys_Id__c": "4c05f860c37f8354d0087405e40131fd"
+          },
+          {
+            "SN_Number__c": "CAFT0001156",
+            "ServiceNow_Sys_Id__c": "a4053c60c37f8354d0087405e401315c"
+          },
+          {
+            "SN_Number__c": "CAFT0001157",
+            "ServiceNow_Sys_Id__c": "2c053c60c37f8354d0087405e4013123"
+          },
+          {
+            "SN_Number__c": "CAFT0001158",
+            "ServiceNow_Sys_Id__c": "e4053c60c37f8354d0087405e401310c"
+          },
+          {
+            "SN_Number__c": "CAFT0001159",
+            "ServiceNow_Sys_Id__c": "e0053c60c37f8354d0087405e4013196"
+          },
+          {
+            "SN_Number__c": "CAFT0001160",
+            "ServiceNow_Sys_Id__c": "45053c60c37f8354d0087405e40131fe"
+          },
+          {
+            "SN_Number__c": "CAFT0001161",
+            "ServiceNow_Sys_Id__c": "c1053c60c37f8354d0087405e40131f2"
+          },
+          {
+            "SN_Number__c": "CAFT0001162",
+            "ServiceNow_Sys_Id__c": "11057c60c37f8354d0087405e401319d"
+          },
+          {
+            "SN_Number__c": "CAFT0001163",
+            "ServiceNow_Sys_Id__c": "19057c60c37f8354d0087405e4013157"
+          },
+          {
+            "SN_Number__c": "CAFT0001164",
+            "ServiceNow_Sys_Id__c": "95057c60c37f8354d0087405e4013164"
+          },
+          {
+            "SN_Number__c": "CAFT0001165",
+            "ServiceNow_Sys_Id__c": "a9057c60c37f8354d0087405e40131b6"
+          },
+          {
+            "SN_Number__c": "CAFT0001166",
+            "ServiceNow_Sys_Id__c": "31057c60c37f8354d0087405e40131f1"
+          },
+          {
+            "SN_Number__c": "CAFT0001167",
+            "ServiceNow_Sys_Id__c": "b105bc60c37f8354d0087405e4013194"
+          },
+          {
+            "SN_Number__c": "CAFT0001168",
+            "ServiceNow_Sys_Id__c": "7505bc60c37f8354d0087405e401318e"
+          },
+          {
+            "SN_Number__c": "CAFT0001169",
+            "ServiceNow_Sys_Id__c": "5605bc60c37f8354d0087405e40131c4"
+          },
+          {
+            "SN_Number__c": "CAFT0001170",
+            "ServiceNow_Sys_Id__c": "d205fc60c37f8354d0087405e4013122"
+          },
+          {
+            "SN_Number__c": "CAFT0001171",
+            "ServiceNow_Sys_Id__c": "5a05bc60c37f8354d0087405e40131dd"
+          },
+          {
+            "SN_Number__c": "CAFT0001172",
+            "ServiceNow_Sys_Id__c": "3e05fc60c37f8354d0087405e40131a9"
+          },
+          {
+            "SN_Number__c": "CAFT0001173",
+            "ServiceNow_Sys_Id__c": "3a05fc60c37f8354d0087405e4013163"
+          },
+          {
+            "SN_Number__c": "CAFT0001174",
+            "ServiceNow_Sys_Id__c": "7605fc60c37f8354d0087405e40131cb"
+          },
+          {
+            "SN_Number__c": "CAFT0001175",
+            "ServiceNow_Sys_Id__c": "7e05fc60c37f8354d0087405e40131b1"
+          },
+          {
+            "SN_Number__c": "CAFT0001176",
+            "ServiceNow_Sys_Id__c": "cf0530a0c37f8354d0087405e4013110"
+          },
+          {
+            "SN_Number__c": "CAFT0001177",
+            "ServiceNow_Sys_Id__c": "570530a0c37f8354d0087405e401311f"
+          },
+          {
+            "SN_Number__c": "CAFT0001178",
+            "ServiceNow_Sys_Id__c": "df0530a0c37f8354d0087405e4013140"
+          },
+          {
+            "SN_Number__c": "CAFT0001179",
+            "ServiceNow_Sys_Id__c": "a70530a0c37f8354d0087405e40131c5"
+          },
+          {
+            "SN_Number__c": "CAFT0001180",
+            "ServiceNow_Sys_Id__c": "770570a0c37f8354d0087405e40131b2"
+          },
+          {
+            "SN_Number__c": "CAFT0001181",
+            "ServiceNow_Sys_Id__c": "3f0570a0c37f8354d0087405e40131a7"
+          },
+          {
+            "SN_Number__c": "CAFT0001182",
+            "ServiceNow_Sys_Id__c": "1815b0a0c37f8354d0087405e401319c"
+          },
+          {
+            "SN_Number__c": "CAFT0001183",
+            "ServiceNow_Sys_Id__c": "9c15b0a0c37f8354d0087405e401314c"
+          },
+          {
+            "SN_Number__c": "CAFT0001184",
+            "ServiceNow_Sys_Id__c": "1c15b0a0c37f8354d0087405e4013134"
+          },
+          {
+            "SN_Number__c": "CAFT0001185",
+            "ServiceNow_Sys_Id__c": "5815b0a0c37f8354d0087405e40131a4"
           }
         ],
-        "at": "2026-10-04T15:29:47.853Z"
+        "at": "2026-10-04T16:17:54.597Z"
       }
     ],
     "observations": [
-      "Baseline for this run: 19 requests and 52 tasks in ServiceNow. TEST-CASES-INTEGRATION.md records 19 and 30; HANDOFF section 3 records 19 and 28."
+      "Baseline for this run: 132 requests and 165 tasks in ServiceNow. TEST-CASES-INTEGRATION.md records 19 and 30; HANDOFF section 3 records 19 and 28."
     ],
     "expected": [
       "Requests and tasks are set-for-set identical across both platforms, compared by number.",
@@ -640,10 +2448,10 @@
       "The symmetric difference is empty in both directions, for both object types."
     ],
     "actual": [
-      "Requests — ServiceNow 19, Salesforce 19. By number: 0 ServiceNow-only, 0 Salesforce-only. By sys_id: 0 ServiceNow-only, 0 Salesforce-only.",
-      "Tasks — ServiceNow 52, Salesforce 52. By number: 0 ServiceNow-only, 0 Salesforce-only. By sys_id: 0 ServiceNow-only, 0 Salesforce-only."
+      "Requests — ServiceNow 132, Salesforce 132. By number: 0 ServiceNow-only, 0 Salesforce-only. By sys_id: 0 ServiceNow-only, 0 Salesforce-only.",
+      "Tasks — ServiceNow 165, Salesforce 165. By number: 0 ServiceNow-only, 0 Salesforce-only. By sys_id: 0 ServiceNow-only, 0 Salesforce-only."
     ],
     "verdictReason": "Symmetric difference empty in both directions, by number and by sys_id, for requests and tasks.",
-    "finishedAt": "2026-10-04T15:29:47.854Z"
+    "finishedAt": "2026-10-04T16:17:54.598Z"
   }
 }

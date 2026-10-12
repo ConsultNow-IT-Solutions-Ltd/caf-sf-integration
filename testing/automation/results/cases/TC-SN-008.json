@@ -7,13 +7,13 @@
   "case": {
     "id": "TC-SN-008",
     "title": "Choice values match the documented set exactly",
-    "startedAt": "2026-10-04T15:40:55.202Z",
+    "startedAt": "2026-10-04T16:27:12.567Z",
     "verdict": "PASS",
     "steps": [
       {
         "n": 1,
         "text": "Read every choice on caf_req and caf_tsk.",
-        "at": "2026-10-04T15:40:55.202Z",
+        "at": "2026-10-04T16:27:12.567Z",
         "screenshots": []
       }
     ],
@@ -178,7 +178,7 @@
             "element": "state"
           }
         ],
-        "at": "2026-10-04T15:40:55.627Z"
+        "at": "2026-10-04T16:27:12.971Z"
       }
     ],
     "observations": [],
@@ -189,6 +189,6 @@
       "22 choice values found; 0 inactive."
     ],
     "verdictReason": "All choice sets match, no inactive values.",
-    "finishedAt": "2026-10-04T15:40:55.628Z"
+    "finishedAt": "2026-10-04T16:27:12.971Z"
   }
 }

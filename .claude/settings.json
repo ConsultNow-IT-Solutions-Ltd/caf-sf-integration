@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(cd \"C:\\\\reyan_tech_cap_dev\\\\dev281754 CAF App Reyan\\\\testing\\\\automation\"; $env:Path = [System.Environment]::GetEnvironmentVariable\\('Path','Machine'\\) + ';' + [System.Environment]::GetEnvironmentVariable\\('Path','User'\\); foreach \\($p in @\\(@\\('specs/integration-readonly.spec.ts','int'\\), @\\('specs/integration-etl.spec.ts','etl'\\)\\)\\) { $o = npx playwright test $p[0] --project=$\\($p[1]\\) --reporter=line 2>&1 | Out-String; \"##### $\\($p[1]\\)\"; $o -split \"`n\" | Where-Object { $_ -match '\\\\] \\(PASS|FAIL|BLOCKED\\)|^\\\\s+\\\\d+ \\(passed|failed|skipped\\)' } | ForEach-Object { if \\($_.Length -gt 260\\) { $_.Substring\\(0,260\\) + '…' } else { $_ } } })",
+      "Bash(awk '/TC-INT-038 —/,/^}\\\\\\);/' specs/integration-readonly.spec.ts)",
+      "Bash(awk '/TC-INT-017 —/,/^}\\\\\\);/' specs/integration-readonly.spec.ts)"
+    ]
+  }
+}

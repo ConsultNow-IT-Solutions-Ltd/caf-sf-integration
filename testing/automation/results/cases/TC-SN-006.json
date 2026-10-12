@@ -7,19 +7,19 @@
   "case": {
     "id": "TC-SN-006",
     "title": "state is read-only on the request but writable on the task",
-    "startedAt": "2026-10-04T15:40:37.690Z",
+    "startedAt": "2026-10-04T16:27:05.243Z",
     "verdict": "FAIL",
     "steps": [
       {
         "n": 1,
         "text": "Read both dictionary entries.",
-        "at": "2026-10-04T15:40:37.690Z",
+        "at": "2026-10-04T16:27:05.243Z",
         "screenshots": []
       },
       {
         "n": 2,
         "text": "Open an Open CAF Task form and ask g_form whether state is editable there.",
-        "at": "2026-10-04T15:40:37.898Z",
+        "at": "2026-10-04T16:27:05.382Z",
         "screenshots": [
           "C:\\reyan_tech_cap_dev\\dev281754 CAF App Reyan\\testing\\automation\\evidence\\TC-SN-006\\02-caft0001001-form.png"
         ]
@@ -44,7 +44,7 @@
             "element": "state"
           }
         ],
-        "at": "2026-10-04T15:40:37.896Z"
+        "at": "2026-10-04T16:27:05.380Z"
       },
       {
         "label": "Form introspection via g_form",
@@ -57,7 +57,7 @@
             "field_description_mandatory": "true"
           }
         ],
-        "at": "2026-10-04T15:40:52.430Z"
+        "at": "2026-10-04T16:27:10.621Z"
       }
     ],
     "observations": [
@@ -73,6 +73,6 @@
       "Form: state readOnly=true, approval readOnly=true, description mandatory=true"
     ],
     "verdictReason": "The dictionary and the form disagree about caf_tsk.state. The dictionary assertion passes; the form contradicts it. Referred for a decision on intended behaviour before this is classed as a defect.",
-    "finishedAt": "2026-10-04T15:40:52.430Z"
+    "finishedAt": "2026-10-04T16:27:10.622Z"
   }
 }

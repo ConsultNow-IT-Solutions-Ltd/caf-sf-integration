@@ -7,25 +7,25 @@
   "case": {
     "id": "TC-INT-050",
     "title": "Compliant only when every control is compliant",
-    "startedAt": "2026-10-04T15:31:17.288Z",
+    "startedAt": "2026-10-04T16:26:34.790Z",
     "verdict": "FAIL",
     "steps": [
       {
         "n": 1,
         "text": "Run the deployed CafDashboardController.getRequests() and apply the LWC roll-up to its output.",
-        "at": "2026-10-04T15:31:17.288Z",
+        "at": "2026-10-04T16:26:34.791Z",
         "screenshots": []
       },
       {
         "n": 2,
         "text": "Read what ServiceNow holds for the same applications.",
-        "at": "2026-10-04T15:31:25.310Z",
+        "at": "2026-10-04T16:26:41.295Z",
         "screenshots": []
       },
       {
         "n": 3,
         "text": "Compare the two verdicts application by application.",
-        "at": "2026-10-04T15:31:29.413Z",
+        "at": "2026-10-04T16:26:45.155Z",
         "screenshots": []
       }
     ],
@@ -35,6 +35,648 @@
         "table": "CAF_Request__c",
         "query": "same SOQL as the controller",
         "rows": [
+          {
+            "SN_Number__c": "RCAF0001152",
+            "Business_Application__c": "Breach Forensics Evidence Vault",
+            "CAF_Control__c": "Confirm Backup & Restore Policy",
+            "CAF_Status__c": "approaching_due"
+          },
+          {
+            "SN_Number__c": "RCAF0001062",
+            "Business_Application__c": "Breach Forensics Evidence Vault",
+            "CAF_Control__c": "Confirm Disaster Recovery Plan",
+            "CAF_Status__c": "approaching_due"
+          },
+          {
+            "SN_Number__c": "RCAF0001154",
+            "Business_Application__c": "Breach Forensics Evidence Vault",
+            "CAF_Control__c": "Confirm RTO & RPO",
+            "CAF_Status__c": "in_compliance"
+          },
+          {
+            "SN_Number__c": "RCAF0001155",
+            "Business_Application__c": "Breach Forensics Evidence Vault",
+            "CAF_Control__c": "Test Backup & Restore",
+            "CAF_Status__c": "approaching_due"
+          },
+          {
+            "SN_Number__c": "RCAF0001153",
+            "Business_Application__c": "Breach Forensics Evidence Vault",
+            "CAF_Control__c": "Test Disaster Recovery Plan",
+            "CAF_Status__c": "in_compliance"
+          },
+          {
+            "SN_Number__c": "RCAF0001058",
+            "Business_Application__c": "Breach Notification Portal",
+            "CAF_Control__c": "Confirm & Execute High Availability Plan",
+            "CAF_Status__c": "approaching_due"
+          },
+          {
+            "SN_Number__c": "RCAF0001132",
+            "Business_Application__c": "Breach Notification Portal",
+            "CAF_Control__c": "Confirm Backup & Restore Policy",
+            "CAF_Status__c": "in_compliance"
+          },
+          {
+            "SN_Number__c": "RCAF0001136",
+            "Business_Application__c": "Breach Notification Portal",
+            "CAF_Control__c": "Confirm Disaster Recovery Plan",
+            "CAF_Status__c": "in_compliance"
+          },
+          {
+            "SN_Number__c": "RCAF0001134",
+            "Business_Application__c": "Breach Notification Portal",
+            "CAF_Control__c": "Confirm RTO & RPO",
+            "CAF_Status__c": "approaching_due"
+          },
+          {
+            "SN_Number__c": "RCAF0001135",
+            "Business_Application__c": "Breach Notification Portal",
+            "CAF_Control__c": "Test Backup & Restore",
+            "CAF_Status__c": "in_compliance"
+          },
+          {
+            "SN_Number__c": "RCAF0001133",
+            "Business_Application__c": "Breach Notification Portal",
+            "CAF_Control__c": "Test Disaster Recovery Plan",
+            "CAF_Status__c": "in_compliance"
+          },
+          {
+            "SN_Number__c": "RCAF0001143",
+            "Business_Application__c": "Data Loss Prevention",
+            "CAF_Control__c": "Confirm & Execute High Availability Plan",
+            "CAF_Status__c": "approaching_due"
+          },
+          {
+            "SN_Number__c": "RCAF0001142",
+            "Business_Application__c": "Data Loss Prevention",
+            "CAF_Control__c": "Confirm Backup & Restore Policy",
+            "CAF_Status__c": "in_compliance"
+          },
+          {
+            "SN_Number__c": "RCAF0001146",
+            "Business_Application__c": "Data Loss Prevention",
+            "CAF_Control__c": "Confirm Disaster Recovery Plan",
+            "CAF_Status__c": "approaching_due"
+          },
+          {
+            "SN_Number__c": "RCAF0001060",
+            "Business_Application__c": "Data Loss Prevention",
+            "CAF_Control__c": "Confirm RTO & RPO",
+            "CAF_Status__c": "in_compliance"
+          },
+          {
+            "SN_Number__c": "RCAF0001145",
+            "Business_Application__c": "Data Loss Prevention",
+            "CAF_Control__c": "Test Backup & Restore",
+            "CAF_Status__c": "in_compliance"
+          },
+          {
+            "SN_Number__c": "RCAF0001144",
+            "Business_Application__c": "Data Loss Prevention",
+            "CAF_Control__c": "Test Disaster Recovery Plan",
+            "CAF_Status__c": "in_compliance"
+          },
+          {
+            "SN_Number__c": "RCAF0001044",
+            "Business_Application__c": "Employee Directory",
+            "CAF_Control__c": "Confirm Backup & Restore Policy",
+            "CAF_Status__c": "approaching_due"
+          },
+          {
+            "SN_Number__c": "RCAF0001071",
+            "Business_Application__c": "Employee Directory",
+            "CAF_Control__c": "Confirm Disaster Recovery Plan",
+            "CAF_Status__c": "approaching_due"
+          },
+          {
+            "SN_Number__c": "RCAF0001069",
+            "Business_Application__c": "Employee Directory",
+            "CAF_Control__c": "Confirm RTO & RPO",
+            "CAF_Status__c": "in_compliance"
+          },
+          {
+            "SN_Number__c": "RCAF0001070",
+            "Business_Application__c": "Employee Directory",
+            "CAF_Control__c": "Test Backup & Restore",
+            "CAF_Status__c": "in_compliance"
+          },
+          {
+            "SN_Number__c": "RCAF0001068",
+            "Business_Application__c": "Employee Directory",
+            "CAF_Control__c": "Test Disaster Recovery Plan",
+            "CAF_Status__c": "approaching_due"
+          },
+          {
+            "SN_Number__c": "RCAF0001077",
+            "Business_Application__c": "Employee Expense Management",
+            "CAF_Control__c": "Confirm Backup & Restore Policy",
+            "CAF_Status__c": "approaching_due"
+          },
+          {
+            "SN_Number__c": "RCAF0001046",
+            "Business_Application__c": "Employee Expense Management",
+            "CAF_Control__c": "Confirm Disaster Recovery Plan",
+            "CAF_Status__c": "approaching_due"
+          },
+          {
+            "SN_Number__c": "RCAF0001079",
+            "Business_Application__c": "Employee Expense Management",
+            "CAF_Control__c": "Confirm RTO & RPO",
+            "CAF_Status__c": "in_compliance"
+          },
+          {
+            "SN_Number__c": "RCAF0001080",
+            "Business_Application__c": "Employee Expense Management",
+            "CAF_Control__c": "Test Backup & Restore",
+            "CAF_Status__c": "approaching_due"
+          },
+          {
+            "SN_Number__c": "RCAF0001078",
+            "Business_Application__c": "Employee Expense Management",
+            "CAF_Control__c": "Test Disaster Recovery Plan",
+            "CAF_Status__c": "in_compliance"
+          },
+          {
+            "SN_Number__c": "RCAF0001081",
+            "Business_Application__c": "Employee Learning Portal",
+            "CAF_Control__c": "Confirm Backup & Restore Policy",
+            "CAF_Status__c": "in_compliance"
+          },
+          {
+            "SN_Number__c": "RCAF0001084",
+            "Business_Application__c": "Employee Learning Portal",
+            "CAF_Control__c": "Confirm Disaster Recovery Plan",
+            "CAF_Status__c": "in_compliance"
+          },
+          {
+            "SN_Number__c": "RCAF0001083",
+            "Business_Application__c": "Employee Learning Portal",
+            "CAF_Control__c": "Confirm RTO & RPO",
+            "CAF_Status__c": "approaching_due"
+          },
+          {
+            "SN_Number__c": "RCAF0001047",
+            "Business_Application__c": "Employee Learning Portal",
+            "CAF_Control__c": "Test Backup & Restore",
+            "CAF_Status__c": "approaching_due"
+          },
+          {
+            "SN_Number__c": "RCAF0001082",
+            "Business_Application__c": "Employee Learning Portal",
+            "CAF_Control__c": "Test Disaster Recovery Plan",
+            "CAF_Status__c": "in_compliance"
+          },
+          {
+            "SN_Number__c": "RCAF0001073",
+            "Business_Application__c": "Employee Onboarding",
+            "CAF_Control__c": "Confirm & Execute High Availability Plan",
+            "CAF_Status__c": "in_compliance"
+          },
+          {
+            "SN_Number__c": "RCAF0001072",
+            "Business_Application__c": "Employee Onboarding",
+            "CAF_Control__c": "Confirm Backup & Restore Policy",
+            "CAF_Status__c": "in_compliance"
+          },
+          {
+            "SN_Number__c": "RCAF0001076",
+            "Business_Application__c": "Employee Onboarding",
+            "CAF_Control__c": "Confirm Disaster Recovery Plan",
+            "CAF_Status__c": "in_compliance"
+          },
+          {
+            "SN_Number__c": "RCAF0001075",
+            "Business_Application__c": "Employee Onboarding",
+            "CAF_Control__c": "Confirm RTO & RPO",
+            "CAF_Status__c": "in_compliance"
+          },
+          {
+            "SN_Number__c": "RCAF0001045",
+            "Business_Application__c": "Employee Onboarding",
+            "CAF_Control__c": "Test Backup & Restore",
+            "CAF_Status__c": "in_compliance"
+          },
+          {
+            "SN_Number__c": "RCAF0001074",
+            "Business_Application__c": "Employee Onboarding",
+            "CAF_Control__c": "Test Disaster Recovery Plan",
+            "CAF_Status__c": "approaching_due"
+          },
+          {
+            "SN_Number__c": "RCAF0001064",
+            "Business_Application__c": "Employee Self-Service Portal",
+            "CAF_Control__c": "Confirm & Execute High Availability Plan",
+            "CAF_Status__c": "in_compliance"
+          },
+          {
+            "SN_Number__c": "RCAF0001063",
+            "Business_Application__c": "Employee Self-Service Portal",
+            "CAF_Control__c": "Confirm Backup & Restore Policy",
+            "CAF_Status__c": "in_compliance"
+          },
+          {
+            "SN_Number__c": "RCAF0001067",
+            "Business_Application__c": "Employee Self-Service Portal",
+            "CAF_Control__c": "Confirm Disaster Recovery Plan",
+            "CAF_Status__c": "in_compliance"
+          },
+          {
+            "SN_Number__c": "RCAF0001043",
+            "Business_Application__c": "Employee Self-Service Portal",
+            "CAF_Control__c": "Confirm RTO & RPO",
+            "CAF_Status__c": "approaching_due"
+          },
+          {
+            "SN_Number__c": "RCAF0001066",
+            "Business_Application__c": "Employee Self-Service Portal",
+            "CAF_Control__c": "Test Backup & Restore",
+            "CAF_Status__c": "in_compliance"
+          },
+          {
+            "SN_Number__c": "RCAF0001065",
+            "Business_Application__c": "Employee Self-Service Portal",
+            "CAF_Control__c": "Test Disaster Recovery Plan",
+            "CAF_Status__c": "approaching_due"
+          },
+          {
+            "SN_Number__c": "RCAF0001055",
+            "Business_Application__c": "HR Benefits Administration",
+            "CAF_Control__c": "Confirm Backup & Restore Policy",
+            "CAF_Status__c": "approaching_due"
+          },
+          {
+            "SN_Number__c": "RCAF0001122",
+            "Business_Application__c": "HR Benefits Administration",
+            "CAF_Control__c": "Confirm Disaster Recovery Plan",
+            "CAF_Status__c": "approaching_due"
+          },
+          {
+            "SN_Number__c": "RCAF0001120",
+            "Business_Application__c": "HR Benefits Administration",
+            "CAF_Control__c": "Confirm RTO & RPO",
+            "CAF_Status__c": "in_compliance"
+          },
+          {
+            "SN_Number__c": "RCAF0001121",
+            "Business_Application__c": "HR Benefits Administration",
+            "CAF_Control__c": "Test Backup & Restore",
+            "CAF_Status__c": "in_compliance"
+          },
+          {
+            "SN_Number__c": "RCAF0001119",
+            "Business_Application__c": "HR Benefits Administration",
+            "CAF_Control__c": "Test Disaster Recovery Plan",
+            "CAF_Status__c": "approaching_due"
+          },
+          {
+            "SN_Number__c": "RCAF0001115",
+            "Business_Application__c": "HR Case Management",
+            "CAF_Control__c": "Confirm Backup & Restore Policy",
+            "CAF_Status__c": "in_compliance"
+          },
+          {
+            "SN_Number__c": "RCAF0001118",
+            "Business_Application__c": "HR Case Management",
+            "CAF_Control__c": "Confirm Disaster Recovery Plan",
+            "CAF_Status__c": "in_compliance"
+          },
+          {
+            "SN_Number__c": "RCAF0001054",
+            "Business_Application__c": "HR Case Management",
+            "CAF_Control__c": "Confirm RTO & RPO",
+            "CAF_Status__c": "in_compliance"
+          },
+          {
+            "SN_Number__c": "RCAF0001117",
+            "Business_Application__c": "HR Case Management",
+            "CAF_Control__c": "Test Backup & Restore",
+            "CAF_Status__c": "in_compliance"
+          },
+          {
+            "SN_Number__c": "RCAF0001116",
+            "Business_Application__c": "HR Case Management",
+            "CAF_Control__c": "Test Disaster Recovery Plan",
+            "CAF_Status__c": "approaching_due"
+          },
+          {
+            "SN_Number__c": "RCAF0001111",
+            "Business_Application__c": "HR Payroll",
+            "CAF_Control__c": "Confirm & Execute High Availability Plan",
+            "CAF_Status__c": "in_compliance"
+          },
+          {
+            "SN_Number__c": "RCAF0001110",
+            "Business_Application__c": "HR Payroll",
+            "CAF_Control__c": "Confirm Backup & Restore Policy",
+            "CAF_Status__c": "approaching_due"
+          },
+          {
+            "SN_Number__c": "RCAF0001114",
+            "Business_Application__c": "HR Payroll",
+            "CAF_Control__c": "Confirm Disaster Recovery Plan",
+            "CAF_Status__c": "in_compliance"
+          },
+          {
+            "SN_Number__c": "RCAF0001113",
+            "Business_Application__c": "HR Payroll",
+            "CAF_Control__c": "Confirm RTO & RPO",
+            "CAF_Status__c": "approaching_due"
+          },
+          {
+            "SN_Number__c": "RCAF0001053",
+            "Business_Application__c": "HR Payroll",
+            "CAF_Control__c": "Test Backup & Restore",
+            "CAF_Status__c": "approaching_due"
+          },
+          {
+            "SN_Number__c": "RCAF0001112",
+            "Business_Application__c": "HR Payroll",
+            "CAF_Control__c": "Test Disaster Recovery Plan",
+            "CAF_Status__c": "in_compliance"
+          },
+          {
+            "SN_Number__c": "RCAF0001128",
+            "Business_Application__c": "HR Performance Management",
+            "CAF_Control__c": "Confirm Backup & Restore Policy",
+            "CAF_Status__c": "approaching_due"
+          },
+          {
+            "SN_Number__c": "RCAF0001131",
+            "Business_Application__c": "HR Performance Management",
+            "CAF_Control__c": "Confirm Disaster Recovery Plan",
+            "CAF_Status__c": "approaching_due"
+          },
+          {
+            "SN_Number__c": "RCAF0001130",
+            "Business_Application__c": "HR Performance Management",
+            "CAF_Control__c": "Confirm RTO & RPO",
+            "CAF_Status__c": "in_compliance"
+          },
+          {
+            "SN_Number__c": "RCAF0001057",
+            "Business_Application__c": "HR Performance Management",
+            "CAF_Control__c": "Test Backup & Restore",
+            "CAF_Status__c": "in_compliance"
+          },
+          {
+            "SN_Number__c": "RCAF0001129",
+            "Business_Application__c": "HR Performance Management",
+            "CAF_Control__c": "Test Disaster Recovery Plan",
+            "CAF_Status__c": "in_compliance"
+          },
+          {
+            "SN_Number__c": "RCAF0001124",
+            "Business_Application__c": "HR Talent Acquisition",
+            "CAF_Control__c": "Confirm & Execute High Availability Plan",
+            "CAF_Status__c": "in_compliance"
+          },
+          {
+            "SN_Number__c": "RCAF0001123",
+            "Business_Application__c": "HR Talent Acquisition",
+            "CAF_Control__c": "Confirm Backup & Restore Policy",
+            "CAF_Status__c": "in_compliance"
+          },
+          {
+            "SN_Number__c": "RCAF0001127",
+            "Business_Application__c": "HR Talent Acquisition",
+            "CAF_Control__c": "Confirm Disaster Recovery Plan",
+            "CAF_Status__c": "in_compliance"
+          },
+          {
+            "SN_Number__c": "RCAF0001125",
+            "Business_Application__c": "HR Talent Acquisition",
+            "CAF_Control__c": "Confirm RTO & RPO",
+            "CAF_Status__c": "approaching_due"
+          },
+          {
+            "SN_Number__c": "RCAF0001126",
+            "Business_Application__c": "HR Talent Acquisition",
+            "CAF_Control__c": "Test Backup & Restore",
+            "CAF_Status__c": "in_compliance"
+          },
+          {
+            "SN_Number__c": "RCAF0001056",
+            "Business_Application__c": "HR Talent Acquisition",
+            "CAF_Control__c": "Test Disaster Recovery Plan",
+            "CAF_Status__c": "approaching_due"
+          },
+          {
+            "SN_Number__c": "RCAF0001048",
+            "Business_Application__c": "Microsoft 365",
+            "CAF_Control__c": "Confirm & Execute High Availability Plan",
+            "CAF_Status__c": "in_compliance"
+          },
+          {
+            "SN_Number__c": "RCAF0001085",
+            "Business_Application__c": "Microsoft 365",
+            "CAF_Control__c": "Confirm Backup & Restore Policy",
+            "CAF_Status__c": "in_compliance"
+          },
+          {
+            "SN_Number__c": "RCAF0001089",
+            "Business_Application__c": "Microsoft 365",
+            "CAF_Control__c": "Confirm Disaster Recovery Plan",
+            "CAF_Status__c": "approaching_due"
+          },
+          {
+            "SN_Number__c": "RCAF0001087",
+            "Business_Application__c": "Microsoft 365",
+            "CAF_Control__c": "Confirm RTO & RPO",
+            "CAF_Status__c": "in_compliance"
+          },
+          {
+            "SN_Number__c": "RCAF0001088",
+            "Business_Application__c": "Microsoft 365",
+            "CAF_Control__c": "Test Backup & Restore",
+            "CAF_Status__c": "in_compliance"
+          },
+          {
+            "SN_Number__c": "RCAF0001086",
+            "Business_Application__c": "Microsoft 365",
+            "CAF_Control__c": "Test Disaster Recovery Plan",
+            "CAF_Status__c": "approaching_due"
+          },
+          {
+            "SN_Number__c": "RCAF0001106",
+            "Business_Application__c": "Microsoft Dynamics 365",
+            "CAF_Control__c": "Confirm & Execute High Availability Plan",
+            "CAF_Status__c": "in_compliance"
+          },
+          {
+            "SN_Number__c": "RCAF0001105",
+            "Business_Application__c": "Microsoft Dynamics 365",
+            "CAF_Control__c": "Confirm Backup & Restore Policy",
+            "CAF_Status__c": "in_compliance"
+          },
+          {
+            "SN_Number__c": "RCAF0001052",
+            "Business_Application__c": "Microsoft Dynamics 365",
+            "CAF_Control__c": "Confirm Disaster Recovery Plan",
+            "CAF_Status__c": "approaching_due"
+          },
+          {
+            "SN_Number__c": "RCAF0001108",
+            "Business_Application__c": "Microsoft Dynamics 365",
+            "CAF_Control__c": "Confirm RTO & RPO",
+            "CAF_Status__c": "in_compliance"
+          },
+          {
+            "SN_Number__c": "RCAF0001109",
+            "Business_Application__c": "Microsoft Dynamics 365",
+            "CAF_Control__c": "Test Backup & Restore",
+            "CAF_Status__c": "in_compliance"
+          },
+          {
+            "SN_Number__c": "RCAF0001107",
+            "Business_Application__c": "Microsoft Dynamics 365",
+            "CAF_Control__c": "Test Disaster Recovery Plan",
+            "CAF_Status__c": "approaching_due"
+          },
+          {
+            "SN_Number__c": "RCAF0001101",
+            "Business_Application__c": "Microsoft Entra ID",
+            "CAF_Control__c": "Confirm & Execute High Availability Plan",
+            "CAF_Status__c": "approaching_due"
+          },
+          {
+            "SN_Number__c": "RCAF0001100",
+            "Business_Application__c": "Microsoft Entra ID",
+            "CAF_Control__c": "Confirm Backup & Restore Policy",
+            "CAF_Status__c": "in_compliance"
+          },
+          {
+            "SN_Number__c": "RCAF0001104",
+            "Business_Application__c": "Microsoft Entra ID",
+            "CAF_Control__c": "Confirm Disaster Recovery Plan",
+            "CAF_Status__c": "approaching_due"
+          },
+          {
+            "SN_Number__c": "RCAF0001051",
+            "Business_Application__c": "Microsoft Entra ID",
+            "CAF_Control__c": "Confirm RTO & RPO",
+            "CAF_Status__c": "in_compliance"
+          },
+          {
+            "SN_Number__c": "RCAF0001103",
+            "Business_Application__c": "Microsoft Entra ID",
+            "CAF_Control__c": "Test Backup & Restore",
+            "CAF_Status__c": "in_compliance"
+          },
+          {
+            "SN_Number__c": "RCAF0001102",
+            "Business_Application__c": "Microsoft Entra ID",
+            "CAF_Control__c": "Test Disaster Recovery Plan",
+            "CAF_Status__c": "in_compliance"
+          },
+          {
+            "SN_Number__c": "RCAF0001095",
+            "Business_Application__c": "Microsoft SharePoint Online",
+            "CAF_Control__c": "Confirm & Execute High Availability Plan",
+            "CAF_Status__c": "approaching_due"
+          },
+          {
+            "SN_Number__c": "RCAF0001050",
+            "Business_Application__c": "Microsoft SharePoint Online",
+            "CAF_Control__c": "Confirm Backup & Restore Policy",
+            "CAF_Status__c": "approaching_due"
+          },
+          {
+            "SN_Number__c": "RCAF0001099",
+            "Business_Application__c": "Microsoft SharePoint Online",
+            "CAF_Control__c": "Confirm Disaster Recovery Plan",
+            "CAF_Status__c": "in_compliance"
+          },
+          {
+            "SN_Number__c": "RCAF0001097",
+            "Business_Application__c": "Microsoft SharePoint Online",
+            "CAF_Control__c": "Confirm RTO & RPO",
+            "CAF_Status__c": "in_compliance"
+          },
+          {
+            "SN_Number__c": "RCAF0001098",
+            "Business_Application__c": "Microsoft SharePoint Online",
+            "CAF_Control__c": "Test Backup & Restore",
+            "CAF_Status__c": "approaching_due"
+          },
+          {
+            "SN_Number__c": "RCAF0001096",
+            "Business_Application__c": "Microsoft SharePoint Online",
+            "CAF_Control__c": "Test Disaster Recovery Plan",
+            "CAF_Status__c": "in_compliance"
+          },
+          {
+            "SN_Number__c": "RCAF0001091",
+            "Business_Application__c": "Microsoft Teams",
+            "CAF_Control__c": "Confirm & Execute High Availability Plan",
+            "CAF_Status__c": "in_compliance"
+          },
+          {
+            "SN_Number__c": "RCAF0001090",
+            "Business_Application__c": "Microsoft Teams",
+            "CAF_Control__c": "Confirm Backup & Restore Policy",
+            "CAF_Status__c": "in_compliance"
+          },
+          {
+            "SN_Number__c": "RCAF0001094",
+            "Business_Application__c": "Microsoft Teams",
+            "CAF_Control__c": "Confirm Disaster Recovery Plan",
+            "CAF_Status__c": "in_compliance"
+          },
+          {
+            "SN_Number__c": "RCAF0001092",
+            "Business_Application__c": "Microsoft Teams",
+            "CAF_Control__c": "Confirm RTO & RPO",
+            "CAF_Status__c": "approaching_due"
+          },
+          {
+            "SN_Number__c": "RCAF0001093",
+            "Business_Application__c": "Microsoft Teams",
+            "CAF_Control__c": "Test Backup & Restore",
+            "CAF_Status__c": "in_compliance"
+          },
+          {
+            "SN_Number__c": "RCAF0001049",
+            "Business_Application__c": "Microsoft Teams",
+            "CAF_Control__c": "Test Disaster Recovery Plan",
+            "CAF_Status__c": "approaching_due"
+          },
+          {
+            "SN_Number__c": "RCAF0001147",
+            "Business_Application__c": "Privileged Access Management",
+            "CAF_Control__c": "Confirm & Execute High Availability Plan",
+            "CAF_Status__c": "in_compliance"
+          },
+          {
+            "SN_Number__c": "RCAF0001061",
+            "Business_Application__c": "Privileged Access Management",
+            "CAF_Control__c": "Confirm Backup & Restore Policy",
+            "CAF_Status__c": "approaching_due"
+          },
+          {
+            "SN_Number__c": "RCAF0001151",
+            "Business_Application__c": "Privileged Access Management",
+            "CAF_Control__c": "Confirm Disaster Recovery Plan",
+            "CAF_Status__c": "in_compliance"
+          },
+          {
+            "SN_Number__c": "RCAF0001149",
+            "Business_Application__c": "Privileged Access Management",
+            "CAF_Control__c": "Confirm RTO & RPO",
+            "CAF_Status__c": "approaching_due"
+          },
+          {
+            "SN_Number__c": "RCAF0001150",
+            "Business_Application__c": "Privileged Access Management",
+            "CAF_Control__c": "Test Backup & Restore",
+            "CAF_Status__c": "in_compliance"
+          },
+          {
+            "SN_Number__c": "RCAF0001148",
+            "Business_Application__c": "Privileged Access Management",
+            "CAF_Control__c": "Test Disaster Recovery Plan",
+            "CAF_Status__c": "in_compliance"
+          },
           {
             "SN_Number__c": "RCAF0001024",
             "Business_Application__c": "SAP Fiori",
@@ -108,6 +750,42 @@
             "CAF_Status__c": "approaching_due"
           },
           {
+            "SN_Number__c": "RCAF0001138",
+            "Business_Application__c": "Security Incident Response",
+            "CAF_Control__c": "Confirm & Execute High Availability Plan",
+            "CAF_Status__c": "in_compliance"
+          },
+          {
+            "SN_Number__c": "RCAF0001137",
+            "Business_Application__c": "Security Incident Response",
+            "CAF_Control__c": "Confirm Backup & Restore Policy",
+            "CAF_Status__c": "approaching_due"
+          },
+          {
+            "SN_Number__c": "RCAF0001059",
+            "Business_Application__c": "Security Incident Response",
+            "CAF_Control__c": "Confirm Disaster Recovery Plan",
+            "CAF_Status__c": "approaching_due"
+          },
+          {
+            "SN_Number__c": "RCAF0001140",
+            "Business_Application__c": "Security Incident Response",
+            "CAF_Control__c": "Confirm RTO & RPO",
+            "CAF_Status__c": "approaching_due"
+          },
+          {
+            "SN_Number__c": "RCAF0001141",
+            "Business_Application__c": "Security Incident Response",
+            "CAF_Control__c": "Test Backup & Restore",
+            "CAF_Status__c": "in_compliance"
+          },
+          {
+            "SN_Number__c": "RCAF0001139",
+            "Business_Application__c": "Security Incident Response",
+            "CAF_Control__c": "Test Disaster Recovery Plan",
+            "CAF_Status__c": "in_compliance"
+          },
+          {
             "SN_Number__c": "RCAF0001036",
             "Business_Application__c": "Zscalar App",
             "CAF_Control__c": "Confirm & Execute High Availability Plan",
@@ -144,13 +822,127 @@
             "CAF_Status__c": "in_compliance"
           }
         ],
-        "at": "2026-10-04T15:31:25.300Z"
+        "at": "2026-10-04T16:26:41.285Z"
       },
       {
         "label": "What the Salesforce LWC renders",
         "table": "cafDashboard",
         "query": "build() roll-up applied to the controller output",
         "rows": [
+          {
+            "application": "Breach Forensics Evidence Vault",
+            "compliant_controls": "2",
+            "total_columns": "6",
+            "lwc_label": "2 of 6"
+          },
+          {
+            "application": "Breach Notification Portal",
+            "compliant_controls": "4",
+            "total_columns": "6",
+            "lwc_label": "4 of 6"
+          },
+          {
+            "application": "Data Loss Prevention",
+            "compliant_controls": "4",
+            "total_columns": "6",
+            "lwc_label": "4 of 6"
+          },
+          {
+            "application": "Employee Directory",
+            "compliant_controls": "2",
+            "total_columns": "6",
+            "lwc_label": "2 of 6"
+          },
+          {
+            "application": "Employee Expense Management",
+            "compliant_controls": "2",
+            "total_columns": "6",
+            "lwc_label": "2 of 6"
+          },
+          {
+            "application": "Employee Learning Portal",
+            "compliant_controls": "3",
+            "total_columns": "6",
+            "lwc_label": "3 of 6"
+          },
+          {
+            "application": "Employee Onboarding",
+            "compliant_controls": "5",
+            "total_columns": "6",
+            "lwc_label": "5 of 6"
+          },
+          {
+            "application": "Employee Self-Service Portal",
+            "compliant_controls": "4",
+            "total_columns": "6",
+            "lwc_label": "4 of 6"
+          },
+          {
+            "application": "HR Benefits Administration",
+            "compliant_controls": "2",
+            "total_columns": "6",
+            "lwc_label": "2 of 6"
+          },
+          {
+            "application": "HR Case Management",
+            "compliant_controls": "4",
+            "total_columns": "6",
+            "lwc_label": "4 of 6"
+          },
+          {
+            "application": "HR Payroll",
+            "compliant_controls": "3",
+            "total_columns": "6",
+            "lwc_label": "3 of 6"
+          },
+          {
+            "application": "HR Performance Management",
+            "compliant_controls": "3",
+            "total_columns": "6",
+            "lwc_label": "3 of 6"
+          },
+          {
+            "application": "HR Talent Acquisition",
+            "compliant_controls": "4",
+            "total_columns": "6",
+            "lwc_label": "4 of 6"
+          },
+          {
+            "application": "Microsoft 365",
+            "compliant_controls": "4",
+            "total_columns": "6",
+            "lwc_label": "4 of 6"
+          },
+          {
+            "application": "Microsoft Dynamics 365",
+            "compliant_controls": "4",
+            "total_columns": "6",
+            "lwc_label": "4 of 6"
+          },
+          {
+            "application": "Microsoft Entra ID",
+            "compliant_controls": "4",
+            "total_columns": "6",
+            "lwc_label": "4 of 6"
+          },
+          {
+            "application": "Microsoft SharePoint Online",
+            "compliant_controls": "3",
+            "total_columns": "6",
+            "lwc_label": "3 of 6"
+          },
+          {
+            "application": "Microsoft Teams",
+            "compliant_controls": "4",
+            "total_columns": "6",
+            "lwc_label": "4 of 6"
+          },
+          {
+            "application": "Privileged Access Management",
+            "compliant_controls": "4",
+            "total_columns": "6",
+            "lwc_label": "4 of 6"
+          },
           {
             "application": "SAP Fiori",
             "compliant_controls": "1",
@@ -164,26 +956,165 @@
             "lwc_label": "1 of 6"
           },
           {
+            "application": "Security Incident Response",
+            "compliant_controls": "3",
+            "total_columns": "6",
+            "lwc_label": "3 of 6"
+          },
+          {
             "application": "Zscalar App",
             "compliant_controls": "6",
             "total_columns": "6",
             "lwc_label": "Compliant"
           }
         ],
-        "at": "2026-10-04T15:31:25.310Z"
+        "at": "2026-10-04T16:26:41.295Z"
       },
       {
         "label": "ServiceNow business applications carrying a CAF compliance status",
         "table": "cmdb_ci_business_app",
         "query": "cnit get cmdb_ci_business_app -Fields sys_id,name,u_caf_compliance_status -ProfileName caf-dev249570",
         "rows": [],
-        "at": "2026-10-04T15:31:27.569Z"
+        "at": "2026-10-04T16:26:43.240Z"
       },
       {
         "label": "ServiceNow roll-up versus the stored status field",
         "table": "x_gskn2_caf_compli_caf_req",
         "query": "caf_status grouped by business_application sys_id",
         "rows": [
+          {
+            "application": "Breach Forensics Evidence Vault",
+            "sys_id": "dfa174a8c33f8354d0087405e4013123",
+            "in_compliance": "2",
+            "total_requests": "5",
+            "u_caf_compliance_status": "(empty)"
+          },
+          {
+            "application": "Breach Notification Portal",
+            "sys_id": "f1a1f0a8c33f8354d0087405e4013167",
+            "in_compliance": "4",
+            "total_requests": "6",
+            "u_caf_compliance_status": "(empty)"
+          },
+          {
+            "application": "Data Loss Prevention",
+            "sys_id": "6ea134a8c33f8354d0087405e4013113",
+            "in_compliance": "4",
+            "total_requests": "6",
+            "u_caf_compliance_status": "(empty)"
+          },
+          {
+            "application": "Employee Directory",
+            "sys_id": "17813c68c33f8354d0087405e4013116",
+            "in_compliance": "2",
+            "total_requests": "5",
+            "u_caf_compliance_status": "(empty)"
+          },
+          {
+            "application": "Employee Expense Management",
+            "sys_id": "08917c68c33f8354d0087405e401313f",
+            "in_compliance": "2",
+            "total_requests": "5",
+            "u_caf_compliance_status": "(empty)"
+          },
+          {
+            "application": "Employee Learning Portal",
+            "sys_id": "a49138e4c33f8354d0087405e40131e3",
+            "in_compliance": "3",
+            "total_requests": "5",
+            "u_caf_compliance_status": "(empty)"
+          },
+          {
+            "application": "Employee Onboarding",
+            "sys_id": "77813c68c33f8354d0087405e401319e",
+            "in_compliance": "5",
+            "total_requests": "6",
+            "u_caf_compliance_status": "(empty)"
+          },
+          {
+            "application": "Employee Self-Service Portal",
+            "sys_id": "7681f868c33f8354d0087405e401319a",
+            "in_compliance": "4",
+            "total_requests": "6",
+            "u_caf_compliance_status": "(empty)"
+          },
+          {
+            "application": "HR Benefits Administration",
+            "sys_id": "aca1b0a8c33f8354d0087405e401310d",
+            "in_compliance": "2",
+            "total_requests": "5",
+            "u_caf_compliance_status": "(empty)"
+          },
+          {
+            "application": "HR Case Management",
+            "sys_id": "c8a130a8c33f8354d0087405e40131be",
+            "in_compliance": "4",
+            "total_requests": "5",
+            "u_caf_compliance_status": "(empty)"
+          },
+          {
+            "application": "HR Payroll",
+            "sys_id": "eb9130a8c33f8354d0087405e401318d",
+            "in_compliance": "3",
+            "total_requests": "6",
+            "u_caf_compliance_status": "(empty)"
+          },
+          {
+            "application": "HR Performance Management",
+            "sys_id": "11a1b0a8c33f8354d0087405e40131f8",
+            "in_compliance": "3",
+            "total_requests": "5",
+            "u_caf_compliance_status": "(empty)"
+          },
+          {
+            "application": "HR Talent Acquisition",
+            "sys_id": "38a1b0a8c33f8354d0087405e401317c",
+            "in_compliance": "4",
+            "total_requests": "6",
+            "u_caf_compliance_status": "(empty)"
+          },
+          {
+            "application": "Microsoft 365",
+            "sys_id": "4d9134e4c33f8354d0087405e4013116",
+            "in_compliance": "4",
+            "total_requests": "6",
+            "u_caf_compliance_status": "(empty)"
+          },
+          {
+            "application": "Microsoft Dynamics 365",
+            "sys_id": "439130a8c33f8354d0087405e4013112",
+            "in_compliance": "4",
+            "total_requests": "6",
+            "u_caf_compliance_status": "(empty)"
+          },
+          {
+            "application": "Microsoft Entra ID",
+            "sys_id": "2291fc68c33f8354d0087405e401318a",
+            "in_compliance": "4",
+            "total_requests": "6",
+            "u_caf_compliance_status": "(empty)"
+          },
+          {
+            "application": "Microsoft SharePoint Online",
+            "sys_id": "9291fc68c33f8354d0087405e4013140",
+            "in_compliance": "3",
+            "total_requests": "6",
+            "u_caf_compliance_status": "(empty)"
+          },
+          {
+            "application": "Microsoft Teams",
+            "sys_id": "2991b4e4c33f8354d0087405e401314f",
+            "in_compliance": "4",
+            "total_requests": "6",
+            "u_caf_compliance_status": "(empty)"
+          },
+          {
+            "application": "Privileged Access Management",
+            "sys_id": "83a134a8c33f8354d0087405e401316a",
+            "in_compliance": "4",
+            "total_requests": "6",
+            "u_caf_compliance_status": "(empty)"
+          },
           {
             "application": "SAP Fiori",
             "sys_id": "7661e43483431210bd2a5860ceaad360",
@@ -199,6 +1130,13 @@
             "u_caf_compliance_status": "(empty)"
           },
           {
+            "application": "Security Incident Response",
+            "sys_id": "0aa1f0a8c33f8354d0087405e40131bd",
+            "in_compliance": "3",
+            "total_requests": "6",
+            "u_caf_compliance_status": "(empty)"
+          },
+          {
             "application": "Zscalar App",
             "sys_id": "41b1e83483431210bd2a5860ceaad366",
             "in_compliance": "6",
@@ -206,7 +1144,7 @@
             "u_caf_compliance_status": "(empty)"
           }
         ],
-        "at": "2026-10-04T15:31:29.413Z"
+        "at": "2026-10-04T16:26:45.154Z"
       }
     ],
     "observations": [
@@ -219,11 +1157,31 @@
       "An application reads Compliant only when every one of its controls is in_compliance."
     ],
     "actual": [
+      "Breach Forensics Evidence Vault — LWC \"2 of 6\"; ServiceNow stored status \"(empty)\"; 2 of 5 request(s) in compliance.",
+      "Breach Notification Portal — LWC \"4 of 6\"; ServiceNow stored status \"(empty)\"; 4 of 6 request(s) in compliance.",
+      "Data Loss Prevention — LWC \"4 of 6\"; ServiceNow stored status \"(empty)\"; 4 of 6 request(s) in compliance.",
+      "Employee Directory — LWC \"2 of 6\"; ServiceNow stored status \"(empty)\"; 2 of 5 request(s) in compliance.",
+      "Employee Expense Management — LWC \"2 of 6\"; ServiceNow stored status \"(empty)\"; 2 of 5 request(s) in compliance.",
+      "Employee Learning Portal — LWC \"3 of 6\"; ServiceNow stored status \"(empty)\"; 3 of 5 request(s) in compliance.",
+      "Employee Onboarding — LWC \"5 of 6\"; ServiceNow stored status \"(empty)\"; 5 of 6 request(s) in compliance.",
+      "Employee Self-Service Portal — LWC \"4 of 6\"; ServiceNow stored status \"(empty)\"; 4 of 6 request(s) in compliance.",
+      "HR Benefits Administration — LWC \"2 of 6\"; ServiceNow stored status \"(empty)\"; 2 of 5 request(s) in compliance.",
+      "HR Case Management — LWC \"4 of 6\"; ServiceNow stored status \"(empty)\"; 4 of 5 request(s) in compliance.",
+      "HR Payroll — LWC \"3 of 6\"; ServiceNow stored status \"(empty)\"; 3 of 6 request(s) in compliance.",
+      "HR Performance Management — LWC \"3 of 6\"; ServiceNow stored status \"(empty)\"; 3 of 5 request(s) in compliance.",
+      "HR Talent Acquisition — LWC \"4 of 6\"; ServiceNow stored status \"(empty)\"; 4 of 6 request(s) in compliance.",
+      "Microsoft 365 — LWC \"4 of 6\"; ServiceNow stored status \"(empty)\"; 4 of 6 request(s) in compliance.",
+      "Microsoft Dynamics 365 — LWC \"4 of 6\"; ServiceNow stored status \"(empty)\"; 4 of 6 request(s) in compliance.",
+      "Microsoft Entra ID — LWC \"4 of 6\"; ServiceNow stored status \"(empty)\"; 4 of 6 request(s) in compliance.",
+      "Microsoft SharePoint Online — LWC \"3 of 6\"; ServiceNow stored status \"(empty)\"; 3 of 6 request(s) in compliance.",
+      "Microsoft Teams — LWC \"4 of 6\"; ServiceNow stored status \"(empty)\"; 4 of 6 request(s) in compliance.",
+      "Privileged Access Management — LWC \"4 of 6\"; ServiceNow stored status \"(empty)\"; 4 of 6 request(s) in compliance.",
       "SAP Fiori — LWC \"1 of 6\"; ServiceNow stored status \"(empty)\"; 1 of 6 request(s) in compliance.",
       "SAP HANA — LWC \"1 of 6\"; ServiceNow stored status \"(empty)\"; 1 of 6 request(s) in compliance.",
+      "Security Incident Response — LWC \"3 of 6\"; ServiceNow stored status \"(empty)\"; 3 of 6 request(s) in compliance.",
       "Zscalar App — LWC \"Compliant\"; ServiceNow stored status \"(empty)\"; 6 of 6 request(s) in compliance."
     ],
     "verdictReason": "The two platforms visibly disagree about identical data — the split-brain outcome the case calls the worse of the two. Zscalar App: ServiceNow u_caf_compliance_status = \"(empty)\", Salesforce LWC renders \"Compliant\" (6 of 6 requests in compliance). The LWC is giving the arithmetically correct answer and ServiceNow the wrong one; the defect is in the ServiceNow business rule CAF - update BA when req compliant, not in the mirror.",
-    "finishedAt": "2026-10-04T15:31:29.413Z"
+    "finishedAt": "2026-10-04T16:26:45.155Z"
   }
 }
