@@ -14,8 +14,6 @@
  */
 public with sharing class CafAttestationService {
 
-    private static final String BASE = 'callout:ServiceNow_CAF/api/x_gskn2_caf_compli/caf/task/';
-
     /**
      * What ServiceNow made of the attestation, read back from the record after
      * its rules ran rather than assumed from the outcome that was sent.
@@ -58,7 +56,7 @@ public with sharing class CafAttestationService {
         };
 
         HttpRequest req = new HttpRequest();
-        req.setEndpoint(BASE + taskSysId + '/attest');
+        req.setEndpoint(CafConfig.serviceNowTaskPath() + taskSysId + '/attest');
         req.setMethod('POST');
         req.setHeader('Content-Type', 'application/json');
         req.setHeader('Accept', 'application/json');
@@ -66,7 +64,7 @@ public with sharing class CafAttestationService {
         // The endpoint closes the task, lets the rules cascade to the parent
         // request, and then pushes both records back to Salesforce, all
         // synchronously.
-        req.setTimeout(120000);
+        req.setTimeout(CafConfig.calloutTimeoutMs());
 
         HttpResponse res;
         try {

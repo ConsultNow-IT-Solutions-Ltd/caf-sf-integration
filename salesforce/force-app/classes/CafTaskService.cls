@@ -14,8 +14,6 @@
  */
 public with sharing class CafTaskService {
 
-    private static final String BASE = 'callout:ServiceNow_CAF/api/x_gskn2_caf_compli/caf/task/';
-
     @AuraEnabled(cacheable=true)
     public static List<CAF_Task__c> getTasks(String requestExternalId) {
         return [
@@ -45,11 +43,11 @@ public with sharing class CafTaskService {
         Map<String, Object> body = new Map<String, Object>{ field => value };
 
         HttpRequest req = new HttpRequest();
-        req.setEndpoint(BASE + sysId);
+        req.setEndpoint(CafConfig.serviceNowTaskPath() + sysId);
         req.setMethod('PATCH');
         req.setHeader('Content-Type', 'application/json');
         req.setBody(JSON.serialize(body));
-        req.setTimeout(120000);   // the inbound call reconciles two records synchronously
+        req.setTimeout(CafConfig.calloutTimeoutMs());   // the inbound call reconciles two records synchronously
 
         HttpResponse res;
         try {

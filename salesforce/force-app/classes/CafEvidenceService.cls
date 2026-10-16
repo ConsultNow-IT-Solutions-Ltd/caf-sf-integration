@@ -17,16 +17,15 @@
  */
 public with sharing class CafEvidenceService {
 
-    private static final String BASE = 'callout:ServiceNow_CAF/api/x_gskn2_caf_compli/caf/task/';
-
     /**
-     * Apex holds the file's Blob and its base64 expansion in the same 6MB heap,
-     * and caps a callout body at 6MB as well. Two megabytes of file is about
-     * 2.7MB encoded and clears both. The ServiceNow resource repeats the check,
-     * so a caller that bypasses this class still cannot exceed it.
+     * The size cap comes from CafConfig, which will not let it rise above 2MB
+     * (see the reason there). The ServiceNow resource repeats the check, so a
+     * caller that bypasses this class still cannot exceed it.
      */
     @TestVisible
-    private static final Integer MAX_BYTES = 2097152;
+    private static Integer maxBytes() {
+        return CafConfig.evidenceMaxBytes();
+    }
 
     // ------------------------------------------------------------------ types
 
@@ -44,7 +43,7 @@ public with sharing class CafEvidenceService {
         @AuraEnabled public List<EvidenceFile> serviceNowFiles = new List<EvidenceFile>();
         @AuraEnabled public Integer serviceNowCount = 0;
         @AuraEnabled public String serviceNowError;
-        @AuraEnabled public Integer maxBytes = MAX_BYTES;
+        @AuraEnabled public Integer maxBytes = CafConfig.evidenceMaxBytes();
     }
 
     // ----------------------------------------------------------------- public
@@ -74,7 +73,7 @@ public with sharing class CafEvidenceService {
         }
 
         try {
-            HttpResponse res = call('GET', BASE + taskSysId + '/evidence', null);
+            HttpResponse res = call('GET', CafConfig.serviceNowTaskPath() + taskSysId + '/evidence', null);
             if (res.getStatusCode() == 200) {
                 Map<String, Object> parsed = unwrap(res.getBody());
                 for (Object item : (List<Object>) parsed.get('files')) {
@@ -124,10 +123,10 @@ public with sharing class CafEvidenceService {
         }
 
         ContentVersion cv = versions[0];
-        if (cv.ContentSize > MAX_BYTES) {
+        if (cv.ContentSize > maxBytes()) {
             throw new AuraHandledException(
                 cv.Title + ' is ' + sizeLabel(cv.ContentSize) + '. The limit for evidence ' +
-                'pushed to ServiceNow is ' + sizeLabel(MAX_BYTES) + '.');
+                'pushed to ServiceNow is ' + sizeLabel(maxBytes()) + '.');
         }
 
         String fileName = String.isBlank(cv.FileExtension)
@@ -142,7 +141,7 @@ public with sharing class CafEvidenceService {
 
         HttpResponse res;
         try {
-            res = call('POST', BASE + taskSysId + '/evidence', JSON.serialize(body));
+            res = call('POST', CafConfig.serviceNowTaskPath() + taskSysId + '/evidence', JSON.serialize(body));
         } catch (Exception e) {
             throw new AuraHandledException(
                 fileName + ' is stored in Salesforce but did not reach ServiceNow: ' +
@@ -227,7 +226,7 @@ public with sharing class CafEvidenceService {
         if (body != null) {
             req.setBody(body);
         }
-        req.setTimeout(120000);
+        req.setTimeout(CafConfig.calloutTimeoutMs());
         return new Http().send(req);
     }
 
