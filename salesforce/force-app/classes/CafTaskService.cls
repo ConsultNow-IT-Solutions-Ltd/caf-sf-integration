@@ -21,6 +21,7 @@ public with sharing class CafTaskService {
                    Met_Criteria__c, ServiceNow_Sys_Id__c
             FROM CAF_Task__c
             WHERE CAF_Request__r.ServiceNow_Sys_Id__c = :requestExternalId
+            WITH USER_MODE
             ORDER BY SN_Number__c
             LIMIT 200
         ];

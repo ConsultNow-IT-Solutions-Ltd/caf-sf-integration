@@ -15,6 +15,10 @@
  * Both stay cacheable=true. Neither makes a callout, so the grid still renders
  * from the mirror when ServiceNow is unreachable - the property that ruled out
  * fetching the catalogue live.
+ *
+ * Both run WITH USER_MODE, so object and field permissions are enforced as
+ * well as sharing. A user without the CAF permission set gets an error naming
+ * the missing access rather than a grid silently missing columns.
  */
 public with sharing class CafDashboardController {
 
@@ -27,6 +31,7 @@ public with sharing class CafDashboardController {
             FROM CAF_Request__c
             WHERE Business_Application__c != null
               AND CAF_Control__c != null
+            WITH USER_MODE
             ORDER BY Business_Application__c, CAF_Control__c
             LIMIT 2000
         ];
@@ -43,6 +48,7 @@ public with sharing class CafDashboardController {
             SELECT Id, Name, SN_Number__c, ServiceNow_Sys_Id__c
             FROM CAF_Control_Catalog__c
             WHERE Active__c = true
+            WITH USER_MODE
             ORDER BY Name
             LIMIT 200
         ];
