@@ -243,8 +243,7 @@ export default class CafEvidence extends LightningElement {
     /**
      * The one state worth calling out: the two systems hold different numbers
      * of files. Not drift in the Sync Health sense - there is no value to
-     * disagree about - but it does mean a push failed, and the gate counts the
-     * ServiceNow side.
+     * disagree about - and the gate counts the ServiceNow side.
      */
     get mismatch() {
         return this._loaded
@@ -252,9 +251,20 @@ export default class CafEvidence extends LightningElement {
             && this.salesforceFiles.length !== this.serviceNowFiles.length;
     }
 
+    /**
+     * The advice depends on which side is short. Salesforce holding more means
+     * a push failed, and re-uploading is the repair. ServiceNow holding more
+     * means the system of record already has the file - usually one attached
+     * there directly - and re-uploading would only add another copy to it.
+     */
     get mismatchLabel() {
-        return this.salesforceFiles.length + ' in Salesforce, ' +
-               this.serviceNowFiles.length + ' in ServiceNow. Re-upload the missing ' +
-               'file to send it to the system of record.';
+        const counts = this.salesforceFiles.length + ' in Salesforce, ' +
+                       this.serviceNowFiles.length + ' in ServiceNow. ';
+        if (this.salesforceFiles.length > this.serviceNowFiles.length) {
+            return counts + 'A file did not reach ServiceNow. Re-upload it to send ' +
+                   'it to the system of record.';
+        }
+        return counts + 'ServiceNow, the system of record, already holds every ' +
+               'file. Nothing needs uploading again.';
     }
 }
