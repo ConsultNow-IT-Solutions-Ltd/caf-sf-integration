@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Settings that used to be constants in Apex.
+
+    One record per setting, one Value__c each, rather than one record with a
+    field per setting. A new setting is then a new record, which an admin can
+    add in Setup, rather than a new field, which is a deployment.
+
+    Read through CafConfig, never directly: CafConfig holds the default for each
+    setting, so a missing or blank record falls back to the value the code
+    shipped with instead of breaking the callout.
+-->
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>CAF Compliance configuration: ServiceNow path, evidence byte cap, callout timeout and feature switches. Read by CafConfig.</description>
+    <label>CAF Setting</label>
+    <pluralLabel>CAF Settings</pluralLabel>
+    <visibility>Public</visibility>
+
+    <fields>
+        <fullName>Value__c</fullName>
+        <description>The setting's value as text. CafConfig converts it, and falls back to its built-in default when the value is blank or will not convert.</description>
+        <externalId>false</externalId>
+        <fieldManageability>SubscriberControlled</fieldManageability>
+        <label>Value</label>
+        <length>255</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+
+    <fields>
+        <fullName>Notes__c</fullName>
+        <description>What the setting does and what it is safe to change it to.</description>
+        <externalId>false</externalId>
+        <fieldManageability>SubscriberControlled</fieldManageability>
+        <label>Notes</label>
+        <length>32768</length>
+        <type>LongTextArea</type>
+        <visibleLines>3</visibleLines>
+    </fields>
+</CustomObject>

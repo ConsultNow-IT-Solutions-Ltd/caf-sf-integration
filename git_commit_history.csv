@@ -1,0 +1,135 @@
+﻿Hash,Short,Author,Email,AuthorDate,CommitDate,Subject
+2714924c53ae61120c56f1d3b61e8cab73946c8f,2714924,Geethasri Chintha,geethasri.chintha@reyantech.co.uk,2026-02-09T09:14:32Z,2026-02-09T09:14:32Z,Initial repository scaffold
+58ad3d85231f6bff32abcc098f7bda76470cf4d3,58ad3d8,Geethasri Chintha,geethasri.chintha@reyantech.co.uk,2026-02-10T11:02:47Z,2026-02-10T11:02:47Z,docs: project README and scope
+530b062d33d7d3a3b30751e8acffbc3e8d5786b1,530b062,Geethasri Chintha,geethasri.chintha@reyantech.co.uk,2026-02-12T14:35:19Z,2026-02-12T14:35:19Z,docs: technical design and integration diagram
+6c2987bfcc8677d19093e8861d13d9313e8348d3,6c2987b,Geethasri Chintha,geethasri.chintha@reyantech.co.uk,2026-02-13T16:20:05Z,2026-02-13T16:20:05Z,docs: record SF and SN instance details
+6e9de6f26629c84e942344c6cb86f1d78613af4f,6e9de6f,Geethasri Chintha,geethasri.chintha@reyantech.co.uk,2026-02-17T10:48:31Z,2026-02-17T10:48:31Z,docs: archive discovery-phase handoff notes
+06bc849a7e38e11817fef3c3e3542ed96f32f384,06bc849,Geethasri Chintha,geethasri.chintha@reyantech.co.uk,2026-02-19T10:40:12Z,2026-02-19T10:40:12Z,sf: CAF Control Catalog custom object
+90a00c64692bdc2e64d16a8389913d4ee4e4533d,90a00c6,Geethasri Chintha,geethasri.chintha@reyantech.co.uk,2026-02-20T15:12:58Z,2026-02-20T15:12:58Z,sf: CAF Request custom object
+0342d551ca7f035044ed5fef735f89f68df8dec2,0342d55,Geethasri Chintha,geethasri.chintha@reyantech.co.uk,2026-02-24T09:55:26Z,2026-02-24T09:55:26Z,sf: CAF Task custom object
+fb22a78046d3a81ace2c143cb2a62bd67cb7a40a,fb22a78,Geethasri Chintha,geethasri.chintha@reyantech.co.uk,2026-02-26T13:30:44Z,2026-02-26T13:30:44Z,sf: package manifest for the CAF metadata bundle
+cccd0f3d514c3fbd9adf29a2a65544c271da1566,cccd0f3,Geethasri Chintha,geethasri.chintha@reyantech.co.uk,2026-03-03T11:08:37Z,2026-03-03T11:08:37Z,sf: CAF Integration permission set
+024b70b38c96386781fb750b58cd27eb544ff9d7,024b70b,Geethasri Chintha,geethasri.chintha@reyantech.co.uk,2026-03-05T14:47:02Z,2026-03-05T14:47:02Z,sf: page layouts and custom tabs
+91f82d83ce5e7a09aec247b97a7e59bf27d8adb3,91f82d8,Geethasri Chintha,geethasri.chintha@reyantech.co.uk,2026-03-10T09:38:15Z,2026-03-10T09:38:15Z,apex: CafTaskService for task creation and lifecycle
+4bb8ad2d3b252655e260745f7c1aeae24a5761a4,4bb8ad2,Geethasri Chintha,geethasri.chintha@reyantech.co.uk,2026-03-12T16:20:49Z,2026-03-12T16:20:49Z,apex: CafEvidenceService for evidence upload and listing
+f72e5f1caf7a911de7efea4000b406734bf25de9,f72e5f1,Geethasri Chintha,geethasri.chintha@reyantech.co.uk,2026-03-17T11:44:23Z,2026-03-17T11:44:23Z,apex: CafAttestationService for approver attestation
+a330a3ca654a9a5c66d3da05936f5d810adc83a4,a330a3c,Geethasri Chintha,geethasri.chintha@reyantech.co.uk,2026-03-19T15:03:08Z,2026-03-19T15:03:08Z,apex: CafDashboardController aggregates compliance posture
+79737f6580364386c33395a0ac8aeca16d58f1ba,79737f6,Geethasri Chintha,geethasri.chintha@reyantech.co.uk,2026-03-24T10:16:52Z,2026-03-24T10:16:52Z,apex: CafSyncHealth surfaces integration drift
+a22cfc72acad936d3fb87c7c93ad57573749f879,a22cfc7,Geethasri Chintha,geethasri.chintha@reyantech.co.uk,2026-03-26T14:52:31Z,2026-03-26T14:52:31Z,apex: anonymous script to clear orphaned CAF tasks
+67d85279fde0ac604cbae767722b6403be61182a,67d8527,Geethasri Chintha,geethasri.chintha@reyantech.co.uk,2026-03-31T09:47:14+01:00,2026-03-31T09:47:14+01:00,docs: Salesforce deployment notes
+7e6e3b1a9585d0cec5cd88e239ee5e23ebb4cf83,7e6e3b1,Geethasri Chintha,geethasri.chintha@reyantech.co.uk,2026-03-31T14:08:53+01:00,2026-03-31T14:08:53+01:00,docs: Technical design doc with diagram V1.md - add Security Model
+125eeb9a27e8c93eda130177f83faed7678a593c,125eeb9,Geethasri Chintha,geethasri.chintha@reyantech.co.uk,2026-04-02T11:30:26+01:00,2026-04-02T11:30:26+01:00,lwc: cafDashboard shell and markup
+dff9502c2e542e6abf2f2cc21d81fb29f47b86d4,dff9502,Geethasri Chintha,geethasri.chintha@reyantech.co.uk,2026-04-03T10:19:43+01:00,2026-04-03T10:19:43+01:00,lwc: cafDashboard wiring and styling
+41782d53d21caadda81d76f11800362be157540f,41782d5,Geethasri Chintha,geethasri.chintha@reyantech.co.uk,2026-04-07T13:55:07+01:00,2026-04-07T13:55:07+01:00,lwc: cafEvidence upload and list markup
+0713beece9a2a1ac3f364b868e7b1460b3e85a09,0713bee,Geethasri Chintha,geethasri.chintha@reyantech.co.uk,2026-04-08T15:10:38+01:00,2026-04-08T15:10:38+01:00,lwc: cafEvidence file handling and styling
+426b8422e4242d4efa56acae70414b041ded9c3d,426b842,Geethasri Chintha,geethasri.chintha@reyantech.co.uk,2026-04-13T10:33:55+01:00,2026-04-13T10:33:55+01:00,lwc: cafAttestation approver flow markup
+fbe5f721afee92b3c58ec0470f44d4cb83433a77,fbe5f72,Geethasri Chintha,geethasri.chintha@reyantech.co.uk,2026-04-14T14:08:21+01:00,2026-04-14T14:08:21+01:00,lwc: cafAttestation submit and validation logic
+9a1df7da6710c9ac4b322cbaf094ecb4d998274c,9a1df7d,Geethasri Chintha,geethasri.chintha@reyantech.co.uk,2026-04-17T13:19:47+01:00,2026-04-17T13:19:47+01:00,docs: SESSION_HANDOFF.md - add Closed since this document was written
+05007d0186e2507f1529b7fb8e20fcd140eb2b09,05007d0,Geethasri Chintha,geethasri.chintha@reyantech.co.uk,2026-04-20T11:15:49+01:00,2026-04-20T11:15:49+01:00,lwc: cafSyncHealth panel markup
+6731b3792cd1894b39d893315b0988503c6acabb,6731b37,Geethasri Chintha,geethasri.chintha@reyantech.co.uk,2026-04-21T15:36:12+01:00,2026-04-21T15:36:12+01:00,lwc: cafSyncHealth polling and drift display
+bb18bb5ea07f06b44f599921e0a8af4075947048,bb18bb5,Geethasri Chintha,geethasri.chintha@reyantech.co.uk,2026-04-27T09:41:33+01:00,2026-04-27T09:41:33+01:00,sn: CAFSalesforceSync script include for outbound REST
+1ef4458ad07ec86c8a2f2be6a8c72079e3b4fe77,1ef4458,Geethasri Chintha,geethasri.chintha@reyantech.co.uk,2026-04-28T14:22:06+01:00,2026-04-28T14:22:06+01:00,sn: caf_short_desc helper script include
+a45dd79cbc0ff2ef1043c9f6f03558c6d0e667d7,a45dd79,Geethasri Chintha,geethasri.chintha@reyantech.co.uk,2026-04-29T11:07:48+01:00,2026-04-29T11:07:48+01:00,sn: business rule to push controls to Salesforce
+1f5148ad92e3f00514c764d9f22d6cd14fc07ed4,1f5148a,Geethasri Chintha,geethasri.chintha@reyantech.co.uk,2026-05-04T10:48:17+01:00,2026-05-04T10:48:17+01:00,sn: business rule to push requests to Salesforce
+fef5f42222d149fd7c8c263575e30aad06c9d100,fef5f42,Geethasri Chintha,geethasri.chintha@reyantech.co.uk,2026-05-05T15:19:52+01:00,2026-05-05T15:19:52+01:00,sn: business rule to retire controls in Salesforce
+0ec77e5f61d8d9f655f78774f34f743dcc7bbc3e,0ec77e5,Geethasri Chintha,geethasri.chintha@reyantech.co.uk,2026-05-06T09:33:29+01:00,2026-05-06T09:33:29+01:00,sn: scripted REST endpoint to sync snapshot
+ecddd6508849805ce44363cf05bb48751f99168c,ecddd65,Geethasri Chintha,geethasri.chintha@reyantech.co.uk,2026-05-07T13:58:41+01:00,2026-05-07T13:58:41+01:00,sn: scripted REST endpoint to update tasks
+38b99bc6addf0409c3936247353e744d72e6f212,38b99bc,Geethasri Chintha,geethasri.chintha@reyantech.co.uk,2026-05-11T10:12:35+01:00,2026-05-11T10:12:35+01:00,sn: scripted REST endpoint to upload evidence
+ea7ef04ef36ab72a080a0c31e9c63a4f22af46f3,ea7ef04,Geethasri Chintha,geethasri.chintha@reyantech.co.uk,2026-05-12T14:45:19+01:00,2026-05-12T14:45:19+01:00,sn: scripted REST endpoint to list evidence
+75001e15a6d4fcb9cebc7431467e0b7e214b199f,75001e1,Geethasri Chintha,geethasri.chintha@reyantech.co.uk,2026-05-13T09:29:04+01:00,2026-05-13T09:29:04+01:00,sn: scripted REST endpoint to attest tasks
+51a639de4b8720e76d11172a59d2b37b33139637,51a639d,Faiza Aslam,faiza.aslam@reyantech.co.uk,2026-05-13T10:21:39+01:00,2026-05-13T10:21:39+01:00,docs: Technical design doc with diagram V1.md - add Application Navigation
+7d1fd8e0d32c86b44db6b17bb196a8af9de6a812,7d1fd8e,Geethasri Chintha,geethasri.chintha@reyantech.co.uk,2026-05-14T16:02:27+01:00,2026-05-14T16:02:27+01:00,sn: scripted REST endpoint to resync a record
+e8bac27a1428f7b9855630b13371436daacb259a,e8bac27,Geethasri Chintha,geethasri.chintha@reyantech.co.uk,2026-05-15T09:58:14+01:00,2026-05-15T09:58:14+01:00,docs: README.md - add Evidence and attestation
+0603cff33585be58c5dd0d9766bd5342e34f14ca,0603cff,Geethasri Chintha,geethasri.chintha@reyantech.co.uk,2026-05-18T11:37:53+01:00,2026-05-18T11:37:53+01:00,docs: ServiceNow configuration and setup guide
+ae7d77ec7ca69656c57879ada07629c54364ea59,ae7d77e,Faiza Aslam,faiza.aslam@reyantech.co.uk,2026-05-19T10:22:41+01:00,2026-05-19T10:22:41+01:00,test: Playwright project scaffold and dependencies
+766ef2c89a30537680815193edf2e29889554127,766ef2c,Faiza Aslam,faiza.aslam@reyantech.co.uk,2026-05-20T14:16:08+01:00,2026-05-20T14:16:08+01:00,test: Playwright config with Salesforce and ServiceNow projects
+12a5462c48fa4aa29dbff932f2bce78ac0b72668,12a5462,Rehan Sadiq,rehan.sadiq@reyantech.co.uk,2026-05-20T16:31:07+01:00,2026-05-20T16:31:07+01:00,test: Salesforce JSON assertion helpers
+d4700d98aadaeb234b1bd6b02d539f71dcdddbe4,d4700d9,Faiza Aslam,faiza.aslam@reyantech.co.uk,2026-05-21T09:44:36+01:00,2026-05-21T09:44:36+01:00,test: Salesforce storage-state auth setup
+476b3382daf94dc3d765c3a15cb8ddc75868740d,476b338,Faiza Aslam,faiza.aslam@reyantech.co.uk,2026-05-22T11:58:14+01:00,2026-05-22T11:58:14+01:00,test: ServiceNow storage-state auth setup
+7c31735920b97178e1491ce172f49ec0cbf00cc0,7c31735,Rehan Sadiq,rehan.sadiq@reyantech.co.uk,2026-05-25T11:05:22+01:00,2026-05-25T11:05:22+01:00,test: seed data definitions for the demo estate
+de6a67059150cd0032187915398db55e9a607634,de6a670,Faiza Aslam,faiza.aslam@reyantech.co.uk,2026-05-26T10:07:49+01:00,2026-05-26T10:07:49+01:00,test: Lightning page-object helpers
+b6c993e09d1c94ab1abfeedf22571901c86633d3,b6c993e,Faiza Aslam,faiza.aslam@reyantech.co.uk,2026-05-27T15:23:31+01:00,2026-05-27T15:23:31+01:00,test: Salesforce helper library
+d2eb2115160cadeccaf2b1847c024f71c2b800e4,d2eb211,Faiza Aslam,faiza.aslam@reyantech.co.uk,2026-05-28T09:51:07+01:00,2026-05-28T09:51:07+01:00,test: ServiceNow helper library
+17848faf82af6befb43dfa0f4e9db0d30ac10981,17848fa,Rehan Sadiq,rehan.sadiq@reyantech.co.uk,2026-05-29T14:33:58+01:00,2026-05-29T14:33:58+01:00,test: background seeding utilities
+b30aa2d229101ac13b5d4d6241cf7cbae4164ce8,b30aa2d,Faiza Aslam,faiza.aslam@reyantech.co.uk,2026-06-01T09:16:22+01:00,2026-06-01T09:16:22+01:00,test: watch-mode instrumentation hooks
+dff0e20ef755271b732b8d5aff314898b8609525,dff0e20,Faiza Aslam,faiza.aslam@reyantech.co.uk,2026-06-01T13:40:16+01:00,2026-06-01T13:40:16+01:00,test: CAF API client helper
+bbfef0c8b2f4a521e9417b1263044f5e78f67928,bbfef0c,Faiza Aslam,faiza.aslam@reyantech.co.uk,2026-06-02T10:29:44+01:00,2026-06-02T10:29:44+01:00,test: evidence capture helper for test artefacts
+25f1418f8e855faba6aed7e3c155b709cae21182,25f1418,Rehan Sadiq,rehan.sadiq@reyantech.co.uk,2026-06-03T09:18:27+01:00,2026-06-03T09:18:27+01:00,test: generic business-app seed for volume testing
+9b5f894bc808f4fe2652b32d089b4b63b4896cb4,9b5f894,Rehan Sadiq,rehan.sadiq@reyantech.co.uk,2026-06-04T15:47:03+01:00,2026-06-04T15:47:03+01:00,test: probe seed for connectivity checks
+8703dc26020d16bdf1bf185483e077ae61219eee,8703dc2,Rehan Sadiq,rehan.sadiq@reyantech.co.uk,2026-06-08T10:36:52+01:00,2026-06-08T10:36:52+01:00,test: seed script to repair CAF record numbering
+19276b9c40a9855b63bbb956af106fb1a5a34977,19276b9,Rehan Sadiq,rehan.sadiq@reyantech.co.uk,2026-06-09T13:12:38+01:00,2026-06-09T13:12:38+01:00,docs: seed usage notes
+793b0ea211e58765ca479e903bb4794cde2508bf,793b0ea,Geethasri Chintha,geethasri.chintha@reyantech.co.uk,2026-06-10T14:52:25+01:00,2026-06-10T14:52:25+01:00,docs: SETUP.md - add Verified behaviour
+662ec165d5e810db68b00933de6c13973b29cba9,662ec16,Rehan Sadiq,rehan.sadiq@reyantech.co.uk,2026-06-11T14:05:46+01:00,2026-06-11T14:05:46+01:00,test: cnit CLI wrapper for record queries
+0c64490810db8a409f8f0dab0d35101791991714,0c64490,Faiza Aslam,faiza.aslam@reyantech.co.uk,2026-06-12T16:05:31+01:00,2026-06-12T16:05:31+01:00,docs: SESSION_HANDOFF.md - add Credentials
+2e74b4f4bb464396c6c34e96f0b43ae5d3182dd2,2e74b4f,Rehan Sadiq,rehan.sadiq@reyantech.co.uk,2026-06-15T10:44:29+01:00,2026-06-15T10:44:29+01:00,test: outbound ETL integration suite
+b925667d1b03728e3cf2a7a2a54bcc7bec88b772,b925667,Faiza Aslam,faiza.aslam@reyantech.co.uk,2026-06-16T15:31:07+01:00,2026-06-16T15:31:07+01:00,test: inbound UI integration suite
+a3df21c0cafc0acd43a015e93ed27eb488cd0cd2,a3df21c,Faiza Aslam,faiza.aslam@reyantech.co.uk,2026-06-17T09:23:52+01:00,2026-06-17T09:23:52+01:00,test: read-only integration suite
+7e94f83159a365451cb53b882d1558e155ecdd85,7e94f83,Faiza Aslam,faiza.aslam@reyantech.co.uk,2026-06-18T14:50:18+01:00,2026-06-18T14:50:18+01:00,test: negative-path and regression suite
+08399306ed350515d5d0024f5235e15068a99b28,0839930,Rehan Sadiq,rehan.sadiq@reyantech.co.uk,2026-06-22T11:14:35+01:00,2026-06-22T11:14:35+01:00,test: ServiceNow case suite
+da83453dc31d68fa6628afeaec5748ad0b48f09b,da83453,Rehan Sadiq,rehan.sadiq@reyantech.co.uk,2026-06-23T10:02:41+01:00,2026-06-23T10:02:41+01:00,test: ServiceNow spike harness
+f1d4bcdec688ce76239e2e1d4d20e12eafdab968,f1d4bcd,Rehan Sadiq,rehan.sadiq@reyantech.co.uk,2026-06-24T15:08:26+01:00,2026-06-24T15:08:26+01:00,test: Lightning probe spec
+ffd9d4e4c0ed12ec8b64a9828c42ae3c4343f8ef,ffd9d4e,Geethasri Chintha,geethasri.chintha@reyantech.co.uk,2026-06-25T15:44:02+01:00,2026-06-25T15:44:02+01:00,docs: Technical design doc with diagram V1.md - add Key Design Decisions
+d65d979f311082a02040be3f12b61bc0dc3b9418,d65d979,Faiza Aslam,faiza.aslam@reyantech.co.uk,2026-06-26T12:36:08+01:00,2026-06-26T12:36:08+01:00,docs: README.md - add Not built
+0b89ae0423917a7a0b6225db9d73d9baf89ecd9e,0b89ae0,Faiza Aslam,faiza.aslam@reyantech.co.uk,2026-06-29T09:37:13+01:00,2026-06-29T09:37:13+01:00,test: single-case runner script
+b7c20481845a9c05ac534797000d7c414b5b0c5b,b7c2048,Faiza Aslam,faiza.aslam@reyantech.co.uk,2026-06-30T09:32:11+01:00,2026-06-30T09:32:11+01:00,docs: SETUP.md - add Inbound: Salesforce → ServiceNow
+4826fee8372f08feba75eea95e7638252ba71a72,4826fee,Faiza Aslam,faiza.aslam@reyantech.co.uk,2026-06-30T13:26:48+01:00,2026-06-30T13:26:48+01:00,test: watch-mode runner scripts and docs
+93fef23144ad466511b3466b105f5e13ee076ff3,93fef23,Rehan Sadiq,rehan.sadiq@reyantech.co.uk,2026-07-01T09:32:11+01:00,2026-07-01T09:32:11+01:00,test: integration-etl.spec.ts - add TC-INT-065
+e3edd784cfd6d5e3a179ebfda1fbf617e0cb0690,e3edd78,Faiza Aslam,faiza.aslam@reyantech.co.uk,2026-07-01T10:21:39+01:00,2026-07-01T10:21:39+01:00,test: package.json - add remaining scripts and dev dependencies
+29bcc7a2bdec639a9444eced6d3ea6870d64c1e4,29bcc7a,Faiza Aslam,faiza.aslam@reyantech.co.uk,2026-07-01T10:49:22+01:00,2026-07-01T10:49:22+01:00,test: convenience test entrypoint
+d93ace017b04a1a420f5f4cffc3689cdfb0a1d5f,d93ace0,Faiza Aslam,faiza.aslam@reyantech.co.uk,2026-07-02T10:21:39+01:00,2026-07-02T10:21:39+01:00,test: integration-ui.spec.ts - add TC-INT-051
+fbe3a216005e675e9a3833c1a071774d2a0fc9ea,fbe3a21,Rehan Sadiq,rehan.sadiq@reyantech.co.uk,2026-07-02T14:17:39+01:00,2026-07-02T14:17:39+01:00,docs: integration test case catalogue
+8434ccba17c682260da0ece5ebee5856bb9b20ca,8434ccb,Faiza Aslam,faiza.aslam@reyantech.co.uk,2026-07-02T16:05:31+01:00,2026-07-02T16:05:31+01:00,test: integration-readonly.spec.ts - add TC-INT-017
+d2006caa0a6095223fe8b061d8465b39d9ee50b9,d2006ca,Rehan Sadiq,rehan.sadiq@reyantech.co.uk,2026-07-06T09:55:04+01:00,2026-07-06T09:55:04+01:00,docs: ServiceNow test case catalogue
+5f2e962ceb662101e03924161cd551cc27c4f26a,5f2e962,Faiza Aslam,faiza.aslam@reyantech.co.uk,2026-07-07T11:31:57+01:00,2026-07-07T11:31:57+01:00,docs: testing README and run instructions
+cecd2da2db8b7a4bd3c25b834794eb44d1220ad7,cecd2da,Faiza Aslam,faiza.aslam@reyantech.co.uk,2026-07-07T14:52:25+01:00,2026-07-07T14:52:25+01:00,test: integration-negative.spec.ts - add TC-INT-032
+509f799c2d8ae4cc73a0aaf6c16b33a9f5e4d9de,509f799,Faiza Aslam,faiza.aslam@reyantech.co.uk,2026-07-09T10:20:33+01:00,2026-07-09T10:20:33+01:00,evidence: Reyan branding assets and helpers
+10024d5d332b8de3a661276ba5074e1d0ee8d046,10024d5,Rehan Sadiq,rehan.sadiq@reyantech.co.uk,2026-07-09T11:47:26+01:00,2026-07-09T11:47:26+01:00,test: servicenow-cases.spec.ts - add TC-SN-017
+f805a3e4dba8b6a569339d69368ac51c2a68c74d,f805a3e,Faiza Aslam,faiza.aslam@reyantech.co.uk,2026-07-13T14:38:19+01:00,2026-07-13T14:38:19+01:00,evidence: parse case results into structured records
+761ce70c9042a80b84b614f8c0a7eace9c557bec,761ce70,Faiza Aslam,faiza.aslam@reyantech.co.uk,2026-07-14T09:47:52+01:00,2026-07-14T09:47:52+01:00,evidence: generate per-case Word evidence packs
+e00ddb3ae48178c5ea386be36f910f2b7464693e,e00ddb3,Faiza Aslam,faiza.aslam@reyantech.co.uk,2026-07-14T11:47:26+01:00,2026-07-14T11:47:26+01:00,test: integration-etl.spec.ts - add TC-INT-067
+f66bce0391714378d44322856536720657e60c42,f66bce0,Rehan Sadiq,rehan.sadiq@reyantech.co.uk,2026-07-14T15:44:02+01:00,2026-07-14T15:44:02+01:00,docs: TEST-CASES-INTEGRATION.md - add The integration contract
+e596cae6c926a2387c83f0c4f4c56bf4ebfe207a,e596cae,Rehan Sadiq,rehan.sadiq@reyantech.co.uk,2026-07-15T09:58:14+01:00,2026-07-15T09:58:14+01:00,test: integration-readonly.spec.ts - add TC-INT-037
+38d8973f0f502256f541f97d66ef19b152cf199b,38d8973,Rehan Sadiq,rehan.sadiq@reyantech.co.uk,2026-07-15T15:44:02+01:00,2026-07-15T15:44:02+01:00,test: integration-ui.spec.ts - add TC-INT-020
+80b2344ca2c82ac6e29e69902aeeb86994cd253f,80b2344,Rehan Sadiq,rehan.sadiq@reyantech.co.uk,2026-07-15T16:11:28+01:00,2026-07-15T16:11:28+01:00,results: outbound ETL case results
+259b17b315b7c2c6912f7eab2436c34c56bf85d5,259b17b,Rehan Sadiq,rehan.sadiq@reyantech.co.uk,2026-07-16T10:05:47+01:00,2026-07-16T10:05:47+01:00,results: ServiceNow case results
+9102de557fc57eb30ca81be86a925ef9325f097f,9102de5,Rehan Sadiq,rehan.sadiq@reyantech.co.uk,2026-07-20T09:58:14+01:00,2026-07-20T09:58:14+01:00,docs: TEST-CASES-SERVICENOW.md - add Test data — read before executing anything
+6a672e9e7bb5632ee9dbc959c8a3087e1b7ba2b6,6a672e9,Geethasri Chintha,geethasri.chintha@reyantech.co.uk,2026-07-20T11:47:26+01:00,2026-07-20T11:47:26+01:00,docs: SETUP.md - add Known gaps
+03350e03d708396a2cee97fa66c51d00d282bcd9,03350e0,Faiza Aslam,faiza.aslam@reyantech.co.uk,2026-07-20T13:42:15+01:00,2026-07-20T13:42:15+01:00,results: inbound UI case results
+a58b047bb5f094a29e5abf3de94f7b9d21ca343e,a58b047,Faiza Aslam,faiza.aslam@reyantech.co.uk,2026-07-21T09:29:36+01:00,2026-07-21T09:29:36+01:00,results: negative-path case results
+0dd0e0145f12f51f74f3dc8b8f3a3bcb6dc2d058,0dd0e01,Faiza Aslam,faiza.aslam@reyantech.co.uk,2026-07-21T09:32:11+01:00,2026-07-21T09:32:11+01:00,docs: RUN-TESTS.md - add What you get
+b785a53385ac1edf2ebd924b2cf75d25a35789da,b785a53,Faiza Aslam,faiza.aslam@reyantech.co.uk,2026-07-21T14:08:53+01:00,2026-07-21T14:08:53+01:00,"docs: README.md - add Salesforce: what ran, 2026-08-07"
+3e683d6bc129ceada0a231366c57e0b6dfd12cfd,3e683d6,Faiza Aslam,faiza.aslam@reyantech.co.uk,2026-07-22T13:19:47+01:00,2026-07-22T13:19:47+01:00,docs: TEST-CASES-INTEGRATION.md - add Coverage summary
+68cb821b232b1aac9b86fd02894c3f7de5f0e4cc,68cb821,Faiza Aslam,faiza.aslam@reyantech.co.uk,2026-07-22T14:52:25+01:00,2026-07-22T14:52:25+01:00,docs: WATCH-MODE.md - add Things worth not rediscovering
+2bdd0795c24fa6e6c160fc198f000d28b7bb5203,2bdd079,Faiza Aslam,faiza.aslam@reyantech.co.uk,2026-07-22T15:04:51+01:00,2026-07-22T15:04:51+01:00,results: read-only case results
+b586e5ac39a951fe7c3fcbdba6f6f6183606d305,b586e5a,Rehan Sadiq,rehan.sadiq@reyantech.co.uk,2026-07-23T09:32:11+01:00,2026-07-23T09:32:11+01:00,test: integration-negative.spec.ts - add TC-INT-035
+2d9aa9ba510f971327f70566abb8ae7747a1a71f,2d9aa9b,Faiza Aslam,faiza.aslam@reyantech.co.uk,2026-07-23T11:18:07+01:00,2026-07-23T11:18:07+01:00,report: HTML evidence report builder
+6a9e5778febe9c94803ecc47a877e56acd937485,6a9e577,Faiza Aslam,faiza.aslam@reyantech.co.uk,2026-07-24T14:08:53+01:00,2026-07-24T14:08:53+01:00,test: servicenow-cases.spec.ts - add TC-SN-067
+12016ffe2fc3c1a3e0fa7b4c36c1975565b10b74,12016ff,Rehan Sadiq,rehan.sadiq@reyantech.co.uk,2026-07-27T14:08:53+01:00,2026-07-27T14:08:53+01:00,test: integration-etl.spec.ts - add TC-INT-070
+04a4ee80ee82c32b7e5e60f722d5a99e94c25e7d,04a4ee8,Faiza Aslam,faiza.aslam@reyantech.co.uk,2026-07-27T14:33:22+01:00,2026-07-27T14:33:22+01:00,report: generated evidence report for the executed suite
+4aaa16f2d8a6bad1e8044ae7ad540e9ec1c68272,4aaa16f,Faiza Aslam,faiza.aslam@reyantech.co.uk,2026-07-28T10:51:44+01:00,2026-07-28T10:51:44+01:00,evidence: Word evidence packs for the executed suite
+7ac2e65bbd73b2b032e10fd01045afbdb8cb6820,7ac2e65,Faiza Aslam,faiza.aslam@reyantech.co.uk,2026-07-28T12:36:08+01:00,2026-07-28T12:36:08+01:00,test: integration-readonly.spec.ts - add TC-INT-047
+72f1561e8857c9f2d37a1539344d5a2aacf66ce9,72f1561,Faiza Aslam,faiza.aslam@reyantech.co.uk,2026-07-28T13:19:47+01:00,2026-07-28T13:19:47+01:00,test: integration-ui.spec.ts - add TC-INT-071
+aaab80fbf58b1cfc0aeb54b6d725dcefb7cfee24,aaab80f,Faiza Aslam,faiza.aslam@reyantech.co.uk,2026-07-29T12:36:08+01:00,2026-07-29T12:36:08+01:00,docs: TEST-CASES-SERVICENOW.md - add Coverage summary
+5081d573005ff3d44ef97db026832c1a7fca408f,5081d57,Rehan Sadiq,rehan.sadiq@reyantech.co.uk,2026-07-30T10:21:39+01:00,2026-07-30T10:21:39+01:00,docs: README.md - add Data hazards
+41e666cbbb0a9e5aabee42b6265d3f21319b93ad,41e666c,Rehan Sadiq,rehan.sadiq@reyantech.co.uk,2026-07-30T11:47:26+01:00,2026-07-30T11:47:26+01:00,docs: RUN-TESTS.md - add If something goes wrong
+faedbf01e6bff625a6b65adba199e36f2eb89d8e,faedbf0,Rehan Sadiq,rehan.sadiq@reyantech.co.uk,2026-07-30T16:05:31+01:00,2026-07-30T16:05:31+01:00,"docs: TEST-CASES-INTEGRATION.md - add Highest-value cases, if the run must be cut short"
+7fd666163476849b3300c1624dfce5704537f417,7fd6661,Geethasri Chintha,geethasri.chintha@reyantech.co.uk,2026-08-03T09:26:18+01:00,2026-08-03T09:26:18+01:00,deck: build script for the business overview deck
+55b1834ac8d00c6467818760eaa3b82d30198529,55b1834,Geethasri Chintha,geethasri.chintha@reyantech.co.uk,2026-08-04T13:47:35+01:00,2026-08-04T13:47:35+01:00,deck: technical architecture deck builder
+d5f614129482350ca2baf9fa16a5fab164926591,d5f6141,Geethasri Chintha,geethasri.chintha@reyantech.co.uk,2026-08-05T10:12:09+01:00,2026-08-05T10:12:09+01:00,deck: screenshot cropping utility
+265cd7155c5fe251c58af814502d1f6040a1bb36,265cd71,Geethasri Chintha,geethasri.chintha@reyantech.co.uk,2026-08-06T15:38:26+01:00,2026-08-06T15:38:26+01:00,deck: captured UI screenshots
+41299fb3119606aca94310ca04ad542e6c1e51ce,41299fb,Geethasri Chintha,geethasri.chintha@reyantech.co.uk,2026-08-07T11:04:53+01:00,2026-08-07T11:04:53+01:00,deck: generated business overview and technical decks
+4e4d17f6437e4fa5c3a44e1ad3b5a29d0b83f735,4e4d17f,Geethasri Chintha,geethasri.chintha@reyantech.co.uk,2026-08-07T16:22:41+01:00,2026-08-07T16:22:41+01:00,docs: presentation build notes
+ddcb572df257f62465a77709e31e5311559c6fbb,ddcb572,Reyantech,admin@reyantech.co.uk,2026-08-09T14:30:06+01:00,2026-08-09T14:30:06+01:00,Initial commit
+f3942c5e77d02a5c17103a98fefc0ede48dba4bc,f3942c5,Reyantech,admin@reyantech.co.uk,2026-08-09T14:33:35+01:00,2026-08-09T14:33:35+01:00,Initial commit
+bc5491b37b93acde5c9c52114bc5722e72fbb570,bc5491b,Reyantech,admin@reyantech.co.uk,2026-08-09T14:38:16+01:00,2026-08-09T14:38:16+01:00,Merge branch 'main' of https://github.com/ConsultNow-IT-Solutions-Ltd/caf-sf-integration
+c6267b303ecaf331c61a6d11dba3acccd51630b5,c6267b3,Reyantech,admin@reyantech.co.uk,2026-08-09T15:19:33+01:00,2026-08-09T15:19:33+01:00,revert changes!
+8c5f56edf168b6b639f47c30c9f28e3a3bc1c8a7,8c5f56e,Faiza Aslam,faiza.aslam@reyantech.co.uk,2026-08-10T09:47:12+01:00,2026-08-10T09:47:12+01:00,"test: re-run TC-INT-020, 053 and 071 at the 1425px viewport"
+6b1c73699856f0ddca861b607957e50021c03633,6b1c736,Faiza Aslam,faiza.aslam@reyantech.co.uk,2026-08-10T14:22:39+01:00,2026-08-10T14:22:39+01:00,evidence: regenerate packs for the re-run cases
+4e6d5e9848e8b6fcc9b4f87cfcde0047a7b752f3,4e6d5e9,Geethasri Chintha,geethasri.chintha@reyantech.co.uk,2026-08-11T10:15:44+01:00,2026-08-11T10:15:44+01:00,deck: re-derive crop boxes for the 1425px capture pass
+25d269cb5a4c9f0a469b9ccfc9b74409e27e6990,25d269c,Geethasri Chintha,geethasri.chintha@reyantech.co.uk,2026-08-11T15:38:07+01:00,2026-08-11T15:38:07+01:00,deck: centre the attestation panel at 10.3in
+378dad79a8718a7bfa6040fb1cbf0be626e5016b,378dad7,Geethasri Chintha,geethasri.chintha@reyantech.co.uk,2026-08-12T09:24:53+01:00,2026-08-12T09:24:53+01:00,chore: ignore Word and PowerPoint owner files
+f30755662efa4c060860e8432d2f0468d6f45707,f307556,Geethasri Chintha,geethasri.chintha@reyantech.co.uk,2026-08-12T11:18:35+01:00,2026-08-12T11:18:35+01:00,sn: build the CAF short description from the parts that exist
+07ff04e50920ae3ad10885789585b6e53afa8d71,07ff04e,Geethasri Chintha,geethasri.chintha@reyantech.co.uk,2026-08-12T12:41:09+01:00,2026-08-12T12:41:09+01:00,"sn: push an unset CAF state as empty, not as ""null"""
+0cddec25b064467e8296b86ff704bd447b5ab82b,0cddec2,Rehan Sadiq,rehan.sadiq@reyantech.co.uk,2026-08-12T14:07:52+01:00,2026-08-12T14:07:52+01:00,test: extract cnit's JSON with parseSfJson instead of slicing to the buffer end
+295f9071becf68fdb5e8d2413c9781451462a035,295f907,Rehan Sadiq,rehan.sadiq@reyantech.co.uk,2026-08-12T15:33:41+01:00,2026-08-12T15:33:41+01:00,test: return null from property() when the row carries no value
+b4a6eea11c906a9d9efbbd9538a5b4a3ba05b0d4,b4a6eea,Reyantech,admin@reyantech.co.uk,2026-08-12T13:02:27+01:00,2026-08-12T13:02:27+01:00,Merge dev-history: full delivery history for the CAF Salesforce integration

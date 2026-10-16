@@ -1,25 +1,40 @@
 {
   "run": {
-    "instance": "https://dev281754.service-now.com",
+    "instance": "https://dev249570.service-now.com",
     "executedBy": "sf.integration (ServiceNow Scripted REST API)",
     "executedVia": "Playwright runner, no browser. Each case calls the inbound API as sf.integration — the same user the named credential uses, because the echo-loop guard keys off it — and re-reads the task over cnit before and after to prove nothing was written."
   },
   "case": {
     "id": "TC-INT-034",
     "title": "Re-attesting with the same outcome",
-    "startedAt": "2026-08-08T14:04:20.792Z",
+    "startedAt": "2026-10-04T15:13:46.290Z",
     "verdict": "BLOCKED",
-    "steps": [],
-    "records": [],
+    "steps": [
+      {
+        "n": 1,
+        "text": "Find an active, In Progress task whose approval is already approved or rejected.",
+        "at": "2026-10-04T15:13:46.290Z",
+        "screenshots": []
+      }
+    ],
+    "records": [
+      {
+        "label": "Candidate tasks",
+        "table": "x_gskn2_caf_compli_caf_tsk",
+        "query": "cnit get x_gskn2_caf_compli_caf_tsk -Query \"active=true^state=2^approvalINapproved,rejected\" -Fields number,sys_id,state,active,approval,met_criteria,comments,actual_start_date,sys_updated_on,sys_mod_count -ProfileName caf-dev249570",
+        "rows": [],
+        "at": "2026-10-04T15:13:48.146Z"
+      }
+    ],
     "observations": [
-      "GET /caf/snapshot answered 401 as sf.integration — \"User is not authenticated — Required to provide Auth information\". Every case in this file authenticates the same way, so none of them can reach the branch it tests."
+      "No fixture available. 2 active In Progress task(s) exist, approvals: CAFT0001046=requested, CAFT0001047=requested."
     ],
     "expected": [
       "HTTP 409, \"<number> is already approved.\" (or rejected).",
       "Nothing written."
     ],
     "actual": [],
-    "verdictReason": "GET /caf/snapshot answered 401 as sf.integration — \"User is not authenticated — Required to provide Auth information\". Every case in this file authenticates the same way, so none of them can reach the branch it tests. Diagnose the credential before reading anything into this run — a 401 is indistinguishable from a working refusal at the status-code level, and treating it as one would certify a check that never ran.",
-    "finishedAt": "2026-08-08T14:04:20.792Z"
+    "verdictReason": "This branch needs an active, In Progress task already carrying an outcome. Every attestation on this instance closes the task, so the state exists only if approval was set directly — reachable per TC-SN-033, but manufacturing it is a write. Executable once such a task exists; do not create one for this case alone.",
+    "finishedAt": "2026-10-04T15:13:49.817Z"
   }
 }

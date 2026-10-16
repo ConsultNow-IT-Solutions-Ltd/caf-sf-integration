@@ -1,25 +1,116 @@
 {
   "run": {
-    "instance": "https://dev281754.service-now.com",
+    "instance": "https://dev249570.service-now.com",
     "executedBy": "sf.integration (ServiceNow Scripted REST API)",
     "executedVia": "Playwright runner, no browser. Each case calls the inbound API as sf.integration — the same user the named credential uses, because the echo-loop guard keys off it — and re-reads the task over cnit before and after to prove nothing was written."
   },
   "case": {
     "id": "TC-INT-029",
     "title": "The evidence gate (refusal half)",
-    "startedAt": "2026-08-08T14:04:20.743Z",
-    "verdict": "BLOCKED",
-    "steps": [],
-    "records": [],
+    "startedAt": "2026-10-04T15:13:23.163Z",
+    "verdict": "PASS",
+    "steps": [
+      {
+        "n": 1,
+        "text": "Find an active, In Progress task that holds no sys_attachment.",
+        "at": "2026-10-04T15:13:23.163Z",
+        "screenshots": []
+      },
+      {
+        "n": 2,
+        "text": "Attest it with a fully valid body. The only thing missing is the evidence.",
+        "at": "2026-10-04T15:13:29.202Z",
+        "screenshots": []
+      }
+    ],
+    "records": [
+      {
+        "label": "Active In Progress tasks",
+        "table": "x_gskn2_caf_compli_caf_tsk",
+        "query": "cnit get x_gskn2_caf_compli_caf_tsk -Query \"active=true^state=2\" -Fields number,sys_id,state,active,approval,met_criteria,comments,actual_start_date,sys_updated_on,sys_mod_count -ProfileName caf-dev249570",
+        "rows": [
+          {
+            "number": "CAFT0001046",
+            "sys_id": "a8d9a03083831210bd2a5860ceaad3fd",
+            "comments": "",
+            "actual_start_date": "2025-01-09 14:45:38",
+            "approval": "requested",
+            "met_criteria": "",
+            "sys_mod_count": "2",
+            "active": "true",
+            "state": "2",
+            "sys_updated_on": "2025-01-09 14:45:38"
+          },
+          {
+            "number": "CAFT0001047",
+            "sys_id": "e4d9a03083831210bd2a5860ceaad3f6",
+            "comments": "",
+            "actual_start_date": "2025-01-09 14:45:48",
+            "approval": "requested",
+            "met_criteria": "",
+            "sys_mod_count": "2",
+            "active": "true",
+            "state": "2",
+            "sys_updated_on": "2025-01-09 14:45:48"
+          }
+        ],
+        "at": "2026-10-04T15:13:29.202Z"
+      },
+      {
+        "label": "TC-INT-029 — before",
+        "table": "x_gskn2_caf_compli_caf_tsk",
+        "query": "cnit get x_gskn2_caf_compli_caf_tsk -Query \"sys_id=a8d9a03083831210bd2a5860ceaad3fd\" -Fields number,sys_id,state,active,approval,met_criteria,comments,actual_start_date,sys_updated_on,sys_mod_count -ProfileName caf-dev249570",
+        "rows": [
+          {
+            "number": "CAFT0001046",
+            "sys_id": "a8d9a03083831210bd2a5860ceaad3fd",
+            "comments": "",
+            "actual_start_date": "2025-01-09 14:45:38",
+            "approval": "requested",
+            "met_criteria": "",
+            "sys_mod_count": "2",
+            "active": "true",
+            "state": "2",
+            "sys_updated_on": "2025-01-09 14:45:38"
+          }
+        ],
+        "at": "2026-10-04T15:13:33.261Z"
+      },
+      {
+        "label": "TC-INT-029 — after",
+        "table": "x_gskn2_caf_compli_caf_tsk",
+        "query": "cnit get x_gskn2_caf_compli_caf_tsk -Query \"sys_id=a8d9a03083831210bd2a5860ceaad3fd\" -Fields number,sys_id,state,active,approval,met_criteria,comments,actual_start_date,sys_updated_on,sys_mod_count -ProfileName caf-dev249570",
+        "rows": [
+          {
+            "number": "CAFT0001046",
+            "sys_id": "a8d9a03083831210bd2a5860ceaad3fd",
+            "comments": "",
+            "actual_start_date": "2025-01-09 14:45:38",
+            "approval": "requested",
+            "met_criteria": "",
+            "sys_mod_count": "2",
+            "active": "true",
+            "state": "2",
+            "sys_updated_on": "2025-01-09 14:45:38"
+          }
+        ],
+        "at": "2026-10-04T15:13:33.261Z"
+      }
+    ],
     "observations": [
-      "GET /caf/snapshot answered 401 as sf.integration — \"User is not authenticated — Required to provide Auth information\". Every case in this file authenticates the same way, so none of them can reach the branch it tests."
+      "2 active In Progress task(s); 2 of them hold no ServiceNow attachment.",
+      "Target CAFT0001046 (a8d9a03083831210bd2a5860ceaad3fd), approval=requested. Attesting \"approved\" so the already-that-outcome check, which runs before the gate, cannot intercept.",
+      "Corollary worth recording in the report, not testable here: the same task closes successfully through the /caf portal, because CAF - attachment mandatory for def tasks is deliberately inactive. The gate binds callers of this endpoint and nobody else."
     ],
     "expected": [
       "HTTP 428, \"Attach at least one evidence file to <number> before attesting.\"",
       "Nothing written: approval still requested, state still In Progress, task still active."
     ],
-    "actual": [],
-    "verdictReason": "GET /caf/snapshot answered 401 as sf.integration — \"User is not authenticated — Required to provide Auth information\". Every case in this file authenticates the same way, so none of them can reach the branch it tests. Diagnose the credential before reading anything into this run — a 401 is indistinguishable from a working refusal at the status-code level, and treating it as one would certify a check that never ran.",
-    "finishedAt": "2026-08-08T14:04:20.743Z"
+    "actual": [
+      "HTTP 428 in 204ms — {\"result\":{\"error\":\"Attach at least one evidence file to CAFT0001046 before attesting.\"}}",
+      "CAFT0001046: every compared field unmoved, sys_mod_count still 2."
+    ],
+    "verdictReason": "428 naming CAFT0001046; approval still \"requested\", state still 2.",
+    "finishedAt": "2026-10-04T15:13:33.261Z"
   }
 }

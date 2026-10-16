@@ -11,8 +11,8 @@ Cases that cross the seam into Salesforce live in
 | | |
 |---|---|
 | Application | CAF Compliance, scope `x_gskn2_caf_compli`, v1.0.0 |
-| Instance | `dev281754.service-now.com` |
-| Baseline captured | 2026-08-07, direct from instance metadata |
+| Instance | `dev249570.service-now.com` (dev281754 until 2026-09-04) |
+| Baseline captured | 2026-08-07, direct from dev281754 metadata — not yet re-captured on dev249570 |
 | Cases | 68 |
 
 ---
@@ -39,10 +39,10 @@ to `record-only` costs nothing but the screenshots.
 **Reading the Verify lines.** All use the project's standard invocation:
 
 ```powershell
-& "C:\Users\patel\...\cnit.ps1" get <table> -ProfileName caf-reyan -Query "<encoded>" -Fields <fields> -ExcludeRefLinks
+& "C:\Users\patel\...\cnit.ps1" get <table> -ProfileName caf-dev249570 -Query "<encoded>" -Fields <fields> -ExcludeRefLinks
 ```
 
-Abbreviated below to `cnit get …`. `-ProfileName caf-reyan` is never optional —
+Abbreviated below to `cnit get …`. `-ProfileName caf-dev249570` is never optional —
 omitting it silently queries a different PDI.
 
 ---

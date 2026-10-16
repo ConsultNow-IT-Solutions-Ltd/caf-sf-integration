@@ -1,37 +1,37 @@
 {
   "run": {
-    "instance": "https://dev281754.service-now.com",
+    "instance": "https://dev249570.service-now.com",
     "executedBy": "admin",
     "executedVia": "Playwright (automated); every assertion cross-checked against the ServiceNow Table API"
   },
   "case": {
     "id": "TC-SN-059",
     "title": "Approval records are created consistently for attestation tasks",
-    "startedAt": "2026-08-07T16:59:40.644Z",
-    "verdict": "FAIL",
+    "startedAt": "2026-10-04T16:27:24.696Z",
+    "verdict": "PASS",
     "steps": [
       {
         "n": 1,
         "text": "List every approval record pointing at a CAF Task.",
-        "at": "2026-08-07T16:59:40.644Z",
+        "at": "2026-10-04T16:27:24.696Z",
         "screenshots": []
       },
       {
         "n": 2,
         "text": "List the attestation tasks the flow has created, to compare against.",
-        "at": "2026-08-07T16:59:41.343Z",
+        "at": "2026-10-04T16:27:24.832Z",
         "screenshots": []
       },
       {
         "n": 3,
         "text": "Reconcile: which attestation tasks have an approver, and which do not.",
-        "at": "2026-08-07T16:59:41.531Z",
+        "at": "2026-10-04T16:27:24.975Z",
         "screenshots": []
       },
       {
         "n": 4,
         "text": "Confirm the state of the rule and notification the design document credits with this.",
-        "at": "2026-08-07T16:59:41.531Z",
+        "at": "2026-10-04T16:27:24.975Z",
         "screenshots": []
       }
     ],
@@ -40,18 +40,8 @@
         "label": "Approval records for CAF Tasks",
         "table": "sysapproval_approver",
         "query": "source_table=x_gskn2_caf_compli_caf_tsk",
-        "rows": [
-          {
-            "approver": "b6826bf03710200044e0bfc8bcbe5df8",
-            "sys_id": "22b829bd83a6c310c67233d6feaad33e",
-            "sys_created_on": "2026-08-07 13:56:11",
-            "state": "requested",
-            "document_id": "dab829bd83a6c310c67233d6feaad33c",
-            "source_table": "x_gskn2_caf_compli_caf_tsk",
-            "sys_created_by": "system"
-          }
-        ],
-        "at": "2026-08-07T16:59:41.343Z"
+        "rows": [],
+        "at": "2026-10-04T16:27:24.832Z"
       },
       {
         "label": "Attestation tasks",
@@ -73,7 +63,7 @@
             "approval": "requested",
             "sys_created_on": "2025-01-09 14:21:06",
             "active": "true",
-            "state": "2",
+            "state": "1",
             "sys_created_by": "system"
           },
           {
@@ -138,36 +128,9 @@
             "active": "false",
             "state": "3",
             "sys_created_by": "system"
-          },
-          {
-            "sys_id": "e99621b983a6c310c67233d6feaad3d3",
-            "number": "CAFT0001001",
-            "approval": "requested",
-            "sys_created_on": "2026-08-07 13:46:51",
-            "active": "true",
-            "state": "1",
-            "sys_created_by": "system"
-          },
-          {
-            "sys_id": "dab829bd83a6c310c67233d6feaad33c",
-            "number": "CAFT0001002",
-            "approval": "requested",
-            "sys_created_on": "2026-08-07 13:56:11",
-            "active": "true",
-            "state": "1",
-            "sys_created_by": "system"
-          },
-          {
-            "sys_id": "2ccb693583e6c310c67233d6feaad346",
-            "number": "CAFT0001003",
-            "approval": "requested",
-            "sys_created_on": "2026-08-07 14:09:26",
-            "active": "true",
-            "state": "1",
-            "sys_created_by": "system"
           }
         ],
-        "at": "2026-08-07T16:59:41.531Z"
+        "at": "2026-10-04T16:27:24.974Z"
       },
       {
         "label": "Reconciliation",
@@ -183,7 +146,7 @@
           {
             "task": "CAFT0001026",
             "created": "2025-01-09 14:21:06",
-            "state": "2",
+            "state": "1",
             "has_approval_record": "no"
           },
           {
@@ -227,27 +190,9 @@
             "created": "2025-01-09 14:44:14",
             "state": "3",
             "has_approval_record": "no"
-          },
-          {
-            "task": "CAFT0001001",
-            "created": "2026-08-07 13:46:51",
-            "state": "1",
-            "has_approval_record": "no"
-          },
-          {
-            "task": "CAFT0001002",
-            "created": "2026-08-07 13:56:11",
-            "state": "1",
-            "has_approval_record": "YES"
-          },
-          {
-            "task": "CAFT0001003",
-            "created": "2026-08-07 14:09:26",
-            "state": "1",
-            "has_approval_record": "no"
           }
         ],
-        "at": "2026-08-07T16:59:41.531Z"
+        "at": "2026-10-04T16:27:24.975Z"
       },
       {
         "label": "Business rule \"CAF - Approval Task\"",
@@ -261,7 +206,7 @@
             "when": "after"
           }
         ],
-        "at": "2026-08-07T16:59:41.782Z"
+        "at": "2026-10-04T16:27:25.161Z"
       },
       {
         "label": "Notification \"CAF - Approval Requested\"",
@@ -275,22 +220,20 @@
             "collection": "sysapproval_approver"
           }
         ],
-        "at": "2026-08-07T16:59:41.978Z"
+        "at": "2026-10-04T16:27:25.307Z"
       }
     ],
     "observations": [
-      "HANDOFF section 6 states \"sysapproval_approver holds no CAF records at all\". That is no longer true — 1 record(s) now exist, created by \"system\", i.e. by the flow rather than by the inactive business rule \"CAF - Approval Task\".",
-      "The problem is not that approvals exist; it is that they exist for SOME attestation tasks and not others. Identical tasks from the same template, created by the same process, are being treated differently.",
-      "Consequence: notification \"CAF - Approval Requested\" fires for a minority of attestations and stays silent for the rest, so an approver is emailed sometimes and not others, with no visible reason. Tasks with no approval record still have no named approver at all — HANDOFF open item 2."
+      "No approval records at all, matching HANDOFF section 6. Attestation therefore uses the approval field alone and there is NO NAMED APPROVER — whoever presses the button in Salesforce is the approver, unrecorded."
     ],
     "expected": [
       "Every \"IT Application Owner Attestation\" task spawned by the flow is treated the same way: either they all get a sysapproval_approver record with a named approver, or none of them do.",
       "Whatever the rule is, it is applied uniformly — an approver on some tasks and not others is not a defensible audit trail."
     ],
     "actual": [
-      "1 approval record(s) exist. Of 12 attestation task(s), 1 have an approval record and 11 do not."
+      "0 approval record(s) exist. Of 9 attestation task(s), 0 have an approval record and 9 do not."
     ],
-    "verdictReason": "Approval creation is inconsistent: 1 of 12 attestation tasks have an approver record. Determine what distinguishes them before this reaches a client.",
-    "finishedAt": "2026-08-07T16:59:41.979Z"
+    "verdictReason": "Consistent: no attestation task carries an approver. Report as a known gap, not a defect.",
+    "finishedAt": "2026-10-04T16:27:25.307Z"
   }
 }

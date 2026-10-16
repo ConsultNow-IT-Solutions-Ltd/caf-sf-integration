@@ -976,7 +976,7 @@ page — though no such site exists yet.
 | **List views** | `All`, with explicit `<columns>` on both objects |
 | **Page layouts** | Carrying the custom fields, every mirrored field Readonly except `State__c` |
 | **Permission set** | `CAF_Integration` — in source, and must be extended for any new field |
-| **Named credential** | `ServiceNow_CAF` → `https://dev281754.service-now.com`, principal type Named User. **Created by hand, deliberately not in source** |
+| **Named credential** | `ServiceNow_CAF` → `https://dev249570.service-now.com`, principal type Named User. **Created by hand, deliberately not in source** |
 
 > **The Metadata API blind spot.** Anything created over the Metadata API needs
 > four things the UI wizard does silently — field-level security, a page layout

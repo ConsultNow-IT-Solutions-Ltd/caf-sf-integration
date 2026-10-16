@@ -1,30 +1,80 @@
 {
   "run": {
-    "instance": "https://dev281754.service-now.com + Salesforce orgfarm-4938c7f768-dev-ed",
+    "instance": "https://dev249570.service-now.com + Salesforce orgfarm-4938c7f768-dev-ed",
     "executedBy": "admin (ServiceNow, via cnit OAuth) / admin.070b86ccf531@agentforce.com (Salesforce)",
     "executedVia": "Playwright runner, no browser and no writes. ServiceNow read over cnit, Salesforce over the sf CLI. Each case compares the transform output held in Salesforce against the source record it was built from."
   },
   "case": {
     "id": "TC-INT-066",
     "title": "The state code-to-label mapping is total",
-    "startedAt": "2026-08-08T16:03:07.228Z",
-    "verdict": "FAIL",
+    "startedAt": "2026-10-04T15:33:46.392Z",
+    "verdict": "PASS",
     "steps": [
       {
         "n": 1,
         "text": "Collect the distinct state values on requests and their mirrored labels.",
-        "at": "2026-08-08T16:03:07.229Z",
+        "at": "2026-10-04T15:33:46.392Z",
+        "screenshots": []
+      },
+      {
+        "n": 2,
+        "text": "Collect the distinct state values on tasks and their mirrored labels.",
+        "at": "2026-10-04T15:33:55.546Z",
         "screenshots": []
       }
     ],
-    "records": [],
+    "records": [
+      {
+        "label": "Requests — states in use",
+        "table": "x_gskn2_caf_compli_caf_req",
+        "query": "cnit get x_gskn2_caf_compli_caf_req -Fields number,state -ProfileName caf-dev249570",
+        "rows": [
+          {
+            "state": "1",
+            "label": "Open"
+          },
+          {
+            "state": "2",
+            "label": "In Progress"
+          },
+          {
+            "state": "3",
+            "label": "Closed Complete"
+          }
+        ],
+        "at": "2026-10-04T15:33:55.546Z"
+      },
+      {
+        "label": "Tasks — states in use",
+        "table": "x_gskn2_caf_compli_caf_tsk",
+        "query": "cnit get x_gskn2_caf_compli_caf_tsk -Fields number,state -ProfileName caf-dev249570",
+        "rows": [
+          {
+            "state": "1",
+            "label": "Open"
+          },
+          {
+            "state": "2",
+            "label": "In Progress"
+          },
+          {
+            "state": "3",
+            "label": "Closed Complete"
+          }
+        ],
+        "at": "2026-10-04T15:34:11.965Z"
+      }
+    ],
     "observations": [],
     "expected": [
       "Every state value in use maps to a label: 1, 2, 3, -1.",
       "No mirrored State__c holds a bare numeric string."
     ],
-    "actual": [],
-    "verdictReason": "SyntaxError: Expected property name or '}' in JSON at position 1 (line 1 column 2)",
-    "finishedAt": "2026-08-08T16:03:13.407Z"
+    "actual": [
+      "Requests: states in use 1, 2, 3; 0 unmapped; 0 mislabelled; 0 rendering as a raw number.",
+      "Tasks: states in use 1, 2, 3; 0 unmapped; 0 mislabelled; 0 rendering as a raw number."
+    ],
+    "verdictReason": "Every state in use maps to a label, and every mirrored label matches.",
+    "finishedAt": "2026-10-04T15:34:11.965Z"
   }
 }

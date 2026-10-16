@@ -1,18 +1,325 @@
 {
   "run": {
-    "instance": "https://dev281754.service-now.com",
+    "instance": "https://dev249570.service-now.com",
     "executedBy": "sf.integration (ServiceNow Scripted REST API)",
     "executedVia": "Playwright runner, no browser. Each case calls the inbound API as sf.integration — the same user the named credential uses, because the echo-loop guard keys off it — and re-reads the task over cnit before and after to prove nothing was written."
   },
   "case": {
     "id": "TC-INT-013",
     "title": "A non-allow-listed field fails the whole call",
-    "startedAt": "2026-08-08T14:04:20.019Z",
-    "verdict": "BLOCKED",
-    "steps": [],
-    "records": [],
+    "startedAt": "2026-10-04T15:12:35.514Z",
+    "verdict": "PASS",
+    "steps": [
+      {
+        "n": 1,
+        "text": "Select an Open, active task, so that a leaked `state` write would be visible rather than a no-op.",
+        "at": "2026-10-04T15:12:36.287Z",
+        "screenshots": []
+      },
+      {
+        "n": 2,
+        "text": "Canary: PATCH with a benign allow-listed field plus a non-writable one.",
+        "at": "2026-10-04T15:12:38.893Z",
+        "screenshots": []
+      },
+      {
+        "n": 3,
+        "text": "Send the documented body and each sub-case, every one pairing state=2 with a refused field.",
+        "at": "2026-10-04T15:12:43.157Z",
+        "screenshots": []
+      },
+      {
+        "n": 4,
+        "text": "Confirm the canary comment reached no task anywhere on the instance.",
+        "at": "2026-10-04T15:13:10.445Z",
+        "screenshots": []
+      }
+    ],
+    "records": [
+      {
+        "label": "Canary — before",
+        "table": "x_gskn2_caf_compli_caf_tsk",
+        "query": "cnit get x_gskn2_caf_compli_caf_tsk -Query \"sys_id=2832a47483431210bd2a5860ceaad3bb\" -Fields number,sys_id,state,active,approval,met_criteria,comments,actual_start_date,sys_updated_on,sys_mod_count -ProfileName caf-dev249570",
+        "rows": [
+          {
+            "number": "CAFT0001001",
+            "sys_id": "2832a47483431210bd2a5860ceaad3bb",
+            "comments": "",
+            "actual_start_date": "",
+            "approval": "requested",
+            "met_criteria": "",
+            "sys_mod_count": "0",
+            "active": "true",
+            "state": "1",
+            "sys_updated_on": "2025-01-09 14:12:02"
+          }
+        ],
+        "at": "2026-10-04T15:12:43.157Z"
+      },
+      {
+        "label": "Canary — after",
+        "table": "x_gskn2_caf_compli_caf_tsk",
+        "query": "cnit get x_gskn2_caf_compli_caf_tsk -Query \"sys_id=2832a47483431210bd2a5860ceaad3bb\" -Fields number,sys_id,state,active,approval,met_criteria,comments,actual_start_date,sys_updated_on,sys_mod_count -ProfileName caf-dev249570",
+        "rows": [
+          {
+            "number": "CAFT0001001",
+            "sys_id": "2832a47483431210bd2a5860ceaad3bb",
+            "comments": "",
+            "actual_start_date": "",
+            "approval": "requested",
+            "met_criteria": "",
+            "sys_mod_count": "0",
+            "active": "true",
+            "state": "1",
+            "sys_updated_on": "2025-01-09 14:12:02"
+          }
+        ],
+        "at": "2026-10-04T15:12:43.157Z"
+      },
+      {
+        "label": "Sub-case number — before",
+        "table": "x_gskn2_caf_compli_caf_tsk",
+        "query": "cnit get x_gskn2_caf_compli_caf_tsk -Query \"sys_id=2832a47483431210bd2a5860ceaad3bb\" -Fields number,sys_id,state,active,approval,met_criteria,comments,actual_start_date,sys_updated_on,sys_mod_count -ProfileName caf-dev249570",
+        "rows": [
+          {
+            "number": "CAFT0001001",
+            "sys_id": "2832a47483431210bd2a5860ceaad3bb",
+            "comments": "",
+            "actual_start_date": "",
+            "approval": "requested",
+            "met_criteria": "",
+            "sys_mod_count": "0",
+            "active": "true",
+            "state": "1",
+            "sys_updated_on": "2025-01-09 14:12:02"
+          }
+        ],
+        "at": "2026-10-04T15:12:47.669Z"
+      },
+      {
+        "label": "Sub-case number — after",
+        "table": "x_gskn2_caf_compli_caf_tsk",
+        "query": "cnit get x_gskn2_caf_compli_caf_tsk -Query \"sys_id=2832a47483431210bd2a5860ceaad3bb\" -Fields number,sys_id,state,active,approval,met_criteria,comments,actual_start_date,sys_updated_on,sys_mod_count -ProfileName caf-dev249570",
+        "rows": [
+          {
+            "number": "CAFT0001001",
+            "sys_id": "2832a47483431210bd2a5860ceaad3bb",
+            "comments": "",
+            "actual_start_date": "",
+            "approval": "requested",
+            "met_criteria": "",
+            "sys_mod_count": "0",
+            "active": "true",
+            "state": "1",
+            "sys_updated_on": "2025-01-09 14:12:02"
+          }
+        ],
+        "at": "2026-10-04T15:12:47.669Z"
+      },
+      {
+        "label": "Sub-case active — before",
+        "table": "x_gskn2_caf_compli_caf_tsk",
+        "query": "cnit get x_gskn2_caf_compli_caf_tsk -Query \"sys_id=2832a47483431210bd2a5860ceaad3bb\" -Fields number,sys_id,state,active,approval,met_criteria,comments,actual_start_date,sys_updated_on,sys_mod_count -ProfileName caf-dev249570",
+        "rows": [
+          {
+            "number": "CAFT0001001",
+            "sys_id": "2832a47483431210bd2a5860ceaad3bb",
+            "comments": "",
+            "actual_start_date": "",
+            "approval": "requested",
+            "met_criteria": "",
+            "sys_mod_count": "0",
+            "active": "true",
+            "state": "1",
+            "sys_updated_on": "2025-01-09 14:12:02"
+          }
+        ],
+        "at": "2026-10-04T15:12:52.239Z"
+      },
+      {
+        "label": "Sub-case active — after",
+        "table": "x_gskn2_caf_compli_caf_tsk",
+        "query": "cnit get x_gskn2_caf_compli_caf_tsk -Query \"sys_id=2832a47483431210bd2a5860ceaad3bb\" -Fields number,sys_id,state,active,approval,met_criteria,comments,actual_start_date,sys_updated_on,sys_mod_count -ProfileName caf-dev249570",
+        "rows": [
+          {
+            "number": "CAFT0001001",
+            "sys_id": "2832a47483431210bd2a5860ceaad3bb",
+            "comments": "",
+            "actual_start_date": "",
+            "approval": "requested",
+            "met_criteria": "",
+            "sys_mod_count": "0",
+            "active": "true",
+            "state": "1",
+            "sys_updated_on": "2025-01-09 14:12:02"
+          }
+        ],
+        "at": "2026-10-04T15:12:52.239Z"
+      },
+      {
+        "label": "Sub-case business_application — before",
+        "table": "x_gskn2_caf_compli_caf_tsk",
+        "query": "cnit get x_gskn2_caf_compli_caf_tsk -Query \"sys_id=2832a47483431210bd2a5860ceaad3bb\" -Fields number,sys_id,state,active,approval,met_criteria,comments,actual_start_date,sys_updated_on,sys_mod_count -ProfileName caf-dev249570",
+        "rows": [
+          {
+            "number": "CAFT0001001",
+            "sys_id": "2832a47483431210bd2a5860ceaad3bb",
+            "comments": "",
+            "actual_start_date": "",
+            "approval": "requested",
+            "met_criteria": "",
+            "sys_mod_count": "0",
+            "active": "true",
+            "state": "1",
+            "sys_updated_on": "2025-01-09 14:12:02"
+          }
+        ],
+        "at": "2026-10-04T15:12:57.326Z"
+      },
+      {
+        "label": "Sub-case business_application — after",
+        "table": "x_gskn2_caf_compli_caf_tsk",
+        "query": "cnit get x_gskn2_caf_compli_caf_tsk -Query \"sys_id=2832a47483431210bd2a5860ceaad3bb\" -Fields number,sys_id,state,active,approval,met_criteria,comments,actual_start_date,sys_updated_on,sys_mod_count -ProfileName caf-dev249570",
+        "rows": [
+          {
+            "number": "CAFT0001001",
+            "sys_id": "2832a47483431210bd2a5860ceaad3bb",
+            "comments": "",
+            "actual_start_date": "",
+            "approval": "requested",
+            "met_criteria": "",
+            "sys_mod_count": "0",
+            "active": "true",
+            "state": "1",
+            "sys_updated_on": "2025-01-09 14:12:02"
+          }
+        ],
+        "at": "2026-10-04T15:12:57.326Z"
+      },
+      {
+        "label": "Sub-case actual_start_date — before",
+        "table": "x_gskn2_caf_compli_caf_tsk",
+        "query": "cnit get x_gskn2_caf_compli_caf_tsk -Query \"sys_id=2832a47483431210bd2a5860ceaad3bb\" -Fields number,sys_id,state,active,approval,met_criteria,comments,actual_start_date,sys_updated_on,sys_mod_count -ProfileName caf-dev249570",
+        "rows": [
+          {
+            "number": "CAFT0001001",
+            "sys_id": "2832a47483431210bd2a5860ceaad3bb",
+            "comments": "",
+            "actual_start_date": "",
+            "approval": "requested",
+            "met_criteria": "",
+            "sys_mod_count": "0",
+            "active": "true",
+            "state": "1",
+            "sys_updated_on": "2025-01-09 14:12:02"
+          }
+        ],
+        "at": "2026-10-04T15:13:02.261Z"
+      },
+      {
+        "label": "Sub-case actual_start_date — after",
+        "table": "x_gskn2_caf_compli_caf_tsk",
+        "query": "cnit get x_gskn2_caf_compli_caf_tsk -Query \"sys_id=2832a47483431210bd2a5860ceaad3bb\" -Fields number,sys_id,state,active,approval,met_criteria,comments,actual_start_date,sys_updated_on,sys_mod_count -ProfileName caf-dev249570",
+        "rows": [
+          {
+            "number": "CAFT0001001",
+            "sys_id": "2832a47483431210bd2a5860ceaad3bb",
+            "comments": "",
+            "actual_start_date": "",
+            "approval": "requested",
+            "met_criteria": "",
+            "sys_mod_count": "0",
+            "active": "true",
+            "state": "1",
+            "sys_updated_on": "2025-01-09 14:12:02"
+          }
+        ],
+        "at": "2026-10-04T15:13:02.261Z"
+      },
+      {
+        "label": "Sub-case caf_request — before",
+        "table": "x_gskn2_caf_compli_caf_tsk",
+        "query": "cnit get x_gskn2_caf_compli_caf_tsk -Query \"sys_id=2832a47483431210bd2a5860ceaad3bb\" -Fields number,sys_id,state,active,approval,met_criteria,comments,actual_start_date,sys_updated_on,sys_mod_count -ProfileName caf-dev249570",
+        "rows": [
+          {
+            "number": "CAFT0001001",
+            "sys_id": "2832a47483431210bd2a5860ceaad3bb",
+            "comments": "",
+            "actual_start_date": "",
+            "approval": "requested",
+            "met_criteria": "",
+            "sys_mod_count": "0",
+            "active": "true",
+            "state": "1",
+            "sys_updated_on": "2025-01-09 14:12:02"
+          }
+        ],
+        "at": "2026-10-04T15:13:06.423Z"
+      },
+      {
+        "label": "Sub-case caf_request — after",
+        "table": "x_gskn2_caf_compli_caf_tsk",
+        "query": "cnit get x_gskn2_caf_compli_caf_tsk -Query \"sys_id=2832a47483431210bd2a5860ceaad3bb\" -Fields number,sys_id,state,active,approval,met_criteria,comments,actual_start_date,sys_updated_on,sys_mod_count -ProfileName caf-dev249570",
+        "rows": [
+          {
+            "number": "CAFT0001001",
+            "sys_id": "2832a47483431210bd2a5860ceaad3bb",
+            "comments": "",
+            "actual_start_date": "",
+            "approval": "requested",
+            "met_criteria": "",
+            "sys_mod_count": "0",
+            "active": "true",
+            "state": "1",
+            "sys_updated_on": "2025-01-09 14:12:02"
+          }
+        ],
+        "at": "2026-10-04T15:13:06.423Z"
+      },
+      {
+        "label": "Sub-case sys_id — before",
+        "table": "x_gskn2_caf_compli_caf_tsk",
+        "query": "cnit get x_gskn2_caf_compli_caf_tsk -Query \"sys_id=2832a47483431210bd2a5860ceaad3bb\" -Fields number,sys_id,state,active,approval,met_criteria,comments,actual_start_date,sys_updated_on,sys_mod_count -ProfileName caf-dev249570",
+        "rows": [
+          {
+            "number": "CAFT0001001",
+            "sys_id": "2832a47483431210bd2a5860ceaad3bb",
+            "comments": "",
+            "actual_start_date": "",
+            "approval": "requested",
+            "met_criteria": "",
+            "sys_mod_count": "0",
+            "active": "true",
+            "state": "1",
+            "sys_updated_on": "2025-01-09 14:12:02"
+          }
+        ],
+        "at": "2026-10-04T15:13:10.445Z"
+      },
+      {
+        "label": "Sub-case sys_id — after",
+        "table": "x_gskn2_caf_compli_caf_tsk",
+        "query": "cnit get x_gskn2_caf_compli_caf_tsk -Query \"sys_id=2832a47483431210bd2a5860ceaad3bb\" -Fields number,sys_id,state,active,approval,met_criteria,comments,actual_start_date,sys_updated_on,sys_mod_count -ProfileName caf-dev249570",
+        "rows": [
+          {
+            "number": "CAFT0001001",
+            "sys_id": "2832a47483431210bd2a5860ceaad3bb",
+            "comments": "",
+            "actual_start_date": "",
+            "approval": "requested",
+            "met_criteria": "",
+            "sys_mod_count": "0",
+            "active": "true",
+            "state": "1",
+            "sys_updated_on": "2025-01-09 14:12:02"
+          }
+        ],
+        "at": "2026-10-04T15:13:10.445Z"
+      }
+    ],
     "observations": [
-      "GET /caf/snapshot answered 401 as sf.integration — \"User is not authenticated — Required to provide Auth information\". Every case in this file authenticates the same way, so none of them can reach the branch it tests."
+      "Target CAFT0001001 (2832a47483431210bd2a5860ceaad3bb), state=1, active=true.",
+      "Canary refused cleanly, so the state-bearing sub-cases below cannot write either."
     ],
     "expected": [
       "HTTP 400, body naming the refused field: \"Fields not writable from Salesforce: <field>\".",
@@ -20,8 +327,23 @@
       "Re-reading the task shows nothing changed and sys_updated_on unmoved.",
       "Each of number, active, business_application, actual_start_date, caf_request and sys_id is refused."
     ],
-    "actual": [],
-    "verdictReason": "GET /caf/snapshot answered 401 as sf.integration — \"User is not authenticated — Required to provide Auth information\". Every case in this file authenticates the same way, so none of them can reach the branch it tests. Diagnose the credential before reading anything into this run — a 401 is indistinguishable from a working refusal at the status-code level, and treating it as one would certify a check that never ran.",
-    "finishedAt": "2026-08-08T14:04:20.685Z"
+    "actual": [
+      "Canary responded HTTP 400 in 358ms: {\"result\":{\"error\":\"Fields not writable from Salesforce: number\"}}",
+      "CAFT0001001: every compared field unmoved, sys_mod_count still 0.",
+      "number: HTTP 400 — {\"result\":{\"error\":\"Fields not writable from Salesforce: number\"}}",
+      "CAFT0001001: every compared field unmoved, sys_mod_count still 0.",
+      "active: HTTP 400 — {\"result\":{\"error\":\"Fields not writable from Salesforce: active\"}}",
+      "CAFT0001001: every compared field unmoved, sys_mod_count still 0.",
+      "business_application: HTTP 400 — {\"result\":{\"error\":\"Fields not writable from Salesforce: business_application\"}}",
+      "CAFT0001001: every compared field unmoved, sys_mod_count still 0.",
+      "actual_start_date: HTTP 400 — {\"result\":{\"error\":\"Fields not writable from Salesforce: actual_start_date\"}}",
+      "CAFT0001001: every compared field unmoved, sys_mod_count still 0.",
+      "caf_request: HTTP 400 — {\"result\":{\"error\":\"Fields not writable from Salesforce: caf_request\"}}",
+      "CAFT0001001: every compared field unmoved, sys_mod_count still 0.",
+      "sys_id: HTTP 400 — {\"result\":{\"error\":\"Fields not writable from Salesforce: sys_id\"}}",
+      "CAFT0001001: every compared field unmoved, sys_mod_count still 0."
+    ],
+    "verdictReason": "All six non-writable fields refused with 400, the allow-listed field in each body unapplied, task unmoved.",
+    "finishedAt": "2026-10-04T15:13:12.376Z"
   }
 }

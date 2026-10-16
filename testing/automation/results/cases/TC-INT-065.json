@@ -1,31 +1,421 @@
 {
   "run": {
-    "instance": "https://dev281754.service-now.com + Salesforce orgfarm-4938c7f768-dev-ed",
+    "instance": "https://dev249570.service-now.com + Salesforce orgfarm-4938c7f768-dev-ed",
     "executedBy": "admin (ServiceNow, via cnit OAuth) / admin.070b86ccf531@agentforce.com (Salesforce)",
     "executedVia": "Playwright runner, no browser and no writes. ServiceNow read over cnit, Salesforce over the sf CLI. Each case compares the transform output held in Salesforce against the source record it was built from."
   },
   "case": {
     "id": "TC-INT-065",
     "title": "Date conversion fidelity",
-    "startedAt": "2026-08-08T16:03:02.104Z",
-    "verdict": "FAIL",
+    "startedAt": "2026-10-04T15:33:19.341Z",
+    "verdict": "PASS",
     "steps": [
       {
         "n": 1,
         "text": "Establish the Salesforce field type — a date silently drops the time a datetime would keep.",
-        "at": "2026-08-08T16:03:02.104Z",
+        "at": "2026-10-04T15:33:19.341Z",
+        "screenshots": []
+      },
+      {
+        "n": 2,
+        "text": "Compare requests field by field.",
+        "at": "2026-10-04T15:33:27.983Z",
+        "screenshots": []
+      },
+      {
+        "n": 3,
+        "text": "Compare tasks field by field.",
+        "at": "2026-10-04T15:33:37.501Z",
         "screenshots": []
       }
     ],
-    "records": [],
-    "observations": [],
+    "records": [
+      {
+        "label": "Requests — Salesforce",
+        "table": "CAF_Request__c",
+        "query": "sf data query --query \"SELECT SN_Number__c, ServiceNow_Sys_Id__c, Planned_Completion_Date__c FROM CAF_Request__c ORDER BY SN_Number__c\" --target-org caf-sf",
+        "rows": [
+          {
+            "SN_Number__c": "RCAF0001001",
+            "ServiceNow_Sys_Id__c": "cc67fc481b5ee5d0a3d187b8e34bcbf9",
+            "Planned_Completion_Date__c": null
+          },
+          {
+            "SN_Number__c": "RCAF0001019",
+            "ServiceNow_Sys_Id__c": "32932cf483431210bd2a5860ceaad317",
+            "Planned_Completion_Date__c": "2025-02-08T14:18:13.000+0000"
+          },
+          {
+            "SN_Number__c": "RCAF0001020",
+            "ServiceNow_Sys_Id__c": "32932cf483431210bd2a5860ceaad31a",
+            "Planned_Completion_Date__c": "2025-02-08T14:18:13.000+0000"
+          },
+          {
+            "SN_Number__c": "RCAF0001021",
+            "ServiceNow_Sys_Id__c": "fe932cf483431210bd2a5860ceaad31c",
+            "Planned_Completion_Date__c": "2025-02-08T14:18:13.000+0000"
+          },
+          {
+            "SN_Number__c": "RCAF0001022",
+            "ServiceNow_Sys_Id__c": "32932cf483431210bd2a5860ceaad3ce",
+            "Planned_Completion_Date__c": "2025-02-08T14:18:13.000+0000"
+          },
+          {
+            "SN_Number__c": "RCAF0001023",
+            "ServiceNow_Sys_Id__c": "cf932cf483431210bd2a5860ceaad3d0",
+            "Planned_Completion_Date__c": "2025-02-08T14:18:13.000+0000"
+          },
+          {
+            "SN_Number__c": "RCAF0001024",
+            "ServiceNow_Sys_Id__c": "8f932cf483431210bd2a5860ceaad3d3",
+            "Planned_Completion_Date__c": "2025-02-08T14:18:13.000+0000"
+          },
+          {
+            "SN_Number__c": "RCAF0001031",
+            "ServiceNow_Sys_Id__c": "de19acbc83431210bd2a5860ceaad37e",
+            "Planned_Completion_Date__c": "2025-02-08T14:42:12.000+0000"
+          },
+          {
+            "SN_Number__c": "RCAF0001032",
+            "ServiceNow_Sys_Id__c": "1219acbc83431210bd2a5860ceaad382",
+            "Planned_Completion_Date__c": "2025-02-08T14:42:12.000+0000"
+          },
+          {
+            "SN_Number__c": "RCAF0001033",
+            "ServiceNow_Sys_Id__c": "1219acbc83431210bd2a5860ceaad385",
+            "Planned_Completion_Date__c": "2025-02-08T14:42:12.000+0000"
+          },
+          {
+            "SN_Number__c": "RCAF0001034",
+            "ServiceNow_Sys_Id__c": "1219acbc83431210bd2a5860ceaad388",
+            "Planned_Completion_Date__c": "2025-02-08T14:42:12.000+0000"
+          },
+          {
+            "SN_Number__c": "RCAF0001035",
+            "ServiceNow_Sys_Id__c": "d219ecbc83431210bd2a5860ceaad390",
+            "Planned_Completion_Date__c": "2025-02-08T14:42:12.000+0000"
+          },
+          {
+            "SN_Number__c": "RCAF0001036",
+            "ServiceNow_Sys_Id__c": "d219ecbc83431210bd2a5860ceaad393",
+            "Planned_Completion_Date__c": "2025-02-08T14:42:12.000+0000"
+          },
+          {
+            "SN_Number__c": "RCAF0001037",
+            "ServiceNow_Sys_Id__c": "dcd9acfc83431210bd2a5860ceaad35b",
+            "Planned_Completion_Date__c": "2025-02-08T14:45:20.000+0000"
+          },
+          {
+            "SN_Number__c": "RCAF0001038",
+            "ServiceNow_Sys_Id__c": "18d9acfc83431210bd2a5860ceaad35f",
+            "Planned_Completion_Date__c": "2025-02-08T14:45:20.000+0000"
+          },
+          {
+            "SN_Number__c": "RCAF0001039",
+            "ServiceNow_Sys_Id__c": "14d9a03083831210bd2a5860ceaad3ce",
+            "Planned_Completion_Date__c": "2025-02-08T14:45:20.000+0000"
+          },
+          {
+            "SN_Number__c": "RCAF0001040",
+            "ServiceNow_Sys_Id__c": "d0d9a03083831210bd2a5860ceaad3d1",
+            "Planned_Completion_Date__c": "2025-02-08T14:45:20.000+0000"
+          },
+          {
+            "SN_Number__c": "RCAF0001041",
+            "ServiceNow_Sys_Id__c": "90d9a03083831210bd2a5860ceaad3d4",
+            "Planned_Completion_Date__c": "2025-02-08T14:45:21.000+0000"
+          },
+          {
+            "SN_Number__c": "RCAF0001042",
+            "ServiceNow_Sys_Id__c": "50d9a03083831210bd2a5860ceaad3d7",
+            "Planned_Completion_Date__c": "2025-02-08T14:45:21.000+0000"
+          }
+        ],
+        "at": "2026-10-04T15:33:37.500Z"
+      },
+      {
+        "label": "Tasks — Salesforce",
+        "table": "CAF_Task__c",
+        "query": "sf data query --query \"SELECT SN_Number__c, ServiceNow_Sys_Id__c, Planned_Completion_Date__c FROM CAF_Task__c ORDER BY SN_Number__c\" --target-org caf-sf",
+        "rows": [
+          {
+            "SN_Number__c": "CAFT0001001",
+            "ServiceNow_Sys_Id__c": "2832a47483431210bd2a5860ceaad3bb",
+            "Planned_Completion_Date__c": "2025-02-08T14:12:00.000+0000"
+          },
+          {
+            "SN_Number__c": "CAFT0001002",
+            "ServiceNow_Sys_Id__c": "2c32a47483431210bd2a5860ceaad38c",
+            "Planned_Completion_Date__c": "2025-02-08T14:12:00.000+0000"
+          },
+          {
+            "SN_Number__c": "CAFT0001003",
+            "ServiceNow_Sys_Id__c": "a432a47483431210bd2a5860ceaad3e8",
+            "Planned_Completion_Date__c": "2025-02-08T14:12:00.000+0000"
+          },
+          {
+            "SN_Number__c": "CAFT0001004",
+            "ServiceNow_Sys_Id__c": "2c32a47483431210bd2a5860ceaad3de",
+            "Planned_Completion_Date__c": "2025-02-08T14:12:01.000+0000"
+          },
+          {
+            "SN_Number__c": "CAFT0001005",
+            "ServiceNow_Sys_Id__c": "e032a47483431210bd2a5860ceaad3ef",
+            "Planned_Completion_Date__c": "2025-02-08T14:12:01.000+0000"
+          },
+          {
+            "SN_Number__c": "CAFT0001006",
+            "ServiceNow_Sys_Id__c": "6832a47483431210bd2a5860ceaad3e5",
+            "Planned_Completion_Date__c": "2025-02-08T14:12:01.000+0000"
+          },
+          {
+            "SN_Number__c": "CAFT0001007",
+            "ServiceNow_Sys_Id__c": "2342687483431210bd2a5860ceaad309",
+            "Planned_Completion_Date__c": "2025-02-08T14:12:30.000+0000"
+          },
+          {
+            "SN_Number__c": "CAFT0001008",
+            "ServiceNow_Sys_Id__c": "e742687483431210bd2a5860ceaad389",
+            "Planned_Completion_Date__c": "2025-02-08T14:12:30.000+0000"
+          },
+          {
+            "SN_Number__c": "CAFT0001009",
+            "ServiceNow_Sys_Id__c": "6f42687483431210bd2a5860ceaad3a1",
+            "Planned_Completion_Date__c": "2025-02-08T14:12:30.000+0000"
+          },
+          {
+            "SN_Number__c": "CAFT0001010",
+            "ServiceNow_Sys_Id__c": "ab42687483431210bd2a5860ceaad398",
+            "Planned_Completion_Date__c": "2025-02-08T14:12:30.000+0000"
+          },
+          {
+            "SN_Number__c": "CAFT0001011",
+            "ServiceNow_Sys_Id__c": "2742687483431210bd2a5860ceaad390",
+            "Planned_Completion_Date__c": "2025-02-08T14:12:31.000+0000"
+          },
+          {
+            "SN_Number__c": "CAFT0001012",
+            "ServiceNow_Sys_Id__c": "ab42687483431210bd2a5860ceaad3a8",
+            "Planned_Completion_Date__c": "2025-02-08T14:12:31.000+0000"
+          },
+          {
+            "SN_Number__c": "CAFT0001013",
+            "ServiceNow_Sys_Id__c": "e96328f483431210bd2a5860ceaad341",
+            "Planned_Completion_Date__c": "2025-02-08T14:17:16.000+0000"
+          },
+          {
+            "SN_Number__c": "CAFT0001014",
+            "ServiceNow_Sys_Id__c": "e96328f483431210bd2a5860ceaad355",
+            "Planned_Completion_Date__c": "2025-02-08T14:17:16.000+0000"
+          },
+          {
+            "SN_Number__c": "CAFT0001015",
+            "ServiceNow_Sys_Id__c": "e16328f483431210bd2a5860ceaad336",
+            "Planned_Completion_Date__c": "2025-02-08T14:17:15.000+0000"
+          },
+          {
+            "SN_Number__c": "CAFT0001016",
+            "ServiceNow_Sys_Id__c": "ad6328f483431210bd2a5860ceaad364",
+            "Planned_Completion_Date__c": "2025-02-08T14:17:16.000+0000"
+          },
+          {
+            "SN_Number__c": "CAFT0001017",
+            "ServiceNow_Sys_Id__c": "a16328f483431210bd2a5860ceaad35f",
+            "Planned_Completion_Date__c": "2025-02-08T14:17:16.000+0000"
+          },
+          {
+            "SN_Number__c": "CAFT0001018",
+            "ServiceNow_Sys_Id__c": "ad6328f483431210bd2a5860ceaad370",
+            "Planned_Completion_Date__c": "2025-02-08T14:17:16.000+0000"
+          },
+          {
+            "SN_Number__c": "CAFT0001019",
+            "ServiceNow_Sys_Id__c": "43936cf483431210bd2a5860ceaad363",
+            "Planned_Completion_Date__c": "2025-02-08T14:18:13.000+0000"
+          },
+          {
+            "SN_Number__c": "CAFT0001020",
+            "ServiceNow_Sys_Id__c": "8f932cf483431210bd2a5860ceaad3a5",
+            "Planned_Completion_Date__c": "2025-02-08T14:18:13.000+0000"
+          },
+          {
+            "SN_Number__c": "CAFT0001021",
+            "ServiceNow_Sys_Id__c": "47932cf483431210bd2a5860ceaad3b1",
+            "Planned_Completion_Date__c": "2025-02-08T14:18:13.000+0000"
+          },
+          {
+            "SN_Number__c": "CAFT0001022",
+            "ServiceNow_Sys_Id__c": "8f936cf483431210bd2a5860ceaad36c",
+            "Planned_Completion_Date__c": "2025-02-08T14:18:13.000+0000"
+          },
+          {
+            "SN_Number__c": "CAFT0001023",
+            "ServiceNow_Sys_Id__c": "c3936cf483431210bd2a5860ceaad38e",
+            "Planned_Completion_Date__c": "2025-02-08T14:18:13.000+0000"
+          },
+          {
+            "SN_Number__c": "CAFT0001024",
+            "ServiceNow_Sys_Id__c": "0f936cf483431210bd2a5860ceaad382",
+            "Planned_Completion_Date__c": "2025-02-08T14:18:13.000+0000"
+          },
+          {
+            "SN_Number__c": "CAFT0001025",
+            "ServiceNow_Sys_Id__c": "deb3603883431210bd2a5860ceaad356",
+            "Planned_Completion_Date__c": "2025-02-08T14:18:13.000+0000"
+          },
+          {
+            "SN_Number__c": "CAFT0001026",
+            "ServiceNow_Sys_Id__c": "91442c3883431210bd2a5860ceaad37e",
+            "Planned_Completion_Date__c": "2025-02-08T14:18:13.000+0000"
+          },
+          {
+            "SN_Number__c": "CAFT0001027",
+            "ServiceNow_Sys_Id__c": "bab4647883431210bd2a5860ceaad3c0",
+            "Planned_Completion_Date__c": "2025-02-08T14:18:13.000+0000"
+          },
+          {
+            "SN_Number__c": "CAFT0001028",
+            "ServiceNow_Sys_Id__c": "89f82cbc83431210bd2a5860ceaad360",
+            "Planned_Completion_Date__c": "2025-02-08T14:41:33.000+0000"
+          },
+          {
+            "SN_Number__c": "CAFT0001029",
+            "ServiceNow_Sys_Id__c": "81f82cbc83431210bd2a5860ceaad355",
+            "Planned_Completion_Date__c": "2025-02-08T14:41:33.000+0000"
+          },
+          {
+            "SN_Number__c": "CAFT0001030",
+            "ServiceNow_Sys_Id__c": "c1f82cbc83431210bd2a5860ceaad368",
+            "Planned_Completion_Date__c": "2025-02-08T14:41:33.000+0000"
+          },
+          {
+            "SN_Number__c": "CAFT0001031",
+            "ServiceNow_Sys_Id__c": "c9f82cbc83431210bd2a5860ceaad382",
+            "Planned_Completion_Date__c": "2025-02-08T14:41:33.000+0000"
+          },
+          {
+            "SN_Number__c": "CAFT0001032",
+            "ServiceNow_Sys_Id__c": "41f82cbc83431210bd2a5860ceaad377",
+            "Planned_Completion_Date__c": "2025-02-08T14:41:33.000+0000"
+          },
+          {
+            "SN_Number__c": "CAFT0001033",
+            "ServiceNow_Sys_Id__c": "81f82cbc83431210bd2a5860ceaad371",
+            "Planned_Completion_Date__c": "2025-02-08T14:41:33.000+0000"
+          },
+          {
+            "SN_Number__c": "CAFT0001034",
+            "ServiceNow_Sys_Id__c": "221920fc83431210bd2a5860ceaad336",
+            "Planned_Completion_Date__c": "2025-02-08T14:42:12.000+0000"
+          },
+          {
+            "SN_Number__c": "CAFT0001035",
+            "ServiceNow_Sys_Id__c": "ae19ecbc83431210bd2a5860ceaad37d",
+            "Planned_Completion_Date__c": "2025-02-08T14:42:12.000+0000"
+          },
+          {
+            "SN_Number__c": "CAFT0001036",
+            "ServiceNow_Sys_Id__c": "261920fc83431210bd2a5860ceaad343",
+            "Planned_Completion_Date__c": "2025-02-08T14:42:12.000+0000"
+          },
+          {
+            "SN_Number__c": "CAFT0001037",
+            "ServiceNow_Sys_Id__c": "b21920fc83431210bd2a5860ceaad371",
+            "Planned_Completion_Date__c": "2025-02-08T14:42:12.000+0000"
+          },
+          {
+            "SN_Number__c": "CAFT0001038",
+            "ServiceNow_Sys_Id__c": "b21920fc83431210bd2a5860ceaad367",
+            "Planned_Completion_Date__c": "2025-02-08T14:42:12.000+0000"
+          },
+          {
+            "SN_Number__c": "CAFT0001039",
+            "ServiceNow_Sys_Id__c": "b61920fc83431210bd2a5860ceaad37e",
+            "Planned_Completion_Date__c": "2025-02-08T14:42:12.000+0000"
+          },
+          {
+            "SN_Number__c": "CAFT0001040",
+            "ServiceNow_Sys_Id__c": "b839a0fc83431210bd2a5860ceaad3c4",
+            "Planned_Completion_Date__c": "2025-02-08T14:42:12.000+0000"
+          },
+          {
+            "SN_Number__c": "CAFT0001041",
+            "ServiceNow_Sys_Id__c": "cd49e0fc83431210bd2a5860ceaad370",
+            "Planned_Completion_Date__c": "2025-02-08T14:42:12.000+0000"
+          },
+          {
+            "SN_Number__c": "CAFT0001042",
+            "ServiceNow_Sys_Id__c": "1359a4fc83431210bd2a5860ceaad39e",
+            "Planned_Completion_Date__c": "2025-02-08T14:42:12.000+0000"
+          },
+          {
+            "SN_Number__c": "CAFT0001043",
+            "ServiceNow_Sys_Id__c": "c07928fc83431210bd2a5860ceaad313",
+            "Planned_Completion_Date__c": "2025-02-08T14:42:12.000+0000"
+          },
+          {
+            "SN_Number__c": "CAFT0001044",
+            "ServiceNow_Sys_Id__c": "ff7968fc83431210bd2a5860ceaad34c",
+            "Planned_Completion_Date__c": "2025-02-08T14:42:12.000+0000"
+          },
+          {
+            "SN_Number__c": "CAFT0001045",
+            "ServiceNow_Sys_Id__c": "8c99e8fc83431210bd2a5860ceaad360",
+            "Planned_Completion_Date__c": "2025-02-08T14:42:12.000+0000"
+          },
+          {
+            "SN_Number__c": "CAFT0001046",
+            "ServiceNow_Sys_Id__c": "a8d9a03083831210bd2a5860ceaad3fd",
+            "Planned_Completion_Date__c": "2025-02-08T14:45:20.000+0000"
+          },
+          {
+            "SN_Number__c": "CAFT0001047",
+            "ServiceNow_Sys_Id__c": "e4d9a03083831210bd2a5860ceaad3f6",
+            "Planned_Completion_Date__c": "2025-02-08T14:45:20.000+0000"
+          },
+          {
+            "SN_Number__c": "CAFT0001048",
+            "ServiceNow_Sys_Id__c": "e4d9a03083831210bd2a5860ceaad3af",
+            "Planned_Completion_Date__c": "2025-02-08T14:45:20.000+0000"
+          },
+          {
+            "SN_Number__c": "CAFT0001049",
+            "ServiceNow_Sys_Id__c": "e0d9e03083831210bd2a5860ceaad307",
+            "Planned_Completion_Date__c": "2025-02-08T14:45:20.000+0000"
+          },
+          {
+            "SN_Number__c": "CAFT0001050",
+            "ServiceNow_Sys_Id__c": "acd9e03083831210bd2a5860ceaad318",
+            "Planned_Completion_Date__c": "2025-02-08T14:45:21.000+0000"
+          },
+          {
+            "SN_Number__c": "CAFT0001051",
+            "ServiceNow_Sys_Id__c": "60d9e03083831210bd2a5860ceaad310",
+            "Planned_Completion_Date__c": "2025-02-08T14:45:21.000+0000"
+          },
+          {
+            "SN_Number__c": "CAFT0001052",
+            "ServiceNow_Sys_Id__c": "c75dd86cc37b8354d0087405e4013132",
+            "Planned_Completion_Date__c": null
+          }
+        ],
+        "at": "2026-10-04T15:33:46.372Z"
+      }
+    ],
+    "observations": [
+      "CafSyncHealth does not compare this field, so any drift found here is invisible on the instance today."
+    ],
     "expected": [
       "Planned_Completion_Date__c equals _toIso(planned_completion_date) for every mirrored record.",
       "An empty source is empty in the mirror — not epoch, not today.",
       "Every source value matches the yyyy-MM-dd HH:mm:ss shape _toIso assumes."
     ],
-    "actual": [],
-    "verdictReason": "SyntaxError: Expected property name or '}' in JSON at position 1 (line 1 column 2)",
-    "finishedAt": "2026-08-08T16:03:06.731Z"
+    "actual": [
+      "CAF_Request__c.Planned_Completion_Date__c is of type \"datetime\".",
+      "Requests: 19 compared, 0 differing, 0 malformed source.",
+      "Tasks: 52 compared, 0 differing, 0 malformed source."
+    ],
+    "verdictReason": "Every mirrored date matches the transform applied to its source.",
+    "finishedAt": "2026-10-04T15:33:46.372Z"
   }
 }

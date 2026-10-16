@@ -2,6 +2,7 @@
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <types>
         <members>CafAttestationService</members>
+        <members>CafConfig</members>
         <members>CafDashboardController</members>
         <members>CafEvidenceService</members>
         <members>CafSyncHealth</members>
@@ -23,7 +24,14 @@
     <types><members>CAF_Integration</members><name>PermissionSet</name></types>
     <types>
         <members>CAF_Control_Catalog__c</members>
+        <members>CAF_Setting__mdt</members>
         <name>CustomObject</name>
+    </types>
+    <types>
+        <members>CAF_Setting.Callout_Timeout_Ms</members>
+        <members>CAF_Setting.Evidence_Max_Bytes</members>
+        <members>CAF_Setting.ServiceNow_Task_Path</members>
+        <name>CustomMetadata</name>
     </types>
     <types>
         <members>CAF_Request__c.CAF_Control_Sys_Id__c</members>

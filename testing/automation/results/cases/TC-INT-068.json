@@ -1,30 +1,182 @@
 {
   "run": {
-    "instance": "https://dev281754.service-now.com + Salesforce orgfarm-4938c7f768-dev-ed",
+    "instance": "https://dev249570.service-now.com + Salesforce orgfarm-4938c7f768-dev-ed",
     "executedBy": "admin (ServiceNow, via cnit OAuth) / admin.070b86ccf531@agentforce.com (Salesforce)",
     "executedVia": "Playwright runner, no browser and no writes. ServiceNow read over cnit, Salesforce over the sf CLI. Each case compares the transform output held in Salesforce against the source record it was built from."
   },
   "case": {
     "id": "TC-INT-068",
     "title": "The control join resolves, and the name agrees",
-    "startedAt": "2026-08-08T16:03:22.304Z",
-    "verdict": "FAIL",
+    "startedAt": "2026-10-04T15:34:24.202Z",
+    "verdict": "PASS",
     "steps": [
       {
         "n": 1,
         "text": "Read the control table and the mirrored requests.",
-        "at": "2026-08-08T16:03:22.304Z",
+        "at": "2026-10-04T15:34:24.203Z",
+        "screenshots": []
+      },
+      {
+        "n": 2,
+        "text": "Resolve each join key and compare the stored label.",
+        "at": "2026-10-04T15:34:38.243Z",
         "screenshots": []
       }
     ],
-    "records": [],
-    "observations": [],
+    "records": [
+      {
+        "label": "Salesforce requests",
+        "table": "CAF_Request__c",
+        "query": "sf data query --query \"SELECT SN_Number__c, CAF_Control__c, CAF_Control_Sys_Id__c FROM CAF_Request__c ORDER BY SN_Number__c\" --target-org caf-sf",
+        "rows": [
+          {
+            "SN_Number__c": "RCAF0001001",
+            "CAF_Control__c": null,
+            "CAF_Control_Sys_Id__c": null
+          },
+          {
+            "SN_Number__c": "RCAF0001019",
+            "CAF_Control__c": "Confirm RTO & RPO",
+            "CAF_Control_Sys_Id__c": "4c85e8a21b7925d46f1e76e5d34bcbfb"
+          },
+          {
+            "SN_Number__c": "RCAF0001020",
+            "CAF_Control__c": "Confirm Backup & Restore Policy",
+            "CAF_Control_Sys_Id__c": "95d568ea1b7925d46f1e76e5d34bcb9f"
+          },
+          {
+            "SN_Number__c": "RCAF0001021",
+            "CAF_Control__c": "Test Backup & Restore",
+            "CAF_Control_Sys_Id__c": "fc1288fb1b61a154eede76e5d34bcb81"
+          },
+          {
+            "SN_Number__c": "RCAF0001022",
+            "CAF_Control__c": "Confirm Disaster Recovery Plan",
+            "CAF_Control_Sys_Id__c": "12952c261b7925d46f1e76e5d34bcb5e"
+          },
+          {
+            "SN_Number__c": "RCAF0001023",
+            "CAF_Control__c": "Test Disaster Recovery Plan",
+            "CAF_Control_Sys_Id__c": "05f10c7f1b61a154eede76e5d34bcb25"
+          },
+          {
+            "SN_Number__c": "RCAF0001024",
+            "CAF_Control__c": "Confirm & Execute High Availability Plan",
+            "CAF_Control_Sys_Id__c": "f1e5e8a61b7925d46f1e76e5d34bcb84"
+          },
+          {
+            "SN_Number__c": "RCAF0001031",
+            "CAF_Control__c": "Confirm RTO & RPO",
+            "CAF_Control_Sys_Id__c": "4c85e8a21b7925d46f1e76e5d34bcbfb"
+          },
+          {
+            "SN_Number__c": "RCAF0001032",
+            "CAF_Control__c": "Confirm Backup & Restore Policy",
+            "CAF_Control_Sys_Id__c": "95d568ea1b7925d46f1e76e5d34bcb9f"
+          },
+          {
+            "SN_Number__c": "RCAF0001033",
+            "CAF_Control__c": "Test Backup & Restore",
+            "CAF_Control_Sys_Id__c": "fc1288fb1b61a154eede76e5d34bcb81"
+          },
+          {
+            "SN_Number__c": "RCAF0001034",
+            "CAF_Control__c": "Confirm Disaster Recovery Plan",
+            "CAF_Control_Sys_Id__c": "12952c261b7925d46f1e76e5d34bcb5e"
+          },
+          {
+            "SN_Number__c": "RCAF0001035",
+            "CAF_Control__c": "Test Disaster Recovery Plan",
+            "CAF_Control_Sys_Id__c": "05f10c7f1b61a154eede76e5d34bcb25"
+          },
+          {
+            "SN_Number__c": "RCAF0001036",
+            "CAF_Control__c": "Confirm & Execute High Availability Plan",
+            "CAF_Control_Sys_Id__c": "f1e5e8a61b7925d46f1e76e5d34bcb84"
+          },
+          {
+            "SN_Number__c": "RCAF0001037",
+            "CAF_Control__c": "Confirm RTO & RPO",
+            "CAF_Control_Sys_Id__c": "4c85e8a21b7925d46f1e76e5d34bcbfb"
+          },
+          {
+            "SN_Number__c": "RCAF0001038",
+            "CAF_Control__c": "Confirm Backup & Restore Policy",
+            "CAF_Control_Sys_Id__c": "95d568ea1b7925d46f1e76e5d34bcb9f"
+          },
+          {
+            "SN_Number__c": "RCAF0001039",
+            "CAF_Control__c": "Test Backup & Restore",
+            "CAF_Control_Sys_Id__c": "fc1288fb1b61a154eede76e5d34bcb81"
+          },
+          {
+            "SN_Number__c": "RCAF0001040",
+            "CAF_Control__c": "Confirm Disaster Recovery Plan",
+            "CAF_Control_Sys_Id__c": "12952c261b7925d46f1e76e5d34bcb5e"
+          },
+          {
+            "SN_Number__c": "RCAF0001041",
+            "CAF_Control__c": "Test Disaster Recovery Plan",
+            "CAF_Control_Sys_Id__c": "05f10c7f1b61a154eede76e5d34bcb25"
+          },
+          {
+            "SN_Number__c": "RCAF0001042",
+            "CAF_Control__c": "Confirm & Execute High Availability Plan",
+            "CAF_Control_Sys_Id__c": "f1e5e8a61b7925d46f1e76e5d34bcb84"
+          }
+        ],
+        "at": "2026-10-04T15:34:38.243Z"
+      },
+      {
+        "label": "ServiceNow controls",
+        "table": "x_gskn2_caf_compli_caf_conformance_type",
+        "query": "cnit get x_gskn2_caf_compli_caf_conformance_type -ProfileName caf-dev249570",
+        "rows": [
+          {
+            "sys_id": "05f10c7f1b61a154eede76e5d34bcb25",
+            "name": "Test Disaster Recovery Plan",
+            "active": "true"
+          },
+          {
+            "sys_id": "12952c261b7925d46f1e76e5d34bcb5e",
+            "name": "Confirm Disaster Recovery Plan",
+            "active": "true"
+          },
+          {
+            "sys_id": "4c85e8a21b7925d46f1e76e5d34bcbfb",
+            "name": "Confirm RTO & RPO",
+            "active": "true"
+          },
+          {
+            "sys_id": "95d568ea1b7925d46f1e76e5d34bcb9f",
+            "name": "Confirm Backup & Restore Policy",
+            "active": "true"
+          },
+          {
+            "sys_id": "f1e5e8a61b7925d46f1e76e5d34bcb84",
+            "name": "Confirm & Execute High Availability Plan",
+            "active": "true"
+          },
+          {
+            "sys_id": "fc1288fb1b61a154eede76e5d34bcb81",
+            "name": "Test Backup & Restore",
+            "active": "true"
+          }
+        ],
+        "at": "2026-10-04T15:34:38.243Z"
+      }
+    ],
+    "observations": [
+      "The two failure shapes are different. A key resolving nowhere means the request points at a deleted control and the grid cannot place it in a column. A key resolving to a different name means the label is stale — the snapshot problem CAF_Control_Sys_Id__c exists to solve."
+    ],
     "expected": [
       "Every CAF_Control_Sys_Id__c resolves to a control that exists.",
       "Every CAF_Control__c matches that control's current name."
     ],
-    "actual": [],
-    "verdictReason": "SyntaxError: Expected property name or '}' in JSON at position 1 (line 1 column 2)",
-    "finishedAt": "2026-08-08T16:03:28.491Z"
+    "actual": [
+      "19 request(s): 0 broken join(s), 0 stale label(s), 0 with no join key."
+    ],
+    "verdictReason": "Every control join resolves and every stored label matches the current control name.",
+    "finishedAt": "2026-10-04T15:34:38.243Z"
   }
 }

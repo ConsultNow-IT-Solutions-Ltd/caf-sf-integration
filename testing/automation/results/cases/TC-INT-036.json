@@ -1,43 +1,43 @@
 {
   "run": {
-    "instance": "https://orgfarm-4938c7f768-dev-ed.develop.lightning.force.com + https://dev281754.service-now.com",
+    "instance": "https://orgfarm-4938c7f768-dev-ed.develop.lightning.force.com + https://dev249570.service-now.com",
     "executedBy": "admin.070b86ccf531@agentforce.com (Salesforce) / admin (ServiceNow)",
     "executedVia": "Playwright driving Lightning Experience. Every screen assertion is cross-checked against the ServiceNow record over cnit and the Salesforce record over the sf CLI. No case in this file writes to either platform."
   },
   "case": {
     "id": "TC-INT-036",
     "title": "Evidence and attestation are separate panels for separate people",
-    "startedAt": "2026-08-08T17:21:34.905Z",
+    "startedAt": "2026-10-04T15:46:47.642Z",
     "verdict": "PASS",
     "steps": [
       {
         "n": 1,
-        "text": "Read the row actions offered on RCAF0001022 — an Open and a Closed task.",
-        "at": "2026-08-08T17:21:34.906Z",
+        "text": "Read the row actions offered on RCAF0001039 — an Open and a Closed task.",
+        "at": "2026-10-04T15:46:47.642Z",
         "screenshots": []
       },
       {
         "n": 2,
         "text": "Read the row actions offered on RCAF0001037 — an In Progress task.",
-        "at": "2026-08-08T17:21:41.272Z",
+        "at": "2026-10-04T15:46:53.232Z",
         "screenshots": [
-          "C:\\audit\\dev281754 CAF App Reyan\\testing\\automation\\evidence\\TC-INT-036\\02-row-actions-in-progress.png"
+          "C:\\reyan_tech_cap_dev\\dev281754 CAF App Reyan\\testing\\automation\\evidence\\TC-INT-036\\02-row-actions-in-progress.png"
         ]
       },
       {
         "n": 3,
         "text": "Open the evidence panel on the In Progress task — the owner’s view.",
-        "at": "2026-08-08T17:21:45.088Z",
+        "at": "2026-10-04T15:46:56.989Z",
         "screenshots": [
-          "C:\\audit\\dev281754 CAF App Reyan\\testing\\automation\\evidence\\TC-INT-036\\03-evidence-panel-owner-view.png"
+          "C:\\reyan_tech_cap_dev\\dev281754 CAF App Reyan\\testing\\automation\\evidence\\TC-INT-036\\03-evidence-panel-owner-view.png"
         ]
       },
       {
         "n": 4,
         "text": "Open the attest panel on the same task — the approver’s view.",
-        "at": "2026-08-08T17:21:46.757Z",
+        "at": "2026-10-04T15:46:58.559Z",
         "screenshots": [
-          "C:\\audit\\dev281754 CAF App Reyan\\testing\\automation\\evidence\\TC-INT-036\\04-attest-panel-approver-view.png"
+          "C:\\reyan_tech_cap_dev\\dev281754 CAF App Reyan\\testing\\automation\\evidence\\TC-INT-036\\04-attest-panel-approver-view.png"
         ]
       }
     ],
@@ -45,7 +45,7 @@
       {
         "label": "Row actions offered, by task state",
         "table": "cafDashboard",
-        "query": "drill-in on RCAF0001022 and RCAF0001037",
+        "query": "drill-in on RCAF0001039 and RCAF0001037",
         "rows": [
           {
             "state": "Open",
@@ -60,7 +60,7 @@
             "actions": "Upload evidence, Attest"
           }
         ],
-        "at": "2026-08-08T17:21:44.828Z"
+        "at": "2026-10-04T15:46:56.893Z"
       },
       {
         "label": "Evidence panel in each mode",
@@ -80,7 +80,7 @@
             "attestation_alongside": "true"
           }
         ],
-        "at": "2026-08-08T17:21:48.277Z"
+        "at": "2026-10-04T15:46:59.972Z"
       },
       {
         "label": "Attestation panel",
@@ -95,7 +95,7 @@
             "blocked_reason": "Attach at least one evidence file before attesting. ServiceNow counts its own copy, not the Salesforce one."
           }
         ],
-        "at": "2026-08-08T17:21:48.277Z"
+        "at": "2026-10-04T15:46:59.972Z"
       }
     ],
     "observations": [
@@ -118,6 +118,6 @@
       "Standalone \"Criteria met\" buttons found: 0"
     ],
     "verdictReason": "Row actions match the specified set for every state observed; the two jobs open different panels; the approver’s copy of the evidence is read-only; no standalone Criteria met button.",
-    "finishedAt": "2026-08-08T17:21:48.309Z"
+    "finishedAt": "2026-10-04T15:47:00.011Z"
   }
 }

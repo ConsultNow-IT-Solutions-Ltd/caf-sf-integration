@@ -1,33 +1,33 @@
 {
   "run": {
-    "instance": "https://orgfarm-4938c7f768-dev-ed.develop.lightning.force.com + https://dev281754.service-now.com",
+    "instance": "https://orgfarm-4938c7f768-dev-ed.develop.lightning.force.com + https://dev249570.service-now.com",
     "executedBy": "admin.070b86ccf531@agentforce.com (Salesforce) / admin (ServiceNow)",
     "executedVia": "Playwright driving Lightning Experience. Every screen assertion is cross-checked against the ServiceNow record over cnit and the Salesforce record over the sf CLI. No case in this file writes to either platform."
   },
   "case": {
     "id": "TC-INT-024",
     "title": "A closed task shows its evidence and takes no more",
-    "startedAt": "2026-08-07T17:52:35.031Z",
+    "startedAt": "2026-10-04T15:47:26.130Z",
     "verdict": "PASS",
     "steps": [
       {
         "n": 1,
-        "text": "Confirm CAFT0001022 is closed on both platforms before judging the UI.",
-        "at": "2026-08-07T17:52:35.031Z",
+        "text": "Confirm CAFT0001052 is closed on both platforms before judging the UI.",
+        "at": "2026-10-04T15:47:26.130Z",
         "screenshots": []
       },
       {
         "n": 2,
         "text": "Open the drill-in and read the action offered on it.",
-        "at": "2026-08-07T17:52:36.470Z",
+        "at": "2026-10-04T15:47:27.644Z",
         "screenshots": []
       },
       {
         "n": 3,
         "text": "Open the panel and confirm it shows the evidence but offers no upload.",
-        "at": "2026-08-07T17:52:41.034Z",
+        "at": "2026-10-04T15:47:34.016Z",
         "screenshots": [
-          "C:\\Users\\patel\\Documents\\ServiceNow Work Project Docs\\Personal AI Assisted\\dev281754 CAF App Reyan\\testing\\automation\\evidence\\TC-INT-024\\03-closed-task-view-evidence.png"
+          "C:\\reyan_tech_cap_dev\\dev281754 CAF App Reyan\\testing\\automation\\evidence\\TC-INT-024\\03-closed-task-view-evidence.png"
         ]
       }
     ],
@@ -35,44 +35,44 @@
       {
         "label": "The task in ServiceNow",
         "table": "x_gskn2_caf_compli_caf_tsk",
-        "query": "cnit get x_gskn2_caf_compli_caf_tsk -Query \"number=CAFT0001022\" -ProfileName caf-reyan",
+        "query": "cnit get x_gskn2_caf_compli_caf_tsk -Query \"number=CAFT0001052\" -ProfileName caf-dev249570",
         "rows": [
           {
-            "number": "CAFT0001022",
+            "number": "CAFT0001052",
             "approval": "approved",
             "active": "false",
             "state": "3"
           }
         ],
-        "at": "2026-08-07T17:52:36.470Z"
+        "at": "2026-10-04T15:47:27.644Z"
       },
       {
         "label": "Row actions on the closed task",
         "table": "cafDashboard",
-        "query": "task CAFT0001022",
+        "query": "task CAFT0001052",
         "rows": [
           {
-            "number": "CAFT0001022",
+            "number": "CAFT0001052",
             "state": "Closed Complete",
             "approval": "approved",
             "actions": "View evidence"
           }
         ],
-        "at": "2026-08-07T17:52:41.034Z"
+        "at": "2026-10-04T15:47:34.016Z"
       },
       {
         "label": "Panel on the closed task",
         "table": "cafEvidence",
-        "query": "task CAFT0001022",
+        "query": "task CAFT0001052",
         "rows": [
           {
-            "heading": "Evidence — CAFT0001022",
+            "heading": "Evidence — CAFT0001052",
             "upload_control": "false",
-            "salesforce_files": "1",
-            "servicenow_attachments": "2"
+            "salesforce_files": "0",
+            "servicenow_attachments": "1"
           }
         ],
-        "at": "2026-08-07T17:52:41.641Z"
+        "at": "2026-10-04T15:47:35.296Z"
       }
     ],
     "observations": [
@@ -86,10 +86,10 @@
     "actual": [
       "ServiceNow: state=3, active=false, approval=approved",
       "Row actions: View evidence",
-      "Panel heading \"Evidence — CAFT0001022\"; upload control present: false",
-      "Evidence still listed: 1 Salesforce file(s), 2 ServiceNow attachment(s)."
+      "Panel heading \"Evidence — CAFT0001052\"; upload control present: false",
+      "Evidence still listed: 0 Salesforce file(s), 1 ServiceNow attachment(s)."
     ],
     "verdictReason": "Reads \"View evidence\", offers no upload, no Start and no Attest, and still shows every file held on both sides.",
-    "finishedAt": "2026-08-07T17:52:41.642Z"
+    "finishedAt": "2026-10-04T15:47:35.299Z"
   }
 }

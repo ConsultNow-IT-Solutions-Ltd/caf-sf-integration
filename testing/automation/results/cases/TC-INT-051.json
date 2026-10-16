@@ -1,19 +1,19 @@
 {
   "run": {
-    "instance": "https://orgfarm-4938c7f768-dev-ed.develop.lightning.force.com + https://dev281754.service-now.com",
+    "instance": "https://orgfarm-4938c7f768-dev-ed.develop.lightning.force.com + https://dev249570.service-now.com",
     "executedBy": "admin.070b86ccf531@agentforce.com (Salesforce) / admin (ServiceNow)",
     "executedVia": "Playwright driving Lightning Experience. Every screen assertion is cross-checked against the ServiceNow record over cnit and the Salesforce record over the sf CLI. No case in this file writes to either platform."
   },
   "case": {
     "id": "TC-INT-051",
     "title": "Drill-in shows the request’s tasks",
-    "startedAt": "2026-08-08T18:36:49.011Z",
+    "startedAt": "2026-10-04T15:46:31.894Z",
     "verdict": "PASS",
     "steps": [
       {
         "n": 1,
-        "text": "Open the dashboard and drill into RCAF0001022.",
-        "at": "2026-08-08T18:36:49.011Z",
+        "text": "Open the dashboard and drill into RCAF0001039.",
+        "at": "2026-10-04T15:46:31.894Z",
         "screenshots": [
           "C:\\reyan_tech_cap_dev\\dev281754 CAF App Reyan\\testing\\automation\\evidence\\TC-INT-051\\01-drill-in-task-list.png"
         ]
@@ -21,13 +21,13 @@
       {
         "n": 2,
         "text": "Read the same request’s tasks from ServiceNow.",
-        "at": "2026-08-08T18:36:54.445Z",
+        "at": "2026-10-04T15:46:37.636Z",
         "screenshots": []
       },
       {
         "n": 3,
         "text": "Read the same request’s tasks from Salesforce, behind the screen.",
-        "at": "2026-08-08T18:36:56.295Z",
+        "at": "2026-10-04T15:46:39.998Z",
         "screenshots": []
       }
     ],
@@ -35,62 +35,62 @@
       {
         "label": "Tasks as the drill-in lists them",
         "table": "cafDashboard",
-        "query": "cell click on RCAF0001022",
+        "query": "cell click on RCAF0001039",
         "rows": [
           {
-            "number": "CAFT0001001",
+            "number": "CAFT0001048",
             "state": "Open",
             "approval": "requested",
             "met_criteria": "",
             "actions": "Start, Upload evidence"
           },
           {
-            "number": "CAFT0001022",
+            "number": "CAFT0001052",
             "state": "Closed Complete",
             "approval": "approved",
             "met_criteria": "yes",
             "actions": "View evidence"
           }
         ],
-        "at": "2026-08-08T18:36:54.445Z"
+        "at": "2026-10-04T15:46:37.636Z"
       },
       {
         "label": "Tasks in ServiceNow",
         "table": "x_gskn2_caf_compli_caf_tsk",
-        "query": "cnit get x_gskn2_caf_compli_caf_tsk -Query \"caf_request.number=RCAF0001022\" -ProfileName caf-reyan",
+        "query": "cnit get x_gskn2_caf_compli_caf_tsk -Query \"caf_request.number=RCAF0001039\" -ProfileName caf-dev249570",
         "rows": [
           {
-            "number": "CAFT0001022",
+            "number": "CAFT0001052",
             "approval": "approved",
             "met_criteria": "yes",
             "state": "3"
           },
           {
-            "number": "CAFT0001001",
+            "number": "CAFT0001048",
             "approval": "requested",
             "met_criteria": "",
             "state": "1"
           }
         ],
-        "at": "2026-08-08T18:36:56.295Z"
+        "at": "2026-10-04T15:46:39.998Z"
       },
       {
         "label": "Tasks in Salesforce",
         "table": "CAF_Task__c",
-        "query": "sf data query --query \"SELECT SN_Number__c, State__c, Approval__c FROM CAF_Task__c WHERE CAF_Request__r.SN_Number__c = 'RCAF0001022' ORDER BY SN_Number__c\" --target-org caf-sf",
+        "query": "sf data query --query \"SELECT SN_Number__c, State__c, Approval__c FROM CAF_Task__c WHERE CAF_Request__r.SN_Number__c = 'RCAF0001039' ORDER BY SN_Number__c\" --target-org caf-sf",
         "rows": [
           {
-            "SN_Number__c": "CAFT0001001",
+            "SN_Number__c": "CAFT0001048",
             "State__c": "Open",
             "Approval__c": "requested"
           },
           {
-            "SN_Number__c": "CAFT0001022",
+            "SN_Number__c": "CAFT0001052",
             "State__c": "Closed Complete",
             "Approval__c": "approved"
           }
         ],
-        "at": "2026-08-08T18:37:02.516Z"
+        "at": "2026-10-04T15:46:46.453Z"
       }
     ],
     "observations": [],
@@ -99,13 +99,13 @@
       "The task set matches ServiceNow exactly."
     ],
     "actual": [
-      "Screen lists 2 task(s): CAFT0001001, CAFT0001022",
-      "ServiceNow holds 2: CAFT0001001, CAFT0001022",
+      "Screen lists 2 task(s): CAFT0001048, CAFT0001052",
+      "ServiceNow holds 2: CAFT0001048, CAFT0001052",
       "On screen but not in ServiceNow: none; in ServiceNow but not on screen: none",
-      "  CAFT0001001 is Open; row actions: Start, Upload evidence",
-      "  CAFT0001022 is Closed Complete; row actions: View evidence"
+      "  CAFT0001048 is Open; row actions: Start, Upload evidence",
+      "  CAFT0001052 is Closed Complete; row actions: View evidence"
     ],
-    "verdictReason": "Drill-in lists exactly the 2 task(s) ServiceNow holds for RCAF0001022, each with its state-appropriate actions.",
-    "finishedAt": "2026-08-08T18:37:02.516Z"
+    "verdictReason": "Drill-in lists exactly the 2 task(s) ServiceNow holds for RCAF0001039, each with its state-appropriate actions.",
+    "finishedAt": "2026-10-04T15:46:46.454Z"
   }
 }

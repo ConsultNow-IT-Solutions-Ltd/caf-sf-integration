@@ -1,29 +1,122 @@
 {
   "run": {
-    "instance": "https://dev281754.service-now.com + Salesforce orgfarm-4938c7f768-dev-ed",
+    "instance": "https://dev249570.service-now.com + Salesforce orgfarm-4938c7f768-dev-ed",
     "executedBy": "admin (ServiceNow, via cnit OAuth) / admin.070b86ccf531@agentforce.com (Salesforce)",
     "executedVia": "Playwright runner, no browser and no writes. ServiceNow read over cnit, Salesforce over the sf CLI. Each case compares the transform output held in Salesforce against the source record it was built from."
   },
   "case": {
     "id": "TC-INT-069",
     "title": "The boolean cast survives the round trip",
-    "startedAt": "2026-08-08T16:03:29.000Z",
-    "verdict": "FAIL",
+    "startedAt": "2026-10-04T15:34:38.267Z",
+    "verdict": "PASS",
     "steps": [
       {
         "n": 1,
         "text": "Read the active flag on both sides.",
-        "at": "2026-08-08T16:03:29.000Z",
+        "at": "2026-10-04T15:34:38.267Z",
+        "screenshots": []
+      },
+      {
+        "n": 2,
+        "text": "Compare, accepting both forms the ServiceNow flag can arrive in.",
+        "at": "2026-10-04T15:34:49.705Z",
         "screenshots": []
       }
     ],
-    "records": [],
-    "observations": [],
+    "records": [
+      {
+        "label": "ServiceNow controls",
+        "table": "x_gskn2_caf_compli_caf_conformance_type",
+        "query": "cnit get x_gskn2_caf_compli_caf_conformance_type -ProfileName caf-dev249570",
+        "rows": [
+          {
+            "number": "CNFTYPE0001004",
+            "sys_id": "05f10c7f1b61a154eede76e5d34bcb25",
+            "name": "Test Disaster Recovery Plan",
+            "active": "true"
+          },
+          {
+            "number": "CNFTYPE0001003",
+            "sys_id": "12952c261b7925d46f1e76e5d34bcb5e",
+            "name": "Confirm Disaster Recovery Plan",
+            "active": "true"
+          },
+          {
+            "number": "CNFTYPE0001002",
+            "sys_id": "4c85e8a21b7925d46f1e76e5d34bcbfb",
+            "name": "Confirm RTO & RPO",
+            "active": "true"
+          },
+          {
+            "number": "CNFTYPE0001006",
+            "sys_id": "95d568ea1b7925d46f1e76e5d34bcb9f",
+            "name": "Confirm Backup & Restore Policy",
+            "active": "true"
+          },
+          {
+            "number": "CNFTYPE0001007",
+            "sys_id": "f1e5e8a61b7925d46f1e76e5d34bcb84",
+            "name": "Confirm & Execute High Availability Plan",
+            "active": "true"
+          },
+          {
+            "number": "CNFTYPE0001005",
+            "sys_id": "fc1288fb1b61a154eede76e5d34bcb81",
+            "name": "Test Backup & Restore",
+            "active": "true"
+          }
+        ],
+        "at": "2026-10-04T15:34:49.705Z"
+      },
+      {
+        "label": "Salesforce catalogue",
+        "table": "CAF_Control_Catalog__c",
+        "query": "sf data query --query \"SELECT Name, Active__c, ServiceNow_Sys_Id__c FROM CAF_Control_Catalog__c ORDER BY Name\" --target-org caf-sf",
+        "rows": [
+          {
+            "Name": "Confirm & Execute High Availability Plan",
+            "Active__c": true,
+            "ServiceNow_Sys_Id__c": "f1e5e8a61b7925d46f1e76e5d34bcb84"
+          },
+          {
+            "Name": "Confirm Backup & Restore Policy",
+            "Active__c": true,
+            "ServiceNow_Sys_Id__c": "95d568ea1b7925d46f1e76e5d34bcb9f"
+          },
+          {
+            "Name": "Confirm Disaster Recovery Plan",
+            "Active__c": true,
+            "ServiceNow_Sys_Id__c": "12952c261b7925d46f1e76e5d34bcb5e"
+          },
+          {
+            "Name": "Confirm RTO & RPO",
+            "Active__c": true,
+            "ServiceNow_Sys_Id__c": "4c85e8a21b7925d46f1e76e5d34bcbfb"
+          },
+          {
+            "Name": "Test Backup & Restore",
+            "Active__c": true,
+            "ServiceNow_Sys_Id__c": "fc1288fb1b61a154eede76e5d34bcb81"
+          },
+          {
+            "Name": "Test Disaster Recovery Plan",
+            "Active__c": true,
+            "ServiceNow_Sys_Id__c": "05f10c7f1b61a154eede76e5d34bcb25"
+          }
+        ],
+        "at": "2026-10-04T15:34:49.705Z"
+      }
+    ],
+    "observations": [
+      "The same confusion between '1' and \"true\", in the attest endpoint, refused every attestation on the instance — which is why this asserts against real records rather than a fixture."
+    ],
     "expected": [
       "Active__c equals the ServiceNow active flag for every control."
     ],
-    "actual": [],
-    "verdictReason": "SyntaxError: Expected property name or '}' in JSON at position 1 (line 1 column 2)",
-    "finishedAt": "2026-08-08T16:03:35.121Z"
+    "actual": [
+      "6 control(s) compared; 0 disagreeing, 0 unmirrored."
+    ],
+    "verdictReason": "Every control's active flag agrees across both platforms.",
+    "finishedAt": "2026-10-04T15:34:49.705Z"
   }
 }

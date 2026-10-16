@@ -12,10 +12,10 @@ integration failure and cost a day.
 
 | | |
 |---|---|
-| ServiceNow | `dev281754.service-now.com`, scope `x_gskn2_caf_compli` |
+| ServiceNow | `dev249570.service-now.com`, scope `x_gskn2_caf_compli` (dev281754 until 2026-09-04) |
 | Salesforce | `orgfarm-4938c7f768-dev-ed`, API v67.0 (Summer '26) |
 | Correlation | External Id `ServiceNow_Sys_Id__c`, upsert-by-External-Id |
-| Baseline captured | 2026-08-07 |
+| Baseline captured | 2026-08-07, on dev281754 — not yet re-captured on dev249570 |
 | Cases | 61 |
 
 Case format, evidence policy and the `Verify` convention are defined in the

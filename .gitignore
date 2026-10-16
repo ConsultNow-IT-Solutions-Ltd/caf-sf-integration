@@ -2,3 +2,14 @@
 
 # Word/PowerPoint owner files, created while a document is open
 ~$*
+
+# Python bytecode
+__pycache__/
+*.pyc
+
+# Local ServiceNow session state written by servicenow/deploy/sn-session.sh
+.sn-cookies
+.sn-token
+
+# Instance credentials - kept on disk, never committed
+Instance Login Details*.txt

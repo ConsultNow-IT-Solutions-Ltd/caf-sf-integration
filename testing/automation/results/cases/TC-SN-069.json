@@ -1,33 +1,33 @@
 {
   "run": {
-    "instance": "https://dev281754.service-now.com",
+    "instance": "https://dev249570.service-now.com",
     "executedBy": "admin",
     "executedVia": "Playwright (automated); every assertion cross-checked against the ServiceNow Table API"
   },
   "case": {
     "id": "TC-SN-069",
     "title": "A new CAF control appears as a new column, with no code change",
-    "startedAt": "2026-08-07T16:59:43.274Z",
+    "startedAt": "2026-10-04T16:27:25.537Z",
     "verdict": "PASS",
     "steps": [
       {
         "n": 1,
         "text": "Read every active CAF control, ordered by name — the widget's own ordering.",
-        "at": "2026-08-07T16:59:43.274Z",
+        "at": "2026-10-04T16:27:25.537Z",
         "screenshots": []
       },
       {
         "n": 2,
         "text": "Open the portal compliance grid and read its column headers.",
-        "at": "2026-08-07T16:59:43.856Z",
+        "at": "2026-10-04T16:27:25.695Z",
         "screenshots": [
-          "C:\\Users\\patel\\Documents\\ServiceNow Work Project Docs\\Personal AI Assisted\\dev281754 CAF App Reyan\\testing\\automation\\evidence\\TC-SN-069\\02-portal-grid-columns.png"
+          "C:\\reyan_tech_cap_dev\\dev281754 CAF App Reyan\\testing\\automation\\evidence\\TC-SN-069\\02-portal-grid-columns.png"
         ]
       },
       {
         "n": 3,
         "text": "Compare the control names against the column headers.",
-        "at": "2026-08-07T16:59:48.772Z",
+        "at": "2026-10-04T16:27:35.143Z",
         "screenshots": []
       }
     ],
@@ -68,7 +68,7 @@
             "active": "true"
           }
         ],
-        "at": "2026-08-07T16:59:43.856Z"
+        "at": "2026-10-04T16:27:25.695Z"
       },
       {
         "label": "Grid column headers as rendered",
@@ -112,7 +112,7 @@
             "header": "Test Disaster Recovery Plan"
           }
         ],
-        "at": "2026-08-07T16:59:48.772Z"
+        "at": "2026-10-04T16:27:35.143Z"
       },
       {
         "label": "Column binding",
@@ -126,7 +126,7 @@
             "leading_attribute_columns": "Critical Business Application / Service Category / Overall Conformance Status"
           }
         ],
-        "at": "2026-08-07T16:59:48.772Z"
+        "at": "2026-10-04T16:27:35.143Z"
       }
     ],
     "observations": [
@@ -144,6 +144,6 @@
       "6 active control(s); 6 appear as grid columns with none missing."
     ],
     "verdictReason": "All 6 active controls are bound to grid columns. The column set is data-driven, not hard-coded. Causation still to be proven by Part B.",
-    "finishedAt": "2026-08-07T16:59:48.786Z"
+    "finishedAt": "2026-10-04T16:27:35.153Z"
   }
 }

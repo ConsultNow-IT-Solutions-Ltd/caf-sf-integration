@@ -24,7 +24,9 @@ import { parseSfJson } from './sfjson';
 // rather than a moved file, so CNIT_PS1 in .env is the supported override.
 const CNIT =
   process.env.CNIT_PS1 || 'C:\\audit\\cnit-instance-tools-main\\cnit.ps1';
-export const PROFILE = 'caf-reyan';
+// dev249570 since 2026-09-04. The old `caf-reyan` profile still exists on some
+// machines, pointing at dev281754, which has been reclaimed and reassigned.
+export const PROFILE = 'caf-dev249570';
 
 /**
  * Windows PowerShell, by absolute path where possible.

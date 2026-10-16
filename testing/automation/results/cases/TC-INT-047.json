@@ -1,31 +1,31 @@
 {
   "run": {
-    "instance": "https://dev281754.service-now.com + Salesforce orgfarm-4938c7f768-dev-ed",
+    "instance": "https://dev249570.service-now.com + Salesforce orgfarm-4938c7f768-dev-ed",
     "executedBy": "admin (ServiceNow) / admin.070b86ccf531@agentforce.com (Salesforce)",
     "executedVia": "Playwright runner, no browser: ServiceNow read over cnit and the Scripted REST API as sf.integration, Salesforce read over the sf CLI and anonymous Apex against the deployed classes. Every case reads both sides."
   },
   "case": {
     "id": "TC-INT-047",
     "title": "Drift detection is automatic, repair never is",
-    "startedAt": "2026-08-07T17:27:51.773Z",
+    "startedAt": "2026-10-04T15:30:48.749Z",
     "verdict": "PASS",
     "steps": [
       {
         "n": 1,
         "text": "Confirm check() never calls resync().",
-        "at": "2026-08-07T17:27:51.773Z",
+        "at": "2026-10-04T15:30:48.749Z",
         "screenshots": []
       },
       {
         "n": 2,
         "text": "Confirm the LWC only reaches resync from a user gesture.",
-        "at": "2026-08-07T17:27:51.773Z",
+        "at": "2026-10-04T15:30:48.756Z",
         "screenshots": []
       },
       {
         "n": 3,
         "text": "Confirm nothing in the org runs Sync Health on a schedule.",
-        "at": "2026-08-07T17:27:51.775Z",
+        "at": "2026-10-04T15:30:48.758Z",
         "screenshots": []
       }
     ],
@@ -54,7 +54,7 @@
             "state": "WAITING"
           }
         ],
-        "at": "2026-08-07T17:27:57.845Z"
+        "at": "2026-10-04T15:30:56.495Z"
       }
     ],
     "observations": [
@@ -71,6 +71,6 @@
       "3 scheduled job(s) in the org — Program Milestone Computation Cron Job; Program Status Update Cron Job; Metalytics Data Loader Job for Org : 00Dak000017K5lc. 0 of them relate to CAF or to sync."
     ],
     "verdictReason": "Repair is reachable only from a button next to a named difference, and nothing schedules it. Detection is equally unscheduled — the known limitation this case also records.",
-    "finishedAt": "2026-08-07T17:27:57.846Z"
+    "finishedAt": "2026-10-04T15:30:56.496Z"
   }
 }

@@ -1,7 +1,23 @@
 # ServiceNow → Salesforce push
 
-**Status: deployed and verified on dev281754, 2026-08-06.** Nothing here is left
-for you to build. This is the operating reference.
+**Status: redeployed and verified on dev249570, 2026-09-04.** The integration
+layer below is live and tested end to end. The compliance engine it sits on is
+**not** — see [What is missing](#what-is-missing). This is the operating
+reference.
+
+> **The instance moved.** This document described dev281754 until 2026-09-04.
+> That PDI was reclaimed and reassigned: the hostname still serves a login page,
+> but the old admin password returns *invalid/expired*, so nothing could be
+> exported from it. The app was rebuilt from scratch on **dev249570** using the
+> scripts in [deploy/](deploy/) — the tables from the data model in the
+> technical design document, the integration layer from the `.js` files here.
+>
+> **Basic auth is refused for the `admin` account** on dev249570, with a correct
+> password and a working web login (401, `WWW-Authenticate: Basic`). Drive the
+> Table API as admin over a `login.do` session plus `X-UserToken` instead; see
+> [deploy/sn-session.sh](deploy/sn-session.sh). This does **not** affect the
+> integration: `sf.integration` authenticates over basic auth normally, which is
+> what every inbound resource below uses.
 
 ## What is live
 
@@ -9,13 +25,54 @@ for you to build. This is the operating reference.
 
 | Record | Table | Detail |
 |---|---|---|
+| `CAF Compliance` | `sys_app` | scope `x_gskn2_caf_compli`, 1.0.0, Helsinki ES5 |
+| 6 `caf_*` roles | `sys_user_role` | admin, engineer, three tier owners, read-only |
+| 5 CAF tables, 65 fields | `sys_db_object` | auto-number `CAFC` / `RCAF` / `CAFT` |
+| `CAF Compliance` menu | `sys_app_application` | 5 modules — see [Navigation](#navigation) |
 | 6 system properties | `sys_properties` | prefix `x_gskn2_caf_compli.sf.` |
 | `CAFSalesforceSync` | `sys_script_include` | api name `x_gskn2_caf_compli.CAFSalesforceSync` |
+| `caf_short_desc` | `sys_script_include` | client callable, package private |
 | `CAF - Push Request to Salesforce` | `sys_script` | async, insert + update, order 1000 |
 | `CAF - Push Task to Salesforce` | `sys_script` | async, insert + update, order 1000 |
+| `CAF - Push Control to Salesforce` | `sys_script` | async, insert + update, order 1000 |
+| `CAF - Retire Control in Salesforce` | `sys_script` | after delete, order 1000 |
 | `CAF Integration` | `sys_ws_definition` | base `/api/x_gskn2_caf_compli/caf` |
 | Update Task / Sync Snapshot / Resync Record | `sys_ws_operation` | PATCH, GET, POST — see below |
 | Upload Evidence / List Evidence / Attest Task | `sys_ws_operation` | POST, GET, POST — see below |
+
+All four push rules carry the echo-loop guard in their **Condition** field.
+
+**`CAF - Push Task to Salesforce` has no source file in this repo.** The other
+three push rules do. It is documented here and at line 809 of the technical
+design document, and `CAFSalesforceSync.pushTask` exists, but the rule body
+itself was reconstructed from `CAF - Push Request to Salesforce`, which it
+mirrors exactly apart from the method it calls. Worth reading before relying on
+it.
+
+### Navigation
+
+Application menu **CAF Compliance**, visible to `itil`, `caf_admin`,
+`caf_read_only_all`, the three tier-owner roles and `caf_engineer`.
+
+| Order | Module | Table | Roles |
+|---|---|---|---|
+| 10 | CAF Requests | `caf_req` | — |
+| 20 | CAF Tasks | `caf_tsk` | — |
+| 30 | CAF Controls Relationship | `caf_relationship` | `caf_admin` |
+| 35 | CAF Controls | `caf_conformance_type` | `caf_admin` |
+| 40 | Critical Business Applications | `cmdb_ci_business_app` | — |
+
+**A table with no module cannot be reached in the UI at all** — it does not
+appear in the navigator, and there is no other route to it. The tables existed
+for some hours on dev249570 with no menu and read as simply absent. This is the
+same blind spot recorded below for Salesforce, where an object created over the
+Metadata API gets no tab and never appears in the App Launcher; it costs the
+same thing on both platforms and fails the same silent way.
+
+The technical design document lists two further modules, **Portal ➚** (`/caf`)
+and a **Performance Analytics dashboard**. Neither target exists on dev249570 —
+there is no `sp_portal` record with suffix `caf` — so both were left out rather
+than deployed as dead links. They belong with the missing engine.
 
 ### Salesforce
 
@@ -61,18 +118,31 @@ both were posted to the instance from those files.
 
 ## Properties
 
-| Name | Type | Value |
+| Name | Type | Value on dev249570 |
 |---|---|---|
-| `x_gskn2_caf_compli.sf.enabled` | boolean | `true` |
+| `x_gskn2_caf_compli.sf.enabled` | boolean | **`false`** — see below |
 | `x_gskn2_caf_compli.sf.instance_url` | string | `https://orgfarm-4938c7f768-dev-ed.develop.my.salesforce.com` |
-| `x_gskn2_caf_compli.sf.client_id` | string | connected app Consumer Key |
-| `x_gskn2_caf_compli.sf.client_secret` | password2 | encrypted at rest (`{{gpaes}}…`) |
+| `x_gskn2_caf_compli.sf.client_id` | string | **empty** — connected app Consumer Key |
+| `x_gskn2_caf_compli.sf.client_secret` | password2 | **empty** — encrypts at rest (`{{gpaes}}…`) once set |
 | `x_gskn2_caf_compli.sf.api_version` | string | `v67.0` |
 | `x_gskn2_caf_compli.sf.integration_user` | string | `sf.integration` |
+
+**Outbound push is off, and cannot be turned on as things stand.** The connected
+app's Consumer Key and Secret did not survive the move — see
+[Known gaps](#known-gaps), where the secret is recorded as having only ever
+existed in a session transcript. Until both are filled in, enabling `sf.enabled`
+would buy nothing but a log full of auth failures, so it ships `false`.
+
+To bring outbound back up: set `client_id` and `client_secret` from the
+Salesforce connected app, set `sf.enabled` to `true`, then
+`POST /resync/request/{sys_id}` and expect `200` where it currently gives `502`.
 
 **`sf.enabled` is the kill switch.** Set it to `false` and every push stops
 immediately — no code change, no deactivating rules under pressure. It is the
 first thing to reach for if anything misbehaves mid-demo.
+
+Everything **inbound** — the six resources under
+`/api/x_gskn2_caf_compli/caf` — is unaffected by this and works today.
 
 ## Auth
 
@@ -87,6 +157,35 @@ The token is not cached; each push costs one extra round trip. At POC volume
 that is worth more in debuggability than it costs.
 
 ## Verified behaviour
+
+### On dev249570, 2026-09-04 — inbound
+
+All six resources exercised as `sf.integration` against a freshly seeded task,
+one case per row of the result tables below; all 17 matched. Re-runnable with
+[deploy/verify_api.sh](deploy/verify_api.sh).
+
+```
+[SF->CAF] CAFT0001001 updated by sf.integration: {"comments":"Set from the Salesforce side."}
+[SF->CAF] CAFT0001001 updated by sf.integration: {"state":"2"}
+[SF->CAF] evidence attached to CAFT0001001: encryption-config.txt (30 bytes) by sf.integration
+[SF->CAF] CAFT0001001 attested approved (met_criteria=yes) by sf.integration;
+          task state 2, RCAF0001001 status in_compliance
+```
+
+Two things to read off that. **No `[CAF->SF]` line appears anywhere against it** —
+every one of those writes was made by `sf.integration` and none produced an
+outbound push, which is the echo-loop guard working. And the attested task
+finished at `state 2`, still active, because the rule that closes it is part of
+the [missing engine](#what-is-missing).
+
+Outbound could not be verified: `sf.enabled` is `false` and the connected-app
+credentials are gone. `POST /resync/request/{id}` correctly returns **502**
+`Sync disabled`, which is the "a failed push must surface" contract holding.
+
+### On dev281754, 2026-08-06 — outbound
+
+Kept as the record of outbound working when it had credentials. The instance
+itself is gone.
 
 ```
 19:30:46  [CAF->SF] RCAF0001034 pushed, HTTP 201                    (created)
@@ -287,12 +386,57 @@ the tell. Creating a `sysauto_script` to do it in script does not help either �
 a job inserted over the Table API never registers a `sys_trigger` and so never
 runs. Use **User Administration → Users → Set Password** in the UI.
 
+**A background script can do it, though**, which is how dev249570 was set up
+without touching the UI — the trap is `setValue`, not scripting as such:
+
+```javascript
+var u = new GlideRecord('sys_user');
+u.get(sysId);
+u.setDisplayValue('user_password', pwd);   // setValue stores it raw; this hashes it
+u.update();
+```
+
+`setDisplayValue` routes through the password hasher; `setValue` is what writes
+the plaintext. Verified by authenticating as `sf.integration` over basic auth
+immediately afterwards. See
+[deploy/06_properties_and_user.js](deploy/06_properties_and_user.js), which
+takes the password from a temporary system property so it never sits in the
+script file.
+
+## What is missing
+
+The rebuild on dev249570 restored the data model and the integration layer.
+**It did not restore the compliance engine**, because no source for it survives
+anywhere in this repo — the technical design document describes these as
+one-line summaries, which is a specification, not an implementation:
+
+| | Count | Consequence |
+|---|---|---|
+| Business rules on the CAF tables | 24 | Nothing derives state. A request does not close when its tasks close; `active` is not managed; `next_due_date` is never calculated |
+| Flows | 2 | `CAF - Create CAF Tasks` and `CAF - Close Request When All Tasks Close` — tasks are not generated from templates, requests do not close |
+| Client scripts / UI policies | 7 / 6 | Forms do not auto-populate from the business application, and read-only-by-state is not enforced in the UI |
+| ACLs | 48+ | **Table-level access only.** The tier-owner and own-records-only model documented in §Security is not enforced |
+| Notifications / events / scheduled jobs | 8 / 2 / 2 | No email, and no recurring request generation |
+| Service Portal + PA dashboard | — | The two navigation modules that point at them were left out |
+
+The most visible symptom: `POST /attest` sets `approval` and returns 200, and
+the task then stays `state=2, active=true`. That is correct behaviour for the
+endpoint — "setting `approval` is the whole act" — but the rule that acts on it,
+`CAF - success criteria not met`, does not exist here, so nothing closes.
+
+Recovering this needs either an update set from an instance that still has the
+app, or a rebuild from §Business Logic of the technical design document.
+
 ## Known gaps
 
 - **Requests are outbound-only.** There is no inbound resource for `caf_req`,
   deliberately — request state is derived from its tasks by the existing flows.
 - **No Apex test coverage** on any of the classes that call these resources.
-- **Secrets.** The Salesforce client secret and the `sf.integration` password
-  both exist outside the instance — the former in this session's transcript, the
-  latter in `C:\Users\patel\.caf-jwt\`. Throwaway POC, so low stakes, but rotate
-  both if the org outlives the demo.
+- **Secrets.** The Salesforce client secret did **not** survive the move to
+  dev249570 — it only ever existed in a session transcript, so outbound push is
+  off until someone re-reads it from the connected app. The `sf.integration`
+  password was regenerated during the rebuild and lives outside the repo; the
+  old `C:\Users\patel\.caf-jwt\` path belongs to the retired instance and is
+  gone. Rotate both if the org outlives the demo.
+- **No ACLs**, per the table above. Anyone with a CAF role sees every record.
+  Fine for a POC, wrong for anything else.

@@ -1,35 +1,35 @@
 {
   "run": {
-    "instance": "https://orgfarm-4938c7f768-dev-ed.develop.lightning.force.com + https://dev281754.service-now.com",
+    "instance": "https://orgfarm-4938c7f768-dev-ed.develop.lightning.force.com + https://dev249570.service-now.com",
     "executedBy": "admin.070b86ccf531@agentforce.com (Salesforce) / admin (ServiceNow)",
     "executedVia": "Playwright driving Lightning Experience. Every screen assertion is cross-checked against the ServiceNow record over cnit and the Salesforce record over the sf CLI. No case in this file writes to either platform."
   },
   "case": {
     "id": "TC-INT-048",
     "title": "Grid matches the ServiceNow portal exactly",
-    "startedAt": "2026-08-07T17:51:34.830Z",
+    "startedAt": "2026-10-04T16:18:23.913Z",
     "verdict": "PASS",
     "steps": [
       {
         "n": 1,
         "text": "Read the Salesforce grid.",
-        "at": "2026-08-07T17:51:34.830Z",
+        "at": "2026-10-04T16:18:23.914Z",
         "screenshots": [
-          "C:\\Users\\patel\\Documents\\ServiceNow Work Project Docs\\Personal AI Assisted\\dev281754 CAF App Reyan\\testing\\automation\\evidence\\TC-INT-048\\01-salesforce-compliance-grid.png"
+          "C:\\reyan_tech_cap_dev\\dev281754 CAF App Reyan\\testing\\automation\\evidence\\TC-INT-048\\01-salesforce-compliance-grid.png"
         ]
       },
       {
         "n": 2,
         "text": "Capture the ServiceNow /caf portal grid in the same session.",
-        "at": "2026-08-07T17:51:39.517Z",
+        "at": "2026-10-04T16:18:28.646Z",
         "screenshots": [
-          "C:\\Users\\patel\\Documents\\ServiceNow Work Project Docs\\Personal AI Assisted\\dev281754 CAF App Reyan\\testing\\automation\\evidence\\TC-INT-048\\02-servicenow-portal-grid.png"
+          "C:\\reyan_tech_cap_dev\\dev281754 CAF App Reyan\\testing\\automation\\evidence\\TC-INT-048\\02-servicenow-portal-grid.png"
         ]
       },
       {
         "n": 3,
         "text": "Reconcile both grids against caf_req.caf_status, the system of record.",
-        "at": "2026-08-07T17:51:44.673Z",
+        "at": "2026-10-04T16:18:38.283Z",
         "screenshots": []
       }
     ],
@@ -40,24 +40,224 @@
         "query": "CAF Dashboard tab",
         "rows": [
           {
+            "application": "Breach Forensics Evidence Vault",
+            "overall": "2 of 5",
+            "Confirm & Execute High Availability Plan": "(none) ",
+            "Confirm Backup & Restore Policy": "RCAF0001152 amber",
+            "Confirm Disaster Recovery Plan": "RCAF0001062 amber",
+            "Confirm RTO & RPO": "RCAF0001154 green",
+            "Test Backup & Restore": "RCAF0001155 amber",
+            "Test Disaster Recovery Plan": "RCAF0001153 green"
+          },
+          {
+            "application": "Breach Notification Portal",
+            "overall": "4 of 6",
+            "Confirm & Execute High Availability Plan": "RCAF0001058 amber",
+            "Confirm Backup & Restore Policy": "RCAF0001132 green",
+            "Confirm Disaster Recovery Plan": "RCAF0001136 green",
+            "Confirm RTO & RPO": "RCAF0001134 amber",
+            "Test Backup & Restore": "RCAF0001135 green",
+            "Test Disaster Recovery Plan": "RCAF0001133 green"
+          },
+          {
+            "application": "Data Loss Prevention",
+            "overall": "4 of 6",
+            "Confirm & Execute High Availability Plan": "RCAF0001143 amber",
+            "Confirm Backup & Restore Policy": "RCAF0001142 green",
+            "Confirm Disaster Recovery Plan": "RCAF0001146 amber",
+            "Confirm RTO & RPO": "RCAF0001060 green",
+            "Test Backup & Restore": "RCAF0001145 green",
+            "Test Disaster Recovery Plan": "RCAF0001144 green"
+          },
+          {
+            "application": "Employee Directory",
+            "overall": "2 of 5",
+            "Confirm & Execute High Availability Plan": "(none) ",
+            "Confirm Backup & Restore Policy": "RCAF0001044 amber",
+            "Confirm Disaster Recovery Plan": "RCAF0001071 amber",
+            "Confirm RTO & RPO": "RCAF0001069 green",
+            "Test Backup & Restore": "RCAF0001070 green",
+            "Test Disaster Recovery Plan": "RCAF0001068 amber"
+          },
+          {
+            "application": "Employee Expense Management",
+            "overall": "2 of 5",
+            "Confirm & Execute High Availability Plan": "(none) ",
+            "Confirm Backup & Restore Policy": "RCAF0001077 amber",
+            "Confirm Disaster Recovery Plan": "RCAF0001046 amber",
+            "Confirm RTO & RPO": "RCAF0001079 green",
+            "Test Backup & Restore": "RCAF0001080 amber",
+            "Test Disaster Recovery Plan": "RCAF0001078 green"
+          },
+          {
+            "application": "Employee Learning Portal",
+            "overall": "3 of 5",
+            "Confirm & Execute High Availability Plan": "(none) ",
+            "Confirm Backup & Restore Policy": "RCAF0001081 green",
+            "Confirm Disaster Recovery Plan": "RCAF0001084 green",
+            "Confirm RTO & RPO": "RCAF0001083 amber",
+            "Test Backup & Restore": "RCAF0001047 amber",
+            "Test Disaster Recovery Plan": "RCAF0001082 green"
+          },
+          {
+            "application": "Employee Onboarding",
+            "overall": "5 of 6",
+            "Confirm & Execute High Availability Plan": "RCAF0001073 green",
+            "Confirm Backup & Restore Policy": "RCAF0001072 green",
+            "Confirm Disaster Recovery Plan": "RCAF0001076 green",
+            "Confirm RTO & RPO": "RCAF0001075 green",
+            "Test Backup & Restore": "RCAF0001045 green",
+            "Test Disaster Recovery Plan": "RCAF0001074 amber"
+          },
+          {
+            "application": "Employee Self-Service Portal",
+            "overall": "4 of 6",
+            "Confirm & Execute High Availability Plan": "RCAF0001064 green",
+            "Confirm Backup & Restore Policy": "RCAF0001063 green",
+            "Confirm Disaster Recovery Plan": "RCAF0001067 green",
+            "Confirm RTO & RPO": "RCAF0001043 amber",
+            "Test Backup & Restore": "RCAF0001066 green",
+            "Test Disaster Recovery Plan": "RCAF0001065 amber"
+          },
+          {
+            "application": "HR Benefits Administration",
+            "overall": "2 of 5",
+            "Confirm & Execute High Availability Plan": "(none) ",
+            "Confirm Backup & Restore Policy": "RCAF0001055 amber",
+            "Confirm Disaster Recovery Plan": "RCAF0001122 amber",
+            "Confirm RTO & RPO": "RCAF0001120 green",
+            "Test Backup & Restore": "RCAF0001121 green",
+            "Test Disaster Recovery Plan": "RCAF0001119 amber"
+          },
+          {
+            "application": "HR Case Management",
+            "overall": "4 of 5",
+            "Confirm & Execute High Availability Plan": "(none) ",
+            "Confirm Backup & Restore Policy": "RCAF0001115 green",
+            "Confirm Disaster Recovery Plan": "RCAF0001118 green",
+            "Confirm RTO & RPO": "RCAF0001054 green",
+            "Test Backup & Restore": "RCAF0001117 green",
+            "Test Disaster Recovery Plan": "RCAF0001116 amber"
+          },
+          {
+            "application": "HR Payroll",
+            "overall": "3 of 6",
+            "Confirm & Execute High Availability Plan": "RCAF0001111 green",
+            "Confirm Backup & Restore Policy": "RCAF0001110 amber",
+            "Confirm Disaster Recovery Plan": "RCAF0001114 green",
+            "Confirm RTO & RPO": "RCAF0001113 amber",
+            "Test Backup & Restore": "RCAF0001053 amber",
+            "Test Disaster Recovery Plan": "RCAF0001112 green"
+          },
+          {
+            "application": "HR Performance Management",
+            "overall": "3 of 5",
+            "Confirm & Execute High Availability Plan": "(none) ",
+            "Confirm Backup & Restore Policy": "RCAF0001128 amber",
+            "Confirm Disaster Recovery Plan": "RCAF0001131 amber",
+            "Confirm RTO & RPO": "RCAF0001130 green",
+            "Test Backup & Restore": "RCAF0001057 green",
+            "Test Disaster Recovery Plan": "RCAF0001129 green"
+          },
+          {
+            "application": "HR Talent Acquisition",
+            "overall": "4 of 6",
+            "Confirm & Execute High Availability Plan": "RCAF0001124 green",
+            "Confirm Backup & Restore Policy": "RCAF0001123 green",
+            "Confirm Disaster Recovery Plan": "RCAF0001127 green",
+            "Confirm RTO & RPO": "RCAF0001125 amber",
+            "Test Backup & Restore": "RCAF0001126 green",
+            "Test Disaster Recovery Plan": "RCAF0001056 amber"
+          },
+          {
+            "application": "Microsoft 365",
+            "overall": "4 of 6",
+            "Confirm & Execute High Availability Plan": "RCAF0001048 green",
+            "Confirm Backup & Restore Policy": "RCAF0001085 green",
+            "Confirm Disaster Recovery Plan": "RCAF0001089 amber",
+            "Confirm RTO & RPO": "RCAF0001087 green",
+            "Test Backup & Restore": "RCAF0001088 green",
+            "Test Disaster Recovery Plan": "RCAF0001086 amber"
+          },
+          {
+            "application": "Microsoft Dynamics 365",
+            "overall": "4 of 6",
+            "Confirm & Execute High Availability Plan": "RCAF0001106 green",
+            "Confirm Backup & Restore Policy": "RCAF0001105 green",
+            "Confirm Disaster Recovery Plan": "RCAF0001052 amber",
+            "Confirm RTO & RPO": "RCAF0001108 green",
+            "Test Backup & Restore": "RCAF0001109 green",
+            "Test Disaster Recovery Plan": "RCAF0001107 amber"
+          },
+          {
+            "application": "Microsoft Entra ID",
+            "overall": "4 of 6",
+            "Confirm & Execute High Availability Plan": "RCAF0001101 amber",
+            "Confirm Backup & Restore Policy": "RCAF0001100 green",
+            "Confirm Disaster Recovery Plan": "RCAF0001104 amber",
+            "Confirm RTO & RPO": "RCAF0001051 green",
+            "Test Backup & Restore": "RCAF0001103 green",
+            "Test Disaster Recovery Plan": "RCAF0001102 green"
+          },
+          {
+            "application": "Microsoft SharePoint Online",
+            "overall": "3 of 6",
+            "Confirm & Execute High Availability Plan": "RCAF0001095 amber",
+            "Confirm Backup & Restore Policy": "RCAF0001050 amber",
+            "Confirm Disaster Recovery Plan": "RCAF0001099 green",
+            "Confirm RTO & RPO": "RCAF0001097 green",
+            "Test Backup & Restore": "RCAF0001098 amber",
+            "Test Disaster Recovery Plan": "RCAF0001096 green"
+          },
+          {
+            "application": "Microsoft Teams",
+            "overall": "4 of 6",
+            "Confirm & Execute High Availability Plan": "RCAF0001091 green",
+            "Confirm Backup & Restore Policy": "RCAF0001090 green",
+            "Confirm Disaster Recovery Plan": "RCAF0001094 green",
+            "Confirm RTO & RPO": "RCAF0001092 amber",
+            "Test Backup & Restore": "RCAF0001093 green",
+            "Test Disaster Recovery Plan": "RCAF0001049 amber"
+          },
+          {
+            "application": "Privileged Access Management",
+            "overall": "4 of 6",
+            "Confirm & Execute High Availability Plan": "RCAF0001147 green",
+            "Confirm Backup & Restore Policy": "RCAF0001061 amber",
+            "Confirm Disaster Recovery Plan": "RCAF0001151 green",
+            "Confirm RTO & RPO": "RCAF0001149 amber",
+            "Test Backup & Restore": "RCAF0001150 green",
+            "Test Disaster Recovery Plan": "RCAF0001148 green"
+          },
+          {
             "application": "SAP Fiori",
-            "overall": "2 of 6",
-            "Confirm & Execute High Availability Plan": "RCAF0001024 red",
-            "Confirm Backup & Restore Policy": "RCAF0001020 red",
-            "Confirm Disaster Recovery Plan": "RCAF0001022 green",
-            "Confirm RTO & RPO": "RCAF0001019 red",
+            "overall": "1 of 6",
+            "Confirm & Execute High Availability Plan": "RCAF0001024 amber",
+            "Confirm Backup & Restore Policy": "RCAF0001020 amber",
+            "Confirm Disaster Recovery Plan": "RCAF0001022 amber",
+            "Confirm RTO & RPO": "RCAF0001019 amber",
             "Test Backup & Restore": "RCAF0001021 green",
-            "Test Disaster Recovery Plan": "RCAF0001023 red"
+            "Test Disaster Recovery Plan": "RCAF0001023 amber"
           },
           {
             "application": "SAP HANA",
-            "overall": "2 of 6",
-            "Confirm & Execute High Availability Plan": "RCAF0001042 green",
-            "Confirm Backup & Restore Policy": "RCAF0001038 green",
-            "Confirm Disaster Recovery Plan": "RCAF0001040 red",
-            "Confirm RTO & RPO": "RCAF0001037 red",
-            "Test Backup & Restore": "RCAF0001039 red",
-            "Test Disaster Recovery Plan": "RCAF0001041 red"
+            "overall": "1 of 6",
+            "Confirm & Execute High Availability Plan": "RCAF0001042 amber",
+            "Confirm Backup & Restore Policy": "RCAF0001038 amber",
+            "Confirm Disaster Recovery Plan": "RCAF0001040 amber",
+            "Confirm RTO & RPO": "RCAF0001037 amber",
+            "Test Backup & Restore": "RCAF0001039 green",
+            "Test Disaster Recovery Plan": "RCAF0001041 amber"
+          },
+          {
+            "application": "Security Incident Response",
+            "overall": "3 of 6",
+            "Confirm & Execute High Availability Plan": "RCAF0001138 green",
+            "Confirm Backup & Restore Policy": "RCAF0001137 amber",
+            "Confirm Disaster Recovery Plan": "RCAF0001059 amber",
+            "Confirm RTO & RPO": "RCAF0001140 amber",
+            "Test Backup & Restore": "RCAF0001141 green",
+            "Test Disaster Recovery Plan": "RCAF0001139 green"
           },
           {
             "application": "Zscalar App",
@@ -70,7 +270,7 @@
             "Test Disaster Recovery Plan": "RCAF0001035 green"
           }
         ],
-        "at": "2026-08-07T17:51:39.517Z"
+        "at": "2026-10-04T16:18:28.646Z"
       },
       {
         "label": "ServiceNow /caf portal grid",
@@ -78,261 +278,366 @@
         "query": "/caf?id=caf_apps",
         "rows": [
           {
-            "application": "SAP HANA",
-            "overall": "Compliant"
+            "application": "Breach Forensics Evidence Vault",
+            "overall": ""
+          },
+          {
+            "application": "Privileged Access Management",
+            "overall": ""
+          },
+          {
+            "application": "Data Loss Prevention",
+            "overall": ""
+          },
+          {
+            "application": "Security Incident Response",
+            "overall": ""
+          },
+          {
+            "application": "Breach Notification Portal",
+            "overall": ""
+          },
+          {
+            "application": "HR Performance Management",
+            "overall": ""
+          },
+          {
+            "application": "HR Talent Acquisition",
+            "overall": ""
+          },
+          {
+            "application": "HR Benefits Administration",
+            "overall": ""
+          },
+          {
+            "application": "HR Case Management",
+            "overall": ""
+          },
+          {
+            "application": "HR Payroll",
+            "overall": ""
+          },
+          {
+            "application": "Microsoft Dynamics 365",
+            "overall": ""
+          },
+          {
+            "application": "Microsoft Entra ID",
+            "overall": ""
+          },
+          {
+            "application": "Microsoft SharePoint Online",
+            "overall": ""
+          },
+          {
+            "application": "Microsoft Teams",
+            "overall": ""
+          },
+          {
+            "application": "Microsoft 365",
+            "overall": ""
+          },
+          {
+            "application": "Employee Learning Portal",
+            "overall": ""
+          },
+          {
+            "application": "Employee Expense Management",
+            "overall": ""
+          },
+          {
+            "application": "Employee Onboarding",
+            "overall": ""
+          },
+          {
+            "application": "Employee Directory",
+            "overall": ""
+          },
+          {
+            "application": "Employee Self-Service Portal",
+            "overall": ""
+          },
+          {
+            "application": "CAF Demo Payments Platform",
+            "overall": ""
           },
           {
             "application": "SAP Fiori",
-            "overall": "Compliant"
-          },
-          {
-            "application": "",
-            "overall": "Out of compliance"
+            "overall": ""
           },
           {
             "application": "Zscalar App",
-            "overall": "Compliant"
-          },
-          {
-            "application": "Test1",
-            "overall": "Out of compliance"
-          },
-          {
-            "application": "Zoho Email",
-            "overall": "Out of compliance"
-          },
-          {
-            "application": "Test Tier 1 app",
-            "overall": "Out of compliance"
-          },
-          {
-            "application": "PeopleSoft CRM",
-            "overall": "Out of compliance"
-          },
-          {
-            "application": "Outlook Web Access (OWA)",
-            "overall": "Out of compliance"
-          },
-          {
-            "application": "PeopleSoft HRMS",
-            "overall": "Out of compliance"
-          },
-          {
-            "application": "Retail Adding Points",
-            "overall": "Not initiated"
-          },
-          {
-            "application": "Electronic Messaging",
-            "overall": "Not initiated"
-          },
-          {
-            "application": "Retail Client Registration",
-            "overall": "Not initiated"
+            "overall": ""
           },
           {
             "application": "SAP HANA",
-            "overall": "Not initiated"
+            "overall": ""
           },
           {
-            "application": "PeopleSoft Enterprise Services",
-            "overall": "Not initiated"
+            "application": "Test1",
+            "overall": ""
+          },
+          {
+            "application": "Zoho Email",
+            "overall": ""
+          },
+          {
+            "application": "Test Tier 1 app",
+            "overall": ""
+          },
+          {
+            "application": "PeopleSoft CRM",
+            "overall": ""
+          },
+          {
+            "application": "Outlook Web Access (OWA)",
+            "overall": ""
+          },
+          {
+            "application": "PeopleSoft HRMS",
+            "overall": ""
+          },
+          {
+            "application": "Retail Adding Points",
+            "overall": ""
           },
           {
             "application": "PeopleSoft Reporting",
-            "overall": "Not initiated"
+            "overall": ""
           },
           {
-            "application": "SAP Labor Distribution",
-            "overall": "Not initiated"
+            "application": "SAP HANA",
+            "overall": ""
+          },
+          {
+            "application": "Retail Client Registration",
+            "overall": ""
+          },
+          {
+            "application": "Electronic Messaging",
+            "overall": ""
+          },
+          {
+            "application": "PeopleSoft Enterprise Services",
+            "overall": ""
           },
           {
             "application": "Bond Trading - DR",
-            "overall": "Not initiated"
+            "overall": ""
           },
           {
-            "application": "PeopleSoft Supply Chain Management",
-            "overall": "Not initiated"
-          },
-          {
-            "application": "Unix Server Hosting",
-            "overall": "Not initiated"
-          },
-          {
-            "application": "External Networking (Internet)",
-            "overall": "Not initiated"
-          },
-          {
-            "application": "SAP Financial Accounting",
-            "overall": "Not initiated"
-          },
-          {
-            "application": "SAP Enterprise Services",
-            "overall": "Not initiated"
+            "application": "SAP Labor Distribution",
+            "overall": ""
           },
           {
             "application": "SAP Payroll",
-            "overall": "Not initiated"
+            "overall": ""
           },
           {
             "application": "Retail Client Lookup",
-            "overall": "Not initiated"
+            "overall": ""
           },
           {
             "application": "Email",
-            "overall": "Not initiated"
+            "overall": ""
           },
           {
-            "application": "SAP Materials Management",
-            "overall": "Not initiated"
+            "application": "External Networking (Internet)",
+            "overall": ""
           },
           {
-            "application": "Campus Network (LAN)",
-            "overall": "Not initiated"
+            "application": "SAP Enterprise Services",
+            "overall": ""
           },
           {
-            "application": "Desktop Support",
-            "overall": "Not initiated"
+            "application": "SAP Financial Accounting",
+            "overall": ""
           },
           {
-            "application": "PeopleSoft Portals",
-            "overall": "Not initiated"
+            "application": "Unix Server Hosting",
+            "overall": ""
           },
           {
-            "application": "Tibco ESB",
-            "overall": "Not initiated"
-          },
-          {
-            "application": "Securities Lending",
-            "overall": "Not initiated"
+            "application": "PeopleSoft Supply Chain Management",
+            "overall": ""
           },
           {
             "application": "Apache Web Hosting",
-            "overall": "Not initiated"
+            "overall": ""
+          },
+          {
+            "application": "Campus Network (LAN)",
+            "overall": ""
+          },
+          {
+            "application": "Desktop Support",
+            "overall": ""
+          },
+          {
+            "application": "SAP Materials Management",
+            "overall": ""
+          },
+          {
+            "application": "PeopleSoft Portals",
+            "overall": ""
+          },
+          {
+            "application": "Tibco ESB",
+            "overall": ""
+          },
+          {
+            "application": "Securities Lending",
+            "overall": ""
           },
           {
             "application": "ServiceNow Enterprise Services",
-            "overall": "Not initiated"
-          },
-          {
-            "application": "Sales Force Automation",
-            "overall": "Not initiated"
-          },
-          {
-            "application": "Windows Server Hosting",
-            "overall": "Not initiated"
-          },
-          {
-            "application": "SAP Human Resources",
-            "overall": "Not initiated"
+            "overall": ""
           },
           {
             "application": "Retail",
-            "overall": "Not initiated"
-          },
-          {
-            "application": "Client Services",
-            "overall": "Not initiated"
-          },
-          {
-            "application": "Bond Trading",
-            "overall": "Not initiated"
+            "overall": ""
           },
           {
             "application": "Shared Storage (SAN)",
-            "overall": "Not initiated"
+            "overall": ""
+          },
+          {
+            "application": "Bond Trading",
+            "overall": ""
+          },
+          {
+            "application": "Client Services",
+            "overall": ""
           },
           {
             "application": "z/OS Platform Hosting",
-            "overall": "Not initiated"
+            "overall": ""
           },
           {
-            "application": "Printing Services",
-            "overall": "Not initiated"
+            "application": "SAP Human Resources",
+            "overall": ""
           },
           {
-            "application": "PeopleSoft Financials",
-            "overall": "Not initiated"
+            "application": "Sales Force Automation",
+            "overall": ""
           },
           {
-            "application": "SAP Controlling",
-            "overall": "Not initiated"
+            "application": "Windows Server Hosting",
+            "overall": ""
           },
           {
             "application": "Windows Mobile",
-            "overall": "Not initiated"
-          },
-          {
-            "application": "E-Commerce",
-            "overall": "Not initiated"
-          },
-          {
-            "application": "Voice Communication",
-            "overall": "Not initiated"
-          },
-          {
-            "application": "PeopleSoft Governance",
-            "overall": "Not initiated"
-          },
-          {
-            "application": "Inter-Site Networking (WAN)",
-            "overall": "Not initiated"
+            "overall": ""
           },
           {
             "application": "PeopleSoft Asset Lifecycle Management",
-            "overall": "Not initiated"
+            "overall": ""
+          },
+          {
+            "application": "Inter-Site Networking (WAN)",
+            "overall": ""
+          },
+          {
+            "application": "Printing Services",
+            "overall": ""
+          },
+          {
+            "application": "PeopleSoft Governance",
+            "overall": ""
+          },
+          {
+            "application": "E-Commerce",
+            "overall": ""
           },
           {
             "application": "IT Services",
-            "overall": "Not initiated"
+            "overall": ""
+          },
+          {
+            "application": "Voice Communication",
+            "overall": ""
+          },
+          {
+            "application": "PeopleSoft Financials",
+            "overall": ""
+          },
+          {
+            "application": "SAP Controlling",
+            "overall": ""
           },
           {
             "application": "Oracle Database Hosting",
-            "overall": "Not initiated"
-          },
-          {
-            "application": "Workday Enterprise Services",
-            "overall": "Not initiated"
+            "overall": ""
           },
           {
             "application": "Jobvite Enterprise Recruitment Services",
-            "overall": "Not initiated"
-          },
-          {
-            "application": "IIS Web Hosting",
-            "overall": "Not initiated"
-          },
-          {
-            "application": "OpenText Enterprise Services",
-            "overall": "Not initiated"
+            "overall": ""
           },
           {
             "application": "This Service-now instance",
-            "overall": "Not initiated"
-          },
-          {
-            "application": "SAP Plant Maintenance",
-            "overall": "Not initiated"
+            "overall": ""
           },
           {
             "application": "Retail POS (Point of Sale)",
-            "overall": "Not initiated"
+            "overall": ""
+          },
+          {
+            "application": "SAP Plant Maintenance",
+            "overall": ""
+          },
+          {
+            "application": "OpenText Enterprise Services",
+            "overall": ""
+          },
+          {
+            "application": "IIS Web Hosting",
+            "overall": ""
+          },
+          {
+            "application": "Workday Enterprise Services",
+            "overall": ""
           },
           {
             "application": "Test EU",
-            "overall": "Out of compliance"
+            "overall": ""
           },
           {
             "application": "Zoho HR System",
-            "overall": "Not initiated"
+            "overall": ""
           }
         ],
-        "at": "2026-08-07T17:51:44.673Z"
+        "at": "2026-10-04T16:18:38.283Z"
       },
       {
         "label": "caf_req.caf_status — the system of record",
         "table": "x_gskn2_caf_compli_caf_req",
-        "query": "cnit get x_gskn2_caf_compli_caf_req -Fields number,caf_status -ProfileName caf-reyan",
+        "query": "cnit get x_gskn2_caf_compli_caf_req -Fields number,caf_status -ProfileName caf-dev249570",
         "rows": [
+          {
+            "number": "RCAF0001061",
+            "application": "Privileged Access Management",
+            "caf_status": "approaching_due"
+          },
+          {
+            "number": "RCAF0001113",
+            "application": "HR Payroll",
+            "caf_status": "approaching_due"
+          },
+          {
+            "number": "RCAF0001089",
+            "application": "Microsoft 365",
+            "caf_status": "approaching_due"
+          },
+          {
+            "number": "RCAF0001100",
+            "application": "Microsoft Entra ID",
+            "caf_status": "in_compliance"
+          },
+          {
+            "number": "RCAF0001057",
+            "application": "HR Performance Management",
+            "caf_status": "in_compliance"
+          },
           {
             "number": "RCAF0001032",
             "application": "Zscalar App",
@@ -349,54 +654,524 @@
             "caf_status": "in_compliance"
           },
           {
+            "number": "RCAF0001121",
+            "application": "HR Benefits Administration",
+            "caf_status": "in_compliance"
+          },
+          {
             "number": "RCAF0001039",
             "application": "SAP HANA",
-            "caf_status": "out_of_compliance"
+            "caf_status": "in_compliance"
+          },
+          {
+            "number": "RCAF0001135",
+            "application": "Breach Notification Portal",
+            "caf_status": "in_compliance"
+          },
+          {
+            "number": "RCAF0001048",
+            "application": "Microsoft 365",
+            "caf_status": "in_compliance"
+          },
+          {
+            "number": "RCAF0001050",
+            "application": "Microsoft SharePoint Online",
+            "caf_status": "approaching_due"
+          },
+          {
+            "number": "RCAF0001149",
+            "application": "Privileged Access Management",
+            "caf_status": "approaching_due"
+          },
+          {
+            "number": "RCAF0001120",
+            "application": "HR Benefits Administration",
+            "caf_status": "in_compliance"
           },
           {
             "number": "RCAF0001038",
             "application": "SAP HANA",
+            "caf_status": "approaching_due"
+          },
+          {
+            "number": "RCAF0001077",
+            "application": "Employee Expense Management",
+            "caf_status": "approaching_due"
+          },
+          {
+            "number": "RCAF0001108",
+            "application": "Microsoft Dynamics 365",
             "caf_status": "in_compliance"
+          },
+          {
+            "number": "RCAF0001141",
+            "application": "Security Incident Response",
+            "caf_status": "in_compliance"
+          },
+          {
+            "number": "RCAF0001143",
+            "application": "Data Loss Prevention",
+            "caf_status": "approaching_due"
+          },
+          {
+            "number": "RCAF0001079",
+            "application": "Employee Expense Management",
+            "caf_status": "in_compliance"
+          },
+          {
+            "number": "RCAF0001064",
+            "application": "Employee Self-Service Portal",
+            "caf_status": "in_compliance"
+          },
+          {
+            "number": "RCAF0001098",
+            "application": "Microsoft SharePoint Online",
+            "caf_status": "approaching_due"
+          },
+          {
+            "number": "RCAF0001047",
+            "application": "Employee Learning Portal",
+            "caf_status": "approaching_due"
+          },
+          {
+            "number": "RCAF0001137",
+            "application": "Security Incident Response",
+            "caf_status": "approaching_due"
           },
           {
             "number": "RCAF0001019",
             "application": "SAP Fiori",
-            "caf_status": "out_of_compliance"
+            "caf_status": "approaching_due"
           },
           {
             "number": "RCAF0001020",
             "application": "SAP Fiori",
-            "caf_status": "out_of_compliance"
+            "caf_status": "approaching_due"
           },
           {
             "number": "RCAF0001022",
             "application": "SAP Fiori",
+            "caf_status": "approaching_due"
+          },
+          {
+            "number": "RCAF0001152",
+            "application": "Breach Forensics Evidence Vault",
+            "caf_status": "approaching_due"
+          },
+          {
+            "number": "RCAF0001125",
+            "application": "HR Talent Acquisition",
+            "caf_status": "approaching_due"
+          },
+          {
+            "number": "RCAF0001111",
+            "application": "HR Payroll",
             "caf_status": "in_compliance"
+          },
+          {
+            "number": "RCAF0001146",
+            "application": "Data Loss Prevention",
+            "caf_status": "approaching_due"
+          },
+          {
+            "number": "RCAF0001117",
+            "application": "HR Case Management",
+            "caf_status": "in_compliance"
+          },
+          {
+            "number": "RCAF0001074",
+            "application": "Employee Onboarding",
+            "caf_status": "approaching_due"
+          },
+          {
+            "number": "RCAF0001124",
+            "application": "HR Talent Acquisition",
+            "caf_status": "in_compliance"
+          },
+          {
+            "number": "RCAF0001058",
+            "application": "Breach Notification Portal",
+            "caf_status": "approaching_due"
+          },
+          {
+            "number": "RCAF0001086",
+            "application": "Microsoft 365",
+            "caf_status": "approaching_due"
+          },
+          {
+            "number": "RCAF0001118",
+            "application": "HR Case Management",
+            "caf_status": "in_compliance"
+          },
+          {
+            "number": "RCAF0001140",
+            "application": "Security Incident Response",
+            "caf_status": "approaching_due"
+          },
+          {
+            "number": "RCAF0001088",
+            "application": "Microsoft 365",
+            "caf_status": "in_compliance"
+          },
+          {
+            "number": "RCAF0001043",
+            "application": "Employee Self-Service Portal",
+            "caf_status": "approaching_due"
+          },
+          {
+            "number": "RCAF0001105",
+            "application": "Microsoft Dynamics 365",
+            "caf_status": "in_compliance"
+          },
+          {
+            "number": "RCAF0001069",
+            "application": "Employee Directory",
+            "caf_status": "in_compliance"
+          },
+          {
+            "number": "RCAF0001095",
+            "application": "Microsoft SharePoint Online",
+            "caf_status": "approaching_due"
+          },
+          {
+            "number": "RCAF0001119",
+            "application": "HR Benefits Administration",
+            "caf_status": "approaching_due"
           },
           {
             "number": "RCAF0001042",
             "application": "SAP HANA",
+            "caf_status": "approaching_due"
+          },
+          {
+            "number": "RCAF0001129",
+            "application": "HR Performance Management",
+            "caf_status": "in_compliance"
+          },
+          {
+            "number": "RCAF0001134",
+            "application": "Breach Notification Portal",
+            "caf_status": "approaching_due"
+          },
+          {
+            "number": "RCAF0001084",
+            "application": "Employee Learning Portal",
+            "caf_status": "in_compliance"
+          },
+          {
+            "number": "RCAF0001148",
+            "application": "Privileged Access Management",
+            "caf_status": "in_compliance"
+          },
+          {
+            "number": "RCAF0001107",
+            "application": "Microsoft Dynamics 365",
+            "caf_status": "approaching_due"
+          },
+          {
+            "number": "RCAF0001063",
+            "application": "Employee Self-Service Portal",
+            "caf_status": "in_compliance"
+          },
+          {
+            "number": "RCAF0001114",
+            "application": "HR Payroll",
+            "caf_status": "in_compliance"
+          },
+          {
+            "number": "RCAF0001097",
+            "application": "Microsoft SharePoint Online",
+            "caf_status": "in_compliance"
+          },
+          {
+            "number": "RCAF0001109",
+            "application": "Microsoft Dynamics 365",
+            "caf_status": "in_compliance"
+          },
+          {
+            "number": "RCAF0001130",
+            "application": "HR Performance Management",
+            "caf_status": "in_compliance"
+          },
+          {
+            "number": "RCAF0001092",
+            "application": "Microsoft Teams",
+            "caf_status": "approaching_due"
+          },
+          {
+            "number": "RCAF0001055",
+            "application": "HR Benefits Administration",
+            "caf_status": "approaching_due"
+          },
+          {
+            "number": "RCAF0001142",
+            "application": "Data Loss Prevention",
+            "caf_status": "in_compliance"
+          },
+          {
+            "number": "RCAF0001116",
+            "application": "HR Case Management",
+            "caf_status": "approaching_due"
+          },
+          {
+            "number": "RCAF0001078",
+            "application": "Employee Expense Management",
+            "caf_status": "in_compliance"
+          },
+          {
+            "number": "RCAF0001103",
+            "application": "Microsoft Entra ID",
+            "caf_status": "in_compliance"
+          },
+          {
+            "number": "RCAF0001085",
+            "application": "Microsoft 365",
+            "caf_status": "in_compliance"
+          },
+          {
+            "number": "RCAF0001091",
+            "application": "Microsoft Teams",
+            "caf_status": "in_compliance"
+          },
+          {
+            "number": "RCAF0001151",
+            "application": "Privileged Access Management",
+            "caf_status": "in_compliance"
+          },
+          {
+            "number": "RCAF0001053",
+            "application": "HR Payroll",
+            "caf_status": "approaching_due"
+          },
+          {
+            "number": "RCAF0001080",
+            "application": "Employee Expense Management",
+            "caf_status": "approaching_due"
+          },
+          {
+            "number": "RCAF0001145",
+            "application": "Data Loss Prevention",
+            "caf_status": "in_compliance"
+          },
+          {
+            "number": "RCAF0001081",
+            "application": "Employee Learning Portal",
+            "caf_status": "in_compliance"
+          },
+          {
+            "number": "RCAF0001147",
+            "application": "Privileged Access Management",
+            "caf_status": "in_compliance"
+          },
+          {
+            "number": "RCAF0001054",
+            "application": "HR Case Management",
+            "caf_status": "in_compliance"
+          },
+          {
+            "number": "RCAF0001133",
+            "application": "Breach Notification Portal",
+            "caf_status": "in_compliance"
+          },
+          {
+            "number": "RCAF0001056",
+            "application": "HR Talent Acquisition",
+            "caf_status": "approaching_due"
+          },
+          {
+            "number": "RCAF0001076",
+            "application": "Employee Onboarding",
+            "caf_status": "in_compliance"
+          },
+          {
+            "number": "RCAF0001068",
+            "application": "Employee Directory",
+            "caf_status": "approaching_due"
+          },
+          {
+            "number": "RCAF0001139",
+            "application": "Security Incident Response",
             "caf_status": "in_compliance"
           },
           {
             "number": "RCAF0001024",
             "application": "SAP Fiori",
-            "caf_status": "out_of_compliance"
+            "caf_status": "approaching_due"
+          },
+          {
+            "number": "RCAF0001155",
+            "application": "Breach Forensics Evidence Vault",
+            "caf_status": "approaching_due"
           },
           {
             "number": "RCAF0001041",
             "application": "SAP HANA",
-            "caf_status": "out_of_compliance"
+            "caf_status": "approaching_due"
+          },
+          {
+            "number": "RCAF0001083",
+            "application": "Employee Learning Portal",
+            "caf_status": "approaching_due"
+          },
+          {
+            "number": "RCAF0001090",
+            "application": "Microsoft Teams",
+            "caf_status": "in_compliance"
+          },
+          {
+            "number": "RCAF0001071",
+            "application": "Employee Directory",
+            "caf_status": "approaching_due"
+          },
+          {
+            "number": "RCAF0001096",
+            "application": "Microsoft SharePoint Online",
+            "caf_status": "in_compliance"
+          },
+          {
+            "number": "RCAF0001128",
+            "application": "HR Performance Management",
+            "caf_status": "approaching_due"
+          },
+          {
+            "number": "RCAF0001046",
+            "application": "Employee Expense Management",
+            "caf_status": "approaching_due"
+          },
+          {
+            "number": "RCAF0001102",
+            "application": "Microsoft Entra ID",
+            "caf_status": "in_compliance"
+          },
+          {
+            "number": "RCAF0001136",
+            "application": "Breach Notification Portal",
+            "caf_status": "in_compliance"
+          },
+          {
+            "number": "RCAF0001150",
+            "application": "Privileged Access Management",
+            "caf_status": "in_compliance"
+          },
+          {
+            "number": "RCAF0001099",
+            "application": "Microsoft SharePoint Online",
+            "caf_status": "in_compliance"
+          },
+          {
+            "number": "RCAF0001044",
+            "application": "Employee Directory",
+            "caf_status": "approaching_due"
+          },
+          {
+            "number": "RCAF0001062",
+            "application": "Breach Forensics Evidence Vault",
+            "caf_status": "approaching_due"
+          },
+          {
+            "number": "RCAF0001065",
+            "application": "Employee Self-Service Portal",
+            "caf_status": "approaching_due"
+          },
+          {
+            "number": "RCAF0001115",
+            "application": "HR Case Management",
+            "caf_status": "in_compliance"
+          },
+          {
+            "number": "RCAF0001051",
+            "application": "Microsoft Entra ID",
+            "caf_status": "in_compliance"
+          },
+          {
+            "number": "RCAF0001073",
+            "application": "Employee Onboarding",
+            "caf_status": "in_compliance"
+          },
+          {
+            "number": "RCAF0001144",
+            "application": "Data Loss Prevention",
+            "caf_status": "in_compliance"
+          },
+          {
+            "number": "RCAF0001104",
+            "application": "Microsoft Entra ID",
+            "caf_status": "approaching_due"
+          },
+          {
+            "number": "RCAF0001067",
+            "application": "Employee Self-Service Portal",
+            "caf_status": "in_compliance"
+          },
+          {
+            "number": "RCAF0001094",
+            "application": "Microsoft Teams",
+            "caf_status": "in_compliance"
+          },
+          {
+            "number": "RCAF0001066",
+            "application": "Employee Self-Service Portal",
+            "caf_status": "in_compliance"
+          },
+          {
+            "number": "RCAF0001154",
+            "application": "Breach Forensics Evidence Vault",
+            "caf_status": "in_compliance"
+          },
+          {
+            "number": "RCAF0001101",
+            "application": "Microsoft Entra ID",
+            "caf_status": "approaching_due"
+          },
+          {
+            "number": "RCAF0001082",
+            "application": "Employee Learning Portal",
+            "caf_status": "in_compliance"
+          },
+          {
+            "number": "RCAF0001127",
+            "application": "HR Talent Acquisition",
+            "caf_status": "in_compliance"
+          },
+          {
+            "number": "RCAF0001126",
+            "application": "HR Talent Acquisition",
+            "caf_status": "in_compliance"
+          },
+          {
+            "number": "RCAF0001153",
+            "application": "Breach Forensics Evidence Vault",
+            "caf_status": "in_compliance"
+          },
+          {
+            "number": "RCAF0001132",
+            "application": "Breach Notification Portal",
+            "caf_status": "in_compliance"
+          },
+          {
+            "number": "RCAF0001075",
+            "application": "Employee Onboarding",
+            "caf_status": "in_compliance"
+          },
+          {
+            "number": "RCAF0001106",
+            "application": "Microsoft Dynamics 365",
+            "caf_status": "in_compliance"
+          },
+          {
+            "number": "RCAF0001112",
+            "application": "HR Payroll",
+            "caf_status": "in_compliance"
           },
           {
             "number": "RCAF0001023",
             "application": "SAP Fiori",
-            "caf_status": "out_of_compliance"
+            "caf_status": "approaching_due"
           },
           {
             "number": "RCAF0001040",
             "application": "SAP HANA",
-            "caf_status": "out_of_compliance"
+            "caf_status": "approaching_due"
           },
           {
             "number": "RCAF0001035",
@@ -409,9 +1184,19 @@
             "caf_status": "in_compliance"
           },
           {
+            "number": "RCAF0001052",
+            "application": "Microsoft Dynamics 365",
+            "caf_status": "approaching_due"
+          },
+          {
+            "number": "RCAF0001070",
+            "application": "Employee Directory",
+            "caf_status": "in_compliance"
+          },
+          {
             "number": "RCAF0001037",
             "application": "SAP HANA",
-            "caf_status": "out_of_compliance"
+            "caf_status": "approaching_due"
           },
           {
             "number": "RCAF0001031",
@@ -419,16 +1204,76 @@
             "caf_status": "in_compliance"
           },
           {
+            "number": "RCAF0001059",
+            "application": "Security Incident Response",
+            "caf_status": "approaching_due"
+          },
+          {
+            "number": "RCAF0001072",
+            "application": "Employee Onboarding",
+            "caf_status": "in_compliance"
+          },
+          {
+            "number": "RCAF0001122",
+            "application": "HR Benefits Administration",
+            "caf_status": "approaching_due"
+          },
+          {
+            "number": "RCAF0001131",
+            "application": "HR Performance Management",
+            "caf_status": "approaching_due"
+          },
+          {
+            "number": "RCAF0001138",
+            "application": "Security Incident Response",
+            "caf_status": "in_compliance"
+          },
+          {
+            "number": "RCAF0001049",
+            "application": "Microsoft Teams",
+            "caf_status": "approaching_due"
+          },
+          {
+            "number": "RCAF0001123",
+            "application": "HR Talent Acquisition",
+            "caf_status": "in_compliance"
+          },
+          {
+            "number": "RCAF0001087",
+            "application": "Microsoft 365",
+            "caf_status": "in_compliance"
+          },
+          {
+            "number": "RCAF0001045",
+            "application": "Employee Onboarding",
+            "caf_status": "in_compliance"
+          },
+          {
+            "number": "RCAF0001110",
+            "application": "HR Payroll",
+            "caf_status": "approaching_due"
+          },
+          {
+            "number": "RCAF0001060",
+            "application": "Data Loss Prevention",
+            "caf_status": "in_compliance"
+          },
+          {
             "number": "RCAF0001021",
             "application": "SAP Fiori",
             "caf_status": "in_compliance"
+          },
+          {
+            "number": "RCAF0001093",
+            "application": "Microsoft Teams",
+            "caf_status": "in_compliance"
           }
         ],
-        "at": "2026-08-07T17:51:47.794Z"
+        "at": "2026-10-04T16:18:42.621Z"
       }
     ],
     "observations": [
-      "Baseline in the case text is SAP HANA 6 out of compliance, SAP Fiori 4 out / 2 compliant, Zscalar App 6 compliant. Observed: SAP Fiori 2 compliant / 4 out; SAP HANA 2 compliant / 4 out; Zscalar App 6 compliant / 0 out.",
+      "Baseline in the case text is SAP HANA 6 out of compliance, SAP Fiori 4 out / 2 compliant, Zscalar App 6 compliant. Observed: Breach Forensics Evidence Vault 2 compliant / 0 out; Breach Notification Portal 4 compliant / 0 out; Data Loss Prevention 4 compliant / 0 out; Employee Directory 2 compliant / 0 out; Employee Expense Management 2 compliant / 0 out; Employee Learning Portal 3 compliant / 0 out; Employee Onboarding 5 compliant / 0 out; Employee Self-Service Portal 4 compliant / 0 out; HR Benefits Administration 2 compliant / 0 out; HR Case Management 4 compliant / 0 out; HR Payroll 3 compliant / 0 out; HR Performance Management 3 compliant / 0 out; HR Talent Acquisition 4 compliant / 0 out; Microsoft 365 4 compliant / 0 out; Microsoft Dynamics 365 4 compliant / 0 out; Microsoft Entra ID 4 compliant / 0 out; Microsoft SharePoint Online 3 compliant / 0 out; Microsoft Teams 4 compliant / 0 out; Privileged Access Management 4 compliant / 0 out; SAP Fiori 1 compliant / 0 out; SAP HANA 1 compliant / 0 out; Security Incident Response 3 compliant / 0 out; Zscalar App 6 compliant / 0 out.",
       "The Overall column is NOT part of this comparison — the two surfaces compute it from different sources and disagree, which is TC-INT-050. This case is about the per-control cells, which come from the same mirrored caf_status on both sides."
     ],
     "expected": [
@@ -436,14 +1281,34 @@
       "Both grids reconcile to caf_req.caf_status, which is the system of record."
     ],
     "actual": [
-      "Salesforce grid: 3 application(s), 6 control column(s).",
-      "  SAP Fiori — 2 of 6; dots: red, red, green, red, green, red",
-      "  SAP HANA — 2 of 6; dots: green, green, red, red, red, red",
+      "Salesforce grid: 23 application(s), 6 control column(s).",
+      "  Breach Forensics Evidence Vault — 2 of 5; dots: none, amber, amber, green, amber, green",
+      "  Breach Notification Portal — 4 of 6; dots: amber, green, green, amber, green, green",
+      "  Data Loss Prevention — 4 of 6; dots: amber, green, amber, green, green, green",
+      "  Employee Directory — 2 of 5; dots: none, amber, amber, green, green, amber",
+      "  Employee Expense Management — 2 of 5; dots: none, amber, amber, green, amber, green",
+      "  Employee Learning Portal — 3 of 5; dots: none, green, green, amber, amber, green",
+      "  Employee Onboarding — 5 of 6; dots: green, green, green, green, green, amber",
+      "  Employee Self-Service Portal — 4 of 6; dots: green, green, green, amber, green, amber",
+      "  HR Benefits Administration — 2 of 5; dots: none, amber, amber, green, green, amber",
+      "  HR Case Management — 4 of 5; dots: none, green, green, green, green, amber",
+      "  HR Payroll — 3 of 6; dots: green, amber, green, amber, amber, green",
+      "  HR Performance Management — 3 of 5; dots: none, amber, amber, green, green, green",
+      "  HR Talent Acquisition — 4 of 6; dots: green, green, green, amber, green, amber",
+      "  Microsoft 365 — 4 of 6; dots: green, green, amber, green, green, amber",
+      "  Microsoft Dynamics 365 — 4 of 6; dots: green, green, amber, green, green, amber",
+      "  Microsoft Entra ID — 4 of 6; dots: amber, green, amber, green, green, green",
+      "  Microsoft SharePoint Online — 3 of 6; dots: amber, amber, green, green, amber, green",
+      "  Microsoft Teams — 4 of 6; dots: green, green, green, amber, green, amber",
+      "  Privileged Access Management — 4 of 6; dots: green, amber, green, amber, green, green",
+      "  SAP Fiori — 1 of 6; dots: amber, amber, amber, amber, green, amber",
+      "  SAP HANA — 1 of 6; dots: amber, amber, amber, amber, green, amber",
+      "  Security Incident Response — 3 of 6; dots: green, amber, amber, amber, green, green",
       "  Zscalar App — Compliant; dots: green, green, green, green, green, green",
-      "ServiceNow portal grid: 62 application row(s) — SAP HANA, SAP Fiori, , Zscalar App, Test1, Zoho Email, Test Tier 1 app, PeopleSoft CRM, Outlook Web Access (OWA), PeopleSoft HRMS, Retail Adding Points, Electronic Messaging, Retail Client Registration, SAP HANA, PeopleSoft Enterprise Services, PeopleSoft Reporting, SAP Labor Distribution, Bond Trading - DR, PeopleSoft Supply Chain Management, Unix Server Hosting, External Networking (Internet), SAP Financial Accounting, SAP Enterprise Services, SAP Payroll, Retail Client Lookup, Email, SAP Materials Management, Campus Network (LAN), Desktop Support, PeopleSoft Portals, Tibco ESB, Securities Lending, Apache Web Hosting, ServiceNow Enterprise Services, Sales Force Automation, Windows Server Hosting, SAP Human Resources, Retail, Client Services, Bond Trading, Shared Storage (SAN), z/OS Platform Hosting, Printing Services, PeopleSoft Financials, SAP Controlling, Windows Mobile, E-Commerce, Voice Communication, PeopleSoft Governance, Inter-Site Networking (WAN), PeopleSoft Asset Lifecycle Management, IT Services, Oracle Database Hosting, Workday Enterprise Services, Jobvite Enterprise Recruitment Services, IIS Web Hosting, OpenText Enterprise Services, This Service-now instance, SAP Plant Maintenance, Retail POS (Point of Sale), Test EU, Zoho HR System",
+      "ServiceNow portal grid: 82 application row(s) — Breach Forensics Evidence Vault, Privileged Access Management, Data Loss Prevention, Security Incident Response, Breach Notification Portal, HR Performance Management, HR Talent Acquisition, HR Benefits Administration, HR Case Management, HR Payroll, Microsoft Dynamics 365, Microsoft Entra ID, Microsoft SharePoint Online, Microsoft Teams, Microsoft 365, Employee Learning Portal, Employee Expense Management, Employee Onboarding, Employee Directory, Employee Self-Service Portal, CAF Demo Payments Platform, SAP Fiori, Zscalar App, SAP HANA, Test1, Zoho Email, Test Tier 1 app, PeopleSoft CRM, Outlook Web Access (OWA), PeopleSoft HRMS, Retail Adding Points, PeopleSoft Reporting, SAP HANA, Retail Client Registration, Electronic Messaging, PeopleSoft Enterprise Services, Bond Trading - DR, SAP Labor Distribution, SAP Payroll, Retail Client Lookup, Email, External Networking (Internet), SAP Enterprise Services, SAP Financial Accounting, Unix Server Hosting, PeopleSoft Supply Chain Management, Apache Web Hosting, Campus Network (LAN), Desktop Support, SAP Materials Management, PeopleSoft Portals, Tibco ESB, Securities Lending, ServiceNow Enterprise Services, Retail, Shared Storage (SAN), Bond Trading, Client Services, z/OS Platform Hosting, SAP Human Resources, Sales Force Automation, Windows Server Hosting, Windows Mobile, PeopleSoft Asset Lifecycle Management, Inter-Site Networking (WAN), Printing Services, PeopleSoft Governance, E-Commerce, IT Services, Voice Communication, PeopleSoft Financials, SAP Controlling, Oracle Database Hosting, Jobvite Enterprise Recruitment Services, This Service-now instance, Retail POS (Point of Sale), SAP Plant Maintenance, OpenText Enterprise Services, IIS Web Hosting, Workday Enterprise Services, Test EU, Zoho HR System",
       "Cells disagreeing with caf_status: 0"
     ],
-    "verdictReason": "Every populated cell in the Salesforce grid matches caf_req.caf_status, and both grids show the same 3 applications.",
-    "finishedAt": "2026-08-07T17:51:47.794Z"
+    "verdictReason": "Every populated cell in the Salesforce grid matches caf_req.caf_status, and both grids show the same 23 applications.",
+    "finishedAt": "2026-10-04T16:18:42.622Z"
   }
 }
