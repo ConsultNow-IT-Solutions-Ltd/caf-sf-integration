@@ -2,12 +2,19 @@
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <types>
         <members>CafAttestationService</members>
+        <members>CafAttestationServiceTest</members>
         <members>CafCallout</members>
+        <members>CafCalloutTest</members>
         <members>CafConfig</members>
+        <members>CafConfigTest</members>
         <members>CafDashboardController</members>
+        <members>CafDashboardControllerTest</members>
         <members>CafEvidenceService</members>
+        <members>CafEvidenceServiceTest</members>
         <members>CafSyncHealth</members>
         <members>CafTaskService</members>
+        <members>CafTaskServiceTest</members>
+        <members>CafTestSupport</members>
         <name>ApexClass</name>
     </types>
     <types>
