@@ -26,6 +26,8 @@ Open it at **App Launcher (grid icon) → search "CAF Dashboard"**, or go direct
 | Page layouts | both, with their custom fields on them |
 | `ServiceNow_CAF` | legacy Named Credential, basic auth as `sf.integration` |
 | `CAF_Integration` | permission set: FLS, object perms, Apex access, tab visibility |
+| `CAF_Setting__mdt` + `CafConfig` | settings formerly in Apex constants: task path, evidence cap, timeout, logging switch (CAF-219, not yet deployed) |
+| `CAF_Integration_Log__c` + `CafCallout` | one row per callout to ServiceNow, written via `CAF_Callout_Event__e` so failures survive rollback (CAF-218, not yet deployed). Nothing grants read access yet: that belongs to the CAF Admin permission set (CAF-221, to do), not to `CAF_Integration` |
 
 **The Named Credential is created by hand in Setup, deliberately.** Salesforce
 refuses to deploy one without a password, and the alternative — putting the

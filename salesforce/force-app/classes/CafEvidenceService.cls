@@ -73,7 +73,8 @@ public with sharing class CafEvidenceService {
         }
 
         try {
-            HttpResponse res = call('GET', CafConfig.serviceNowTaskPath() + taskSysId + '/evidence', null);
+            HttpResponse res = CafCallout.send('evidence.list', 'GET',
+                CafConfig.serviceNowTaskPath() + taskSysId + '/evidence', null);
             if (res.getStatusCode() == 200) {
                 Map<String, Object> parsed = unwrap(res.getBody());
                 for (Object item : (List<Object>) parsed.get('files')) {
@@ -93,6 +94,8 @@ public with sharing class CafEvidenceService {
             }
         } catch (Exception e) {
             view.serviceNowError = 'Could not reach ServiceNow: ' + e.getMessage();
+        } finally {
+            CafCallout.flush();
         }
 
         return view;
@@ -141,11 +144,14 @@ public with sharing class CafEvidenceService {
 
         HttpResponse res;
         try {
-            res = call('POST', CafConfig.serviceNowTaskPath() + taskSysId + '/evidence', JSON.serialize(body));
+            res = CafCallout.send('evidence.push', 'POST',
+                CafConfig.serviceNowTaskPath() + taskSysId + '/evidence', JSON.serialize(body));
         } catch (Exception e) {
             throw new AuraHandledException(
                 fileName + ' is stored in Salesforce but did not reach ServiceNow: ' +
                 e.getMessage());
+        } finally {
+            CafCallout.flush();
         }
 
         Integer code = res.getStatusCode();
@@ -215,19 +221,6 @@ public with sharing class CafEvidenceService {
             return (Map<String, Object>) body.get('result');
         }
         return body;
-    }
-
-    private static HttpResponse call(String method, String endpoint, String body) {
-        HttpRequest req = new HttpRequest();
-        req.setEndpoint(endpoint);
-        req.setMethod(method);
-        req.setHeader('Content-Type', 'application/json');
-        req.setHeader('Accept', 'application/json');
-        if (body != null) {
-            req.setBody(body);
-        }
-        req.setTimeout(CafConfig.calloutTimeoutMs());
-        return new Http().send(req);
     }
 
     /**

@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    One row per callout from Salesforce to ServiceNow: what was called, by
+    whom, how long it took and what came back. Written only by
+    CafCalloutEventTrigger; nobody edits a log row.
+
+    Read-only sharing, because the rows are owned by the Automated Process user
+    that runs the trigger. Under private sharing nobody but an admin could see
+    them; under read-write anyone could edit the record of what happened.
+
+    The error is the response body or exception message, cut to fit. It is
+    stored only for failures: a successful body can carry record data, and the
+    log is not meant to become a second copy of it.
+-->
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <deploymentStatus>Deployed</deploymentStatus>
+    <description>Log of every callout from Salesforce to ServiceNow: endpoint, status, latency and error. Written by CafCalloutEventTrigger.</description>
+    <enableActivities>false</enableActivities>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>false</enableHistory>
+    <enableReports>true</enableReports>
+    <enableSearch>false</enableSearch>
+    <label>CAF Integration Log</label>
+    <nameField>
+        <displayFormat>LOG-{0000000}</displayFormat>
+        <label>Log Number</label>
+        <type>AutoNumber</type>
+    </nameField>
+    <pluralLabel>CAF Integration Logs</pluralLabel>
+    <sharingModel>Read</sharingModel>
+
+    <fields>
+        <fullName>Operation__c</fullName>
+        <description>What the caller was doing, such as task.update or evidence.push.</description>
+        <externalId>false</externalId>
+        <label>Operation</label>
+        <length>80</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Method__c</fullName>
+        <externalId>false</externalId>
+        <label>Method</label>
+        <length>10</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Endpoint__c</fullName>
+        <externalId>false</externalId>
+        <label>Endpoint</label>
+        <length>255</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Status_Code__c</fullName>
+        <description>HTTP status. Blank when ServiceNow could not be reached at all.</description>
+        <externalId>false</externalId>
+        <label>Status Code</label>
+        <precision>3</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Succeeded__c</fullName>
+        <externalId>false</externalId>
+        <formula>AND(NOT(ISBLANK(Status_Code__c)), Status_Code__c &gt;= 200, Status_Code__c &lt; 300)</formula>
+        <label>Succeeded</label>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Latency_Ms__c</fullName>
+        <externalId>false</externalId>
+        <label>Latency (ms)</label>
+        <precision>9</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Error__c</fullName>
+        <externalId>false</externalId>
+        <label>Error</label>
+        <length>32768</length>
+        <type>LongTextArea</type>
+        <visibleLines>5</visibleLines>
+    </fields>
+    <fields>
+        <fullName>Requested_By__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <label>Requested By</label>
+        <referenceTo>User</referenceTo>
+        <relationshipName>CAF_Integration_Logs</relationshipName>
+        <required>false</required>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Called_At__c</fullName>
+        <externalId>false</externalId>
+        <label>Called At</label>
+        <required>false</required>
+        <type>DateTime</type>
+    </fields>
+
+    <listViews>
+        <fullName>All</fullName>
+        <columns>NAME</columns>
+        <columns>Called_At__c</columns>
+        <columns>Operation__c</columns>
+        <columns>Method__c</columns>
+        <columns>Status_Code__c</columns>
+        <columns>Latency_Ms__c</columns>
+        <columns>Requested_By__c</columns>
+        <filterScope>Everything</filterScope>
+        <label>All</label>
+    </listViews>
+    <listViews>
+        <fullName>Failures</fullName>
+        <columns>NAME</columns>
+        <columns>Called_At__c</columns>
+        <columns>Operation__c</columns>
+        <columns>Status_Code__c</columns>
+        <columns>Error__c</columns>
+        <columns>Requested_By__c</columns>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>Succeeded__c</field>
+            <operation>equals</operation>
+            <value>0</value>
+        </filters>
+        <label>Failures</label>
+    </listViews>
+</CustomObject>
