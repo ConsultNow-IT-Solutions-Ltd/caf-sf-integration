@@ -119,6 +119,7 @@ public with sharing class CafEvidenceService {
             FROM ContentVersion
             WHERE ContentDocumentId = :contentDocumentId
               AND IsLatest = true
+            WITH USER_MODE
             LIMIT 1
         ];
         if (versions.isEmpty()) {
@@ -175,6 +176,7 @@ public with sharing class CafEvidenceService {
             SELECT ContentDocumentId
             FROM ContentDocumentLink
             WHERE LinkedEntityId = :taskRecordId
+            WITH USER_MODE
             LIMIT 200
         ]) {
             documentIds.add(link.ContentDocumentId);
@@ -189,6 +191,7 @@ public with sharing class CafEvidenceService {
             FROM ContentVersion
             WHERE ContentDocumentId IN :documentIds
               AND IsLatest = true
+            WITH USER_MODE
             ORDER BY CreatedDate DESC
         ]) {
             EvidenceFile file = new EvidenceFile();
