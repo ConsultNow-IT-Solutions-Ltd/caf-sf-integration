@@ -42,18 +42,16 @@ public with sharing class CafTaskService {
 
         Map<String, Object> body = new Map<String, Object>{ field => value };
 
-        HttpRequest req = new HttpRequest();
-        req.setEndpoint(CafConfig.serviceNowTaskPath() + sysId);
-        req.setMethod('PATCH');
-        req.setHeader('Content-Type', 'application/json');
-        req.setBody(JSON.serialize(body));
-        req.setTimeout(CafConfig.calloutTimeoutMs());   // the inbound call reconciles two records synchronously
-
+        // The inbound call reconciles two records synchronously, hence the
+        // long timeout CafCallout applies.
         HttpResponse res;
         try {
-            res = new Http().send(req);
+            res = CafCallout.send('task.update', 'PATCH',
+                                  CafConfig.serviceNowTaskPath() + sysId, JSON.serialize(body));
         } catch (Exception e) {
             throw new AuraHandledException('Could not reach ServiceNow: ' + e.getMessage());
+        } finally {
+            CafCallout.flush();
         }
 
         Integer code = res.getStatusCode();

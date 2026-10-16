@@ -2,12 +2,17 @@
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <types>
         <members>CafAttestationService</members>
+        <members>CafCallout</members>
         <members>CafConfig</members>
         <members>CafDashboardController</members>
         <members>CafEvidenceService</members>
         <members>CafSyncHealth</members>
         <members>CafTaskService</members>
         <name>ApexClass</name>
+    </types>
+    <types>
+        <members>CafCalloutEventTrigger</members>
+        <name>ApexTrigger</name>
     </types>
     <types>
         <members>cafAttestation</members>
@@ -23,13 +28,16 @@
     </types>
     <types><members>CAF_Integration</members><name>PermissionSet</name></types>
     <types>
+        <members>CAF_Callout_Event__e</members>
         <members>CAF_Control_Catalog__c</members>
+        <members>CAF_Integration_Log__c</members>
         <members>CAF_Setting__mdt</members>
         <name>CustomObject</name>
     </types>
     <types>
         <members>CAF_Setting.Callout_Timeout_Ms</members>
         <members>CAF_Setting.Evidence_Max_Bytes</members>
+        <members>CAF_Setting.Logging_Enabled</members>
         <members>CAF_Setting.ServiceNow_Task_Path</members>
         <name>CustomMetadata</name>
     </types>

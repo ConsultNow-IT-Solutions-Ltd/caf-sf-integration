@@ -55,22 +55,18 @@ public with sharing class CafAttestationService {
             'comments'     => comments == null ? '' : comments
         };
 
-        HttpRequest req = new HttpRequest();
-        req.setEndpoint(CafConfig.serviceNowTaskPath() + taskSysId + '/attest');
-        req.setMethod('POST');
-        req.setHeader('Content-Type', 'application/json');
-        req.setHeader('Accept', 'application/json');
-        req.setBody(JSON.serialize(body));
         // The endpoint closes the task, lets the rules cascade to the parent
         // request, and then pushes both records back to Salesforce, all
-        // synchronously.
-        req.setTimeout(CafConfig.calloutTimeoutMs());
-
+        // synchronously - hence the long timeout CafCallout applies.
         HttpResponse res;
         try {
-            res = new Http().send(req);
+            res = CafCallout.send('task.attest', 'POST',
+                                  CafConfig.serviceNowTaskPath() + taskSysId + '/attest',
+                                  JSON.serialize(body));
         } catch (Exception e) {
             throw new AuraHandledException('Could not reach ServiceNow: ' + e.getMessage());
+        } finally {
+            CafCallout.flush();
         }
 
         Map<String, Object> parsed;
