@@ -14,8 +14,6 @@
  */
 public with sharing class CafTaskService {
 
-    private static final String BASE = 'callout:ServiceNow_CAF/api/x_gskn2_caf_compli/caf/task/';
-
     @AuraEnabled(cacheable=true)
     public static List<CAF_Task__c> getTasks(String requestExternalId) {
         return [
@@ -23,6 +21,7 @@ public with sharing class CafTaskService {
                    Met_Criteria__c, ServiceNow_Sys_Id__c
             FROM CAF_Task__c
             WHERE CAF_Request__r.ServiceNow_Sys_Id__c = :requestExternalId
+            WITH USER_MODE
             ORDER BY SN_Number__c
             LIMIT 200
         ];
@@ -44,18 +43,16 @@ public with sharing class CafTaskService {
 
         Map<String, Object> body = new Map<String, Object>{ field => value };
 
-        HttpRequest req = new HttpRequest();
-        req.setEndpoint(BASE + sysId);
-        req.setMethod('PATCH');
-        req.setHeader('Content-Type', 'application/json');
-        req.setBody(JSON.serialize(body));
-        req.setTimeout(120000);   // the inbound call reconciles two records synchronously
-
+        // The inbound call reconciles two records synchronously, hence the
+        // long timeout CafCallout applies.
         HttpResponse res;
         try {
-            res = new Http().send(req);
+            res = CafCallout.send('task.update', 'PATCH',
+                                  CafConfig.serviceNowTaskPath() + sysId, JSON.serialize(body));
         } catch (Exception e) {
             throw new AuraHandledException('Could not reach ServiceNow: ' + e.getMessage());
+        } finally {
+            CafCallout.flush();
         }
 
         Integer code = res.getStatusCode();

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    One event per callout to ServiceNow, turned into a CAF_Integration_Log__c
+    row by CafCalloutEventTrigger.
+
+    The event exists only because a log row cannot be inserted directly. Every
+    CAF service turns a ServiceNow failure into an AuraHandledException, which
+    rolls back the transaction, and a directly inserted row would be rolled back
+    with it - losing exactly the rows worth having. An event published
+    immediately is not rolled back.
+-->
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <deploymentStatus>Deployed</deploymentStatus>
+    <description>Carries one ServiceNow callout to CafCalloutEventTrigger, which writes it to CAF_Integration_Log__c. Published immediately so a failed transaction still leaves its log.</description>
+    <eventType>HighVolume</eventType>
+    <label>CAF Callout Event</label>
+    <pluralLabel>CAF Callout Events</pluralLabel>
+    <publishBehavior>PublishImmediately</publishBehavior>
+
+    <fields>
+        <fullName>Operation__c</fullName>
+        <externalId>false</externalId>
+        <label>Operation</label>
+        <length>80</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Method__c</fullName>
+        <externalId>false</externalId>
+        <label>Method</label>
+        <length>10</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Endpoint__c</fullName>
+        <externalId>false</externalId>
+        <label>Endpoint</label>
+        <length>255</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Status_Code__c</fullName>
+        <externalId>false</externalId>
+        <label>Status Code</label>
+        <precision>3</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Latency_Ms__c</fullName>
+        <externalId>false</externalId>
+        <label>Latency (ms)</label>
+        <precision>9</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Error__c</fullName>
+        <externalId>false</externalId>
+        <label>Error</label>
+        <length>32768</length>
+        <type>LongTextArea</type>
+        <visibleLines>5</visibleLines>
+    </fields>
+    <fields>
+        <fullName>Requested_By__c</fullName>
+        <description>Id of the user whose action made the call. Text, because a platform event cannot hold a lookup.</description>
+        <externalId>false</externalId>
+        <label>Requested By</label>
+        <length>18</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Called_At__c</fullName>
+        <externalId>false</externalId>
+        <label>Called At</label>
+        <required>false</required>
+        <type>DateTime</type>
+    </fields>
+</CustomObject>
