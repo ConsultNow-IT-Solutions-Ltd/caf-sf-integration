@@ -30,7 +30,25 @@ const FIELDS = [SN_SYS_ID, SN_NUMBER, STATE, APPROVAL];
  */
 export default class CafAttestation extends LightningElement {
     @api recordId;
-    @api snSysId;
+
+    /**
+     * A setter, because the dashboard keeps this component mounted while the
+     * user moves between tasks. Without the reset, the previous task's outcome
+     * line and half-typed comments stayed on screen against the next task.
+     */
+    @api
+    get snSysId() {
+        return this._snSysId;
+    }
+    set snSysId(value) {
+        if (value !== this._snSysId) {
+            this.metCriteria = 'yes';
+            this.comments = '';
+            this.outcome = undefined;
+        }
+        this._snSysId = value;
+    }
+
     @api taskNumber;
     @api taskState;
     @api taskApproval;
@@ -43,6 +61,7 @@ export default class CafAttestation extends LightningElement {
     busy = false;
     outcome;
 
+    _snSysId;
     _resolvedSysId;
     _resolvedNumber;
     _resolvedState;
@@ -90,24 +109,47 @@ export default class CafAttestation extends LightningElement {
 
     handleComments(event) {
         this.comments = event.target.value;
+        event.target.setCustomValidity('');
+        event.target.reportValidity();
     }
 
     handleApprove() {
         this.submit('approved');
     }
 
+    /**
+     * A rejection marks the request out of compliance, and the comment is the
+     * only place the reason is recorded. Blank or whitespace-only is refused
+     * here, on the field, rather than sent.
+     */
     handleReject() {
+        if (!this.trimmedComments) {
+            const field = this.template.querySelector('.at__comments');
+            if (field) {
+                field.setCustomValidity('Say why the control is rejected.');
+                field.reportValidity();
+                field.focus();
+            }
+            return;
+        }
         this.submit('rejected');
     }
 
+    get trimmedComments() {
+        return (this.comments || '').trim();
+    }
+
     async submit(decision) {
+        if (this.busy) {
+            return;
+        }
         this.busy = true;
         try {
             const result = await attest({
                 taskSysId: this.sysId,
                 metCriteria: this.metCriteria,
                 outcome: decision,
-                comments: this.comments
+                comments: this.trimmedComments
             });
             this.outcome = result;
             this.comments = '';
@@ -174,12 +216,22 @@ export default class CafAttestation extends LightningElement {
         return this.state === 'Closed Complete' || this.state === 'Cancelled';
     }
 
+    /**
+     * Closed by the attestation just sent. On a record page nothing refreshes
+     * State__c - the wire holds the cached record - so without this the form
+     * stayed live and a second press went to ServiceNow to be refused with 409.
+     */
+    get justAttested() {
+        return !!this.outcome && this.outcome.active === false;
+    }
+
     get noEvidence() {
         return this.evidenceCount === 0;
     }
 
     get canAttest() {
-        return !!this.sysId && !this.notStarted && !this.alreadyClosed && !this.noEvidence;
+        return !!this.sysId && !this.notStarted && !this.alreadyClosed &&
+               !this.justAttested && !this.noEvidence;
     }
 
     get disabled() {
@@ -189,6 +241,10 @@ export default class CafAttestation extends LightningElement {
     get blockedReason() {
         if (!this.sysId) {
             return 'This task carries no ServiceNow sys_id, so it cannot be attested.';
+        }
+        if (this.justAttested) {
+            return this.number + ' is closed. Its outcome is recorded as ' +
+                   this.outcome.approval + '.';
         }
         if (this.alreadyClosed) {
             return this.number + ' is ' + this.state.toLowerCase() +
