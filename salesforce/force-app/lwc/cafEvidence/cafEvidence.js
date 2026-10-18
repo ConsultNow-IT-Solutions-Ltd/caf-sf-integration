@@ -27,8 +27,27 @@ export default class CafEvidence extends LightningElement {
     /** Salesforce CAF_Task__c Id. Injected on a record page. */
     @api recordId;
 
-    /** ServiceNow sys_id. Passed by the dashboard; read from the record otherwise. */
-    @api snSysId;
+    /**
+     * ServiceNow sys_id. Passed by the dashboard; read from the record otherwise.
+     *
+     * A setter, because the dashboard keeps this component mounted while the
+     * user moves from one task to the next and only swaps its properties.
+     * Loading once on connect left the previous task's files on screen under
+     * the new task's heading - in the attest panel, the approver was judging
+     * the wrong evidence.
+     */
+    @api
+    get snSysId() {
+        return this._snSysId;
+    }
+    set snSysId(value) {
+        const changed = value !== this._snSysId;
+        this._snSysId = value;
+        if (changed && this._connected) {
+            this.clear();
+            this.load();
+        }
+    }
 
     /** Display only, for the heading. */
     @api taskNumber;
@@ -51,9 +70,18 @@ export default class CafEvidence extends LightningElement {
     uploading = false;
     error;
 
+    _snSysId;
     _resolvedSysId;
     _resolvedNumber;
     _loaded = false;
+    _connected = false;
+
+    /**
+     * Incremented by every load. A response is applied only if no later load
+     * has started since, so a slow reply for the task the user just left
+     * cannot overwrite the one they moved to.
+     */
+    _loadSeq = 0;
 
     acceptedFormats = ['.pdf', '.png', '.jpg', '.jpeg', '.gif', '.csv', '.txt',
                        '.log', '.json', '.xml', '.doc', '.docx', '.xls', '.xlsx'];
@@ -73,10 +101,15 @@ export default class CafEvidence extends LightningElement {
     }
 
     connectedCallback() {
+        this._connected = true;
         // On a record page the sys_id is not known yet; the wire loads instead.
         if (this.snSysId || !this.recordId) {
             this.load();
         }
+    }
+
+    disconnectedCallback() {
+        this._connected = false;
     }
 
     get sysId() {
@@ -87,6 +120,15 @@ export default class CafEvidence extends LightningElement {
         return this.taskNumber || this._resolvedNumber || '';
     }
 
+    /** Forget the previous task's lists, so they are never shown under the next one. */
+    clear() {
+        this.salesforceFiles = [];
+        this.serviceNowFiles = [];
+        this.serviceNowError = undefined;
+        this.error = undefined;
+        this._loaded = false;
+    }
+
     /**
      * Reload from both systems. Public so the dashboard can refresh this panel
      * after an attestation without re-rendering the component from scratch.
@@ -94,8 +136,10 @@ export default class CafEvidence extends LightningElement {
     @api
     async load() {
         if (!this.recordId && !this.sysId) {
+            this.loading = false;
             return;
         }
+        const seq = ++this._loadSeq;
         this.loading = true;
         this.error = undefined;
         try {
@@ -103,16 +147,23 @@ export default class CafEvidence extends LightningElement {
                 taskRecordId: this.recordId,
                 taskSysId: this.sysId
             });
+            if (seq !== this._loadSeq) {
+                return;
+            }
             this.salesforceFiles = view.salesforceFiles || [];
             this.serviceNowFiles = view.serviceNowFiles || [];
             this.serviceNowError = view.serviceNowError;
-            this.maxBytes = view.maxBytes;
+            this.maxBytes = view.maxBytes || this.maxBytes;
             this._loaded = true;
             this.announceCount();
         } catch (err) {
-            this.error = this.messageOf(err);
+            if (seq === this._loadSeq) {
+                this.error = this.messageOf(err);
+            }
         } finally {
-            this.loading = false;
+            if (seq === this._loadSeq) {
+                this.loading = false;
+            }
         }
     }
 

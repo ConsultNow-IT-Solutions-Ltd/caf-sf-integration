@@ -72,34 +72,74 @@ public with sharing class CafEvidenceService {
             return view;
         }
 
+        HttpResponse res;
         try {
-            HttpResponse res = CafCallout.send('evidence.list', 'GET',
+            res = CafCallout.send('evidence.list', 'GET',
                 CafConfig.serviceNowTaskPath() + taskSysId + '/evidence', null);
-            if (res.getStatusCode() == 200) {
-                Map<String, Object> parsed = unwrap(res.getBody());
-                for (Object item : (List<Object>) parsed.get('files')) {
-                    Map<String, Object> f = (Map<String, Object>) item;
-                    EvidenceFile file = new EvidenceFile();
-                    file.id        = (String) f.get('sys_id');
-                    file.name      = (String) f.get('file_name');
-                    file.sizeLabel = sizeLabel(f.get('size_bytes'));
-                    file.createdBy = (String) f.get('sys_created_by');
-                    file.createdOn = (String) f.get('sys_created_on');
-                    view.serviceNowFiles.add(file);
-                }
-                view.serviceNowCount = view.serviceNowFiles.size();
-            } else {
-                view.serviceNowError = 'ServiceNow returned ' + res.getStatusCode() +
-                                       ': ' + res.getBody();
-            }
         } catch (Exception e) {
             view.serviceNowError = 'Could not reach ServiceNow: ' + e.getMessage();
+            return view;
         } finally {
             CafCallout.flush();
         }
 
+        if (res.getStatusCode() != 200) {
+            view.serviceNowError = 'ServiceNow returned ' + res.getStatusCode() +
+                                   ': ' + res.getBody();
+            return view;
+        }
+
+        // Reading the reply is kept apart from reaching ServiceNow. Inside one
+        // try, a 200 with no file list or a body that is not JSON was reported
+        // as "Could not reach ServiceNow", which sends people looking for an
+        // outage that is not there.
+        try {
+            view.serviceNowFiles = readServiceNowFiles(res.getBody());
+        } catch (Exception e) {
+            view.serviceNowFiles = new List<EvidenceFile>();
+            view.serviceNowError = 'ServiceNow answered but its evidence list could not ' +
+                                   'be read: ' + e.getMessage();
+        }
+        view.serviceNowCount = view.serviceNowFiles.size();
         return view;
     }
+
+    /**
+     * A reply without a "files" list is an error, not an empty list. Zero files
+     * is what keeps a task from being attested, so a malformed reply must not
+     * look like it.
+     */
+    @TestVisible
+    private static List<EvidenceFile> readServiceNowFiles(String responseBody) {
+        if (String.isBlank(responseBody)) {
+            throw new CafEvidenceException('the response was empty.');
+        }
+        Map<String, Object> parsed = unwrap(responseBody);
+        Object raw = parsed.get('files');
+        if (!(raw instanceof List<Object>)) {
+            throw new CafEvidenceException('the response held no file list.');
+        }
+
+        List<EvidenceFile> files = new List<EvidenceFile>();
+        for (Object item : (List<Object>) raw) {
+            if (!(item instanceof Map<String, Object>)) {
+                continue;
+            }
+            Map<String, Object> f = (Map<String, Object>) item;
+            EvidenceFile file = new EvidenceFile();
+            file.id        = (String) f.get('sys_id');
+            file.name      = String.isBlank((String) f.get('file_name'))
+                                 ? '(unnamed attachment)'
+                                 : (String) f.get('file_name');
+            file.sizeLabel = sizeLabel(f.get('size_bytes'));
+            file.createdBy = (String) f.get('sys_created_by');
+            file.createdOn = (String) f.get('sys_created_on');
+            files.add(file);
+        }
+        return files;
+    }
+
+    public class CafEvidenceException extends Exception {}
 
     /**
      * Push one already-uploaded Salesforce file into ServiceNow.
