@@ -414,3 +414,63 @@ export async function shot(page: Page, caseId: string, label: string): Promise<s
   await page.screenshot({ path: file, fullPage: true });
   return file;
 }
+
+// ---------------------------------------------------------------------------
+// The screens beside the grid: Approvals, Reports, Admin (cafDashboard's tab bar)
+// ---------------------------------------------------------------------------
+
+/** The four screens, by the `data-view` key on their tab and `c__view` in the URL. */
+export const SCREENS = {
+  compliance: 'table.grid',
+  approvals: 'c-caf-approvals',
+  reports: 'c-caf-reports',
+  admin: 'c-caf-admin',
+} as const;
+export type ScreenKey = keyof typeof SCREENS;
+
+/**
+ * Open the dashboard straight onto one screen through `?c__view=`, and wait
+ * for that screen's first round trip - each renders a "Loading…" paragraph
+ * before its data arrives, and asserting then reads an empty screen.
+ */
+export async function openScreen(page: Page, view: ScreenKey): Promise<Locator> {
+  const query = view === 'compliance' ? '' : `?c__view=${view}`;
+  await page.goto(`${SF_LIGHTNING}${TABS.dashboard}${query}`, { waitUntil: 'domcontentloaded' });
+  await waitForApp(page);
+  const root = dashboard(page).locator(SCREENS[view]).first();
+  await root.waitFor({ state: 'visible', timeout: 90_000 });
+  if (view !== 'compliance') {
+    // `.view` is the root of each screen's template; `.msg` is its loading line.
+    await expect(root.locator('.msg').filter({ hasText: /Loading/ })).toHaveCount(0, { timeout: 90_000 });
+  }
+  return root;
+}
+
+/** The tab bar as rendered: label, data-view key, and which one is selected. */
+export async function readScreenTabs(page: Page): Promise<{ label: string; key: string; selected: boolean }[]> {
+  const tabs = dashboard(page).locator('nav.views .views__tab'); // class names: cafDashboard.html
+  const n = await tabs.count();
+  const out: { label: string; key: string; selected: boolean }[] = [];
+  for (let i = 0; i < n; i++) {
+    const t = tabs.nth(i);
+    out.push({
+      label: (await t.innerText()).trim(),
+      key: (await t.getAttribute('data-view')) ?? '',
+      selected: (await t.getAttribute('aria-selected')) === 'true',
+    });
+  }
+  return out;
+}
+
+/** Stat tiles on a screen, label -> value. Class names: cafTheme.css. */
+export async function readTiles(root: Locator): Promise<Record<string, string>> {
+  const tiles = root.locator('.tiles .tile');
+  const n = await tiles.count();
+  const out: Record<string, string> = {};
+  for (let i = 0; i < n; i++) {
+    const label = (await tiles.nth(i).locator('.tile__label').innerText()).trim();
+    const value = (await tiles.nth(i).locator('span').first().innerText()).trim();
+    out[label] = value;
+  }
+  return out;
+}

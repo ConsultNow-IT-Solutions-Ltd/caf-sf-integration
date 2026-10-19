@@ -2,6 +2,9 @@ import { LightningElement, wire } from 'lwc';
 import { refreshApex } from '@salesforce/apex';
 import getOverview from '@salesforce/apex/CafAdminController.getOverview';
 
+/** Errors longer than this are cut in the table; the full text is the tooltip. */
+export const ERROR_PREVIEW = 140;
+
 /**
  * Integration administration, read-only.
  *
@@ -79,6 +82,15 @@ export default class CafAdmin extends LightningElement {
         });
     }
 
+    /**
+     * Logging_Enabled = false stops CafCallout writing the log. The screen
+     * would then show an old, quiet log that reads as "nothing is failing".
+     */
+    get loggingOff() {
+        const s = ((this.overview && this.overview.settings) || []).find((x) => x.name === 'Logging_Enabled');
+        return !!s && String(s.effective).toLowerCase() === 'false';
+    }
+
     get activeControlCount() {
         return this.controls.filter((c) => c.active).length;
     }
@@ -101,7 +113,11 @@ export default class CafAdmin extends LightningElement {
             resultLabel: c.Succeeded__c ? 'OK' : 'Failed',
             resultClass: c.Succeeded__c ? 'pill pill--green' : 'pill pill--red',
             latency: c.Latency_Ms__c === null || c.Latency_Ms__c === undefined ? '' : c.Latency_Ms__c + ' ms',
-            code: c.Status_Code__c === null || c.Status_Code__c === undefined ? '-' : c.Status_Code__c
+            code: c.Status_Code__c === null || c.Status_Code__c === undefined ? '-' : c.Status_Code__c,
+            errorShort:
+                c.Error__c && c.Error__c.length > ERROR_PREVIEW
+                    ? c.Error__c.slice(0, ERROR_PREVIEW) + '…'
+                    : c.Error__c || ''
         }));
     }
 
@@ -127,7 +143,9 @@ export default class CafAdmin extends LightningElement {
             successRate: calls.length ? Math.round(((calls.length - failed) / calls.length) * 100) + '%' : '-',
             avg: avg === null ? '-' : avg + ' ms',
             p95: p95 === null ? '-' : p95 + ' ms',
-            failedClass: failed ? 'tile__value tile__value--red' : 'tile__value'
+            failedClass: failed ? 'tile__value tile__value--red' : 'tile__value',
+            // Rows arrive newest first.
+            last: calls.length ? calls[0].when.slice(0, 16) : '-'
         };
     }
 

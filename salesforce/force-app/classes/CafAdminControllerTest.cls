@@ -43,6 +43,21 @@ private class CafAdminControllerTest {
         }
     }
 
+    /** The controls read runs in user mode, so no CAF access means no screen. */
+    @IsTest
+    static void userWithoutCafAccessIsRefused() {
+        User outsider = CafTestSupport.userWithoutCafAccess();
+        System.runAs(outsider) {
+            Boolean refused = false;
+            try {
+                CafAdminController.getOverview();
+            } catch (Exception e) {
+                refused = true;
+            }
+            Assert.isTrue(refused);
+        }
+    }
+
     /** CAF_Integration alone does not read the callout log; the rest still loads. */
     @IsTest
     static void callLogNeedsCafAdmin() {

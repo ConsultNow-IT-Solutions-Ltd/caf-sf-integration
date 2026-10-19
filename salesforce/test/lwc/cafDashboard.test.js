@@ -3,6 +3,23 @@ import CafDashboard from 'c/cafDashboard';
 import getControls from '@salesforce/apex/CafDashboardController.getControls';
 import getRequests from '@salesforce/apex/CafDashboardController.getRequests';
 import check from '@salesforce/apex/CafSyncHealth.check';
+import { CurrentPageReference, navigateCalls } from 'lightning/navigation';
+
+// The stock stub's Navigate does nothing and records nothing; this one keeps
+// each call so the tab bar's URL writes can be asserted.
+jest.mock('lightning/navigation', () => {
+    const { createTestWireAdapter } = require('@salesforce/wire-service-jest-util');
+    const Navigate = Symbol('Navigate');
+    const calls = [];
+    const NavigationMixin = (Base) =>
+        class extends Base {
+            [Navigate](ref, replace) {
+                calls.push({ ref, replace });
+            }
+        };
+    NavigationMixin.Navigate = Navigate;
+    return { CurrentPageReference: createTestWireAdapter(jest.fn()), NavigationMixin, navigateCalls: calls };
+});
 
 jest.mock(
     '@salesforce/apex/CafDashboardController.getControls',
@@ -213,6 +230,7 @@ describe('c-caf-dashboard screens', () => {
         jest.clearAllMocks();
     });
 
+    // TC-UNIT-020
     it('opens on Compliance with four screen tabs', async () => {
         const el = await render(CONTROLS, [request('Payroll', 0, 'in_compliance')]);
         const tabs = Array.from(el.shadowRoot.querySelectorAll('.views__tab'));
@@ -222,6 +240,7 @@ describe('c-caf-dashboard screens', () => {
         expect(el.shadowRoot.querySelector('table.grid')).not.toBeNull();
     });
 
+    // TC-UNIT-021
     it('swaps the grid for the selected screen and back', async () => {
         const el = await render(CONTROLS, [request('Payroll', 0, 'in_compliance')]);
 
@@ -234,5 +253,78 @@ describe('c-caf-dashboard screens', () => {
         await flush();
         expect(el.shadowRoot.querySelector('table.grid')).not.toBeNull();
         expect(el.shadowRoot.querySelector('c-caf-reports')).toBeNull();
+    });
+});
+
+const PAGE = { type: 'standard__navItemPage', attributes: { apiName: 'CAF_Dashboard' }, state: {} };
+
+describe('c-caf-dashboard screen URLs and keyboard', () => {
+    beforeEach(() => {
+        check.mockResolvedValue({ differences: [] });
+        navigateCalls.length = 0;
+    });
+
+    afterEach(() => {
+        while (document.body.firstChild) {
+            document.body.removeChild(document.body.firstChild);
+        }
+        jest.clearAllMocks();
+    });
+
+    // TC-UNIT-022
+    it('opens on the screen named by c__view', async () => {
+        const el = await render(CONTROLS, [request('Payroll', 0, 'in_compliance')]);
+        CurrentPageReference.emit({ ...PAGE, state: { c__view: 'admin' } });
+        await flush();
+
+        expect(el.shadowRoot.querySelector('c-caf-admin')).not.toBeNull();
+        expect(el.shadowRoot.querySelector('table.grid')).toBeNull();
+    });
+
+    // TC-UNIT-023
+    it('ignores an unknown c__view and stays on Compliance', async () => {
+        const el = await render(CONTROLS, [request('Payroll', 0, 'in_compliance')]);
+        CurrentPageReference.emit({ ...PAGE, state: { c__view: 'nonsense' } });
+        await flush();
+
+        expect(el.shadowRoot.querySelector('table.grid')).not.toBeNull();
+    });
+
+    // TC-UNIT-024
+    it('writes the screen into the URL with replace, and drops it for Compliance', async () => {
+        const el = await render(CONTROLS, [request('Payroll', 0, 'in_compliance')]);
+        CurrentPageReference.emit(PAGE);
+        await flush();
+
+        el.shadowRoot.querySelector('[data-view="approvals"]').click();
+        await flush();
+        el.shadowRoot.querySelector('[data-view="compliance"]').click();
+        await flush();
+
+        expect(navigateCalls).toHaveLength(2);
+        expect(navigateCalls[0].ref.state.c__view).toBe('approvals');
+        expect(navigateCalls[0].replace).toBe(true);
+        expect('c__view' in navigateCalls[1].ref.state).toBe(false);
+    });
+
+    // TC-UNIT-025
+    it('moves between screens with the arrow keys, wrapping at the ends', async () => {
+        const el = await render(CONTROLS, [request('Payroll', 0, 'in_compliance')]);
+        const nav = el.shadowRoot.querySelector('nav.views');
+        const selected = () => el.shadowRoot.querySelector('.views__tab--on').textContent;
+
+        nav.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft' }));
+        await flush();
+        expect(selected()).toBe('Admin');
+
+        nav.dispatchEvent(new KeyboardEvent('keydown', { key: 'Home' }));
+        await flush();
+        expect(selected()).toBe('Compliance');
+
+        nav.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight' }));
+        await flush();
+        expect(selected()).toBe('Approvals');
+        expect(el.shadowRoot.querySelector('.views__tab--on').getAttribute('tabindex')).toBe('0');
+        expect(el.shadowRoot.activeElement.textContent).toBe('Approvals');
     });
 });

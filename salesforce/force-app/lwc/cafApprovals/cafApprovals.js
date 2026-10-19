@@ -4,6 +4,9 @@ import getQueue from '@salesforce/apex/CafApprovalsController.getQueue';
 import getRecentDecisions from '@salesforce/apex/CafApprovalsController.getRecentDecisions';
 
 const ALL = '';
+
+/** CafApprovalsController.getQueue's LIMIT. A full page means there may be more. */
+export const QUEUE_LIMIT = 500;
 const DAY_MS = 86400000;
 
 /** Today as YYYY-MM-DD in the viewer's zone, the format Date fields arrive in. */
@@ -34,6 +37,10 @@ export default class CafApprovals extends LightningElement {
 
     appFilter = ALL;
     search = '';
+    overdueOnly = false;
+
+    /** The decisions list failing should not hide a queue that loaded. */
+    decisionsError;
 
     activeTask;
     evidenceCount;
@@ -65,6 +72,10 @@ export default class CafApprovals extends LightningElement {
                 decisionClass: t.Approval__c === 'approved' ? 'pill pill--green' : 'pill pill--red',
                 updated: t.LastModifiedDate ? t.LastModifiedDate.slice(0, 10) : ''
             }));
+            this.decisionsError = undefined;
+        } else if (result.error) {
+            this.decisions = [];
+            this.decisionsError = this.messageOf(result.error);
         }
     }
 
@@ -124,6 +135,7 @@ export default class CafApprovals extends LightningElement {
         return this.queue
             .filter((t) => this.appFilter === ALL || t.app === this.appFilter)
             .filter((t) => !needle || t.haystack.includes(needle))
+            .filter((t) => !this.overdueOnly || t.overdue)
             .map((t) => ({
                 ...t,
                 rowClass: t.Id === activeId ? 'tasks__row tasks__row--active' : 'tasks__row'
@@ -160,7 +172,19 @@ export default class CafApprovals extends LightningElement {
     }
 
     get isFiltered() {
-        return this.appFilter !== ALL || this.search.trim() !== '';
+        return this.appFilter !== ALL || this.search.trim() !== '' || this.overdueOnly;
+    }
+
+    /**
+     * The Apex returns at most QUEUE_LIMIT rows, soonest due first. Saying so
+     * matters: a silently truncated queue reads as "this is everything".
+     */
+    get queueCapped() {
+        return this.queue.length >= QUEUE_LIMIT;
+    }
+
+    get queueLimit() {
+        return QUEUE_LIMIT;
     }
 
     get hasDecisions() {
@@ -178,6 +202,10 @@ export default class CafApprovals extends LightningElement {
 
     handleAppFilter(event) {
         this.appFilter = event.target.value;
+    }
+
+    handleOverdueOnly(event) {
+        this.overdueOnly = event.target.checked;
     }
 
     handleSearch(event) {
