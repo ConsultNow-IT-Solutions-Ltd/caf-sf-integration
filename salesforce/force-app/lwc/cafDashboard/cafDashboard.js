@@ -72,17 +72,25 @@ export default class CafDashboard extends NavigationMixin(LightningElement) {
 
     /**
      * /lightning/n/CAF_Dashboard?c__view=approvals opens straight onto a
-     * screen, so a link in an email or a notification can land on it.
+     * screen, so a link in an email or a notification can land on it. An
+     * unknown or missing c__view leaves the current screen as it is.
+     *
+     * @param {object} ref the page reference; may be undefined before it resolves
      */
     @wire(CurrentPageReference)
     handlePageReference(ref) {
-        this.pageRef = ref;
+        this.pageRef = ref || undefined;
         const wanted = ref && ref.state && ref.state.c__view;
-        if (wanted && VIEWS.some((v) => v.key === wanted)) {
+        if (typeof wanted === 'string' && VIEWS.some((v) => v.key === wanted)) {
             this.view = wanted;
         }
     }
 
+    /**
+     * The tab bar's buttons, with which one is selected.
+     *
+     * @returns {object[]}
+     */
     get views() {
         return VIEWS.map((v) => ({
             ...v,
@@ -93,31 +101,48 @@ export default class CafDashboard extends NavigationMixin(LightningElement) {
         }));
     }
 
+    /** @returns {boolean} whether the Approvals screen is showing */
     get isApprovals() {
         return this.view === 'approvals';
     }
 
+    /** @returns {boolean} whether the Reports screen is showing */
     get isReports() {
         return this.view === 'reports';
     }
 
+    /** @returns {boolean} whether the Admin screen is showing */
     get isAdmin() {
         return this.view === 'admin';
     }
 
+    /**
+     * A tab was clicked.
+     *
+     * @param {Event} event click event from a tab button
+     */
     handleView(event) {
-        this.selectView(event.currentTarget.dataset.view);
+        const data = event && event.currentTarget && event.currentTarget.dataset;
+        if (data && data.view) {
+            this.selectView(data.view);
+        }
     }
 
-    /** ARIA tabs pattern: Left/Right wrap, Home/End jump. */
+    /**
+     * Keyboard on the tab bar, following the ARIA tabs pattern: Left/Right
+     * wrap, Home/End jump. Other keys pass through untouched.
+     *
+     * @param {KeyboardEvent} event keydown event from the tab bar
+     */
     handleViewKey(event) {
         const keys = { ArrowLeft: -1, ArrowRight: 1, Home: 'first', End: 'last' };
-        const move = keys[event.key];
+        const move = event && keys[event.key];
         if (move === undefined) {
             return;
         }
         event.preventDefault();
-        const i = VIEWS.findIndex((v) => v.key === this.view);
+        // An unrecognised current view counts as the first tab.
+        const i = Math.max(0, VIEWS.findIndex((v) => v.key === this.view));
         let next;
         if (move === 'first') {
             next = 0;
@@ -133,7 +158,10 @@ export default class CafDashboard extends NavigationMixin(LightningElement) {
     /**
      * Writes the screen into the URL with replace, so a refresh or a copied
      * link lands back on it without each tab click adding a history entry.
-     * Compliance is the default and is left out of the URL.
+     * Compliance is the default and is left out of the URL. An unknown key,
+     * or the screen already showing, does nothing.
+     *
+     * @param {string} key one of the VIEWS keys
      */
     selectView(key) {
         if (!VIEWS.some((v) => v.key === key) || key === this.view) {
@@ -151,6 +179,7 @@ export default class CafDashboard extends NavigationMixin(LightningElement) {
         }
     }
 
+    /** Moves focus to the selected tab after an arrow-key change has rendered. */
     renderedCallback() {
         if (this.focusPending) {
             this.focusPending = false;
@@ -163,11 +192,18 @@ export default class CafDashboard extends NavigationMixin(LightningElement) {
 
     /**
      * An attestation on the Approvals screen moves a request's status, so the
-     * grid's requests are stale by the time anyone switches back to it.
+     * grid's requests are stale by the time anyone switches back to it. A
+     * failed refresh is reported as a toast: the screen the user is on is
+     * still correct, only the grid behind it is out of date.
      */
     async handleChildChange() {
-        if (this.wiredRequests) {
+        if (!this.wiredRequests) {
+            return;
+        }
+        try {
             await refreshApex(this.wiredRequests);
+        } catch (err) {
+            this.toast('Could not refresh the compliance grid', this.messageOf(err), 'warning');
         }
     }
 

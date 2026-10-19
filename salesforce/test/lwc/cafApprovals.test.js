@@ -157,3 +157,49 @@ describe('c-caf-approvals', () => {
         expect(el.shadowRoot.querySelector('.msg--error').textContent).toContain('Recent decisions could not be loaded');
     });
 });
+
+describe('c-caf-approvals with missing or bad data', () => {
+    afterEach(() => {
+        while (document.body.firstChild) {
+            document.body.removeChild(document.body.firstChild);
+        }
+        jest.clearAllMocks();
+    });
+
+    // TC-UNIT-060
+    it('drops null rows and renders a task whose parent request is missing', async () => {
+        const orphan = task(1, 'CRM', null);
+        delete orphan.CAF_Request__r;
+        const el = await render([null, orphan, undefined]);
+
+        expect(queueRows(el)).toHaveLength(1);
+        expect(queueRows(el)[0].textContent).not.toContain('undefined');
+        expect(queueRows(el)[0].textContent).not.toContain('null');
+    });
+
+    // TC-UNIT-061
+    it('flags an unparseable due date instead of treating it as on time', async () => {
+        const el = await render([task(1, 'CRM', 'not-a-date')]);
+        expect(el.shadowRoot.querySelector('.due').textContent).toContain('invalid date');
+        expect(el.shadowRoot.querySelectorAll('.tile__value')[1].textContent).toBe('0');
+    });
+
+    // TC-UNIT-062
+    it('does not match "undefined" against blank fields', async () => {
+        const el = await render([task(1, 'CRM', null, { Short_Description__c: null })]);
+        const input = el.shadowRoot.querySelector('input[type="search"]');
+        input.value = 'undefined';
+        input.dispatchEvent(new CustomEvent('input'));
+        await flush();
+
+        expect(queueRows(el)).toHaveLength(0);
+    });
+
+    // TC-UNIT-063
+    it('shows an unknown approval value as received rather than as Rejected', async () => {
+        const el = await render([], [task(9, 'CRM', null, { Approval__c: 'not requested', LastModifiedDate: null })]);
+        const pill = el.shadowRoot.querySelector('.pill');
+        expect(pill.textContent).toBe('not requested');
+        expect(pill.className).toContain('pill--none');
+    });
+});
