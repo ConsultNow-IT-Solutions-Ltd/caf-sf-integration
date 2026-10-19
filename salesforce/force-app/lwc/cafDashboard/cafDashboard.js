@@ -39,6 +39,23 @@ export default class CafDashboard extends NavigationMixin(LightningElement) {
 
     columns = [];
     rows = [];
+
+    /** Grid filter: application name contains this, ignoring case. */
+    appSearch = '';
+
+    /** Grid filter: hide applications whose Overall reads Compliant. */
+    attentionOnly = false;
+
+    /**
+     * Per-control and per-status counts over every row, worked out in build()
+     * alongside the pivot. Not filtered: the footer and legend describe the
+     * estate, and a filter that changed them would make them disagree with
+     * the Reports screen.
+     */
+    totals = { columns: [], status: {}, na: 0, compliantApps: 0 };
+
+    /** Set when a cell opens the task panel, so it is scrolled to once rendered. */
+    scrollPending = false;
     error;
     loading = true;
     busy = false;
@@ -179,8 +196,21 @@ export default class CafDashboard extends NavigationMixin(LightningElement) {
         }
     }
 
-    /** Moves focus to the selected tab after an arrow-key change has rendered. */
+    /**
+     * After render: focus the selected tab following an arrow-key change, and
+     * bring a newly opened task panel into view and focus, so Escape reaches it.
+     */
     renderedCallback() {
+        if (this.scrollPending) {
+            this.scrollPending = false;
+            const panel = this.template.querySelector('section.panel');
+            if (panel) {
+                if (typeof panel.scrollIntoView === 'function') {
+                    panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+                panel.focus({ preventScroll: true });
+            }
+        }
         if (this.focusPending) {
             this.focusPending = false;
             const tab = this.template.querySelector('.views__tab--on');
@@ -376,6 +406,7 @@ export default class CafDashboard extends NavigationMixin(LightningElement) {
 
                 return {
                     key: appName + '|' + control.Name,
+                    status: record ? status : null,
                     isNa: !record,
                     dot: meta ? meta.dot : 'dot dot--none',
                     sysId: record ? record.ServiceNow_Sys_Id__c : null,
@@ -411,12 +442,152 @@ export default class CafDashboard extends NavigationMixin(LightningElement) {
                 app: appName,
                 cells,
                 overallClass,
-                overallLabel
+                overallLabel,
+                compliant: allGreen,
+                // An unassessed application has nothing to fix yet, so it is
+                // not "needing attention" - it is waiting for a request.
+                needsAttention: assessed > 0 && !allGreen
             });
         });
 
-        rows.sort((a, b) => a.app.localeCompare(b.app));
+        rows.sort((a, b) => String(a.app).localeCompare(String(b.app)));
         this.rows = rows;
+        this.totals = this.computeTotals(controls, rows);
+    }
+
+    /**
+     * Footer and legend figures over every row: for each control, how many
+     * of the applications assessed against it are in compliance; and how many
+     * cells carry each status.
+     *
+     * @param {object[]} controls the active controls, in column order
+     * @param {object[]} rows     the pivoted rows from build()
+     * @returns {{columns: object[], status: object, na: number, compliantApps: number}}
+     */
+    computeTotals(controls, rows) {
+        const status = {};
+        let na = 0;
+        const columns = controls.map((control, i) => {
+            let assessed = 0;
+            let compliant = 0;
+            rows.forEach((row) => {
+                const cell = row.cells[i];
+                if (!cell || cell.isNa) {
+                    return;
+                }
+                assessed += 1;
+                if (cell.status === 'in_compliance') {
+                    compliant += 1;
+                }
+            });
+            return {
+                key: 'total|' + (control.ServiceNow_Sys_Id__c || control.Name || i),
+                label: assessed ? compliant + '/' + assessed : '-',
+                title: assessed
+                    ? compliant + ' of ' + assessed + ' assessed applications in compliance for ' + control.Name
+                    : 'No application assessed for ' + control.Name
+            };
+        });
+        rows.forEach((row) =>
+            row.cells.forEach((cell) => {
+                if (cell.isNa) {
+                    na += 1;
+                } else if (cell.status) {
+                    status[cell.status] = (status[cell.status] || 0) + 1;
+                }
+            })
+        );
+        return { columns, status, na, compliantApps: rows.filter((r) => r.compliant).length };
+    }
+
+    /**
+     * Rows after the grid's own filters. Neither filter touches the data or
+     * the footer, only which rows are drawn.
+     *
+     * @returns {object[]}
+     */
+    get visibleRows() {
+        const needle = (this.appSearch || '').trim().toLowerCase();
+        return this.rows.filter(
+            (r) =>
+                (!needle || String(r.app).toLowerCase().includes(needle)) &&
+                (!this.attentionOnly || r.needsAttention)
+        );
+    }
+
+    /** @returns {boolean} whether any row survives the grid filters */
+    get hasVisibleRows() {
+        return this.visibleRows.length > 0;
+    }
+
+    /** @returns {string} e.g. "Showing 4 of 19 applications" */
+    get rowCountLabel() {
+        const shown = this.visibleRows.length;
+        const all = this.rows.length;
+        const noun = all === 1 ? 'application' : 'applications';
+        return shown === all ? all + ' ' + noun : 'Showing ' + shown + ' of ' + all + ' ' + noun;
+    }
+
+    /** @returns {object[]} one footer cell per control column */
+    get columnTotals() {
+        return this.totals.columns;
+    }
+
+    /** @returns {string} applications fully compliant, over all applications */
+    get overallTotalLabel() {
+        return this.totals.compliantApps + '/' + this.rows.length;
+    }
+
+    /** @returns {object[]} the legend, each status with its cell count */
+    get legendItems() {
+        return Object.keys(STATUS).map((key) => ({
+            key,
+            label: STATUS[key].label,
+            dot: STATUS[key].dot,
+            count: this.totals.status[key] || 0
+        }));
+    }
+
+    /** @returns {number} cells with no request behind them */
+    get naCount() {
+        return this.totals.na;
+    }
+
+    /**
+     * Grid search typed in.
+     *
+     * @param {Event} event input event from the search box
+     */
+    handleAppSearch(event) {
+        this.appSearch = (event && event.target && event.target.value) || '';
+    }
+
+    /**
+     * "Needs attention only" toggled.
+     *
+     * @param {Event} event change event from the checkbox
+     */
+    handleAttentionOnly(event) {
+        this.attentionOnly = !!(event && event.target && event.target.checked);
+    }
+
+    /**
+     * Escape inside the task panel closes the open task first, then the
+     * panel itself - one layer per press, the way a dialog stack unwinds.
+     *
+     * @param {KeyboardEvent} event keydown event from the panel
+     */
+    handlePanelKey(event) {
+        if (!event || event.key !== 'Escape') {
+            return;
+        }
+        event.preventDefault();
+        event.stopPropagation();
+        if (this.activeTask) {
+            this.handleCloseTask();
+        } else {
+            this.handleClose();
+        }
     }
 
     /**
@@ -435,6 +606,9 @@ export default class CafDashboard extends NavigationMixin(LightningElement) {
         this.selectedSysId = sysid;
         this.selectedNumber = number;
         this.selectedControl = control;
+        // On a long grid the panel opens below the fold; without this a click
+        // appears to do nothing.
+        this.scrollPending = true;
     }
 
     handleClose() {

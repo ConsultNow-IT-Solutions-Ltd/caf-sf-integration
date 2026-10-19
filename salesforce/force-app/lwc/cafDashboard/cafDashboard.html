@@ -36,6 +36,21 @@
         </template>
 
         <template lwc:elseif={hasRows}>
+            <div class="gridfilter">
+                <label class="gridfilter__field">
+                    <span class="gridfilter__label">Find application</span>
+                    <input type="search" class="gridfilter__search" placeholder="Application name"
+                           value={appSearch} oninput={handleAppSearch} />
+                </label>
+                <label class="gridfilter__check">
+                    <input type="checkbox" class="gridfilter__attention" checked={attentionOnly}
+                           onchange={handleAttentionOnly} />
+                    Needs attention only
+                </label>
+                <span class="gridfilter__count" aria-live="polite">{rowCountLabel}</span>
+            </div>
+
+            <template lwc:if={hasVisibleRows}>
             <div class="caf__scroll">
                 <table class="grid">
                     <thead>
@@ -48,7 +63,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <template for:each={rows} for:item="row">
+                        <template for:each={visibleRows} for:item="row">
                             <tr key={row.key}>
                                 <th scope="row" class="grid__app">{row.app}</th>
                                 <template for:each={row.cells} for:item="cell">
@@ -74,15 +89,27 @@
                             </tr>
                         </template>
                     </tbody>
+                    <tfoot>
+                        <tr class="grid__totals">
+                            <th scope="row" class="grid__app">In compliance</th>
+                            <template for:each={columnTotals} for:item="t">
+                                <td key={t.key} class="grid__total" title={t.title}>{t.label}</td>
+                            </template>
+                            <td class="grid__overall grid__total">{overallTotalLabel}</td>
+                        </tr>
+                    </tfoot>
                 </table>
             </div>
+            </template>
+            <template lwc:else>
+                <p class="caf__msg">No applications match the filter.</p>
+            </template>
 
             <ul class="legend">
-                <li><span class="dot dot--green"></span>In compliance</li>
-                <li><span class="dot dot--amber"></span>Approaching due</li>
-                <li><span class="dot dot--red"></span>Out of compliance</li>
-                <li><span class="dot dot--blue"></span>Exception approved</li>
-                <li><span class="na">N/A</span>Not assessed</li>
+                <template for:each={legendItems} for:item="l">
+                    <li key={l.key}><span class={l.dot}></span>{l.label} <span class="legend__n">{l.count}</span></li>
+                </template>
+                <li><span class="na">N/A</span>Not assessed <span class="legend__n">{naCount}</span></li>
             </ul>
         </template>
 
@@ -91,7 +118,7 @@
         </template>
 
         <template lwc:if={hasSelection}>
-            <section class="panel">
+            <section class="panel" tabindex="-1" onkeydown={handlePanelKey}>
                 <div class="panel__head">
                     <div>
                         <h2 class="panel__title">{selectedNumber}</h2>
