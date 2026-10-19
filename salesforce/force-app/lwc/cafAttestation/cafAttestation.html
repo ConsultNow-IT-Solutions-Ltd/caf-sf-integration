@@ -28,9 +28,11 @@
             placeholder="What was checked, and against what evidence."
             field-level-help="Required when rejecting."
             value={comments}
+            max-length={commentMax}
             disabled={disabled}
             onchange={handleComments}>
         </lightning-textarea>
+        <p class={commentCountClass} aria-live="polite">{commentCount}</p>
 
         <div class="at__actions">
             <button type="button" class="btn btn--approve" disabled={disabled}

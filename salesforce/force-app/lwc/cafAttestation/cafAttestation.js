@@ -11,6 +11,9 @@ import APPROVAL from '@salesforce/schema/CAF_Task__c.Approval__c';
 
 const FIELDS = [SN_SYS_ID, SN_NUMBER, STATE, APPROVAL];
 
+/** Longest comment accepted. Long enough for a reasoned rejection, short enough to read in an audit. */
+export const COMMENT_MAX = 4000;
+
 /**
  * Attestation for one CAF Task.
  *
@@ -174,6 +177,21 @@ export default class CafAttestation extends LightningElement {
         }
     }
 
+    /** @returns {number} the comment-length limit, for the template */
+    get commentMax() {
+        return COMMENT_MAX;
+    }
+
+    /** @returns {string} e.g. "120 / 4000" */
+    get commentCount() {
+        return (this.comments || '').length + ' / ' + COMMENT_MAX;
+    }
+
+    /** @returns {string} the counter turns amber in the last tenth of the limit */
+    get commentCountClass() {
+        return (this.comments || '').length > COMMENT_MAX * 0.9 ? 'at__count at__count--near' : 'at__count';
+    }
+
     get trimmedComments() {
         return (this.comments || '').trim();
     }
@@ -188,7 +206,7 @@ export default class CafAttestation extends LightningElement {
                 taskSysId: this.sysId,
                 metCriteria: this.metCriteria,
                 outcome: decision,
-                comments: this.trimmedComments
+                comments: this.trimmedComments.slice(0, COMMENT_MAX)
             });
             this.outcome = result;
             this.comments = '';
