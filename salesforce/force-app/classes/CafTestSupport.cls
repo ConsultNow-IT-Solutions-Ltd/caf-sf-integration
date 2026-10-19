@@ -67,6 +67,14 @@ public class CafTestSupport {
         return newUser(false);
     }
 
+    /** Adds a permission set to a user made by cafUser(), e.g. CAF_Admin. */
+    public static void grant(User user, String permissionSet) {
+        System.runAs(new User(Id = UserInfo.getUserId())) {
+            PermissionSet ps = [SELECT Id FROM PermissionSet WHERE Name = :permissionSet LIMIT 1];
+            insert new PermissionSetAssignment(AssigneeId = user.Id, PermissionSetId = ps.Id);
+        }
+    }
+
     public static CAF_Request__c request(String sysId, String application, String control) {
         return new CAF_Request__c(
             Name                   = 'RCAF-' + sysId,

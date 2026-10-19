@@ -1,0 +1,24 @@
+@import 'c/cafTheme';
+
+.review {
+    margin-top: 1rem;
+    border: 1px solid #d7dce8;
+    border-radius: 6px;
+    padding: 0.9rem 1rem 1rem;
+    background: #fafbfe;
+}
+
+.review__head { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 0.4rem; }
+.review__title { margin: 0; font-size: 0.9375rem; font-weight: 700; color: #000724; }
+.review__who { margin: 0 0 0.7rem; font-size: 0.75rem; color: #5c5f66; font-style: italic; }
+
+.review__cols {
+    display: grid;
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+    gap: 1rem;
+    align-items: start;
+}
+
+@media (max-width: 900px) {
+    .review__cols { grid-template-columns: minmax(0, 1fr); }
+}

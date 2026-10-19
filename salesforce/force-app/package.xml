@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <types>
+        <members>CafAdminController</members>
+        <members>CafAdminControllerTest</members>
+        <members>CafApprovalsController</members>
+        <members>CafApprovalsControllerTest</members>
         <members>CafAttestationService</members>
         <members>CafAttestationServiceTest</members>
         <members>CafCallout</members>
@@ -11,6 +15,8 @@
         <members>CafDashboardControllerTest</members>
         <members>CafEvidenceService</members>
         <members>CafEvidenceServiceTest</members>
+        <members>CafReportsController</members>
+        <members>CafReportsControllerTest</members>
         <members>CafSyncHealth</members>
         <members>CafTaskService</members>
         <members>CafTaskServiceTest</members>
@@ -22,10 +28,14 @@
         <name>ApexTrigger</name>
     </types>
     <types>
+        <members>cafAdmin</members>
+        <members>cafApprovals</members>
         <members>cafAttestation</members>
         <members>cafDashboard</members>
         <members>cafEvidence</members>
+        <members>cafReports</members>
         <members>cafSyncHealth</members>
+        <members>cafTheme</members>
         <name>LightningComponentBundle</name>
     </types>
     <types>
@@ -33,7 +43,7 @@
         <members>CAF_Task__c</members>
         <name>CustomTab</name>
     </types>
-    <types><members>CAF_Integration</members><name>PermissionSet</name></types>
+    <types><members>CAF_Admin</members><members>CAF_Integration</members><name>PermissionSet</name></types>
     <types>
         <members>CAF_Callout_Event__e</members>
         <members>CAF_Control_Catalog__c</members>

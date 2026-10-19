@@ -5,8 +5,28 @@
             <p class="caf__sub">Business applications by control &middot; system of record: ServiceNow</p>
         </header>
 
+        <nav class="views" role="tablist" aria-label="CAF screens">
+            <template for:each={views} for:item="v">
+                <button key={v.key} type="button" role="tab" class={v.className}
+                        aria-selected={v.selected} data-view={v.key}
+                        onclick={handleView}>{v.label}</button>
+            </template>
+        </nav>
+
         <c-caf-sync-health></c-caf-sync-health>
 
+        <template lwc:if={isApprovals}>
+            <c-caf-approvals oncafchange={handleChildChange}></c-caf-approvals>
+        </template>
+        <template lwc:elseif={isReports}>
+            <c-caf-reports></c-caf-reports>
+        </template>
+        <template lwc:elseif={isAdmin}>
+            <c-caf-admin></c-caf-admin>
+        </template>
+
+        <template lwc:else>
+        <!-- Compliance: the original grid and its drill-in, unchanged. -->
         <template lwc:if={loading}>
             <p class="caf__msg">Loading compliance data&hellip;</p>
         </template>
@@ -183,6 +203,7 @@
                     </p>
                 </template>
             </section>
+        </template>
         </template>
     </div>
 </template>

@@ -1,0 +1,134 @@
+<template>
+    <div class="view">
+        <div class="view__head">
+            <div>
+                <h2 class="view__title">Admin</h2>
+                <p class="view__sub">Integration settings, the control catalogue and recent callouts to ServiceNow</p>
+            </div>
+            <button type="button" class="btn btn--ghost" onclick={handleRefresh}>Refresh</button>
+        </div>
+
+        <template lwc:if={loading}>
+            <p class="msg">Loading integration details&hellip;</p>
+        </template>
+
+        <template lwc:elseif={error}>
+            <p class="msg msg--error">{error}</p>
+        </template>
+
+        <template lwc:else>
+            <h3 class="section">Callouts to ServiceNow <span class="muted">&middot; most recent 50</span></h3>
+            <template lwc:if={logAccess}>
+                <ul class="tiles">
+                    <li class="tile"><span class="tile__value">{callStats.total}</span><span class="tile__label">Calls logged</span></li>
+                    <li class="tile"><span class={callStats.failedClass}>{callStats.failed}</span><span class="tile__label">Failed</span></li>
+                    <li class="tile"><span class="tile__value">{callStats.successRate}</span><span class="tile__label">Success rate</span></li>
+                    <li class="tile"><span class="tile__value">{callStats.avg}</span><span class="tile__label">Average latency</span></li>
+                    <li class="tile"><span class="tile__value">{callStats.p95}</span><span class="tile__label">95th percentile latency</span></li>
+                </ul>
+
+                <div class="filters">
+                    <label class="filters__check">
+                        <input type="checkbox" checked={failuresOnly} onchange={handleFailuresOnly} />
+                        Failures only
+                    </label>
+                </div>
+
+                <template lwc:if={hasCalls}>
+                    <div class="scroll">
+                        <table class="tasks">
+                            <thead>
+                                <tr>
+                                    <th>Log</th><th>Called at</th><th>Operation</th><th>Method</th>
+                                    <th class="num">Status</th><th>Result</th><th class="num">Latency</th>
+                                    <th>By</th><th>Error</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <template for:each={calls} for:item="c">
+                                    <tr key={c.Id}>
+                                        <td class="mono">{c.Name}</td>
+                                        <td class="mono">{c.when}</td>
+                                        <td>{c.Operation__c}</td>
+                                        <td>{c.Method__c}</td>
+                                        <td class="num">{c.code}</td>
+                                        <td><span class={c.resultClass}>{c.resultLabel}</span></td>
+                                        <td class="num">{c.latency}</td>
+                                        <td>{c.by}</td>
+                                        <td class="err">{c.Error__c}</td>
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
+                    </div>
+                </template>
+                <template lwc:else>
+                    <p class="msg">No callouts logged.</p>
+                </template>
+            </template>
+            <template lwc:else>
+                <p class="msg">
+                    The callout log needs the <strong>CAF Admin</strong> permission set. Ask a Salesforce
+                    administrator to assign it alongside CAF Integration.
+                </p>
+            </template>
+
+            <h3 class="section">Control catalogue <span class="muted">&middot; {activeControlCount} active</span></h3>
+            <template lwc:if={hasControls}>
+                <div class="scroll">
+                    <table class="tasks">
+                        <thead>
+                            <tr><th>Control</th><th>SN number</th><th>Status</th><th class="num">Requests</th><th>Note</th></tr>
+                        </thead>
+                        <tbody>
+                            <template for:each={controls} for:item="c">
+                                <tr key={c.key}>
+                                    <th scope="row" class="name">{c.name}</th>
+                                    <td class="mono">{c.snNumber}</td>
+                                    <td><span class={c.activeClass}>{c.activeLabel}</span></td>
+                                    <td class="num">{c.requests}</td>
+                                    <td class="hint">{c.note}</td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </div>
+            </template>
+            <template lwc:else>
+                <p class="msg">No controls have been pushed from ServiceNow.</p>
+            </template>
+            <p class="note">Controls are owned by ServiceNow. Add, rename or retire them there; the change is pushed here.</p>
+
+            <h3 class="section">Settings</h3>
+            <div class="scroll">
+                <table class="tasks">
+                    <thead>
+                        <tr><th>Setting</th><th>Stored value</th><th>In use</th><th></th><th>Notes</th></tr>
+                    </thead>
+                    <tbody>
+                        <template for:each={settings} for:item="s">
+                            <tr key={s.name}>
+                                <th scope="row" class="name">
+                                    {s.label}
+                                    <span class="api">{s.name}</span>
+                                </th>
+                                <td class="mono wrap">{s.configuredLabel}</td>
+                                <td class="mono wrap">{s.effective}</td>
+                                <td>
+                                    <template lwc:if={s.hasFlag}>
+                                        <span class={s.flagClass}>{s.flag}</span>
+                                    </template>
+                                </td>
+                                <td class="hint">{s.notes}</td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+            </div>
+            <p class="note">
+                Settings are CAF Setting custom metadata. Change them in Setup &rarr; Custom Metadata Types
+                &rarr; CAF Setting, or deploy them with the package.
+            </p>
+        </template>
+    </div>
+</template>
