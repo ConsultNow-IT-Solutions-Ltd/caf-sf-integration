@@ -94,3 +94,22 @@ describe('c-caf-sync-health', () => {
         expect(el.shadowRoot.querySelector('.sync__when')).toBeNull();
     });
 });
+
+describe('c-caf-sync-health breakdown', () => {
+    afterEach(() => {
+        while (document.body.firstChild) {
+            document.body.removeChild(document.body.firstChild);
+        }
+        jest.clearAllMocks();
+    });
+
+    // TC-UNIT-085
+    it('counts differences by record type above the table', async () => {
+        const el = await mount({
+            inSync: false,
+            differences: [diff(1), diff(2), diff(3, { recordType: 'task' })],
+            comparedCount: 3, snRequests: 2, snTasks: 1
+        });
+        expect(el.shadowRoot.querySelector('.sync__breakdown').textContent).toBe('Differences by type: 2 request \u00b7 1 task');
+    });
+});

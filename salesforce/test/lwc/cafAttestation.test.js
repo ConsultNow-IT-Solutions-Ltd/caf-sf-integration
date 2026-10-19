@@ -94,3 +94,42 @@ describe('c-caf-attestation confirmation', () => {
         expect(attest).not.toHaveBeenCalled();
     });
 });
+
+describe('c-caf-attestation comment limit', () => {
+    afterEach(() => {
+        while (document.body.firstChild) {
+            document.body.removeChild(document.body.firstChild);
+        }
+        jest.clearAllMocks();
+    });
+
+    // TC-UNIT-095
+    it('counts characters against the limit and warns near it', async () => {
+        const el = await mount();
+        const counter = () => el.shadowRoot.querySelector('.at__count');
+        expect(counter().textContent).toBe('0 / 4000');
+        expect(el.shadowRoot.querySelector('.at__comments').maxLength).toBe(4000);
+
+        const comments = el.shadowRoot.querySelector('.at__comments');
+        comments.value = 'x'.repeat(3700);
+        comments.dispatchEvent(new CustomEvent('change'));
+        await flush();
+        expect(counter().textContent).toBe('3700 / 4000');
+        expect(counter().className).toContain('at__count--near');
+    });
+
+    // TC-UNIT-096
+    it('never sends more than the limit, even if the field let more through', async () => {
+        LightningConfirm.open.mockResolvedValue(true);
+        attest.mockResolvedValue(RESULT);
+        const el = await mount();
+        const comments = el.shadowRoot.querySelector('.at__comments');
+        comments.value = 'y'.repeat(4100);
+        comments.dispatchEvent(new CustomEvent('change'));
+        await flush();
+
+        el.shadowRoot.querySelector('.btn--approve').click();
+        await flush();
+        expect(attest.mock.calls[0][0].comments).toHaveLength(4000);
+    });
+});

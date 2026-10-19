@@ -129,3 +129,5 @@
 }
 .act:hover:not(:disabled) { background: #06245a; }
 .act:disabled { background: #9aa6c4; cursor: default; }
+
+.sync__breakdown { margin: 0 0 0.4rem; font-size: 0.75rem; color: #8e030f; font-weight: 600; }

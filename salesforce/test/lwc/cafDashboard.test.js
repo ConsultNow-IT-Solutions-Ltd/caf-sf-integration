@@ -220,6 +220,7 @@ jest.mock(
 
 describe('c-caf-dashboard screens', () => {
     beforeEach(() => {
+        window.localStorage.clear();
         check.mockResolvedValue({ differences: [] });
     });
 
@@ -260,6 +261,7 @@ const PAGE = { type: 'standard__navItemPage', attributes: { apiName: 'CAF_Dashbo
 
 describe('c-caf-dashboard screen URLs and keyboard', () => {
     beforeEach(() => {
+        window.localStorage.clear();
         check.mockResolvedValue({ differences: [] });
         navigateCalls.length = 0;
     });
@@ -331,6 +333,7 @@ describe('c-caf-dashboard screen URLs and keyboard', () => {
 
 describe('c-caf-dashboard grid filters, totals and panel', () => {
     beforeEach(() => {
+        window.localStorage.clear();
         check.mockResolvedValue({ differences: [] });
     });
 
@@ -410,8 +413,8 @@ describe('c-caf-dashboard grid filters, totals and panel', () => {
         const counts = Array.from(el.shadowRoot.querySelectorAll('.legend li')).map((li) =>
             li.querySelector('.legend__n').textContent
         );
-        // green, amber, red, blue, N/A (3 apps x 6 controls = 18 cells, 5 assessed)
-        expect(counts).toEqual(['3', '1', '1', '0', '13']);
+        // green, amber, red, blue, N/A (3 apps x 6 controls = 18 cells, 5 assessed), past planned date
+        expect(counts).toEqual(['3', '1', '1', '0', '13', '0']);
     });
 
     // TC-UNIT-075
@@ -427,5 +430,92 @@ describe('c-caf-dashboard grid filters, totals and panel', () => {
         panel.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
         await flush();
         expect(el.shadowRoot.querySelector('section.panel')).toBeNull();
+    });
+});
+
+function isoDay(offsetDays) {
+    const d = new Date(Date.now() + offsetDays * 86400000);
+    const pad = (n) => String(n).padStart(2, '0');
+    return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+}
+
+describe('c-caf-dashboard sort, markers and saved preferences', () => {
+    beforeEach(() => {
+        window.localStorage.clear();
+        check.mockResolvedValue({ differences: [] });
+    });
+
+    afterEach(() => {
+        while (document.body.firstChild) {
+            document.body.removeChild(document.body.firstChild);
+        }
+        jest.clearAllMocks();
+    });
+
+    const apps = (el) => Array.from(el.shadowRoot.querySelectorAll('table.grid tbody th.grid__app')).map((t) => t.textContent);
+
+    async function estate() {
+        return render(CONTROLS, [
+            request('Alpha', 0, 'in_compliance'),
+            request('Bravo', 0, 'out_of_compliance'),
+            request('Bravo', 1, 'in_compliance'),
+            request('Charlie', 0, 'out_of_compliance'),
+            request('Charlie', 1, 'out_of_compliance')
+        ]);
+    }
+
+    // TC-UNIT-076
+    it('sorts least compliant first on request, name order by default', async () => {
+        const el = await estate();
+        expect(apps(el)).toEqual(['Alpha', 'Bravo', 'Charlie']);
+
+        const sort = el.shadowRoot.querySelector('select.gridfilter__sort');
+        sort.value = 'least';
+        sort.dispatchEvent(new CustomEvent('change'));
+        await flush();
+        expect(apps(el)).toEqual(['Charlie', 'Bravo', 'Alpha']);
+    });
+
+    // TC-UNIT-077
+    it('remembers the sort and "Needs attention only" for the next visit', async () => {
+        const first = await estate();
+        const sort = first.shadowRoot.querySelector('select.gridfilter__sort');
+        sort.value = 'least';
+        sort.dispatchEvent(new CustomEvent('change'));
+        const box = first.shadowRoot.querySelector('input.gridfilter__attention');
+        box.checked = true;
+        box.dispatchEvent(new CustomEvent('change'));
+        await flush();
+        document.body.removeChild(first);
+
+        const again = await estate();
+        expect(apps(again)).toEqual(['Charlie', 'Bravo']);
+        expect(again.shadowRoot.querySelector('input.gridfilter__attention').checked).toBe(true);
+    });
+
+    // TC-UNIT-078
+    it('ignores saved preferences it cannot read', async () => {
+        window.localStorage.setItem('caf.dashboard.grid', '{not json');
+        const el = await estate();
+        expect(apps(el)).toEqual(['Alpha', 'Bravo', 'Charlie']);
+    });
+
+    // TC-UNIT-079
+    it('rings cells past their planned date unless the status is settled, and highlights the open cell', async () => {
+        const el = await render(CONTROLS, [
+            request('Late', 0, 'out_of_compliance', { Planned_Completion_Date__c: isoDay(-3) }),
+            request('Late', 1, 'in_compliance', { Planned_Completion_Date__c: isoDay(-3) }),
+            request('Late', 2, 'approaching_due', { Planned_Completion_Date__c: isoDay(5) })
+        ]);
+        const buttons = () => Array.from(el.shadowRoot.querySelectorAll('table.grid button.cellbtn'));
+
+        expect(buttons().map((b) => b.classList.contains('cellbtn--overdue'))).toEqual([true, false, false]);
+        expect(buttons()[0].title).toContain('(overdue)');
+        // The dot is still the first span in the button, which the live harness reads.
+        expect(buttons()[0].querySelector('span').className).toContain('dot--red');
+
+        buttons()[1].click();
+        await flush();
+        expect(buttons().map((b) => b.classList.contains('cellbtn--selected'))).toEqual([false, true, false]);
     });
 });

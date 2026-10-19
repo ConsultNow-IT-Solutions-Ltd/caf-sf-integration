@@ -50,6 +50,10 @@ TC-UNIT-001 covers the direction no live case can reach without an upload.
 | TC-UNIT-073 | Footer totals compliant/assessed per control, unchanged by the filter | Footer describes the estate, agrees with Reports |
 | TC-UNIT-074 | Legend counts each status and N/A | |
 | TC-UNIT-075 | Task panel takes focus on open; Escape closes it | Panel below the fold was easy to miss |
+| TC-UNIT-076 | Sort: name by default, "Least compliant first" on request | Default order still matches the ServiceNow portal |
+| TC-UNIT-077 | Sort and "Needs attention only" remembered for the next visit | |
+| TC-UNIT-078 | Unreadable saved preferences are ignored | Bad storage never breaks the grid |
+| TC-UNIT-079 | Overdue ring on past-date, unsettled cells only; selected cell highlighted; dot still the first span | Live harness reads the dot from the first span |
 
 ## LWC: `cafSyncHealth` (`salesforce/test/lwc/cafSyncHealth.test.js`)
 
@@ -60,6 +64,7 @@ TC-UNIT-001 covers the direction no live case can reach without an upload.
 | TC-UNIT-082 | Empty reply is "Could not check", not "In sync" | |
 | TC-UNIT-083 | Only the pressed row reads "Re-syncing…"; every Re-sync disabled until it finishes; re-checks after | No racing pushes |
 | TC-UNIT-084 | "checked … · N min ago"; unparseable time omitted | A stale check is visible |
+| TC-UNIT-085 | Differences counted by record type above the table | |
 
 ## LWC: `cafAttestation` (`salesforce/test/lwc/cafAttestation.test.js`)
 
@@ -70,6 +75,8 @@ TC-UNIT-001 covers the direction no live case can reach without an upload.
 | TC-UNIT-092 | Reject with no comment asks for a reason before any dialog | |
 | TC-UNIT-093 | Reject dialog warns the request goes out of compliance | |
 | TC-UNIT-094 | A dialog that can't open counts as no | Fails safe |
+| TC-UNIT-095 | Comment counter "n / 4000", amber past 90%; field capped at 4000 | |
+| TC-UNIT-096 | Never sends more than 4000 characters | Belt and braces if the field lets more through |
 
 ## LWC: `cafDashboard` screen tabs (`salesforce/test/lwc/cafDashboard.test.js`)
 
