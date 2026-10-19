@@ -117,3 +117,36 @@ describe('c-caf-admin', () => {
         expect(el.shadowRoot.textContent).toContain('2026-10-19 09:00');
     });
 });
+
+describe('c-caf-admin with missing or bad data', () => {
+    afterEach(() => {
+        while (document.body.firstChild) {
+            document.body.removeChild(document.body.firstChild);
+        }
+        jest.clearAllMocks();
+    });
+
+    // TC-UNIT-068
+    it('renders nulls as blanks or dashes, never as "null"', async () => {
+        const el = await render({
+            settings: [{ name: 'Logging_Enabled', label: null, configured: null, effective: null, hasRecord: true }, null],
+            controls: [{ name: null, snNumber: null, sysId: null, active: null, requests: null }],
+            logAccess: true,
+            calls: [{ Id: null, Succeeded__c: null, Latency_Ms__c: null, Status_Code__c: null, Called_At__c: null, Error__c: null }]
+        });
+        const body = el.shadowRoot.textContent;
+
+        expect(body).not.toMatch(/\bnull\b/);
+        expect(body).not.toContain('undefined');
+        expect(body).toContain('(Unnamed control)');
+        expect(body).toContain('Logging Enabled');
+    });
+
+    // TC-UNIT-069
+    it('treats a payload without lists as an empty screen', async () => {
+        const el = await render({ logAccess: true });
+        expect(el.shadowRoot.textContent).toContain('No controls have been pushed from ServiceNow');
+        expect(el.shadowRoot.textContent).toContain('No callouts logged');
+        expect(el.shadowRoot.querySelector('.msg--error')).toBeNull();
+    });
+});

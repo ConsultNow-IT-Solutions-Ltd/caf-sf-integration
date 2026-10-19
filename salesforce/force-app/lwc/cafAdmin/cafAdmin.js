@@ -6,6 +6,40 @@ import getOverview from '@salesforce/apex/CafAdminController.getOverview';
 export const ERROR_PREVIEW = 140;
 
 /**
+ * A value as display text: '' for null or undefined rather than "null".
+ *
+ * @param {*} v any field value
+ * @returns {string}
+ */
+function text(v) {
+    return v === null || v === undefined ? '' : String(v);
+}
+
+/**
+ * A number field as a number, or null when it is missing or not numeric.
+ *
+ * @param {*} v any field value
+ * @returns {number|null}
+ */
+function num(v) {
+    if (v === null || v === undefined || v === '') {
+        return null;
+    }
+    const n = Number(v);
+    return Number.isFinite(n) ? n : null;
+}
+
+/**
+ * The entries of an array that are objects; [] for anything that is not an array.
+ *
+ * @param {*} list
+ * @returns {object[]}
+ */
+function objects(list) {
+    return (Array.isArray(list) ? list : []).filter((x) => x && typeof x === 'object');
+}
+
+/**
  * Integration administration, read-only.
  *
  * Settings live in custom metadata and controls are owned by ServiceNow, so
@@ -20,17 +54,27 @@ export default class CafAdmin extends LightningElement {
 
     wiredOverview;
 
+    /**
+     * Receives the overview. A payload that is not an object is treated as
+     * an empty overview, so each section shows its own "nothing here" message.
+     *
+     * @param {{data?: object, error?: object}} result the wire's payload
+     */
     @wire(getOverview)
     handleOverview(result) {
         this.wiredOverview = result;
+        if (!result) {
+            return;
+        }
         if (result.data) {
-            this.overview = result.data;
+            this.overview = typeof result.data === 'object' ? result.data : {};
             this.error = undefined;
         } else if (result.error) {
             this.error = this.messageOf(result.error);
         }
     }
 
+    /** @returns {boolean} true until the overview or an error arrives */
     get loading() {
         return !this.overview && !this.error;
     }
@@ -38,45 +82,73 @@ export default class CafAdmin extends LightningElement {
     // ------------------------------------------------------------ settings
 
     /**
-     * A setting is flagged when what CafConfig uses is not what is stored:
-     * no record, a blank value, or a value the code clamps or cannot convert.
+     * Every setting with a flag where what CafConfig uses is not what is
+     * stored: no record, a blank value, or a value the code clamps or cannot
+     * convert. A setting without a name cannot be keyed or identified and is
+     * left out.
+     *
+     * @returns {object[]}
      */
     get settings() {
-        return ((this.overview && this.overview.settings) || []).map((s) => {
-            const configured = s.configured === null || s.configured === undefined ? '' : String(s.configured).trim();
-            let flag = '';
-            let flagClass = '';
-            if (!s.hasRecord) {
-                flag = 'No record - default in use';
-                flagClass = 'pill pill--amber';
-            } else if (!configured) {
-                flag = 'Blank - default in use';
-                flagClass = 'pill pill--amber';
-            } else if (configured !== String(s.effective)) {
-                flag = 'Adjusted by CafConfig';
-                flagClass = 'pill pill--blue';
-            }
-            return { ...s, configuredLabel: configured || '-', flag, flagClass, hasFlag: !!flag };
-        });
+        return objects(this.overview && this.overview.settings)
+            .filter((s) => text(s.name))
+            .map((s) => {
+                const configured = text(s.configured).trim();
+                const effective = text(s.effective).trim();
+                let flag = '';
+                let flagClass = '';
+                if (!s.hasRecord) {
+                    flag = 'No record - default in use';
+                    flagClass = 'pill pill--amber';
+                } else if (!configured) {
+                    flag = 'Blank - default in use';
+                    flagClass = 'pill pill--amber';
+                } else if (effective && configured !== effective) {
+                    flag = 'Adjusted by CafConfig';
+                    flagClass = 'pill pill--blue';
+                }
+                return {
+                    ...s,
+                    label: text(s.label) || text(s.name).replace(/_/g, ' '),
+                    configuredLabel: configured || '-',
+                    effective: effective || '-',
+                    notes: text(s.notes),
+                    flag,
+                    flagClass,
+                    hasFlag: !!flag
+                };
+            });
     }
 
     // ------------------------------------------------------------ controls
 
+    /**
+     * The control catalogue, each with a note on the states worth an
+     * administrator's attention. A missing request count is treated as 0.
+     *
+     * @returns {object[]}
+     */
     get controls() {
-        return ((this.overview && this.overview.controls) || []).map((c) => {
+        return objects(this.overview && this.overview.controls).map((c, i) => {
+            const requests = num(c.requests) || 0;
+            const active = c.active === true;
             let note = '';
-            if (!c.active && c.requests > 0) {
+            if (!active && requests > 0) {
                 note = 'Inactive but still has requests - they render under no column in the grid';
-            } else if (c.active && c.requests === 0) {
+            } else if (active && requests === 0) {
                 note = 'No requests yet - the grid shows N/A down this column';
             } else if (!c.sysId) {
                 note = 'No ServiceNow sys_id - requests can only join on the name';
             }
             return {
                 ...c,
-                key: c.sysId || c.name,
-                activeLabel: c.active ? 'Active' : 'Inactive',
-                activeClass: c.active ? 'pill pill--green' : 'pill pill--none',
+                key: c.sysId || c.name || 'control-' + i,
+                name: text(c.name) || '(Unnamed control)',
+                snNumber: text(c.snNumber),
+                active,
+                requests,
+                activeLabel: active ? 'Active' : 'Inactive',
+                activeClass: active ? 'pill pill--green' : 'pill pill--none',
                 note
             };
         });
@@ -85,58 +157,85 @@ export default class CafAdmin extends LightningElement {
     /**
      * Logging_Enabled = false stops CafCallout writing the log. The screen
      * would then show an old, quiet log that reads as "nothing is failing".
+     *
+     * @returns {boolean}
      */
     get loggingOff() {
-        const s = ((this.overview && this.overview.settings) || []).find((x) => x.name === 'Logging_Enabled');
-        return !!s && String(s.effective).toLowerCase() === 'false';
+        const s = objects(this.overview && this.overview.settings).find((x) => x.name === 'Logging_Enabled');
+        return !!s && text(s.effective).trim().toLowerCase() === 'false';
     }
 
+    /** @returns {number} controls marked active */
     get activeControlCount() {
         return this.controls.filter((c) => c.active).length;
     }
 
+    /** @returns {boolean} whether the catalogue has any rows */
     get hasControls() {
         return this.controls.length > 0;
     }
 
     // ---------------------------------------------------------- callout log
 
+    /** @returns {boolean} whether this user can read CAF_Integration_Log__c */
     get logAccess() {
         return !!(this.overview && this.overview.logAccess);
     }
 
+    /**
+     * Every logged call, formatted for the table. Missing timestamps, codes,
+     * latencies and errors render as blanks or dashes, never as "null".
+     *
+     * @returns {object[]}
+     */
     get allCalls() {
-        return ((this.overview && this.overview.calls) || []).map((c) => ({
-            ...c,
-            when: c.Called_At__c ? c.Called_At__c.replace('T', ' ').slice(0, 19) : '',
-            by: c.Requested_By__r ? c.Requested_By__r.Name : '',
-            resultLabel: c.Succeeded__c ? 'OK' : 'Failed',
-            resultClass: c.Succeeded__c ? 'pill pill--green' : 'pill pill--red',
-            latency: c.Latency_Ms__c === null || c.Latency_Ms__c === undefined ? '' : c.Latency_Ms__c + ' ms',
-            code: c.Status_Code__c === null || c.Status_Code__c === undefined ? '-' : c.Status_Code__c,
-            errorShort:
-                c.Error__c && c.Error__c.length > ERROR_PREVIEW
-                    ? c.Error__c.slice(0, ERROR_PREVIEW) + '…'
-                    : c.Error__c || ''
-        }));
+        return objects(this.overview && this.overview.calls).map((c, i) => {
+            const error = text(c.Error__c);
+            const latency = num(c.Latency_Ms__c);
+            const code = num(c.Status_Code__c);
+            const calledAt = typeof c.Called_At__c === 'string' ? c.Called_At__c : '';
+            return {
+                ...c,
+                Id: c.Id || 'call-' + i,
+                ok: c.Succeeded__c === true,
+                latencyMs: latency,
+                when: calledAt.replace('T', ' ').slice(0, 19),
+                by: c.Requested_By__r && c.Requested_By__r.Name ? c.Requested_By__r.Name : '',
+                resultLabel: c.Succeeded__c === true ? 'OK' : 'Failed',
+                resultClass: c.Succeeded__c === true ? 'pill pill--green' : 'pill pill--red',
+                latency: latency === null ? '' : latency + ' ms',
+                code: code === null ? '-' : code,
+                errorShort: error.length > ERROR_PREVIEW ? error.slice(0, ERROR_PREVIEW) + '…' : error
+            };
+        });
     }
 
+    /** @returns {object[]} the log rows after the failures-only filter */
     get calls() {
-        return this.failuresOnly ? this.allCalls.filter((c) => !c.Succeeded__c) : this.allCalls;
+        return this.failuresOnly ? this.allCalls.filter((c) => !c.ok) : this.allCalls;
     }
 
+    /** @returns {boolean} whether the filtered log has rows */
     get hasCalls() {
         return this.calls.length > 0;
     }
 
-    /** Figures over the rows shown in the log, which is the most recent 50. */
+    /**
+     * Figures over the rows shown in the log, which is the most recent 50.
+     * Calls with no recorded latency are left out of the latency figures
+     * rather than counted as zero.
+     *
+     * @returns {object}
+     */
     get callStats() {
         const calls = this.allCalls;
-        const failed = calls.filter((c) => !c.Succeeded__c).length;
-        const timed = calls.map((c) => c.Latency_Ms__c).filter((n) => typeof n === 'number');
+        const failed = calls.filter((c) => !c.ok).length;
+        const timed = calls.map((c) => c.latencyMs).filter((n) => n !== null);
         const avg = timed.length ? Math.round(timed.reduce((a, b) => a + b, 0) / timed.length) : null;
         const sorted = [...timed].sort((a, b) => a - b);
         const p95 = sorted.length ? sorted[Math.min(sorted.length - 1, Math.ceil(sorted.length * 0.95) - 1)] : null;
+        // Rows arrive newest first; the first with a timestamp is the latest call.
+        const newest = calls.find((c) => c.when);
         return {
             total: calls.length,
             failed,
@@ -144,21 +243,40 @@ export default class CafAdmin extends LightningElement {
             avg: avg === null ? '-' : avg + ' ms',
             p95: p95 === null ? '-' : p95 + ' ms',
             failedClass: failed ? 'tile__value tile__value--red' : 'tile__value',
-            // Rows arrive newest first.
-            last: calls.length ? calls[0].when.slice(0, 16) : '-'
+            last: newest ? newest.when.slice(0, 16) : '-'
         };
     }
 
+    /**
+     * "Failures only" toggled.
+     *
+     * @param {Event} event change event from the checkbox
+     */
     handleFailuresOnly(event) {
-        this.failuresOnly = event.target.checked;
+        this.failuresOnly = !!(event && event.target && event.target.checked);
     }
 
+    /**
+     * Re-reads the overview. Nothing to refresh before the wire has delivered;
+     * a refresh that fails is shown, not thrown.
+     */
     async handleRefresh() {
-        if (this.wiredOverview) {
+        if (!this.wiredOverview) {
+            return;
+        }
+        try {
             await refreshApex(this.wiredOverview);
+        } catch (err) {
+            this.error = this.messageOf(err);
         }
     }
 
+    /**
+     * The message to show for an Apex or JavaScript error.
+     *
+     * @param {*} err an AuraHandledException payload, an Error, or anything
+     * @returns {string}
+     */
     messageOf(err) {
         if (!err) {
             return 'Unknown error';

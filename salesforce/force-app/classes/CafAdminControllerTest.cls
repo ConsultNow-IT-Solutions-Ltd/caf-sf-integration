@@ -43,6 +43,40 @@ private class CafAdminControllerTest {
         }
     }
 
+    /** No record: labelled from the name, nothing stored, CafConfig's value in use. */
+    @IsTest
+    static void settingWithoutARecordFallsBackToTheName() {
+        CafAdminController.Setting s = CafAdminController.settingOf('Callout_Timeout_Ms', null, '120000');
+
+        Assert.isFalse(s.hasRecord);
+        Assert.areEqual('Callout Timeout Ms', s.label);
+        Assert.isNull(s.configured);
+        Assert.isNull(s.notes);
+        Assert.areEqual('120000', s.effective);
+    }
+
+    /** A blank stored value is reported as nothing stored, not as an empty string. */
+    @IsTest
+    static void blankStoredValueIsReportedAsNull() {
+        CAF_Setting__mdt rec = new CAF_Setting__mdt(MasterLabel = '', Value__c = '   ');
+        CafAdminController.Setting s = CafAdminController.settingOf('Logging_Enabled', rec, 'true');
+
+        Assert.isTrue(s.hasRecord);
+        Assert.areEqual('Logging Enabled', s.label);
+        Assert.isNull(s.configured);
+        Assert.areEqual('true', s.effective);
+    }
+
+    /** A setting CafConfig does not read shows its stored value as the value in use. */
+    @IsTest
+    static void unknownSettingShowsItsStoredValue() {
+        CAF_Setting__mdt rec = new CAF_Setting__mdt(MasterLabel = 'Future Flag', Value__c = 'on');
+        CafAdminController.Setting s = CafAdminController.settingOf('Future_Flag', rec, null);
+
+        Assert.areEqual('Future Flag', s.label);
+        Assert.areEqual('on', s.effective);
+    }
+
     /** The controls read runs in user mode, so no CAF access means no screen. */
     @IsTest
     static void userWithoutCafAccessIsRefused() {
