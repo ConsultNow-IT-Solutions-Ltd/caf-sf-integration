@@ -1,0 +1,8 @@
+@import 'c/cafTheme';
+
+.muted { color: #5c5f66; font-weight: 400; }
+.name { font-weight: 600; text-align: left; white-space: nowrap; }
+.api { display: block; font-weight: 400; font-size: 0.7rem; color: #8a8a95; font-family: Consolas, monospace; }
+.wrap { white-space: normal; word-break: break-all; max-width: 320px; }
+.hint { color: #5c5f66; font-size: 0.75rem; max-width: 360px; }
+.err { color: #8e030f; font-size: 0.75rem; max-width: 360px; word-break: break-word; }

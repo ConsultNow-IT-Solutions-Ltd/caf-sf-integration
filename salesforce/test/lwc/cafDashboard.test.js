@@ -189,3 +189,50 @@ describe('c-caf-dashboard roll-up', () => {
         expect(el.shadowRoot.querySelector('.caf__msg--error')).not.toBeNull();
     });
 });
+
+// The other screens mount only when selected; their wires are stubbed here so
+// switching to them renders without an org.
+jest.mock(
+    '@salesforce/apex/CafReportsController.getTaskSummary',
+    () => {
+        const { createApexTestWireAdapter } = require('@salesforce/sfdx-lwc-jest');
+        return { default: createApexTestWireAdapter(jest.fn()) };
+    },
+    { virtual: true }
+);
+
+describe('c-caf-dashboard screens', () => {
+    beforeEach(() => {
+        check.mockResolvedValue({ differences: [] });
+    });
+
+    afterEach(() => {
+        while (document.body.firstChild) {
+            document.body.removeChild(document.body.firstChild);
+        }
+        jest.clearAllMocks();
+    });
+
+    it('opens on Compliance with four screen tabs', async () => {
+        const el = await render(CONTROLS, [request('Payroll', 0, 'in_compliance')]);
+        const tabs = Array.from(el.shadowRoot.querySelectorAll('.views__tab'));
+
+        expect(tabs.map((t) => t.textContent)).toEqual(['Compliance', 'Approvals', 'Reports', 'Admin']);
+        expect(tabs[0].getAttribute('aria-selected')).toBe('true');
+        expect(el.shadowRoot.querySelector('table.grid')).not.toBeNull();
+    });
+
+    it('swaps the grid for the selected screen and back', async () => {
+        const el = await render(CONTROLS, [request('Payroll', 0, 'in_compliance')]);
+
+        el.shadowRoot.querySelector('[data-view="reports"]').click();
+        await flush();
+        expect(el.shadowRoot.querySelector('table.grid')).toBeNull();
+        expect(el.shadowRoot.querySelector('c-caf-reports')).not.toBeNull();
+
+        el.shadowRoot.querySelector('[data-view="compliance"]').click();
+        await flush();
+        expect(el.shadowRoot.querySelector('table.grid')).not.toBeNull();
+        expect(el.shadowRoot.querySelector('c-caf-reports')).toBeNull();
+    });
+});

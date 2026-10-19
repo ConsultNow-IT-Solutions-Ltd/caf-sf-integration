@@ -1,0 +1,126 @@
+/*
+    Shared look for the CAF Dashboard screens (Approvals, Reports, Admin).
+    A CSS-only module: each screen pulls it in with @import 'c/cafTheme'.
+    Colours follow cafDashboard.css - navy #000724, royal blue #0A3176, and the
+    four status colours, which mean the same thing on every screen.
+*/
+
+.view {
+    font-family: 'Salesforce Sans', Arial, sans-serif;
+    color: #16171a;
+    font-size: 0.8125rem;
+}
+
+.view__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 0.9rem;
+}
+
+.view__title { margin: 0; font-size: 1rem; font-weight: 700; color: #000724; }
+.view__sub { margin: 0.15rem 0 0; color: #5c5f66; font-size: 0.8125rem; }
+
+.section {
+    margin: 1.5rem 0 0.6rem;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #000724;
+    border-bottom: 1px solid #d7dce8;
+    padding-bottom: 0.35rem;
+}
+
+.msg { padding: 1rem 0; color: #5c5f66; }
+.msg--error { color: #ba0517; }
+.note { margin: 0.9rem 0 0; font-size: 0.75rem; color: #5c5f66; font-style: italic; }
+.mono { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+/* --- buttons --- */
+.btn {
+    background: #0a3176; color: #fff; border: 1px solid #0a3176; border-radius: 4px;
+    padding: 0.3rem 0.75rem; font-size: 0.75rem; cursor: pointer; white-space: nowrap;
+}
+.btn:hover:not(:disabled) { background: #06245a; }
+.btn:disabled { background: #9aa6c4; border-color: #9aa6c4; cursor: default; }
+.btn:focus-visible { outline: 2px solid #0a3176; outline-offset: 2px; }
+.btn--ghost { background: #fff; color: #0a3176; }
+.btn--ghost:hover:not(:disabled) { background: #dfe6f5; }
+
+/* --- stat tiles --- */
+.tiles {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 0.75rem;
+    list-style: none;
+    margin: 0 0 1rem;
+    padding: 0;
+}
+.tile {
+    border: 1px solid #d7dce8;
+    border-radius: 6px;
+    background: #fafbfe;
+    padding: 0.7rem 0.85rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+}
+.tile__value { font-size: 1.5rem; font-weight: 700; color: #000724; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.tile__value--red { color: #ba0517; }
+.tile__value--amber { color: #8c5000; }
+.tile__value--green { color: #1d6334; }
+.tile__label { font-size: 0.75rem; color: #5c5f66; }
+
+/* --- filters --- */
+.filters { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 0.75rem; align-items: flex-end; }
+.filters__field { display: flex; flex-direction: column; gap: 0.2rem; font-size: 0.75rem; color: #5c5f66; }
+.filters__field--grow { flex: 1 1 240px; }
+.filters__select,
+.filters__input {
+    font: inherit; font-size: 0.8125rem; color: #16171a;
+    border: 1px solid #c9cede; border-radius: 4px; padding: 0.3rem 0.5rem; background: #fff;
+}
+.filters__check { display: flex; align-items: center; gap: 0.35rem; font-size: 0.8125rem; color: #16171a; }
+
+/* --- tables --- */
+.scroll { overflow-x: auto; }
+.tasks { width: 100%; border-collapse: collapse; background: #fff; }
+.tasks th, .tasks td { border-bottom: 1px solid #e5e5e5; padding: 0.5rem 0.6rem; text-align: left; vertical-align: middle; }
+.tasks thead th { background: #eef1f8; font-weight: 600; font-size: 0.75rem; color: #000724; white-space: nowrap; }
+.tasks tbody tr:hover td { background: #f4f6fb; }
+.tasks__desc { max-width: 320px; }
+.tasks__actions { white-space: nowrap; text-align: right; }
+.tasks__row--active td { background: #eef1f8; }
+
+/* --- pills and badges --- */
+.pill {
+    display: inline-block; padding: 0.12rem 0.55rem; border-radius: 999px;
+    font-size: 0.72rem; font-weight: 600; white-space: nowrap;
+}
+.pill--green { background: #ebf7ee; color: #1d6334; border: 1px solid #a6dab7; }
+.pill--amber { background: #fdf3e6; color: #8c5000; border: 1px solid #f2c98a; }
+.pill--red   { background: #fdeceb; color: #8e030f; border: 1px solid #f2a9a4; }
+.pill--blue  { background: #e8eef9; color: #0a3176; border: 1px solid #a9bde3; }
+.pill--none  { background: #f4f4f6; color: #6b6b76; border: 1px solid #d8d8de; }
+
+.due { white-space: nowrap; }
+.due--late { color: #ba0517; font-weight: 600; }
+.due--soon { color: #8c5000; font-weight: 600; }
+.due--none { color: #8a8a95; }
+
+.dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; vertical-align: middle; }
+.dot--green { background: #2e844a; }
+.dot--amber { background: #dd7a01; }
+.dot--red   { background: #ba0517; }
+.dot--blue  { background: #0a3176; }
+
+.legend {
+    display: flex; flex-wrap: wrap; gap: 1rem; list-style: none;
+    margin: 0.4rem 0 0.8rem; padding: 0; font-size: 0.75rem; color: #5c5f66;
+}
+.legend li { display: flex; align-items: center; gap: 0.35rem; }
+
+@media (max-width: 600px) {
+    .view__head { flex-direction: column; }
+}

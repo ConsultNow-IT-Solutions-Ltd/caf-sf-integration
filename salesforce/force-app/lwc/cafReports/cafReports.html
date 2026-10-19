@@ -1,0 +1,164 @@
+<template>
+    <div class="view">
+        <div class="view__head">
+            <div>
+                <h2 class="view__title">Reports</h2>
+                <p class="view__sub">Compliance across every mirrored request &middot; the same rows the grid shows</p>
+            </div>
+            <div class="actions">
+                <button type="button" class="btn btn--ghost" onclick={handleRefresh}>Refresh</button>
+                <button type="button" class="btn" disabled={loading} onclick={handleExport}>Export CSV</button>
+            </div>
+        </div>
+        <div class="export" lwc:dom="manual"></div>
+
+        <template lwc:if={loading}>
+            <p class="msg">Loading report data&hellip;</p>
+        </template>
+
+        <template lwc:elseif={error}>
+            <p class="msg msg--error">{error}</p>
+        </template>
+
+        <template lwc:else>
+            <ul class="tiles">
+                <template for:each={kpis} for:item="k">
+                    <li key={k.key} class="tile">
+                        <span class={k.cls}>{k.value}</span>
+                        <span class="tile__label">{k.label}</span>
+                    </li>
+                </template>
+            </ul>
+
+            <h3 class="section">Compliance by control</h3>
+            <ul class="legend">
+                <template for:each={legend} for:item="l">
+                    <li key={l.key}><span class={l.cls}></span>{l.label}</li>
+                </template>
+            </ul>
+            <table class="tasks bars">
+                <thead>
+                    <tr>
+                        <th>Control</th>
+                        <th class="bars__col">Requests by status</th>
+                        <th class="num">Requests</th>
+                        <th class="num">In compliance</th>
+                        <th class="num">Out</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <template for:each={byControl} for:item="c">
+                        <tr key={c.key}>
+                            <th scope="row" class="bars__name">{c.name}</th>
+                            <td class="bars__col">
+                                <template lwc:if={c.empty}>
+                                    <span class="bars__none">No requests</span>
+                                </template>
+                                <template lwc:else>
+                                    <div class="stack">
+                                        <template for:each={c.segments} for:item="s">
+                                            <span key={s.key} class={s.cls} style={s.style} title={s.title}></span>
+                                        </template>
+                                    </div>
+                                </template>
+                            </td>
+                            <td class="num">{c.total}</td>
+                            <td class="num">{c.compliant} <span class="muted">({c.rate})</span></td>
+                            <td class="num">{c.out}</td>
+                        </tr>
+                    </template>
+                </tbody>
+            </table>
+
+            <div class="cols">
+                <section>
+                    <h3 class="section">By application <span class="muted">&middot; least compliant first</span></h3>
+                    <div class="scroll">
+                        <table class="tasks">
+                            <thead>
+                                <tr>
+                                    <th>Business application</th>
+                                    <th class="meter__col">Requests in compliance</th>
+                                    <th class="num">Out</th>
+                                    <th>Overall</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <template for:each={byApplication} for:item="a">
+                                    <tr key={a.key}>
+                                        <th scope="row" class="bars__name">{a.app}</th>
+                                        <td class="meter__col">
+                                            <div class="meter" title={a.rateLabel}>
+                                                <span class="meter__fill" style={a.meterStyle}></span>
+                                            </div>
+                                            <span class="meter__label">{a.compliant} / {a.assessed}</span>
+                                        </td>
+                                        <td class="num">{a.failing}</td>
+                                        <td><span class={a.overallClass}>{a.overallLabel}</span></td>
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section>
+                    <h3 class="section">Tasks</h3>
+                    <template lwc:if={hasTasks}>
+                        <table class="tasks">
+                            <tbody>
+                                <template for:each={taskStates.states} for:item="s">
+                                    <tr key={s.key}>
+                                        <th scope="row" class="bars__name">{s.label}</th>
+                                        <td class="meter__col">
+                                            <div class="hbar"><span class="hbar__fill" style={s.barStyle}></span></div>
+                                        </td>
+                                        <td class="num">{s.n}</td>
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
+                        <p class="note">
+                            Attestations recorded: {taskStates.approved} approved,
+                            {taskStates.rejected} rejected.
+                        </p>
+                    </template>
+                    <template lwc:else>
+                        <p class="msg">No tasks mirrored yet.</p>
+                    </template>
+                </section>
+            </div>
+
+            <h3 class="section">
+                Due dates <span class="muted">&middot; {overdueCount} overdue, {dueSoonCount} due in the next 30 days</span>
+            </h3>
+            <template lwc:if={hasDueRows}>
+                <div class="scroll">
+                    <table class="tasks">
+                        <thead>
+                            <tr>
+                                <th>Request</th><th>Application</th><th>Control</th>
+                                <th>CAF status</th><th>Planned completion</th><th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template for:each={dueRows} for:item="d">
+                                <tr key={d.key}>
+                                    <td class="mono">{d.number}</td>
+                                    <td>{d.app}</td>
+                                    <td>{d.control}</td>
+                                    <td>{d.status}</td>
+                                    <td class="mono">{d.date}</td>
+                                    <td><span class={d.whenClass}>{d.when}</span></td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </div>
+            </template>
+            <template lwc:else>
+                <p class="msg">Nothing overdue or due in the next 30 days.</p>
+            </template>
+        </template>
+    </div>
+</template>
