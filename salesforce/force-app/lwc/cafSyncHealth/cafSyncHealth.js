@@ -14,21 +14,75 @@ import resync from '@salesforce/apex/CafSyncHealth.resync';
  * press of Re-check goes and looks, which is the only way the answer means
  * anything.
  */
+/** How often the "checked N min ago" label is brought up to date. */
+const TICK_MS = 30000;
+
+/**
+ * "just now", "1 min ago", "2 h ago" - how stale a check is, at a glance.
+ *
+ * @param {number} thenMs the check time, epoch ms
+ * @param {number} nowMs  the current time, epoch ms
+ * @returns {string} '' when either time is unusable
+ */
+export function ago(thenMs, nowMs) {
+    if (!Number.isFinite(thenMs) || !Number.isFinite(nowMs)) {
+        return '';
+    }
+    const mins = Math.floor(Math.max(0, nowMs - thenMs) / 60000);
+    if (mins < 1) {
+        return 'just now';
+    }
+    if (mins < 60) {
+        return mins + ' min ago';
+    }
+    return Math.floor(mins / 60) + ' h ago';
+}
+
 export default class CafSyncHealth extends LightningElement {
     report;
     error;
     loading = true;
     busy = false;
 
+    /** The record being re-synced, so only its button says so. */
+    resyncingSysId;
+
+    /** Current time, moved on by a timer so the age label does not freeze. */
+    now = Date.now();
+
+    _tick;
+
+    /** Checks on arrival, and starts the clock behind "checked N min ago". */
     connectedCallback() {
         this.run();
+        // eslint-disable-next-line @lwc/lwc/no-async-operation
+        this._tick = setInterval(() => {
+            this.now = Date.now();
+        }, TICK_MS);
     }
 
+    /** Stops the clock; a strip nobody can see has nothing to keep current. */
+    disconnectedCallback() {
+        if (this._tick) {
+            clearInterval(this._tick);
+            this._tick = undefined;
+        }
+    }
+
+    /**
+     * Asks ServiceNow for its view and compares. Clears the previous answer
+     * first, so a failed check never leaves an old "In sync" on screen.
+     */
     async run() {
         this.loading = true;
         this.error = undefined;
         try {
-            this.report = await check();
+            const report = await check();
+            this.report = report && typeof report === 'object' ? report : undefined;
+            if (!this.report) {
+                this.error = 'ServiceNow returned no comparison.';
+            }
+            this.now = Date.now();
         } catch (err) {
             this.error = this.messageOf(err);
             this.report = undefined;
@@ -37,13 +91,26 @@ export default class CafSyncHealth extends LightningElement {
         }
     }
 
+    /** Re-check now. */
     handleRecheck() {
         this.run();
     }
 
+    /**
+     * Re-pushes one record from ServiceNow, then checks again. Only the row
+     * being repaired says "Re-syncing"; every Re-sync button is disabled
+     * meanwhile, because a second push mid-flight would race the first.
+     *
+     * @param {Event} event click event from a Re-sync button
+     */
     async handleResync(event) {
-        const { type, sysid, number } = event.currentTarget.dataset;
+        const data = (event && event.currentTarget && event.currentTarget.dataset) || {};
+        const { type, sysid, number } = data;
+        if (!type || !sysid || this.busy) {
+            return;
+        }
         this.busy = true;
+        this.resyncingSysId = sysid;
         try {
             await resync({ recordType: type, sysId: sysid });
             this.toast('Re-pushed to Salesforce', number + ' was sent again from ServiceNow.', 'success');
@@ -52,6 +119,7 @@ export default class CafSyncHealth extends LightningElement {
             this.toast('Re-sync failed', this.messageOf(err), 'error');
         } finally {
             this.busy = false;
+            this.resyncingSysId = undefined;
         }
     }
 
@@ -61,15 +129,19 @@ export default class CafSyncHealth extends LightningElement {
      * shaping the Apex return around one component's markup.
      */
     get differences() {
-        if (!this.report || !this.report.differences) {
-            return [];
-        }
-        return this.report.differences.map((d, i) => ({
-            ...d,
-            key: d.recordType + '|' + d.recordNumber + '|' + d.fieldLabel + '|' + i,
-            showValues: !!d.fieldLabel,
-            resyncDisabled: this.busy || !d.canResync
-        }));
+        const list = this.report && Array.isArray(this.report.differences) ? this.report.differences : [];
+        return list
+            .filter((d) => d && typeof d === 'object')
+            .map((d, i) => {
+                const resyncing = !!d.sysId && d.sysId === this.resyncingSysId;
+                return {
+                    ...d,
+                    key: d.recordType + '|' + d.recordNumber + '|' + d.fieldLabel + '|' + i,
+                    showValues: !!d.fieldLabel,
+                    resyncDisabled: this.busy || !d.canResync,
+                    resyncLabel: resyncing ? 'Re-syncing\u2026' : 'Re-sync'
+                };
+            });
     }
 
     get hasReport() {
@@ -95,7 +167,11 @@ export default class CafSyncHealth extends LightningElement {
         if (this.report.inSync) {
             return 'In sync';
         }
-        const n = this.report.differences.length;
+        // Out of sync with no list is still out of sync; count what arrived.
+        const n = this.differences.length;
+        if (n === 0) {
+            return 'Out of sync';
+        }
         return n === 1 ? '1 difference found' : n + ' differences found';
     }
 
@@ -108,10 +184,11 @@ export default class CafSyncHealth extends LightningElement {
         // resource returns no controls array, and the class then leaves snControls
         // null rather than zero. Printing "· 0 controls" in that case would claim
         // the catalogue was checked and found empty, when it was not checked.
+        const n = (v) => (v === null || v === undefined ? '?' : v);
         const parts = [
-            `${r.comparedCount} records verified`,
-            `${r.snRequests} requests`,
-            `${r.snTasks} tasks`,
+            `${n(r.comparedCount)} records verified`,
+            `${n(r.snRequests)} requests`,
+            `${n(r.snTasks)} tasks`,
         ];
         if (r.snControls !== null && r.snControls !== undefined) {
             parts.push(`${r.snControls} controls`);
@@ -119,11 +196,23 @@ export default class CafSyncHealth extends LightningElement {
         return parts.join(' · ');
     }
 
+    /**
+     * "checked 10:42:01 · 3 min ago". A missing or unparseable checkedAt
+     * shows nothing rather than "Invalid Date".
+     *
+     * @returns {string}
+     */
     get checkedAtLabel() {
-        if (!this.hasReport) {
+        if (!this.hasReport || !this.report.checkedAt) {
             return '';
         }
-        return new Date(this.report.checkedAt).toLocaleTimeString();
+        const at = new Date(this.report.checkedAt);
+        const ms = at.getTime();
+        if (Number.isNaN(ms)) {
+            return '';
+        }
+        const age = ago(ms, this.now);
+        return at.toLocaleTimeString() + (age ? ' \u00b7 ' + age : '');
     }
 
     messageOf(err) {

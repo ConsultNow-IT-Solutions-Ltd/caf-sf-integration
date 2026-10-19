@@ -123,3 +123,40 @@ describe('c-caf-evidence', () => {
         expect(el.shadowRoot.textContent).toContain('There is no evidence to review.');
     });
 });
+
+describe('c-caf-evidence reload', () => {
+    afterEach(() => {
+        while (document.body.firstChild) {
+            document.body.removeChild(document.body.firstChild);
+        }
+        jest.clearAllMocks();
+    });
+
+    // TC-UNIT-007
+    it('reads both lists again when Reload is pressed', async () => {
+        const el = await mount({ salesforceFiles: files(1, 'sf'), serviceNowFiles: [] });
+        expect(getEvidence).toHaveBeenCalledTimes(1);
+
+        getEvidence.mockResolvedValue({ maxBytes: 2097152, salesforceFiles: files(1, 'sf'), serviceNowFiles: files(1, 'sn') });
+        el.shadowRoot.querySelector('button.ev__reload').click();
+        await flush();
+
+        expect(getEvidence).toHaveBeenCalledTimes(2);
+        expect(el.shadowRoot.querySelector('.ev__count--sn').textContent).toBe('1');
+    });
+
+    // TC-UNIT-008
+    it('disables Reload while a read is in flight', async () => {
+        let release;
+        getEvidence.mockImplementation(() => new Promise((r) => { release = r; }));
+        const el = createElement('c-caf-evidence', { is: CafEvidence });
+        Object.assign(el, { snSysId: SYS_ID, taskNumber: 'CAFT0001022' });
+        document.body.appendChild(el);
+        await flush();
+
+        expect(el.shadowRoot.querySelector('button.ev__reload').disabled).toBe(true);
+        release({ salesforceFiles: [], serviceNowFiles: [] });
+        await flush();
+        expect(el.shadowRoot.querySelector('button.ev__reload').disabled).toBe(false);
+    });
+});

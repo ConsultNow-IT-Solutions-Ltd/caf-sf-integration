@@ -285,3 +285,40 @@
 @media (max-width: 900px) {
     .attest__cols { grid-template-columns: minmax(0, 1fr); }
 }
+/* --- grid filter bar --- */
+.gridfilter {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 0.75rem 1.25rem;
+    margin-bottom: 0.75rem;
+}
+.gridfilter__field { display: flex; flex-direction: column; gap: 0.2rem; flex: 0 1 280px; }
+.gridfilter__label { font-size: 0.75rem; color: #5c5f66; }
+.gridfilter__search {
+    font: inherit; font-size: 0.8125rem; color: #16171a;
+    border: 1px solid #c9cede; border-radius: 4px; padding: 0.3rem 0.5rem; background: #fff;
+}
+.gridfilter__search:focus-visible { outline: 2px solid #0a3176; outline-offset: 1px; }
+.gridfilter__check { display: flex; align-items: center; gap: 0.35rem; font-size: 0.8125rem; padding-bottom: 0.3rem; }
+.gridfilter__count { margin-left: auto; font-size: 0.75rem; color: #5c5f66; padding-bottom: 0.35rem; }
+
+/* --- per-control totals: recessive, so the dots stay the subject --- */
+.grid tfoot th,
+.grid tfoot td {
+    border-top: 2px solid #d7dce8;
+    border-bottom: none;
+    font-size: 0.75rem;
+    color: #5c5f66;
+    font-variant-numeric: tabular-nums;
+    background: #fafbfe;
+}
+.grid tfoot .grid__app { background: #fafbfe; font-weight: 600; }
+
+.legend__n {
+    color: #8a8a95;
+    font-variant-numeric: tabular-nums;
+}
+
+.panel:focus { outline: none; }
+.panel:focus-visible { outline: 2px solid #0a3176; outline-offset: 2px; }
