@@ -38,6 +38,63 @@ TC-UNIT-001 covers the direction no live case can reach without an upload.
 | TC-UNIT-016 | Only one wire answered → still loading, no grid | No half-built pivot |
 | TC-UNIT-017 | A wire error → error message shown | Failure is visible |
 
+## LWC: `cafDashboard` screen tabs (`salesforce/test/lwc/cafDashboard.test.js`)
+
+| ID | Case | Why |
+|---|---|---|
+| TC-UNIT-020 | Opens on Compliance, four tabs, grid shown | The grid stays the default screen |
+| TC-UNIT-021 | Switching to Reports unmounts the grid, and switching back restores it | Screens mount only while selected |
+| TC-UNIT-022 | `c__view=admin` opens on Admin | Deep links from email or notifications |
+| TC-UNIT-023 | Unknown `c__view` is ignored | A bad link doesn't blank the page |
+| TC-UNIT-024 | A tab click writes `c__view` with replace, and Compliance drops it | Refresh keeps the screen, Back isn't flooded |
+| TC-UNIT-025 | Left/Right wrap, Home/End jump, focus follows, roving tabindex | ARIA tabs keyboard pattern |
+
+## LWC: `cafApprovals` (`salesforce/test/lwc/cafApprovals.test.js`)
+
+| ID | Case | Why |
+|---|---|---|
+| TC-UNIT-030 | Awaiting and past-due tiles count correctly; no date reads "No date", not overdue | Nothing to be late against |
+| TC-UNIT-031 | Application filter and search narrow the queue | |
+| TC-UNIT-032 | Review is disabled on a task with no ServiceNow sys_id | Nothing to send the decision to |
+| TC-UNIT-033 | Review opens evidence with `hideUpload` true, and attestation for the same task | Approver judges evidence, doesn't add to it |
+| TC-UNIT-034 | Recent decisions labelled Approved / Rejected | |
+| TC-UNIT-035 | Overdue only shows only past-due tasks | |
+| TC-UNIT-036 | A queue at the 500-row Apex limit says so | A cut-off queue mustn't read as complete |
+| TC-UNIT-037 | Decisions list failing leaves the queue on screen with its own error | One failure doesn't hide the other list |
+
+## LWC: `cafReports` (`salesforce/test/lwc/cafReports.test.js`)
+
+| ID | Case | Why |
+|---|---|---|
+| TC-UNIT-040 | Waits for both requests and controls | No half-built report |
+| TC-UNIT-041 | Headline tiles computed from the request rows | |
+| TC-UNIT-042 | One bar per control; requests on no active control go in an extra row | Bars add up to the total |
+| TC-UNIT-043 | Applications least compliant first, Overall uses the grid's rule | Report and grid agree |
+| TC-UNIT-044 | Overdue and due-in-30-days, settled statuses left out | |
+| TC-UNIT-045 | Tasks totalled by state, attestations counted | |
+| TC-UNIT-046 | Application filter scopes every figure | |
+| TC-UNIT-047 | CSV cells starting `=`, `+`, `-` or `@` are defused; separators quoted | CSV formula injection: descriptions come from ServiceNow |
+| TC-UNIT-048 | Export carries only the filtered rows, with the application in the file name | |
+| TC-UNIT-049 | Task-summary failure shown in its panel; rest of report stays | |
+
+## LWC: `cafAdmin` (`salesforce/test/lwc/cafAdmin.test.js`)
+
+| ID | Case | Why |
+|---|---|---|
+| TC-UNIT-050 | Log tiles (count, failed, success rate, average, p95, last call) and failures-only filter | |
+| TC-UNIT-051 | No log access shows the CAF Admin message, rest of screen loads | CAF_Integration alone can't read the log |
+| TC-UNIT-052 | Settings flagged when the value in use isn't the stored value | Clamped, blank and missing settings are visible |
+| TC-UNIT-053 | Inactive control with requests gets a note; heading counts active | |
+| TC-UNIT-054 | `Logging_Enabled = false` shows a warning that the log has stopped | A quiet log mustn't read as "nothing failing" |
+| TC-UNIT-055 | Long errors cut to 140 characters, full text in the tooltip | |
+| TC-UNIT-056 | Newest call time shown | |
+
+Apex: `CafApprovalsControllerTest`, `CafReportsControllerTest` and
+`CafAdminControllerTest` cover the queue filter and order, recent decisions,
+task aggregation, settings with effective values, control request counts
+(sys_id and name joins), log access with and without `CAF_Admin`, and refusal
+for a user with no CAF access. They run in the org, not here.
+
 ## Harness preflight (`testing/automation/preflight.test.mjs`)
 
 `preflight.mjs` checks `.env` and the files it points at before a run. With

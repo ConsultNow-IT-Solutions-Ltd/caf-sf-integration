@@ -21,6 +21,17 @@
         </template>
 
         <template lwc:else>
+            <div class="filters">
+                <label class="filters__field">
+                    <span>Application</span>
+                    <select class="filters__select filters__app" onchange={handleAppFilter}>
+                        <template for:each={appOptions} for:item="o">
+                            <option key={o.value} value={o.value} selected={o.selected}>{o.label}</option>
+                        </template>
+                    </select>
+                </label>
+            </div>
+
             <ul class="tiles">
                 <template for:each={kpis} for:item="k">
                     <li key={k.key} class="tile">
@@ -104,7 +115,10 @@
 
                 <section>
                     <h3 class="section">Tasks</h3>
-                    <template lwc:if={hasTasks}>
+                    <template lwc:if={taskError}>
+                        <p class="msg msg--error">Task counts could not be loaded: {taskError}</p>
+                    </template>
+                    <template lwc:elseif={hasTasks}>
                         <table class="tasks">
                             <tbody>
                                 <template for:each={taskStates.states} for:item="s">
@@ -119,7 +133,7 @@
                             </tbody>
                         </table>
                         <p class="note">
-                            Attestations recorded: {taskStates.approved} approved,
+                            Across all applications. Attestations recorded: {taskStates.approved} approved,
                             {taskStates.rejected} rejected.
                         </p>
                     </template>

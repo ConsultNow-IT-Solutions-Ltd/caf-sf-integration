@@ -18,6 +18,12 @@
 
         <template lwc:else>
             <h3 class="section">Callouts to ServiceNow <span class="muted">&middot; most recent 50</span></h3>
+            <template lwc:if={loggingOff}>
+                <p class="msg msg--warn logging-off">
+                    Logging_Enabled is false, so new callouts are not being recorded. The log below
+                    stops at the last call made before it was switched off.
+                </p>
+            </template>
             <template lwc:if={logAccess}>
                 <ul class="tiles">
                     <li class="tile"><span class="tile__value">{callStats.total}</span><span class="tile__label">Calls logged</span></li>
@@ -25,6 +31,7 @@
                     <li class="tile"><span class="tile__value">{callStats.successRate}</span><span class="tile__label">Success rate</span></li>
                     <li class="tile"><span class="tile__value">{callStats.avg}</span><span class="tile__label">Average latency</span></li>
                     <li class="tile"><span class="tile__value">{callStats.p95}</span><span class="tile__label">95th percentile latency</span></li>
+                    <li class="tile"><span class="tile__value tile__value--small">{callStats.last}</span><span class="tile__label">Last call (UTC)</span></li>
                 </ul>
 
                 <div class="filters">
@@ -49,13 +56,13 @@
                                     <tr key={c.Id}>
                                         <td class="mono">{c.Name}</td>
                                         <td class="mono">{c.when}</td>
-                                        <td>{c.Operation__c}</td>
+                                        <td title={c.Endpoint__c}>{c.Operation__c}</td>
                                         <td>{c.Method__c}</td>
                                         <td class="num">{c.code}</td>
                                         <td><span class={c.resultClass}>{c.resultLabel}</span></td>
                                         <td class="num">{c.latency}</td>
                                         <td>{c.by}</td>
-                                        <td class="err">{c.Error__c}</td>
+                                        <td class="err" title={c.Error__c}>{c.errorShort}</td>
                                     </tr>
                                 </template>
                             </tbody>

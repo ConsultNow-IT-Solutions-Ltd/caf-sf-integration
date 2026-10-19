@@ -13,6 +13,7 @@
     "int:neg": "playwright test specs/integration-negative.spec.ts --project=int-neg",
     "sf:auth": "playwright test --project=sf-setup",
     "sf:smoke": "playwright test specs/probe-lightning.spec.ts --project=sf-ui",
+    "sf:screens": "playwright test specs/integration-ui-screens.spec.ts --project=sf-ui",
     "sf:smoke:headed": "playwright test specs/probe-lightning.spec.ts --project=sf-ui --headed",
     "report": "playwright show-report",
     "preflight": "node preflight.mjs",

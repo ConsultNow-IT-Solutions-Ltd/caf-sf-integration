@@ -5,10 +5,10 @@
             <p class="caf__sub">Business applications by control &middot; system of record: ServiceNow</p>
         </header>
 
-        <nav class="views" role="tablist" aria-label="CAF screens">
+        <nav class="views" role="tablist" aria-label="CAF screens" onkeydown={handleViewKey}>
             <template for:each={views} for:item="v">
                 <button key={v.key} type="button" role="tab" class={v.className}
-                        aria-selected={v.selected} data-view={v.key}
+                        aria-selected={v.selected} tabindex={v.tabIndex} data-view={v.key}
                         onclick={handleView}>{v.label}</button>
             </template>
         </nav>

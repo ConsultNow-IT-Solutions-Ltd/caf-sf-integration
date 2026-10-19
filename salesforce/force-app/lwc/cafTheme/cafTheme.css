@@ -124,3 +124,13 @@
 @media (max-width: 600px) {
     .view__head { flex-direction: column; }
 }
+
+.msg--warn {
+    color: #8c5000;
+    background: #fdf3e6;
+    border: 1px solid #f2c98a;
+    border-radius: 4px;
+    padding: 0.5rem 0.75rem;
+    margin: 0 0 0.75rem;
+}
+.tile__value--small { font-size: 1rem; padding-top: 0.35rem; }

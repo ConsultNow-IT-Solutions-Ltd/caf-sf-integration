@@ -1582,6 +1582,23 @@ passes once the advice is direction-correct; it does not prescribe the wording.
 
 ---
 
+## Suite 11 — Approvals, Reports and Admin screens
+
+Automated in `testing/automation/specs/integration-ui-screens.spec.ts`
+(`npm run sf:screens`). All read-only: each checks a screen figure against
+SOQL over the same mirror, and Approve / Reject are never pressed.
+
+| ID | Title | Priority | Expected |
+|---|---|---|---|
+| TC-INT-072 | Screen tabs and deep links | P2 | Four tabs, Compliance by default; `?c__view=approvals\|reports\|admin` opens that screen without the grid; clicking a tab writes `c__view` into the URL |
+| TC-INT-073 | Approvals queue is every In Progress task | P1 | Queue rows = `CAF_Task__c WHERE State__c = 'In Progress'` (up to 500), none extra, and the Awaiting decision tile agrees |
+| TC-INT-074 | Review opens evidence read-only | P1 | Review on a queued task opens evidence and attestation for that task, and the evidence panel offers no upload. BLOCKED if the queue is empty |
+| TC-INT-075 | Reports figures match the mirror | P1 | Requests assessed, Business applications and Out of compliance equal SOQL over the grid's rows; per-control totals add up to Requests assessed |
+| TC-INT-076 | CSV export carries the report rows, defused | P2 | One line per request plus a header; no cell starts with `=`, `+`, `-` or `@` |
+| TC-INT-077 | Admin lists every setting and control | P2 | All four CafConfig settings listed; every control, inactive ones included; the active count in the heading matches; the log section shows the log or the CAF Admin message, never an error |
+
+---
+
 ## Coverage summary
 
 | Suite | Cases | P1 |
@@ -1596,7 +1613,8 @@ passes once the advice is direction-correct; it does not prescribe the wording.
 | 8 Configuration and limits | 3 | 1 |
 | 9 Transform and data quality | 9 | 5 |
 | 10 Regressions raised by earlier runs | 1 | 0 |
-| **Total** | **71** | **33** |
+| 11 Approvals, Reports and Admin screens | 6 | 3 |
+| **Total** | **77** | **36** |
 
 **Not covered here, deliberately**
 - Engine behaviour — [TEST-CASES-SERVICENOW.md](TEST-CASES-SERVICENOW.md).
