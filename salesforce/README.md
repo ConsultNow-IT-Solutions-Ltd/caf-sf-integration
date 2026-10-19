@@ -108,6 +108,26 @@ mean inventing a column contract the client then has to trust.
 widget. Softening that here would make the two views disagree about the same
 data, which is worse than either being wrong alone.
 
+## Screens: Compliance, Approvals, Reports, Admin
+
+**Not yet deployed (2026-10-19).** The CAF Dashboard tab now has a tab bar
+across the top. **Compliance** is the grid described above and is still the
+default. The other three are separate LWCs, and each one is mounted only while
+it is selected. `?c__view=approvals|reports|admin` on
+`/lightning/n/CAF_Dashboard` opens the page on that screen.
+
+| Screen | LWC / Apex | What it shows |
+|---|---|---|
+| Approvals | `cafApprovals` / `CafApprovalsController` | Every In Progress task across all requests: due-date flags, filter by app, search. **Review** opens the existing evidence (read-only) and attestation panels. Also lists the last 25 approved/rejected decisions |
+| Reports | `cafReports` / `CafReportsController` + `CafDashboardController.getRequests` | Headline figures, a stacked status bar per control, applications least compliant first (using the grid's Overall rule), tasks by state, requests overdue or due within 30 days, and a CSV export |
+| Admin | `cafAdmin` / `CafAdminController` | Read-only. The callout log (success rate, latency, a failures-only filter), the full control catalogue including inactive controls with request counts, and each CAF Setting's stored value next to the value CafConfig actually uses |
+
+The callout log needs the new **`CAF_Admin`** permission set (CAF-221), which
+grants read on `CAF_Integration_Log__c` and is assigned in addition to
+`CAF_Integration`. Without it the Admin screen still loads but says the log
+needs that set. Shared styles live in `cafTheme`, a CSS-only module; its Jest
+mapping is in `jest.config.js`.
+
 ## Sync Health
 
 The strip above the grid asks ServiceNow for its own view of every request and

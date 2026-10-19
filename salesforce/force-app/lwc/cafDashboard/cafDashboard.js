@@ -1,6 +1,7 @@
 import { LightningElement, wire } from 'lwc';
 import { refreshApex } from '@salesforce/apex';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+import { CurrentPageReference } from 'lightning/navigation';
 import getRequests from '@salesforce/apex/CafDashboardController.getRequests';
 import getControls from '@salesforce/apex/CafDashboardController.getControls';
 import getTasks from '@salesforce/apex/CafTaskService.getTasks';
@@ -13,7 +14,23 @@ const STATUS = {
     archer_exception_approved: { label: 'Exception approved', dot: 'dot dot--blue' }
 };
 
+/**
+ * The screens under the CAF Dashboard tab. Compliance is the grid this
+ * component has always been; the others are their own components, mounted
+ * only while selected so their wires do not run behind a screen nobody is
+ * looking at.
+ */
+const VIEWS = [
+    { key: 'compliance', label: 'Compliance' },
+    { key: 'approvals', label: 'Approvals' },
+    { key: 'reports', label: 'Reports' },
+    { key: 'admin', label: 'Admin' }
+];
+
 export default class CafDashboard extends LightningElement {
+    /** Which screen is showing; c__view in the URL selects one on arrival. */
+    view = 'compliance';
+
     columns = [];
     rows = [];
     error;
@@ -46,6 +63,52 @@ export default class CafDashboard extends LightningElement {
     /** Raw wire payloads, held because the grid needs both to pivot. */
     controls;
     requests;
+
+    /**
+     * /lightning/n/CAF_Dashboard?c__view=approvals opens straight onto a
+     * screen, so a link in an email or a notification can land on it.
+     */
+    @wire(CurrentPageReference)
+    handlePageReference(ref) {
+        const wanted = ref && ref.state && ref.state.c__view;
+        if (wanted && VIEWS.some((v) => v.key === wanted)) {
+            this.view = wanted;
+        }
+    }
+
+    get views() {
+        return VIEWS.map((v) => ({
+            ...v,
+            selected: String(v.key === this.view),
+            className: v.key === this.view ? 'views__tab views__tab--on' : 'views__tab'
+        }));
+    }
+
+    get isApprovals() {
+        return this.view === 'approvals';
+    }
+
+    get isReports() {
+        return this.view === 'reports';
+    }
+
+    get isAdmin() {
+        return this.view === 'admin';
+    }
+
+    handleView(event) {
+        this.view = event.currentTarget.dataset.view;
+    }
+
+    /**
+     * An attestation on the Approvals screen moves a request's status, so the
+     * grid's requests are stale by the time anyone switches back to it.
+     */
+    async handleChildChange() {
+        if (this.wiredRequests) {
+            await refreshApex(this.wiredRequests);
+        }
+    }
 
     @wire(getControls)
     handleControls(result) {

@@ -28,6 +28,32 @@
     margin: 0.2rem 0 0;
 }
 
+/* --- screen tabs --- */
+.views {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    margin: -0.4rem 0 1rem;
+    border-bottom: 1px solid #d7dce8;
+}
+
+.views__tab {
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -1px;
+    padding: 0.5rem 0.9rem;
+    font: inherit;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #5c5f66;
+    cursor: pointer;
+}
+
+.views__tab:hover { color: #0a3176; background: #f4f6fb; }
+.views__tab:focus-visible { outline: 2px solid #0a3176; outline-offset: -2px; }
+.views__tab--on { color: #000724; border-bottom-color: #0a3176; }
+
 .caf__msg {
     padding: 1.5rem 0;
     color: #5c5f66;
