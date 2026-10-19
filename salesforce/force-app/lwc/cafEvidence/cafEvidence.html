@@ -1,7 +1,11 @@
 <template>
     <div class="ev">
         <div class="ev__head">
-            <h3 class="ev__title">{heading}</h3>
+            <div class="ev__titlerow">
+                <h3 class="ev__title">{heading}</h3>
+                <button type="button" class="ev__reload" disabled={reloadDisabled}
+                        title="Read both file lists again" onclick={handleReload}>Reload</button>
+            </div>
             <p class="ev__sub">{subheading}</p>
         </div>
 

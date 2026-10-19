@@ -15,7 +15,9 @@
                 <template lwc:else>
                     <span class={statusDot}></span>
                     <span class="sync__headline">{headline}</span>
-                    <span class="sync__when">checked {checkedAtLabel}</span>
+                    <template lwc:if={checkedAtLabel}>
+                        <span class="sync__when">checked {checkedAtLabel}</span>
+                    </template>
                 </template>
             </div>
 
@@ -58,7 +60,7 @@
                                                 data-type={d.recordType}
                                                 data-sysid={d.sysId}
                                                 data-number={d.recordNumber}
-                                                onclick={handleResync}>Re-sync</button>
+                                                onclick={handleResync}>{d.resyncLabel}</button>
                                     </td>
                                 </tr>
                             </template>

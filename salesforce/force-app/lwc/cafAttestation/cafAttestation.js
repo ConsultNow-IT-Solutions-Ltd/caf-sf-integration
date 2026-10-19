@@ -1,6 +1,7 @@
 import { LightningElement, api, wire } from 'lwc';
 import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+import LightningConfirm from 'lightning/confirm';
 import attest from '@salesforce/apex/CafAttestationService.attest';
 
 import SN_SYS_ID from '@salesforce/schema/CAF_Task__c.ServiceNow_Sys_Id__c';
@@ -113,8 +114,11 @@ export default class CafAttestation extends LightningElement {
         event.target.reportValidity();
     }
 
-    handleApprove() {
-        this.submit('approved');
+    /** Approve pressed: confirm, then send. */
+    async handleApprove() {
+        if (await this.confirmDecision('approved')) {
+            await this.submit('approved');
+        }
     }
 
     /**
@@ -122,7 +126,7 @@ export default class CafAttestation extends LightningElement {
      * only place the reason is recorded. Blank or whitespace-only is refused
      * here, on the field, rather than sent.
      */
-    handleReject() {
+    async handleReject() {
         if (!this.trimmedComments) {
             const field = this.template.querySelector('.at__comments');
             if (field) {
@@ -132,7 +136,42 @@ export default class CafAttestation extends LightningElement {
             }
             return;
         }
-        this.submit('rejected');
+        if (await this.confirmDecision('rejected')) {
+            await this.submit('rejected');
+        }
+    }
+
+    /**
+     * Either decision closes the task in ServiceNow and moves the parent
+     * request's status, and nothing on this side can reopen it. One click is
+     * too little for that, so the decision is restated and confirmed first.
+     * A dialog that cannot open (no Lightning container) counts as no.
+     *
+     * @param {string} decision 'approved' or 'rejected'
+     * @returns {Promise<boolean>} true only when the user confirmed
+     */
+    async confirmDecision(decision) {
+        if (this.busy || !this.canAttest) {
+            return false;
+        }
+        const verb = decision === 'approved' ? 'Approve' : 'Reject';
+        const criteria = this.metCriteria === 'yes' ? 'met' : 'not met';
+        try {
+            const ok = await LightningConfirm.open({
+                label: verb + ' ' + (this.number || 'this task') + '?',
+                message:
+                    'Success criteria ' + criteria + '. ' +
+                    'ServiceNow will close the task' +
+                    (decision === 'rejected' ? ' and mark the request out of compliance' : '') +
+                    '. This cannot be undone from Salesforce.',
+                theme: decision === 'approved' ? 'success' : 'warning',
+                variant: 'header'
+            });
+            return ok === true;
+        } catch (err) {
+            this.toast('Could not ask for confirmation', this.messageOf(err), 'error');
+            return false;
+        }
     }
 
     get trimmedComments() {

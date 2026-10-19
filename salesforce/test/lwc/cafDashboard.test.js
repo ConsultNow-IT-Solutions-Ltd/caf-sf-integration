@@ -328,3 +328,104 @@ describe('c-caf-dashboard screen URLs and keyboard', () => {
         expect(el.shadowRoot.activeElement.textContent).toBe('Approvals');
     });
 });
+
+describe('c-caf-dashboard grid filters, totals and panel', () => {
+    beforeEach(() => {
+        check.mockResolvedValue({ differences: [] });
+    });
+
+    afterEach(() => {
+        while (document.body.firstChild) {
+            document.body.removeChild(document.body.firstChild);
+        }
+        jest.clearAllMocks();
+    });
+
+    const apps = (el) => Array.from(el.shadowRoot.querySelectorAll('table.grid tbody th.grid__app')).map((t) => t.textContent);
+
+    async function estate() {
+        return render(CONTROLS, [
+            request('Payroll', 0, 'in_compliance'),
+            request('Payroll', 1, 'in_compliance'),
+            request('SAP HANA', 0, 'out_of_compliance'),
+            request('SAP HANA', 1, 'in_compliance'),
+            request('SAP Fiori', 0, 'approaching_due')
+        ]);
+    }
+
+    // TC-UNIT-070
+    it('narrows the grid by application name and says how many are shown', async () => {
+        const el = await estate();
+        const input = el.shadowRoot.querySelector('input.gridfilter__search');
+        input.value = 'sap';
+        input.dispatchEvent(new CustomEvent('input'));
+        await flush();
+
+        expect(apps(el)).toEqual(['SAP Fiori', 'SAP HANA']);
+        expect(el.shadowRoot.querySelector('.gridfilter__count').textContent).toBe('Showing 2 of 3 applications');
+    });
+
+    // TC-UNIT-071
+    it('hides compliant applications under "Needs attention only"', async () => {
+        const el = await estate();
+        const box = el.shadowRoot.querySelector('input.gridfilter__attention');
+        box.checked = true;
+        box.dispatchEvent(new CustomEvent('change'));
+        await flush();
+
+        expect(apps(el)).toEqual(['SAP Fiori', 'SAP HANA']);
+    });
+
+    // TC-UNIT-072
+    it('says so when no application matches, and keeps the filter bar', async () => {
+        const el = await estate();
+        const input = el.shadowRoot.querySelector('input.gridfilter__search');
+        input.value = 'zzz';
+        input.dispatchEvent(new CustomEvent('input'));
+        await flush();
+
+        expect(el.shadowRoot.querySelector('table.grid')).toBeNull();
+        expect(el.shadowRoot.textContent).toContain('No applications match the filter.');
+        expect(el.shadowRoot.querySelector('input.gridfilter__search')).not.toBeNull();
+    });
+
+    // TC-UNIT-073
+    it('totals each control column over assessed applications only, unaffected by the filter', async () => {
+        const el = await estate();
+        const footer = () => Array.from(el.shadowRoot.querySelectorAll('tfoot td.grid__total')).map((t) => t.textContent);
+
+        // BCP: Payroll green, HANA red, Fiori amber -> 1/3. DRP: Payroll, HANA green -> 2/2. Rest unassessed.
+        expect(footer()).toEqual(['1/3', '2/2', '-', '-', '-', '-', '1/3']);
+
+        const input = el.shadowRoot.querySelector('input.gridfilter__search');
+        input.value = 'payroll';
+        input.dispatchEvent(new CustomEvent('input'));
+        await flush();
+        expect(footer()).toEqual(['1/3', '2/2', '-', '-', '-', '-', '1/3']);
+    });
+
+    // TC-UNIT-074
+    it('counts each status and N/A in the legend', async () => {
+        const el = await estate();
+        const counts = Array.from(el.shadowRoot.querySelectorAll('.legend li')).map((li) =>
+            li.querySelector('.legend__n').textContent
+        );
+        // green, amber, red, blue, N/A (3 apps x 6 controls = 18 cells, 5 assessed)
+        expect(counts).toEqual(['3', '1', '1', '0', '13']);
+    });
+
+    // TC-UNIT-075
+    it('opens the task panel focused, and Escape closes it', async () => {
+        const el = await estate();
+        el.shadowRoot.querySelector('button.cellbtn').click();
+        await flush();
+
+        const panel = el.shadowRoot.querySelector('section.panel');
+        expect(panel).not.toBeNull();
+        expect(el.shadowRoot.activeElement).toBe(panel);
+
+        panel.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+        await flush();
+        expect(el.shadowRoot.querySelector('section.panel')).toBeNull();
+    });
+});
