@@ -322,3 +322,14 @@
 
 .panel:focus { outline: none; }
 .panel:focus-visible { outline: 2px solid #0a3176; outline-offset: 2px; }
+
+/* --- overdue ring and selected cell --- */
+.cellbtn--overdue { box-shadow: 0 0 0 2px #ba0517 inset; }
+.cellbtn--selected { background: #dfe6f5; outline: 2px solid #0a3176; outline-offset: -2px; }
+.legend__ring { display: inline-block; cursor: default; }
+.gridfilter__sort {
+    font: inherit; font-size: 0.8125rem; color: #16171a;
+    border: 1px solid #c9cede; border-radius: 4px; padding: 0.3rem 0.5rem; background: #fff;
+}
+.gridfilter__field--sort { flex: 0 0 auto; }
+.panel__summary { margin: -0.5rem 0 0.8rem; font-size: 0.75rem; color: #5c5f66; }

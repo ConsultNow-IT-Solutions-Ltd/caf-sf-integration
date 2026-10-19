@@ -144,6 +144,25 @@ export default class CafSyncHealth extends LightningElement {
             });
     }
 
+    /**
+     * The differences counted by record type, e.g. "2 request · 1 task", so
+     * the scale of the drift is readable before the table.
+     *
+     * @returns {string} '' when in sync or nothing listed
+     */
+    get breakdown() {
+        const list = this.differences;
+        if (!list.length) {
+            return '';
+        }
+        const byType = new Map();
+        list.forEach((d) => {
+            const type = d.recordType || 'record';
+            byType.set(type, (byType.get(type) || 0) + 1);
+        });
+        return [...byType.entries()].map(([type, n]) => n + ' ' + type).join(' \u00b7 ');
+    }
+
     get hasReport() {
         return !!this.report && !this.error;
     }

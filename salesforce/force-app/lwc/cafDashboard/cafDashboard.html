@@ -47,6 +47,14 @@
                            onchange={handleAttentionOnly} />
                     Needs attention only
                 </label>
+                <label class="gridfilter__field gridfilter__field--sort">
+                    <span class="gridfilter__label">Sort</span>
+                    <select class="gridfilter__sort" onchange={handleSort}>
+                        <template for:each={sortOptions} for:item="o">
+                            <option key={o.value} value={o.value} selected={o.selected}>{o.label}</option>
+                        </template>
+                    </select>
+                </label>
                 <span class="gridfilter__count" aria-live="polite">{rowCountLabel}</span>
             </div>
 
@@ -72,7 +80,7 @@
                                             <span class="na" title={cell.title}>N/A</span>
                                         </template>
                                         <template lwc:else>
-                                            <button type="button" class="cellbtn" title={cell.title}
+                                            <button type="button" class={cell.cls} title={cell.title}
                                                     disabled={cell.disabled}
                                                     data-sysid={cell.sysId}
                                                     data-number={cell.number}
@@ -110,6 +118,7 @@
                     <li key={l.key}><span class={l.dot}></span>{l.label} <span class="legend__n">{l.count}</span></li>
                 </template>
                 <li><span class="na">N/A</span>Not assessed <span class="legend__n">{naCount}</span></li>
+                <li><span class="cellbtn cellbtn--overdue legend__ring"><span class="dot dot--none"></span></span>Past planned date <span class="legend__n">{overdueCount}</span></li>
             </ul>
         </template>
 
@@ -123,6 +132,9 @@
                     <div>
                         <h2 class="panel__title">{selectedNumber}</h2>
                         <p class="panel__sub">{selectedControl}</p>
+                        <template lwc:if={taskSummary}>
+                            <p class="panel__summary">{taskSummary}</p>
+                        </template>
                     </div>
                     <button type="button" class="panel__close" onclick={handleClose}>Close</button>
                 </div>

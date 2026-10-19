@@ -34,6 +34,9 @@
             <p class="sync__summary">{summary}</p>
 
             <template lwc:if={hasDrift}>
+                <template lwc:if={breakdown}>
+                    <p class="sync__breakdown">Differences by type: {breakdown}</p>
+                </template>
                 <div class="sync__scroll">
                     <table class="drift">
                         <thead>
