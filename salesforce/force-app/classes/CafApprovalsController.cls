@@ -16,6 +16,26 @@
  */
 public with sharing class CafApprovalsController {
 
+    /** Row cap for the queue. The screen warns when a reply is this long. */
+    @TestVisible
+    private static final Integer QUEUE_LIMIT = 500;
+
+    /** Row cap for the recently decided list. */
+    @TestVisible
+    private static final Integer DECISION_LIMIT = 25;
+
+    /**
+     * The approver's queue: every task In Progress, soonest due first, with
+     * its parent request's number, application and control.
+     *
+     * A task whose parent lookup is empty still comes back, with a null
+     * CAF_Request__r; the LWC renders those columns blank rather than this
+     * method dropping a task someone is waiting on.
+     *
+     * @return up to QUEUE_LIMIT tasks; never null
+     * @throws QueryException when the user lacks read access to CAF_Task__c
+     *         or one of the fields (WITH USER_MODE)
+     */
     @AuraEnabled(cacheable=true)
     public static List<CAF_Task__c> getQueue() {
         return [
@@ -29,7 +49,7 @@ public with sharing class CafApprovalsController {
             WHERE State__c = 'In Progress'
             WITH USER_MODE
             ORDER BY Planned_Completion_Date__c ASC NULLS LAST, SN_Number__c
-            LIMIT 500
+            LIMIT :QUEUE_LIMIT
         ];
     }
 
@@ -37,6 +57,10 @@ public with sharing class CafApprovalsController {
      * The last decisions that came back from ServiceNow, newest first. The
      * mirror's LastModifiedDate is when the push landed, which is close enough
      * to when the decision was made for a "recently decided" list.
+     *
+     * @return up to DECISION_LIMIT tasks whose Approval__c is approved or
+     *         rejected; never null
+     * @throws QueryException when the user lacks read access (WITH USER_MODE)
      */
     @AuraEnabled(cacheable=true)
     public static List<CAF_Task__c> getRecentDecisions() {
@@ -50,7 +74,7 @@ public with sharing class CafApprovalsController {
             WHERE Approval__c IN ('approved', 'rejected')
             WITH USER_MODE
             ORDER BY LastModifiedDate DESC
-            LIMIT 25
+            LIMIT :DECISION_LIMIT
         ];
     }
 }
