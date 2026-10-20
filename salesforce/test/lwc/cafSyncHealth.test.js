@@ -163,3 +163,49 @@ describe('c-caf-sync-health type filter', () => {
         expect(rows(el)).toHaveLength(2);
     });
 });
+
+describe('c-caf-sync-health stale check', () => {
+    afterEach(() => {
+        while (document.body.firstChild) {
+            document.body.removeChild(document.body.firstChild);
+        }
+        jest.restoreAllMocks();
+        jest.clearAllMocks();
+    });
+
+    const minutesAgo = (m) => new Date(Date.now() - m * 60000).toISOString();
+    const report = (checkedAt) => ({ inSync: true, differences: [], comparedCount: 1, snRequests: 1, snTasks: 0, checkedAt });
+
+    // TC-UNIT-131
+    it('flags a check 15 minutes old or more, and not a fresh one', async () => {
+        const old = await mount(report(minutesAgo(20)));
+        expect(old.shadowRoot.querySelector('.sync__when').className).toBe('sync__when sync__when--stale');
+        expect(old.shadowRoot.querySelector('.sync__stale').textContent).toBe('Re-check for a current answer');
+
+        const fresh = await mount(report(minutesAgo(2)));
+        expect(fresh.shadowRoot.querySelector('.sync__when').className).toBe('sync__when');
+        expect(fresh.shadowRoot.querySelector('.sync__stale')).toBeNull();
+
+        const unreadable = await mount(report('not-a-time'));
+        expect(unreadable.shadowRoot.querySelector('.sync__stale')).toBeNull();
+    });
+
+    // TC-UNIT-132
+    it('turns stale as the clock moves on, without a re-check', async () => {
+        const ticks = [];
+        jest.spyOn(window, 'setInterval').mockImplementation((fn) => {
+            ticks.push(fn);
+            return 1;
+        });
+        const el = await mount(report(minutesAgo(14)));
+        expect(el.shadowRoot.querySelector('.sync__stale')).toBeNull();
+
+        const later = Date.now() + 2 * 60000;
+        jest.spyOn(Date, 'now').mockReturnValue(later);
+        ticks.forEach((fn) => fn());
+        await flush();
+
+        expect(el.shadowRoot.querySelector('.sync__stale')).not.toBeNull();
+        expect(check).toHaveBeenCalledTimes(1);
+    });
+});
