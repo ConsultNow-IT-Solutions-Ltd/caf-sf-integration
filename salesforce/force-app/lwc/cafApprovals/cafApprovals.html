@@ -55,6 +55,11 @@
                            onchange={handleOverdueOnly} />
                     Overdue only
                 </label>
+                <template lwc:if={isFiltered}>
+                    <button type="button" class="btn btn--ghost filters__clear" onclick={handleClearFilters}>
+                        Clear filters
+                    </button>
+                </template>
             </div>
 
             <template lwc:if={queueCapped}>
