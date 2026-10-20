@@ -35,6 +35,14 @@
                 </ul>
 
                 <div class="filters">
+                    <label class="filters__field">
+                        <span>Operation</span>
+                        <select class="filters__select filters__operation" onchange={handleOperationFilter}>
+                            <template for:each={operationOptions} for:item="o">
+                                <option key={o.value} value={o.value} selected={o.selected}>{o.label}</option>
+                            </template>
+                        </select>
+                    </label>
                     <label class="filters__check">
                         <input type="checkbox" checked={failuresOnly} onchange={handleFailuresOnly} />
                         Failures only
