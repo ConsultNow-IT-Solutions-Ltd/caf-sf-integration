@@ -368,3 +368,105 @@ describe('c-caf-approvals with missing or bad data', () => {
         expect(pill.className).toContain('pill--none');
     });
 });
+
+describe('c-caf-approvals filters and tiles', () => {
+    afterEach(() => {
+        while (document.body.firstChild) {
+            document.body.removeChild(document.body.firstChild);
+        }
+        jest.clearAllMocks();
+    });
+
+    const search = async (el, value) => {
+        const input = el.shadowRoot.querySelector('input[type="search"]');
+        input.value = value;
+        input.dispatchEvent(new CustomEvent('input'));
+        await flush();
+    };
+
+    // TC-UNIT-109
+    it('shows the loading message until the queue arrives', async () => {
+        const el = createElement('c-caf-approvals', { is: CafApprovals });
+        document.body.appendChild(el);
+        await flush();
+        expect(el.shadowRoot.querySelector('.msg').textContent).toContain('Loading the approval queue');
+        expect(el.shadowRoot.querySelector('.filters')).toBeNull();
+
+        getQueue.emit([task(1, 'CRM', null)]);
+        await flush();
+        expect(el.shadowRoot.textContent).not.toContain('Loading the approval queue');
+        expect(queueRows(el)).toHaveLength(1);
+    });
+
+    // TC-UNIT-110
+    it('searches without regard to case or surrounding spaces, across request and control', async () => {
+        const el = await render([
+            task(1, 'CRM', null),
+            task(2, 'CRM', null, { CAF_Request__r: { SN_Number__c: 'RCAF0000002', Business_Application__c: 'CRM', CAF_Control__c: 'Patching' } })
+        ]);
+
+        await search(el, '  rcaf0000001  ');
+        expect(queueRows(el)).toHaveLength(1);
+        expect(queueRows(el)[0].textContent).toContain('CAFT0000001');
+
+        await search(el, 'PATCH');
+        expect(queueRows(el)).toHaveLength(1);
+        expect(queueRows(el)[0].textContent).toContain('CAFT0000002');
+
+        await search(el, '   ');
+        expect(queueRows(el)).toHaveLength(2);
+    });
+
+    // TC-UNIT-111
+    it('applies the application and overdue filters together, and All applications undoes the first', async () => {
+        const el = await render([task(1, 'CRM', iso(-2)), task(2, 'CRM', iso(6)), task(3, 'HR', iso(-1))]);
+        const select = el.shadowRoot.querySelector('select');
+        select.value = 'CRM';
+        select.dispatchEvent(new CustomEvent('change'));
+        const box = el.shadowRoot.querySelector('input.filters__overdue');
+        box.checked = true;
+        box.dispatchEvent(new CustomEvent('change'));
+        await flush();
+
+        expect(queueRows(el)).toHaveLength(1);
+        expect(queueRows(el)[0].textContent).toContain('CAFT0000001');
+
+        select.value = '';
+        select.dispatchEvent(new CustomEvent('change'));
+        await flush();
+        expect(Array.from(queueRows(el)).map((r) => r.querySelector('td').textContent)).toEqual([
+            'CAFT0000001',
+            'CAFT0000003'
+        ]);
+    });
+
+    // TC-UNIT-112
+    it('counts approvals and rejections only, and shows the date part of the update time', async () => {
+        const el = await render([], [
+            task(1, 'CRM', null, { Approval__c: 'approved', LastModifiedDate: '2026-10-01T10:00:00.000Z' }),
+            task(2, 'CRM', null, { Approval__c: 'approved', LastModifiedDate: '2026-10-02T10:00:00.000Z' }),
+            task(3, 'CRM', null, { Approval__c: 'rejected', LastModifiedDate: '2026-10-03T10:00:00.000Z' }),
+            task(4, 'CRM', null, { Approval__c: 'cancelled', LastModifiedDate: '2026-10-04T10:00:00.000Z' })
+        ]);
+
+        const values = Array.from(el.shadowRoot.querySelectorAll('.tile__value')).map((t) => t.textContent);
+        expect(values[2]).toBe('2');
+        expect(values[3]).toBe('1');
+        const firstRow = el.shadowRoot.querySelector('table.tasks:not(.queue) tbody tr');
+        expect(firstRow.lastElementChild.textContent).toBe('2026-10-01');
+    });
+
+    // TC-UNIT-113
+    it('shows a queue that fails to load as an error, with no filters or table', async () => {
+        const el = createElement('c-caf-approvals', { is: CafApprovals });
+        document.body.appendChild(el);
+        getQueue.error({ message: 'Insufficient access to CAF_Task__c' });
+        getRecentDecisions.emit([]);
+        await flush();
+
+        expect(el.shadowRoot.querySelector('.msg--error').textContent).toBe('Insufficient access to CAF_Task__c');
+        expect(el.shadowRoot.querySelector('.filters')).toBeNull();
+        expect(el.shadowRoot.querySelector('table.queue')).toBeNull();
+        expect(el.shadowRoot.textContent).not.toContain('Loading the approval queue');
+    });
+});
