@@ -110,6 +110,11 @@ TC-UNIT-001 covers the direction no live case can reach without an upload.
 | TC-UNIT-106 | Refresh re-reads both the queue and the recent decisions | |
 | TC-UNIT-107 | A decision refreshes both lists and sends a bubbling, composed `cafchange` | The dashboard's grid mustn't be stale on return |
 | TC-UNIT-108 | A failed refresh shows its message in place of the queue, not an uncaught error | |
+| TC-UNIT-109 | "Loading the approval queue" shows, with no filters, until the queue wire delivers | |
+| TC-UNIT-110 | Search ignores case and surrounding spaces and matches the request number and control; spaces alone don't filter | |
+| TC-UNIT-111 | Application and Overdue only filters apply together; choosing "All applications" brings the other applications back | |
+| TC-UNIT-112 | Approved and Rejected tiles count only those two values; Updated shows the date part of `LastModifiedDate` | An unknown decision mustn't be counted as either |
+| TC-UNIT-113 | A queue that fails to load shows its message with no filters, table or loading text | |
 
 ## LWC: `cafReports` (`salesforce/test/lwc/cafReports.test.js`)
 
