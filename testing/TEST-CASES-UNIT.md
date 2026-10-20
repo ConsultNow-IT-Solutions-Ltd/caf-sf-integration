@@ -119,6 +119,8 @@ TC-UNIT-001 covers the direction no live case can reach without an upload.
 | TC-UNIT-115 | A filter that hides the row under review leaves the panel open; clearing it brings the highlight back | Filtering mustn't lose a review in progress |
 | TC-UNIT-116 | Refresh leaves the review panel open on the same task | |
 | TC-UNIT-117 | Rows with no Id, sys_id or number each render once, with distinct keys and Review disabled, and a click opens nothing | Malformed rows mustn't collapse into one or open an empty panel |
+| TC-UNIT-120 | Clear filters resets application, search and Overdue only in one press, and the controls show the reset | One way back from "No tasks match the filter" |
+| TC-UNIT-121 | Clear filters shows only while a filter narrows the queue; spaces alone don't count | |
 
 ## LWC: `cafReports` (`salesforce/test/lwc/cafReports.test.js`)
 

@@ -338,6 +338,13 @@ export default class CafApprovals extends LightningElement {
         this.search = text(event && event.target && event.target.value);
     }
 
+    /** Clears the application, search and overdue filters together. */
+    handleClearFilters() {
+        this.appFilter = ALL;
+        this.search = '';
+        this.overdueOnly = false;
+    }
+
     /**
      * Opens the review panel for the task on the clicked row. A row with no
      * record Id or no ServiceNow sys_id has nothing the panels can load or
