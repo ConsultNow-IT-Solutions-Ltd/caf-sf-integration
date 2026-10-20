@@ -107,6 +107,9 @@ TC-UNIT-001 covers the direction no live case can reach without an upload.
 | TC-UNIT-103 | Review highlights its row and titles the panel with the task number; Done closes it and clears the highlight | The approver can see which task they are deciding |
 | TC-UNIT-104 | An evidence count is passed to attestation only when its sys_id is the open task's, and only as a number | A late reply from a closed panel mustn't unlock the decision |
 | TC-UNIT-105 | Opening a second review clears the first task's evidence count | One task's evidence mustn't gate another's decision |
+| TC-UNIT-106 | Refresh re-reads both the queue and the recent decisions | |
+| TC-UNIT-107 | A decision refreshes both lists and sends a bubbling, composed `cafchange` | The dashboard's grid mustn't be stale on return |
+| TC-UNIT-108 | A failed refresh shows its message in place of the queue, not an uncaught error | |
 
 ## LWC: `cafReports` (`salesforce/test/lwc/cafReports.test.js`)
 

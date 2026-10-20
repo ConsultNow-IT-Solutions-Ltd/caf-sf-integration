@@ -3,6 +3,9 @@ import CafApprovals from 'c/cafApprovals';
 import getQueue from '@salesforce/apex/CafApprovalsController.getQueue';
 import getRecentDecisions from '@salesforce/apex/CafApprovalsController.getRecentDecisions';
 import getEvidence from '@salesforce/apex/CafEvidenceService.getEvidence';
+import { refreshApex } from '@salesforce/apex';
+
+jest.mock('@salesforce/apex', () => ({ refreshApex: jest.fn(() => Promise.resolve()) }), { virtual: true });
 
 jest.mock(
     '@salesforce/apex/CafApprovalsController.getQueue',
@@ -267,6 +270,56 @@ describe('c-caf-approvals review panel', () => {
         const attestation = el.shadowRoot.querySelector('c-caf-attestation');
         expect(attestation.snSysId).toBe('sys2');
         expect(attestation.evidenceCount).toBeUndefined();
+    });
+});
+
+describe('c-caf-approvals refresh', () => {
+    afterEach(() => {
+        while (document.body.firstChild) {
+            document.body.removeChild(document.body.firstChild);
+        }
+        refreshApex.mockImplementation(() => Promise.resolve());
+        jest.clearAllMocks();
+    });
+
+    // TC-UNIT-106
+    it('Refresh re-reads both the queue and the recent decisions', async () => {
+        const el = await render([task(1, 'CRM', null)]);
+        el.shadowRoot.querySelector('.view__head button').click();
+        await flush();
+
+        expect(refreshApex).toHaveBeenCalledTimes(2);
+        const refreshed = refreshApex.mock.calls.map(([w]) => w.data);
+        expect(refreshed).toContainEqual([task(1, 'CRM', null)]);
+        expect(refreshed).toContainEqual([]);
+    });
+
+    // TC-UNIT-107
+    it('a decision refreshes the lists and tells the dashboard', async () => {
+        const el = await render([task(1, 'CRM', null)]);
+        const onChange = jest.fn();
+        document.body.addEventListener('cafchange', onChange);
+        el.shadowRoot.querySelector('table.queue button').click();
+        await flush();
+
+        el.shadowRoot.querySelector('c-caf-attestation').dispatchEvent(new CustomEvent('attested'));
+        await flush();
+
+        expect(refreshApex).toHaveBeenCalledTimes(2);
+        expect(onChange).toHaveBeenCalledTimes(1);
+        expect(onChange.mock.calls[0][0].composed).toBe(true);
+        document.body.removeEventListener('cafchange', onChange);
+    });
+
+    // TC-UNIT-108
+    it('shows a failed refresh instead of throwing it', async () => {
+        refreshApex.mockImplementation(() => Promise.reject({ body: { message: 'Session expired' } }));
+        const el = await render([task(1, 'CRM', null)]);
+        el.shadowRoot.querySelector('.view__head button').click();
+        await flush();
+
+        expect(el.shadowRoot.querySelector('.msg--error').textContent).toBe('Session expired');
+        expect(el.shadowRoot.querySelector('table.queue')).toBeNull();
     });
 });
 
