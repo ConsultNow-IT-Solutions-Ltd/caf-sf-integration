@@ -150,6 +150,9 @@ TC-UNIT-001 covers the direction no live case can reach without an upload.
 | TC-UNIT-054 | `Logging_Enabled = false` shows a warning that the log has stopped | A quiet log mustn't read as "nothing failing" |
 | TC-UNIT-055 | Long errors cut to 140 characters, full text in the tooltip | |
 | TC-UNIT-056 | Newest call time shown | |
+| TC-UNIT-124 | Operation dropdown lists each logged operation once, sorted; choosing one narrows the log; the tiles stay on the whole log | |
+| TC-UNIT-125 | An operation a refresh no longer returns falls back to "All operations" | An empty log with no visible reason |
+| TC-UNIT-126 | Operation filter and Failures only apply together | |
 
 ## LWC: missing or bad data on the new screens
 
