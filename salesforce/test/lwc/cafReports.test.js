@@ -323,3 +323,47 @@ describe('c-caf-reports due dates, overdue only', () => {
         expect(none.shadowRoot.querySelector('.due__empty').textContent).toBe('Nothing overdue or due in the next 30 days.');
     });
 });
+
+describe('c-caf-reports application drill-in', () => {
+    afterEach(() => {
+        while (document.body.firstChild) {
+            document.body.removeChild(document.body.firstChild);
+        }
+        jest.clearAllMocks();
+    });
+
+    const appLink = (el, app) =>
+        Array.from(el.shadowRoot.querySelectorAll('button.app-link')).find((b) => b.textContent === app);
+
+    // TC-UNIT-135
+    it('scopes the report to an application clicked in "By application", and a second click goes back to all', async () => {
+        const el = await render([
+            request('CRM', 0, 'in_compliance'),
+            request('CRM', 1, 'out_of_compliance'),
+            request('HR', 0, 'in_compliance')
+        ]);
+        expect(tile(el, 'Requests assessed')).toBe('3');
+
+        appLink(el, 'CRM').click();
+        await flush();
+        expect(tile(el, 'Requests assessed')).toBe('2');
+        expect(el.shadowRoot.querySelector('select.filters__app').value).toBe('CRM');
+        expect(appLink(el, 'HR')).toBeUndefined();
+        expect(appLink(el, 'CRM').title).toBe('Show all applications');
+
+        appLink(el, 'CRM').click();
+        await flush();
+        expect(tile(el, 'Requests assessed')).toBe('3');
+        expect(el.shadowRoot.querySelector('select.filters__app').value).toBe('');
+    });
+
+    // TC-UNIT-136
+    it('drills into requests with no application', async () => {
+        const el = await render([request('CRM', 0, 'in_compliance'), request('', 0, 'out_of_compliance'), request(null, 1, 'in_compliance')]);
+        appLink(el, '(No application)').click();
+        await flush();
+
+        expect(tile(el, 'Requests assessed')).toBe('2');
+        expect(appLink(el, 'CRM')).toBeUndefined();
+    });
+});
