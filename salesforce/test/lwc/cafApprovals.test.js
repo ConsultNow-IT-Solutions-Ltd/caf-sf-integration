@@ -156,6 +156,41 @@ describe('c-caf-approvals', () => {
         expect(queueRows(el)).toHaveLength(1);
         expect(el.shadowRoot.querySelector('.msg--error').textContent).toContain('Recent decisions could not be loaded');
     });
+
+    // TC-UNIT-100
+    it('labels due dates today, within a week and further out', async () => {
+        const el = await render([task(1, 'CRM', iso(0)), task(2, 'CRM', iso(3)), task(3, 'CRM', iso(30))]);
+        const due = Array.from(queueRows(el)).map((r) => r.querySelector('td:nth-child(6) span'));
+
+        expect(due[0].textContent).toBe(iso(0) + ' (today)');
+        expect(due[0].className).toBe('due due--soon');
+        expect(due[1].textContent).toBe(iso(3) + ' (3d)');
+        expect(due[1].className).toBe('due due--soon');
+        expect(due[2].textContent).toBe(iso(30));
+        expect(due[2].className).toBe('due');
+        expect(el.shadowRoot.querySelectorAll('.tile__value')[1].textContent).toBe('0');
+    });
+
+    // TC-UNIT-101
+    it('lists each application once, sorted, after "All applications"', async () => {
+        const el = await render([task(1, 'HR', null), task(2, 'CRM', null), task(3, 'HR', null), task(4, '', null)]);
+        const options = Array.from(el.shadowRoot.querySelectorAll('select option')).map((o) => o.textContent);
+
+        expect(options).toEqual(['All applications', 'CRM', 'HR']);
+    });
+
+    // TC-UNIT-102
+    it('tells a filtered-out queue apart from an empty one', async () => {
+        const el = await render([task(1, 'CRM', iso(10))]);
+        const box = el.shadowRoot.querySelector('input.filters__overdue');
+        box.checked = true;
+        box.dispatchEvent(new CustomEvent('change'));
+        await flush();
+
+        expect(queueRows(el)).toHaveLength(0);
+        expect(el.shadowRoot.textContent).toContain('No tasks match the filter.');
+        expect(el.shadowRoot.textContent).not.toContain('Nothing is waiting on an attestation');
+    });
 });
 
 describe('c-caf-approvals with missing or bad data', () => {
