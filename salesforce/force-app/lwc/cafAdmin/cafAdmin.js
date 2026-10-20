@@ -236,10 +236,33 @@ export default class CafAdmin extends LightningElement {
      * @returns {object[]}
      */
     get calls() {
-        const op = this.operationOptions.some((o) => o.value === this.operationFilter) ? this.operationFilter : '';
+        const op = this.activeOperation;
         return this.allCalls
             .filter((c) => !op || text(c.Operation__c) === op)
             .filter((c) => !this.failuresOnly || !c.ok);
+    }
+
+    /** @returns {string} the operation filtering the log, or '' when none is, or it is no longer logged */
+    get activeOperation() {
+        return this.operationOptions.some((o) => o.value === this.operationFilter) ? this.operationFilter : '';
+    }
+
+    /**
+     * What to say when the table has no rows. An empty log, a log with no
+     * failures and a filter that matches nothing are different answers; all
+     * three used to read "No callouts logged".
+     *
+     * @returns {string}
+     */
+    get emptyLogMessage() {
+        const total = this.allCalls.length;
+        if (!total) {
+            return 'No callouts logged.';
+        }
+        if (this.failuresOnly && !this.activeOperation) {
+            return total === 1 ? 'The one logged call did not fail.' : 'None of the ' + total + ' logged calls failed.';
+        }
+        return 'No logged calls match the filter.';
     }
 
     /** @returns {boolean} whether the filtered log has rows */

@@ -224,3 +224,45 @@ describe('c-caf-admin callout log filters', () => {
         expect(logRows(el)[0].textContent).toContain('LOG-3');
     });
 });
+
+describe('c-caf-admin empty callout log', () => {
+    afterEach(() => {
+        while (document.body.firstChild) {
+            document.body.removeChild(document.body.firstChild);
+        }
+        jest.clearAllMocks();
+    });
+
+    const ok = (n, operation) => ({ Id: 'l' + n, Name: 'LOG-' + n, Operation__c: operation, Succeeded__c: true });
+    const message = (el) => el.shadowRoot.querySelector('.log-empty').textContent;
+    const failuresOnly = async (el) => {
+        const box = el.shadowRoot.querySelector('input[type="checkbox"]');
+        box.checked = true;
+        box.dispatchEvent(new CustomEvent('change'));
+        await flush();
+    };
+
+    // TC-UNIT-127
+    it('says no call failed, rather than that nothing was logged, when Failures only empties the table', async () => {
+        const el = await render(overview({ calls: [ok(1, 'attest'), ok(2, 'attest')] }));
+        await failuresOnly(el);
+        expect(message(el)).toBe('None of the 2 logged calls failed.');
+
+        const one = await render(overview({ calls: [ok(1, 'attest')] }));
+        await failuresOnly(one);
+        expect(message(one)).toBe('The one logged call did not fail.');
+    });
+
+    // TC-UNIT-128
+    it('tells a filter that matches nothing apart from an empty log', async () => {
+        const el = await render(overview({ calls: [ok(1, 'attest'), ok(2, 'getEvidence')] }));
+        const select = el.shadowRoot.querySelector('select.filters__operation');
+        select.value = 'attest';
+        select.dispatchEvent(new CustomEvent('change'));
+        await failuresOnly(el);
+        expect(message(el)).toBe('No logged calls match the filter.');
+
+        const empty = await render(overview({ calls: [] }));
+        expect(message(empty)).toBe('No callouts logged.');
+    });
+});
