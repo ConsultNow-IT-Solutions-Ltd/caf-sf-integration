@@ -101,6 +101,9 @@ TC-UNIT-001 covers the direction no live case can reach without an upload.
 | TC-UNIT-035 | Overdue only shows only past-due tasks | |
 | TC-UNIT-036 | A queue at the 500-row Apex limit says so | A cut-off queue mustn't read as complete |
 | TC-UNIT-037 | Decisions list failing leaves the queue on screen with its own error | One failure doesn't hide the other list |
+| TC-UNIT-100 | Due today reads "(today)", within 7 days "(Nd)", both amber; further out is plain; none count as past due | Soon-due work stands out without being called late |
+| TC-UNIT-101 | Application dropdown lists each application once, sorted, after "All applications"; blank applications left out | |
+| TC-UNIT-102 | A filter that hides every row says "No tasks match the filter", not "Nothing is waiting" | An empty filter result mustn't read as an empty queue |
 
 ## LWC: `cafReports` (`salesforce/test/lwc/cafReports.test.js`)
 
