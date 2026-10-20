@@ -104,6 +104,9 @@ TC-UNIT-001 covers the direction no live case can reach without an upload.
 | TC-UNIT-100 | Due today reads "(today)", within 7 days "(Nd)", both amber; further out is plain; none count as past due | Soon-due work stands out without being called late |
 | TC-UNIT-101 | Application dropdown lists each application once, sorted, after "All applications"; blank applications left out | |
 | TC-UNIT-102 | A filter that hides every row says "No tasks match the filter", not "Nothing is waiting" | An empty filter result mustn't read as an empty queue |
+| TC-UNIT-103 | Review highlights its row and titles the panel with the task number; Done closes it and clears the highlight | The approver can see which task they are deciding |
+| TC-UNIT-104 | An evidence count is passed to attestation only when its sys_id is the open task's, and only as a number | A late reply from a closed panel mustn't unlock the decision |
+| TC-UNIT-105 | Opening a second review clears the first task's evidence count | One task's evidence mustn't gate another's decision |
 
 ## LWC: `cafReports` (`salesforce/test/lwc/cafReports.test.js`)
 
