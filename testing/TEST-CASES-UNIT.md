@@ -142,6 +142,8 @@ TC-UNIT-001 covers the direction no live case can reach without an upload.
 | TC-UNIT-047 | CSV cells starting `=`, `+`, `-` or `@` are defused; separators quoted | CSV formula injection: descriptions come from ServiceNow |
 | TC-UNIT-048 | Export carries only the filtered rows, with the application in the file name | |
 | TC-UNIT-049 | Task-summary failure shown in its panel; rest of report stays | |
+| TC-UNIT-133 | Overdue only narrows the due-dates table to late requests; the heading still gives both counts | |
+| TC-UNIT-134 | Overdue only with nothing late says "Nothing overdue. N due in the next 30 days." | An empty table mustn't read as nothing coming due |
 
 ## LWC: `cafAdmin` (`salesforce/test/lwc/cafAdmin.test.js`)
 

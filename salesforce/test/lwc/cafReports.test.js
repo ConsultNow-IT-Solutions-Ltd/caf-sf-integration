@@ -276,3 +276,50 @@ describe('c-caf-reports with missing or bad data', () => {
         expect(tile(el, 'Requests assessed')).toBe('2');
     });
 });
+
+describe('c-caf-reports due dates, overdue only', () => {
+    afterEach(() => {
+        while (document.body.firstChild) {
+            document.body.removeChild(document.body.firstChild);
+        }
+        jest.clearAllMocks();
+    });
+
+    const dueTable = (el) =>
+        Array.from(el.shadowRoot.querySelectorAll('table.tasks')).find((t) => t.textContent.includes('Planned completion'));
+    const overdueOnly = async (el) => {
+        const box = el.shadowRoot.querySelector('input.due__overdue');
+        box.checked = true;
+        box.dispatchEvent(new CustomEvent('change'));
+        await flush();
+    };
+
+    // TC-UNIT-133
+    it('narrows the due-dates table to overdue requests, keeping both counts in the heading', async () => {
+        const el = await render([
+            request('CRM', 0, 'out_of_compliance', iso(-4)),
+            request('CRM', 0, 'approaching_due', iso(6)),
+            request('HR', 1, 'out_of_compliance', iso(-1))
+        ]);
+        expect(dueTable(el).querySelectorAll('tbody tr')).toHaveLength(3);
+
+        await overdueOnly(el);
+
+        const rows = Array.from(dueTable(el).querySelectorAll('tbody tr'));
+        expect(rows).toHaveLength(2);
+        rows.forEach((r) => expect(r.textContent).toContain('overdue'));
+        expect(el.shadowRoot.textContent).toContain('2 overdue, 1 due in the next 30 days');
+    });
+
+    // TC-UNIT-134
+    it('says nothing is overdue, and how much is coming due, when Overdue only empties the table', async () => {
+        const el = await render([request('CRM', 0, 'approaching_due', iso(3)), request('HR', 0, 'approaching_due', iso(9))]);
+        await overdueOnly(el);
+
+        expect(dueTable(el)).toBeUndefined();
+        expect(el.shadowRoot.querySelector('.due__empty').textContent).toBe('Nothing overdue. 2 due in the next 30 days.');
+
+        const none = await render([request('CRM', 0, 'in_compliance', iso(3))]);
+        expect(none.shadowRoot.querySelector('.due__empty').textContent).toBe('Nothing overdue or due in the next 30 days.');
+    });
+});
