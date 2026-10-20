@@ -3,6 +3,7 @@ import { refreshApex } from '@salesforce/apex';
 import getRequests from '@salesforce/apex/CafDashboardController.getRequests';
 import getControls from '@salesforce/apex/CafDashboardController.getControls';
 import getTaskSummary from '@salesforce/apex/CafReportsController.getTaskSummary';
+import { csvCell } from 'c/cafCsv';
 
 /** Same order and colours as the grid's legend. */
 const STATUSES = [
@@ -59,22 +60,8 @@ function appOf(r) {
     return app === null || app === undefined || String(app).trim() === '' ? NO_APP : String(app);
 }
 
-/**
- * One CSV cell. Quoted when it holds a separator, and defused when it starts
- * with a character a spreadsheet reads as a formula: descriptions come from
- * ServiceNow, where anyone who can edit a request can type "=HYPERLINK(...)",
- * and opening the export must not run it.
- *
- * @param {*} v any field value; null and undefined become an empty cell
- * @returns {string}
- */
-export function csvCell(v) {
-    let s = v === null || v === undefined ? '' : String(v);
-    if (/^[=+\-@\t\r]/.test(s)) {
-        s = "'" + s;
-    }
-    return /[",\r\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
-}
+// Kept as a named export here so existing imports from c/cafReports still work.
+export { csvCell };
 
 /**
  * Compliance reporting over the mirror. Every figure is computed from the

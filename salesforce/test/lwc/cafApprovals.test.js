@@ -607,3 +607,60 @@ describe('c-caf-approvals clear filters', () => {
         expect(clearButton(el)).not.toBeNull();
     });
 });
+
+describe('c-caf-approvals export', () => {
+    let downloads;
+    beforeEach(() => {
+        downloads = [];
+        jest.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(function () {
+            downloads.push({ name: this.download, text: decodeURIComponent(this.href.split(',').slice(1).join(',')) });
+        });
+    });
+
+    afterEach(() => {
+        while (document.body.firstChild) {
+            document.body.removeChild(document.body.firstChild);
+        }
+        jest.restoreAllMocks();
+        jest.clearAllMocks();
+    });
+
+    const exportButton = (el) => el.shadowRoot.querySelector('button.btn--export');
+
+    // TC-UNIT-122
+    it('exports only the queue rows the filters leave on screen', async () => {
+        const el = await render([
+            task(1, 'CRM', iso(-2), { Met_Criteria__c: 'Yes' }),
+            task(2, 'HR', iso(5)),
+            task(3, 'HR', null)
+        ]);
+        const select = el.shadowRoot.querySelector('select');
+        select.value = 'HR';
+        select.dispatchEvent(new CustomEvent('change'));
+        await flush();
+
+        exportButton(el).click();
+        await flush();
+
+        expect(downloads).toHaveLength(1);
+        expect(downloads[0].name).toMatch(/^caf-approvals-\d{4}-\d{2}-\d{2}\.csv$/);
+        const lines = downloads[0].text.split('\r\n');
+        expect(lines[0]).toBe('Task,Application,Control,Request,Description,Planned completion,Overdue,Criteria met');
+        expect(lines).toHaveLength(3);
+        expect(lines[1]).toBe('CAFT0000002,HR,Backup,RCAF0000002,Attach evidence 2,' + iso(5) + ',No,');
+        expect(lines[2]).toBe('CAFT0000003,HR,Backup,RCAF0000003,Attach evidence 3,,No,');
+    });
+
+    // TC-UNIT-123
+    it('defuses formulas in the export, and cannot export an empty queue', async () => {
+        const el = await render([task(1, 'CRM', iso(-1), { Short_Description__c: '=HYPERLINK("http://x","y")' })]);
+        exportButton(el).click();
+        await flush();
+        expect(downloads[0].text.split('\r\n')[1]).toBe(
+            'CAFT0000001,CRM,Backup,RCAF0000001,"\'=HYPERLINK(""http://x"",""y"")",' + iso(-1) + ',Yes,'
+        );
+
+        const empty = await render([]);
+        expect(exportButton(empty).disabled).toBe(true);
+    });
+});

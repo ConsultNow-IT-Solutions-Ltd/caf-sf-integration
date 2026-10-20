@@ -5,8 +5,12 @@
                 <h2 class="view__title">Approvals</h2>
                 <p class="view__sub">Tasks In Progress and waiting on an attestation, across every request</p>
             </div>
-            <button type="button" class="btn btn--ghost" onclick={handleRefresh}>Refresh</button>
+            <div class="actions">
+                <button type="button" class="btn btn--ghost" onclick={handleRefresh}>Refresh</button>
+                <button type="button" class="btn btn--export" disabled={noQueueRows} onclick={handleExport}>Export CSV</button>
+            </div>
         </div>
+        <div class="export" lwc:dom="manual"></div>
 
         <ul class="tiles">
             <li class="tile">
