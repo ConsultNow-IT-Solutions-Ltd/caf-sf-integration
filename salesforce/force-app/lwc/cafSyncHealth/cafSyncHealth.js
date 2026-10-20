@@ -44,6 +44,9 @@ export default class CafSyncHealth extends LightningElement {
     loading = true;
     busy = false;
 
+    /** The record type the drift table is narrowed to; '' for all. */
+    typeFilter = '';
+
     /** The record being re-synced, so only its button says so. */
     resyncingSysId;
 
@@ -142,6 +145,48 @@ export default class CafSyncHealth extends LightningElement {
                     resyncLabel: resyncing ? 'Re-syncing\u2026' : 'Re-sync'
                 };
             });
+    }
+
+    /**
+     * The type dropdown: each record type among the differences once, sorted,
+     * with "All types" first. A filter on a type a re-check no longer returns
+     * falls back to "All types".
+     *
+     * @returns {{value: string, label: string, selected: boolean}[]}
+     */
+    get typeOptions() {
+        const types = [...new Set(this.differences.map((d) => d.recordType || 'record'))].sort((a, b) =>
+            a.localeCompare(b)
+        );
+        const current = types.includes(this.typeFilter) ? this.typeFilter : '';
+        return [{ value: '', label: 'All types', selected: current === '' }].concat(
+            types.map((t) => ({ value: t, label: t, selected: current === t }))
+        );
+    }
+
+    /** @returns {boolean} whether the differences span more than one record type */
+    get hasSeveralTypes() {
+        return this.typeOptions.length > 2;
+    }
+
+    /**
+     * The differences shown in the table, after the type filter. The headline
+     * and breakdown still count every difference.
+     *
+     * @returns {object[]}
+     */
+    get visibleDifferences() {
+        const current = this.typeOptions.find((o) => o.selected).value;
+        return current ? this.differences.filter((d) => (d.recordType || 'record') === current) : this.differences;
+    }
+
+    /**
+     * Type dropdown changed. An empty or missing value means all.
+     *
+     * @param {Event} event change event from the select
+     */
+    handleTypeFilter(event) {
+        this.typeFilter = (event && event.target && event.target.value) || '';
     }
 
     /**

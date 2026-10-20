@@ -113,3 +113,53 @@ describe('c-caf-sync-health breakdown', () => {
         expect(el.shadowRoot.querySelector('.sync__breakdown').textContent).toBe('Differences by type: 2 request \u00b7 1 task');
     });
 });
+
+describe('c-caf-sync-health type filter', () => {
+    afterEach(() => {
+        while (document.body.firstChild) {
+            document.body.removeChild(document.body.firstChild);
+        }
+        jest.clearAllMocks();
+    });
+
+    const rows = (el) => Array.from(el.shadowRoot.querySelectorAll('table.drift tbody tr'));
+    const mixed = {
+        inSync: false,
+        differences: [diff(1), diff(2, { recordType: 'task', recordNumber: 'CAFT0000002' }), diff(3)],
+        comparedCount: 3,
+        snRequests: 2,
+        snTasks: 1
+    };
+
+    // TC-UNIT-129
+    it('narrows the table to one record type, leaving the headline and breakdown on every difference', async () => {
+        const el = await mount(mixed);
+        const select = el.shadowRoot.querySelector('select.sync__type');
+        expect(Array.from(select.querySelectorAll('option')).map((o) => o.textContent)).toEqual(['All types', 'request', 'task']);
+
+        select.value = 'task';
+        select.dispatchEvent(new CustomEvent('change'));
+        await flush();
+
+        expect(rows(el)).toHaveLength(1);
+        expect(rows(el)[0].textContent).toContain('CAFT0000002');
+        expect(headline(el)).toBe('3 differences found');
+        expect(el.shadowRoot.querySelector('.sync__breakdown').textContent).toContain('2 request');
+    });
+
+    // TC-UNIT-130
+    it('hides the filter for a single type, and shows every row when a re-check drops the chosen type', async () => {
+        const el = await mount(mixed);
+        const select = el.shadowRoot.querySelector('select.sync__type');
+        select.value = 'task';
+        select.dispatchEvent(new CustomEvent('change'));
+        await flush();
+
+        check.mockResolvedValue({ inSync: false, differences: [diff(1), diff(3)], comparedCount: 2, snRequests: 2, snTasks: 0 });
+        el.shadowRoot.querySelector('.sync__btn').click();
+        await flush();
+
+        expect(el.shadowRoot.querySelector('select.sync__type')).toBeNull();
+        expect(rows(el)).toHaveLength(2);
+    });
+});

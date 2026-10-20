@@ -37,6 +37,16 @@
                 <template lwc:if={breakdown}>
                     <p class="sync__breakdown">Differences by type: {breakdown}</p>
                 </template>
+                <template lwc:if={hasSeveralTypes}>
+                    <label class="sync__filter">
+                        <span>Show</span>
+                        <select class="sync__type" onchange={handleTypeFilter}>
+                            <template for:each={typeOptions} for:item="o">
+                                <option key={o.value} value={o.value} selected={o.selected}>{o.label}</option>
+                            </template>
+                        </select>
+                    </label>
+                </template>
                 <div class="sync__scroll">
                     <table class="drift">
                         <thead>
@@ -50,7 +60,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <template for:each={differences} for:item="d">
+                            <template for:each={visibleDifferences} for:item="d">
                                 <tr key={d.key}>
                                     <td class="drift__num">{d.recordNumber}</td>
                                     <td>{d.recordType}</td>
