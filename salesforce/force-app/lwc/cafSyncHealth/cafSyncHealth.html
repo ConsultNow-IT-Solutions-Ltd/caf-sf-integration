@@ -16,7 +16,10 @@
                     <span class={statusDot}></span>
                     <span class="sync__headline">{headline}</span>
                     <template lwc:if={checkedAtLabel}>
-                        <span class="sync__when">checked {checkedAtLabel}</span>
+                        <span class={whenClass}>checked {checkedAtLabel}</span>
+                        <template lwc:if={stale}>
+                            <span class="sync__stale">Re-check for a current answer</span>
+                        </template>
                     </template>
                 </template>
             </div>

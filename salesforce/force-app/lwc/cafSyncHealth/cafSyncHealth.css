@@ -133,3 +133,5 @@
 .sync__breakdown { margin: 0 0 0.4rem; font-size: 0.75rem; color: #8e030f; font-weight: 600; }
 
 .sync__filter { display: inline-flex; align-items: center; gap: 0.4rem; margin: 0 0 0.4rem; font-size: 0.75rem; color: #5c5f66; }
+.sync__when--stale { color: #8c4b02; font-weight: 600; }
+.sync__stale { font-size: 0.75rem; color: #8c4b02; }

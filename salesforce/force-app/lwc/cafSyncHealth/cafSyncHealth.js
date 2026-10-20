@@ -17,6 +17,9 @@ import resync from '@salesforce/apex/CafSyncHealth.resync';
 /** How often the "checked N min ago" label is brought up to date. */
 const TICK_MS = 30000;
 
+/** A check older than this is flagged: drift since then would not show. */
+export const STALE_MS = 15 * 60000;
+
 /**
  * "just now", "1 min ago", "2 h ago" - how stale a check is, at a glance.
  *
@@ -277,6 +280,25 @@ export default class CafSyncHealth extends LightningElement {
         }
         const age = ago(ms, this.now);
         return at.toLocaleTimeString() + (age ? ' \u00b7 ' + age : '');
+    }
+
+    /**
+     * Whether the check on screen is old enough that it may no longer be the
+     * truth. Moves with the same clock as the age label.
+     *
+     * @returns {boolean} false when there is no usable check time
+     */
+    get stale() {
+        if (!this.hasReport || !this.report.checkedAt) {
+            return false;
+        }
+        const ms = new Date(this.report.checkedAt).getTime();
+        return Number.isFinite(ms) && this.now - ms >= STALE_MS;
+    }
+
+    /** @returns {string} the age label's class, amber when the check is stale */
+    get whenClass() {
+        return this.stale ? 'sync__when sync__when--stale' : 'sync__when';
     }
 
     messageOf(err) {
