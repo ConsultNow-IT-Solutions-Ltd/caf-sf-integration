@@ -121,6 +121,8 @@ TC-UNIT-001 covers the direction no live case can reach without an upload.
 | TC-UNIT-117 | Rows with no Id, sys_id or number each render once, with distinct keys and Review disabled, and a click opens nothing | Malformed rows mustn't collapse into one or open an empty panel |
 | TC-UNIT-120 | Clear filters resets application, search and Overdue only in one press, and the controls show the reset | One way back from "No tasks match the filter" |
 | TC-UNIT-121 | Clear filters shows only while a filter narrows the queue; spaces alone don't count | |
+| TC-UNIT-122 | Export CSV carries only the queue rows the filters leave on screen, with a dated file name and an Overdue column | |
+| TC-UNIT-123 | Export defuses formulas in the description; Export is disabled when the queue is empty | CSV formula injection: descriptions come from ServiceNow |
 
 ## LWC: `cafReports` (`salesforce/test/lwc/cafReports.test.js`)
 

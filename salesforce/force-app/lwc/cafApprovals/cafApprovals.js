@@ -2,6 +2,7 @@ import { LightningElement, wire } from 'lwc';
 import { refreshApex } from '@salesforce/apex';
 import getQueue from '@salesforce/apex/CafApprovalsController.getQueue';
 import getRecentDecisions from '@salesforce/apex/CafApprovalsController.getRecentDecisions';
+import { csvText, downloadCsv, todayStamp } from 'c/cafCsv';
 
 const ALL = '';
 
@@ -272,6 +273,11 @@ export default class CafApprovals extends LightningElement {
         return this.visibleQueue.length > 0;
     }
 
+    /** @returns {boolean} true when no queue row is on screen, so there is nothing to export */
+    get noQueueRows() {
+        return this.loading || !!this.error || !this.hasQueue;
+    }
+
     /** @returns {boolean} whether any filter is narrowing the queue */
     get isFiltered() {
         return this.appFilter !== ALL || text(this.search).trim() !== '' || this.overdueOnly;
@@ -391,6 +397,31 @@ export default class CafApprovals extends LightningElement {
     async handleAttested() {
         await this.refreshAll();
         this.dispatchEvent(new CustomEvent('cafchange', { bubbles: true, composed: true }));
+    }
+
+    /**
+     * The queue rows on screen - after the filters - as CSV, for chasing
+     * approvers outside Salesforce. Does nothing when no row is shown.
+     */
+    handleExport() {
+        const rows = this.visibleQueue;
+        if (!rows.length) {
+            return;
+        }
+        const header = ['Task', 'Application', 'Control', 'Request', 'Description', 'Planned completion', 'Overdue', 'Criteria met'];
+        const lines = [header].concat(
+            rows.map((t) => [
+                t.SN_Number__c,
+                t.app,
+                t.control,
+                t.requestNumber,
+                t.Short_Description__c,
+                t.Planned_Completion_Date__c,
+                t.overdue ? 'Yes' : 'No',
+                t.Met_Criteria__c
+            ])
+        );
+        downloadCsv(this.template.querySelector('.export'), 'caf-approvals-' + todayStamp() + '.csv', csvText(lines));
     }
 
     /** Refresh button. */
