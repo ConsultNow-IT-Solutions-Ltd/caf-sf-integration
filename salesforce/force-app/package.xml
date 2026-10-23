@@ -41,6 +41,7 @@
         <members>cafHome</members>
         <members>cafReports</members>
         <members>cafSyncHealth</members>
+        <members>cafTaskHeader</members>
         <members>cafTheme</members>
         <name>LightningComponentBundle</name>
     </types>
@@ -53,6 +54,10 @@
         <name>CustomTab</name>
     </types>
     <types><members>CAF_Admin</members><members>CAF_Approver</members><members>CAF_Integration</members><members>CAF_Owner</members><members>CAF_Viewer</members><name>PermissionSet</name></types>
+    <types>
+        <members>CAF_Task_Record_Page</members>
+        <name>FlexiPage</name>
+    </types>
     <types>
         <members>CAF_Compliance</members>
         <name>CustomApplication</name>

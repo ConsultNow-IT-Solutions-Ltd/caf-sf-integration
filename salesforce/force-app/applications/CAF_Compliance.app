@@ -14,6 +14,15 @@
     Visibility comes from CAF_Viewer and CAF_Integration, not profiles.
 -->
 <CustomApplication xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>View</actionName>
+        <comment>CAF task record page (CAF-229)</comment>
+        <content>CAF_Task_Record_Page</content>
+        <formFactor>Large</formFactor>
+        <skipRecordTypeSelect>false</skipRecordTypeSelect>
+        <type>Flexipage</type>
+        <pageOrSobjectType>CAF_Task__c</pageOrSobjectType>
+    </actionOverrides>
     <brand>
         <headerColor>#0B5CAB</headerColor>
         <shouldOverrideOrgTheme>false</shouldOverrideOrgTheme>
