@@ -17,6 +17,8 @@
         <members>CafDashboardControllerTest</members>
         <members>CafEvidenceService</members>
         <members>CafEvidenceServiceTest</members>
+        <members>CafHomeController</members>
+        <members>CafHomeControllerTest</members>
         <members>CafReportsController</members>
         <members>CafReportsControllerTest</members>
         <members>CafSyncHealth</members>
@@ -36,6 +38,7 @@
         <members>cafCsv</members>
         <members>cafDashboard</members>
         <members>cafEvidence</members>
+        <members>cafHome</members>
         <members>cafReports</members>
         <members>cafSyncHealth</members>
         <members>cafTheme</members>
@@ -44,6 +47,7 @@
     <types>
         <members>CAF_Control_Catalog__c</members>
         <members>CAF_Dashboard</members>
+        <members>CAF_Home</members>
         <members>CAF_Request__c</members>
         <members>CAF_Task__c</members>
         <name>CustomTab</name>
