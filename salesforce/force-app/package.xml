@@ -42,11 +42,17 @@
         <name>LightningComponentBundle</name>
     </types>
     <types>
+        <members>CAF_Control_Catalog__c</members>
         <members>CAF_Dashboard</members>
+        <members>CAF_Request__c</members>
         <members>CAF_Task__c</members>
         <name>CustomTab</name>
     </types>
     <types><members>CAF_Admin</members><members>CAF_Approver</members><members>CAF_Integration</members><members>CAF_Owner</members><members>CAF_Viewer</members><name>PermissionSet</name></types>
+    <types>
+        <members>CAF_Compliance</members>
+        <name>CustomApplication</name>
+    </types>
     <types>
         <members>CAF_Attest</members>
         <members>CAF_Work_Tasks</members>
@@ -74,6 +80,8 @@
         <members>CAF_Control_Catalog__c.All</members>
         <members>CAF_Request__c.All</members>
         <members>CAF_Task__c.All</members>
+        <members>CAF_Task__c.Awaiting_Attestation</members>
+        <members>CAF_Task__c.Overdue</members>
         <name>ListView</name>
     </types>
     <types>
