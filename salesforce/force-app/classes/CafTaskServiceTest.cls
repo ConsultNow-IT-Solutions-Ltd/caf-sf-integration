@@ -16,7 +16,7 @@ private class CafTaskServiceTest {
         Assert.isTrue(sent.getEndpoint().endsWith('/caf/task/abc123'), sent.getEndpoint());
         Assert.areEqual('{"state":"2"}', sent.getBody());
 
-        CAF_Integration_Log__c log = [SELECT Operation__c, Status_Code__c FROM CAF_Integration_Log__c];
+        CAF_Integration_Log__c log = [SELECT Operation__c, Status_Code__c FROM CAF_Integration_Log__c WITH SYSTEM_MODE];
         Assert.areEqual('task.update', log.Operation__c);
         Assert.areEqual(200, log.Status_Code__c);
     }
@@ -35,7 +35,7 @@ private class CafTaskServiceTest {
         Test.stopTest();
 
         Assert.isTrue(raised);
-        CAF_Integration_Log__c log = [SELECT Status_Code__c, Error__c FROM CAF_Integration_Log__c];
+        CAF_Integration_Log__c log = [SELECT Status_Code__c, Error__c FROM CAF_Integration_Log__c WITH SYSTEM_MODE];
         Assert.areEqual(400, log.Status_Code__c);
         Assert.isTrue(log.Error__c.contains('not writable'));
     }
@@ -54,7 +54,7 @@ private class CafTaskServiceTest {
         Test.stopTest();
 
         Assert.isTrue(raised);
-        Assert.isNull([SELECT Status_Code__c FROM CAF_Integration_Log__c].Status_Code__c);
+        Assert.isNull([SELECT Status_Code__c FROM CAF_Integration_Log__c WITH SYSTEM_MODE].Status_Code__c);
     }
 
     @IsTest

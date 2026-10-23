@@ -32,7 +32,7 @@ private class CafEvidenceServiceTest {
             Assert.areEqual('att1', view.serviceNowFiles[0].id);
             Assert.areEqual('2 KB', view.serviceNowFiles[0].sizeLabel);
             Assert.isNull(view.serviceNowError);
-            Assert.areEqual('evidence.list', [SELECT Operation__c FROM CAF_Integration_Log__c].Operation__c);
+            Assert.areEqual('evidence.list', [SELECT Operation__c FROM CAF_Integration_Log__c WITH SYSTEM_MODE].Operation__c);
         }
     }
 
@@ -123,7 +123,7 @@ private class CafEvidenceServiceTest {
             Assert.areEqual('TEST-evidence.pdf', sent.get('file_name'));
             Assert.areEqual('application/pdf', sent.get('content_type'));
             Assert.areEqual(EncodingUtil.base64Encode(Blob.valueOf('x'.repeat(20))), sent.get('data'));
-            Assert.areEqual('evidence.push', [SELECT Operation__c FROM CAF_Integration_Log__c].Operation__c);
+            Assert.areEqual('evidence.push', [SELECT Operation__c FROM CAF_Integration_Log__c WITH SYSTEM_MODE].Operation__c);
         }
     }
 
