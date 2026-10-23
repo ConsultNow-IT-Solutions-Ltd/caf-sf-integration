@@ -32,6 +32,14 @@
         <apexClass>CafTaskService</apexClass>
         <enabled>true</enabled>
     </classAccesses>
+    <customPermissions>
+        <enabled>true</enabled>
+        <name>CAF_Attest</name>
+    </customPermissions>
+    <customPermissions>
+        <enabled>true</enabled>
+        <name>CAF_Work_Tasks</name>
+    </customPermissions>
     <fieldPermissions>
         <editable>true</editable>
         <field>CAF_Control_Catalog__c.Active__c</field>

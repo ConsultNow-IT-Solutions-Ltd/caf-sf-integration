@@ -40,6 +40,7 @@ public with sharing class CafTaskService {
         if (String.isBlank(sysId) || String.isBlank(field)) {
             throw new AuraHandledException('sysId and field are both required.');
         }
+        CafAccess.require(CafAccess.WORK_TASKS, 'change tasks');
 
         Map<String, Object> body = new Map<String, Object>{ field => value };
 

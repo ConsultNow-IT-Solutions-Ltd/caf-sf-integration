@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Layered on CAF_Viewer for the people who decide: the Approvals screen and
+    Approve / Reject. Grants the CAF_Attest custom permission and the
+    controller behind the Approvals screen; every other read comes from
+    CAF_Viewer.
+-->
+<PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <classAccesses>
+        <apexClass>CafApprovalsController</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+    <customPermissions>
+        <enabled>true</enabled>
+        <name>CAF_Attest</name>
+    </customPermissions>
+    <description>With CAF Viewer: the Approvals screen, and approve or reject tasks.</description>
+    <hasActivationRequired>false</hasActivationRequired>
+    <label>CAF Approver</label>
+</PermissionSet>
