@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Layered on CAF_Viewer for the people who do the work on a task: Start,
+    Criteria met and Upload evidence. Grants the CAF_Work_Tasks custom
+    permission and nothing else; every read comes from CAF_Viewer.
+-->
+<PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customPermissions>
+        <enabled>true</enabled>
+        <name>CAF_Work_Tasks</name>
+    </customPermissions>
+    <description>With CAF Viewer: start tasks, mark criteria met and upload evidence.</description>
+    <hasActivationRequired>false</hasActivationRequired>
+    <label>CAF Owner</label>
+</PermissionSet>
