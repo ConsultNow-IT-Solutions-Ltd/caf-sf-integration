@@ -1,0 +1,35 @@
+<template>
+    <div class="view">
+        <div class="view__head">
+            <div>
+                <h2 class="view__title">CAF Home</h2>
+                <p class="view__sub">Where compliance stands today &middot; select a figure to see what is behind it</p>
+            </div>
+            <button type="button" class="btn btn--ghost" onclick={handleRefresh}>Refresh</button>
+        </div>
+
+        <template lwc:if={loading}>
+            <p class="msg">Loading&hellip;</p>
+        </template>
+
+        <template lwc:elseif={error}>
+            <p class="msg msg--error">{error}</p>
+        </template>
+
+        <template lwc:else>
+            <ul class="tiles">
+                <template for:each={tiles} for:item="t">
+                    <li key={t.key}>
+                        <button type="button" class="tile tile--link" data-key={t.key} title={t.hint} onclick={handleTile}>
+                            <span class={t.cls}>{t.value}</span>
+                            <span class="tile__label">{t.label}</span>
+                        </button>
+                    </li>
+                </template>
+            </ul>
+            <template lwc:if={taskError}>
+                <p class="msg msg--error">Task figures unavailable: {taskError}</p>
+            </template>
+        </template>
+    </div>
+</template>

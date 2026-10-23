@@ -2,8 +2,8 @@
 <!--
     The CAF Compliance Lightning app (CAF-222).
 
-    Navigation follows the plan as far as the pieces exist today: Dashboard,
-    Requests, Tasks and Controls. Home joins with cafHome (CAF-224). My Work
+    Navigation follows the plan as far as the pieces exist today: Home,
+    Dashboard, Requests, Tasks and Controls. My Work
     waits for the assignee fields (CAF-225, needs CAF-232). Sync Health and
     Admin are not separate tabs: they are screens inside the Dashboard tab
     (?c__view=admin), which already gates them by permission set.
@@ -18,6 +18,7 @@
         <headerColor>#0B5CAB</headerColor>
         <shouldOverrideOrgTheme>false</shouldOverrideOrgTheme>
     </brand>
+    <defaultLandingTab>CAF_Home</defaultLandingTab>
     <description>CAF compliance: the controls grid, requests and tasks mirrored from ServiceNow.</description>
     <formFactors>Small</formFactors>
     <formFactors>Large</formFactors>
@@ -25,6 +26,7 @@
     <isNavPersonalizationDisabled>false</isNavPersonalizationDisabled>
     <label>CAF Compliance</label>
     <navType>Standard</navType>
+    <tabs>CAF_Home</tabs>
     <tabs>CAF_Dashboard</tabs>
     <tabs>CAF_Request__c</tabs>
     <tabs>CAF_Task__c</tabs>
