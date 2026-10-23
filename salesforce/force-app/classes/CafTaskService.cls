@@ -18,7 +18,7 @@ public with sharing class CafTaskService {
     public static List<CAF_Task__c> getTasks(String requestExternalId) {
         return [
             SELECT Id, SN_Number__c, Short_Description__c, State__c, Approval__c,
-                   Met_Criteria__c, ServiceNow_Sys_Id__c
+                   Met_Criteria__c, ServiceNow_Sys_Id__c, Planned_Completion_Date__c
             FROM CAF_Task__c
             WHERE CAF_Request__r.ServiceNow_Sys_Id__c = :requestExternalId
             WITH USER_MODE
