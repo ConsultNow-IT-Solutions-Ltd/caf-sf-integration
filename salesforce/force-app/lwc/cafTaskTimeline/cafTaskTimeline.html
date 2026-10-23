@@ -1,0 +1,44 @@
+<template>
+    <div class="view timeline">
+        <h2 class="view__title">Tasks</h2>
+
+        <template lwc:if={loading}>
+            <p class="msg">Loading tasks&hellip;</p>
+        </template>
+
+        <template lwc:elseif={error}>
+            <p class="msg msg--error">{error}</p>
+        </template>
+
+        <template lwc:elseif={empty}>
+            <p class="msg">ServiceNow has not created any tasks for this request yet.</p>
+        </template>
+
+        <template lwc:else>
+            <p class="view__sub">{summary}</p>
+            <ol class="entries">
+                <template for:each={tasks} for:item="t">
+                    <li key={t.id} class={t.itemClass}>
+                        <span class="dot" aria-hidden="true"></span>
+                        <div class="entry__body">
+                            <button type="button" class="link" data-id={t.id} onclick={handleOpen}>{t.number}</button>
+                            <span class={t.stateClass}>{t.state}</span>
+                            <p class="entry__desc">{t.description}</p>
+                            <p class="entry__meta">
+                                <template lwc:if={t.due}>
+                                    <span>Due {t.due}</span>
+                                </template>
+                                <template lwc:if={t.overdue}>
+                                    <span class="late">Overdue</span>
+                                </template>
+                                <template lwc:if={t.approval}>
+                                    <span>Approval: {t.approval}</span>
+                                </template>
+                            </p>
+                        </div>
+                    </li>
+                </template>
+            </ol>
+        </template>
+    </div>
+</template>
