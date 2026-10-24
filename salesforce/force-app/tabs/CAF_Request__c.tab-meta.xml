@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Tab for CAF_Request__c (CAF-226).
+
+    The tab came from the UI wizard that created the object and was never in
+    source. Declared here with the motif it already had, so the app shell can
+    rely on it and a rebuilt org gets the same icon.
+-->
+<CustomTab xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customObject>true</customObject>
+    <motif>Custom26: Flag</motif>
+</CustomTab>

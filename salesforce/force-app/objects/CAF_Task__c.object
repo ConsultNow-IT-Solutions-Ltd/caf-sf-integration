@@ -28,4 +28,49 @@
         <filterScope>Everything</filterScope>
         <label>All</label>
     </listViews>
+    <!--
+        Overdue (CAF-226): still open and past its planned completion. Same
+        rule as the dashboard's overdue flag, applied to tasks.
+    -->
+    <listViews>
+        <fullName>Overdue</fullName>
+        <columns>NAME</columns>
+        <columns>CAF_Request__c</columns>
+        <columns>Short_Description__c</columns>
+        <columns>State__c</columns>
+        <columns>Approval__c</columns>
+        <columns>Planned_Completion_Date__c</columns>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>State__c</field>
+            <operation>equals</operation>
+            <value>Open,In Progress</value>
+        </filters>
+        <filters>
+            <field>Planned_Completion_Date__c</field>
+            <operation>lessThan</operation>
+            <value>TODAY</value>
+        </filters>
+        <label>Overdue</label>
+    </listViews>
+    <!--
+        Awaiting attestation (CAF-226): In Progress, the same definition the
+        Approvals screen uses. "My tasks" waits for the assignee field (CAF-232).
+    -->
+    <listViews>
+        <fullName>Awaiting_Attestation</fullName>
+        <columns>NAME</columns>
+        <columns>CAF_Request__c</columns>
+        <columns>Short_Description__c</columns>
+        <columns>State__c</columns>
+        <columns>Approval__c</columns>
+        <columns>Planned_Completion_Date__c</columns>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>State__c</field>
+            <operation>equals</operation>
+            <value>In Progress</value>
+        </filters>
+        <label>Awaiting attestation</label>
+    </listViews>
 </CustomObject>

@@ -38,13 +38,19 @@ public class CafTestSupport {
         }
     }
 
+    /**
+     * Callout tests are about the callout, so they act with both CAF
+     * permissions. CafAccessTest covers who really holds them.
+     */
     public static ServiceNowMock respondWith(Integer status, String body) {
+        permitActions();
         ServiceNowMock mock = new ServiceNowMock(status, body);
         Test.setMock(HttpCalloutMock.class, mock);
         return mock;
     }
 
     public static ServiceNowMock unreachable() {
+        permitActions();
         ServiceNowMock mock = new ServiceNowMock(0, null);
         mock.unreachable = true;
         Test.setMock(HttpCalloutMock.class, mock);
@@ -95,6 +101,11 @@ public class CafTestSupport {
     }
 
     // ---------------------------------------------------------------- private
+
+    private static void permitActions() {
+        CafAccess.overrides.put(CafAccess.WORK_TASKS, true);
+        CafAccess.overrides.put(CafAccess.ATTEST, true);
+    }
 
     private static User newUser(Boolean withCafAccess) {
         User created;
