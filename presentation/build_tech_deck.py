@@ -213,10 +213,10 @@ def context(prs):
         ]),
         (right_x, "Salesforce  ·  Lightning", ROYAL, [
             ("CAF_Request__c  ·  CAF_Task__c", True),
-            ("CAF_Control_Catalog__c", True),
-            ("CafTaskService  ·  CafSyncHealth", True),
-            ("CafEvidenceService  ·  CafAttestationService", True),
-            ("cafDashboard  ·  cafSyncHealth  ·  cafEvidence", True),
+            ("CAF_Control_Catalog__c  ·  CAF_Integration_Log__c", True),
+            ("4 services  ·  4 screen controllers", False),
+            ("CafCallout  ·  CafConfig  ·  CAF_Setting__mdt", True),
+            ("Compliance · Approvals · Reports · Admin", False),
         ]),
     ):
         rect(slide, left, panel_top, panel_w, panel_h, None, line=RULE, line_w=Pt(0.75))
@@ -250,6 +250,44 @@ def context(prs):
             "Nothing is shared, replicated at the database level, or read through. Every crossing is an "
             "explicit HTTP call with its own credential, which is what makes each direction separately "
             "testable and separately disableable.", height=Inches(0.82))
+
+
+def salesforce_surface(prs):
+    slide = blank(prs)
+    chrome(slide, "The Salesforce surface — one tab, four screens",
+           "Each screen is its own LWC over its own Apex read model, mounted only while it is selected.")
+
+    screens = [
+        ("Compliance", "cafDashboard\nCafDashboardController",
+         "Applications × controls grid, search, sort, overdue rings, drill-in to tasks, Sync Health strip"),
+        ("Approvals", "cafApprovals\nCafApprovalsController",
+         "Every In Progress task with due-date flags. Review opens evidence read-only beside the attestation"),
+        ("Reports", "cafReports\nCafReportsController",
+         "Headline figures, status per control, least-compliant applications, overdue requests, CSV export"),
+        ("Admin", "cafAdmin\nCafAdminController",
+         "Read-only: callout log with success rate and latency, the control catalogue, live CAF Settings"),
+    ]
+    box_w = (CONTENT_W - Inches(0.45)) / 4
+    for i, (name, code, body) in enumerate(screens):
+        left = MARGIN + i * (box_w + Inches(0.15))
+        rect(slide, left, Inches(2.08), box_w, Inches(2.5), PANEL)
+        rect(slide, left, Inches(2.08), box_w, Pt(3.5), ROYAL)
+        tf = textbox(slide, left + Inches(0.18), Inches(2.28), box_w - Inches(0.3), Inches(0.35))
+        write(tf, name, size=15, color=NAVY, bold=True, first=True)
+        tf = textbox(slide, left + Inches(0.18), Inches(2.7), box_w - Inches(0.3), Inches(0.5))
+        mono(write(tf, code, size=9.5, color=ROYAL, first=True, line=1.15))
+        tf = textbox(slide, left + Inches(0.18), Inches(3.3), box_w - Inches(0.3), Inches(1.2))
+        write(tf, body, size=11, color=INK, first=True, line=1.2)
+
+    bullets(slide, [
+        ("Deep-linkable.",
+         "?c__view=approvals | reports | admin on /lightning/n/CAF_Dashboard opens the tab on that screen."),
+        ("Shared, not copied.",
+         "cafTheme is a CSS-only module and cafCsv a shared export helper, so the four screens cannot drift "
+         "apart in look or in what an export contains."),
+        ("Columns come from the catalogue on every screen.",
+         "Reports uses the grid's own Overall rule, so a figure on one screen never disagrees with another."),
+    ], Inches(4.82), size=12.5, gap=8)
 
 
 def correlation(prs):
@@ -508,8 +546,9 @@ def sync_health(prs):
         write(tf, gloss, size=10, color=MUTED, italic=True, first=True)
 
     label(slide, MARGIN, Inches(3.42), CONTENT_W,
-          "Each of the four has actually occurred on this build.", size=10.5, color=MUTED,
-          align=PP_ALIGN.LEFT)
+          "Each of the four has actually occurred on this build. Requests, tasks and controls are all "
+          "compared; differences can be filtered by record type, and a check older than 15 minutes is flagged.",
+          size=10.5, color=MUTED, align=PP_ALIGN.LEFT)
 
     bullets(slide, [
         ("Repair only ever flows ServiceNow → Salesforce.",
@@ -522,10 +561,45 @@ def sync_health(prs):
         ("Blank equals null.",
          "ServiceNow returns null for an empty field and Salesforce may hold either. Treating them as "
          "different would report drift on every record with an empty approval, which is most of them."),
-        ("It compares number, status, state, approval, criteria and description — not Name.",
-         "Name is mirrored and editable, so drift introduced by editing it is invisible until the next push "
-         "overwrites it. Either make it read-only or add it to the comparison."),
+        ("Requests and tasks are compared on status, state, approval, criteria and description — not Name.",
+         "Controls are compared on name and active. A request or task Name edited in Salesforce stays "
+         "invisible until the next push overwrites it."),
     ], Inches(3.86), size=12, gap=7)
+
+
+def observability(prs):
+    slide = blank(prs)
+    chrome(slide, "Every callout logged, every limit configurable",
+           "One gateway for ServiceNow calls, a log that survives rollback, and settings that need no deploy.")
+
+    steps = [
+        ("CAF service\ncalls send()", ROYAL, False),
+        ("CafCallout\ntimes the call,\nholds the result", NAVY, True),
+        ("flush() publishes\nCAF_Callout_Event__e", NAVY, True),
+        ("Trigger, own\ntransaction, as\nAutomated Process", NAVY, False),
+        ("CAF_Integration_Log__c\nread by Admin\nscreen", GREEN, True),
+    ]
+    chip_w, gap = Inches(2.0), Inches(0.41)
+    y, x = Inches(2.12), MARGIN
+    for i, (text, accent, code) in enumerate(steps):
+        chip(slide, x, y, chip_w, Inches(1.1), text, size=10, accent=accent, code=code)
+        if i < len(steps) - 1:
+            arrow(slide, x + chip_w + Inches(0.06), y + Inches(0.4), gap - Inches(0.12), Inches(0.3))
+        x += chip_w + gap
+
+    bullets(slide, [
+        ("Why a platform event, not an insert.",
+         "Callers turn a ServiceNow failure into an AuraHandledException, which rolls the transaction back and "
+         "would take a directly inserted log row with it. And Apex refuses a callout after uncommitted DML, so a "
+         "row written after the first call would break any caller that makes a second."),
+        ("CAF_Setting__mdt, read through CafConfig.",
+         "Task path, evidence cap (2 MB), callout timeout (120 s) and the logging switch, each with a code "
+         "default and a ceiling, so a bad value cannot exceed the platform limit. The Admin screen shows each "
+         "stored value beside the value actually in use."),
+        ("The log needs CAF_Admin.",
+         "Read access on the log is granted by its own permission set, assigned in addition to CAF_Integration "
+         "— an integration user does not need to read who called what."),
+    ], Inches(3.5), size=12.5, gap=9)
 
 
 def failure_modes(prs):
@@ -542,7 +616,7 @@ def failure_modes(prs):
                "syslog, filtered on the object name. Sync Health is the safety net"],
               ["ServiceNow is down",
                "A failed action in the Salesforce UI",
-               "Nothing is queued. Every call is synchronous — Platform Events are not built"],
+               "Nothing is queued or retried. The failure is in CAF_Integration_Log__c"],
               ["A record is deleted",
                "An orphan on the other side, indefinitely",
                "Delete it there too. Controls are the exception and retire automatically"],
@@ -602,17 +676,51 @@ def traps(prs):
             height=Inches(0.86), accent=AMBER)
 
 
+def assurance(prs):
+    slide = blank(prs)
+    chrome(slide, "Assurance — tested at three levels",
+           "Each level catches what the one below cannot, and every end-to-end case proves both platforms.")
+
+    stats = [
+        ("9", "Apex test classes", "Every service and controller except CafSyncHealth. Mocked callouts, "
+         "shared CafTestSupport fixtures."),
+        ("115", "offline unit cases", "Jest suites for 7 LWCs plus the harness preflight. No org, no "
+         "instance, no credentials — seconds to run."),
+        ("139", "end-to-end cases", "70 integration and 69 ServiceNow cases, driven by Playwright against "
+         "both live systems."),
+    ]
+    box_w = (CONTENT_W - Inches(0.6)) / 3
+    for i, (n, what, body) in enumerate(stats):
+        left = MARGIN + i * (box_w + Inches(0.3))
+        rect(slide, left, Inches(2.08), box_w, Inches(2.3), PANEL)
+        tf = textbox(slide, left + Inches(0.24), Inches(2.2), box_w - Inches(0.4), Inches(0.8))
+        write(tf, n, size=40, color=ROYAL, bold=True, first=True)
+        tf = textbox(slide, left + Inches(0.24), Inches(2.98), box_w - Inches(0.4), Inches(0.35))
+        write(tf, what, size=13.5, color=NAVY, bold=True, first=True)
+        tf = textbox(slide, left + Inches(0.24), Inches(3.36), box_w - Inches(0.4), Inches(0.95))
+        write(tf, body, size=11, color=INK, first=True, line=1.2)
+
+    bullets(slide, [
+        ("Two proofs per case.",
+         "What the screen showed and what the record holds. A green toast proves a form submitted, not that a "
+         "business rule ran — and this architecture's characteristic failure is the two platforms disagreeing."),
+        ("Unit tests pin the defects the live runs found.",
+         "The evidence-mismatch advice (TC-INT-071) now branches on which side is short, and TC-UNIT-002 fails "
+         "against the pre-fix code, so the regression shows up in seconds rather than on the next live run."),
+    ], Inches(4.62), size=12.5, gap=9)
+
+
 def open_items(prs):
     slide = blank(prs)
     chrome(slide, "What a production move would require")
 
     items = [
-        ("Test coverage on the Apex service classes.",
-         "CafSyncHealth, CafEvidenceService and CafAttestationService have none. Salesforce requires 75% to "
-         "deploy, so this is not a quality preference — it is a hard gate."),
+        ("Test coverage for CafSyncHealth.",
+         "Every other Apex class now has one. Salesforce requires 75% coverage to deploy — a hard gate, "
+         "not a preference."),
         ("Queued delivery.",
-         "Every call is synchronous, so a ServiceNow outage surfaces as a failed action rather than being "
-         "retried. Platform Events are the designed answer and are not built."),
+         "A Platform Event now carries the callout log, but calls are still synchronous: a ServiceNow outage "
+         "fails the action and nothing retries."),
         ("JWT bearer, replacing Client Credentials.",
          "Recorded as a deviation rather than a decision. It needs a custom JWT API Script on the ServiceNow "
          "side; the keypair already exists and is unused."),
@@ -623,7 +731,7 @@ def open_items(prs):
 
     y = Inches(1.62)
     for i, (lead, body) in enumerate(items, start=1):
-        step = Inches(1.08) if len(body) < 105 else Inches(1.3)
+        step = Inches(1.08) if len(body) < 150 else Inches(1.3)
         rect(slide, MARGIN, y, Inches(0.44), Inches(0.44), ROYAL)
         tf = textbox(slide, MARGIN, y + Inches(0.09), Inches(0.44), Inches(0.3))
         write(tf, str(i), size=14, color=WHITE, bold=True, align=PP_ALIGN.CENTER, first=True)
@@ -645,9 +753,10 @@ def main():
     prs = Presentation()
     prs.slide_width, prs.slide_height = W, H
 
-    for builder in (cover, governing_rule, context, correlation, outbound,
-                    echo_loop, inbound, attestation, evidence, catalogue,
-                    sync_health, failure_modes, traps, open_items):
+    for builder in (cover, governing_rule, context, salesforce_surface, correlation,
+                    outbound, echo_loop, inbound, attestation, evidence, catalogue,
+                    sync_health, observability, failure_modes, traps, assurance,
+                    open_items):
         builder(prs)
 
     prs.save(OUTPUT)

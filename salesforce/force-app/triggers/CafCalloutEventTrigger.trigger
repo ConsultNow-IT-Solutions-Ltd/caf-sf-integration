@@ -19,5 +19,5 @@ trigger CafCalloutEventTrigger on CAF_Callout_Event__e (after insert) {
             Called_At__c    = e.Called_At__c
         ));
     }
-    insert rows;
+    insert as system rows;
 }

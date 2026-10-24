@@ -95,7 +95,7 @@ private class CafAdminControllerTest {
     /** CAF_Integration alone does not read the callout log; the rest still loads. */
     @IsTest
     static void callLogNeedsCafAdmin() {
-        insert new CAF_Integration_Log__c(Operation__c = 'task.update', Succeeded__c = true,
+        insert as system new CAF_Integration_Log__c(Operation__c = 'task.update', Status_Code__c = 200,
                                           Called_At__c = System.now());
         User caf = CafTestSupport.cafUser();
 

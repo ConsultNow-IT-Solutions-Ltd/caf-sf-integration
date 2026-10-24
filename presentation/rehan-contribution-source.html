@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>CAF Compliance – Contribution Report: Rehan Sadiq</title>
+<style>
+  :root {
+    --ink: #13203A; --muted: #4A5568; --faint: #6A7383; --rule: #D9DEE5;
+    --sf: #2563A8; --sn: #0E7364; --accent: #A3520F; --warn-bg: #FFF1DF;
+  }
+  @page { size: A4; margin: 18mm 16mm 20mm 16mm; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; color: var(--ink); background: #fff;
+    font-family: "Segoe UI", Arial, sans-serif; font-size: 10.5pt; line-height: 1.5; }
+  h1 { font-size: 20pt; margin: 0 0 10px; padding-bottom: 6px; border-bottom: 3px solid var(--ink); break-before: page; break-after: avoid; }
+  h2 { font-size: 13.5pt; margin: 18px 0 6px; break-after: avoid; }
+  p { margin: 0 0 8px; }
+  ul { margin: 0 0 8px; padding-left: 20px; }
+  li { margin-bottom: 3px; }
+  code { font-family: Consolas, monospace; font-size: 9pt; background: #EEF1F5; padding: 0 3px; border-radius: 3px; }
+  table { width: 100%; border-collapse: collapse; margin: 6px 0 12px; font-size: 9.5pt; }
+  th { background: var(--ink); color: #fff; text-align: left; padding: 5px 7px; font-weight: 600; }
+  td { padding: 5px 7px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  tr { break-inside: avoid; }
+  tbody tr:nth-child(even) td { background: #F7F8FA; }
+  td.num, th.num { text-align: right; }
+  .figure { margin: 10px 0 14px; break-inside: avoid; }
+  .figure svg { width: 100%; height: auto; display: block; }
+  .caption { font-size: 9pt; color: var(--faint); margin-top: 4px; }
+  .callout { border-left: 4px solid var(--accent); background: var(--warn-bg); padding: 8px 12px; margin: 8px 0 12px; break-inside: avoid; }
+  .note { font-size: 9pt; color: var(--faint); }
+  .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 10px 0 14px; }
+  .kpi { border: 1px solid var(--rule); border-radius: 6px; padding: 10px 12px; background: #F7F8FA; break-inside: avoid; }
+  .kpi b { display: block; font-size: 22pt; line-height: 1.1; color: var(--sf); }
+  .kpi span { font-size: 9pt; color: var(--muted); }
+  .status { display: inline-block; padding: 1px 8px; border-radius: 999px; font-size: 8.5pt; font-weight: 600; white-space: nowrap; }
+  .done { background: #DCEEE8; color: #0B5C50; }
+  .part { background: #FFF1DF; color: #8A4A0B; }
+  .plan { background: #EEF1F5; color: #4A5568; }
+  .cover { height: 250mm; display: flex; flex-direction: column; justify-content: space-between; background: var(--ink); color: #F5F6F2; padding: 22mm 16mm; border-radius: 6px; }
+  .cover .kicker { color: #F0A35E; letter-spacing: 3px; text-transform: uppercase; font-weight: 600; font-size: 11pt; }
+  .cover h1 { border: 0; font-size: 32pt; line-height: 1.1; margin: 14px 0; break-before: avoid; color: #F5F6F2; }
+  .cover .sub { font-size: 13.5pt; color: #BCC6D6; max-width: 150mm; }
+  .cover table { color: #F5F6F2; font-size: 10pt; max-width: 130mm; }
+  .cover td { border-bottom: 1px solid #33415E; background: transparent !important; }
+  .cover td:first-child { color: #BCC6D6; width: 42mm; }
+</style>
+</head>
+<body>
+
+<section class="cover">
+  <div>
+    <div class="kicker">Contribution Report · Individual</div>
+    <h1>Rehan Sadiq<br>CAF Compliance</h1>
+    <p class="sub">What Rehan delivered on the ServiceNow ⇄ Salesforce CAF integration from May to October 2026, drawn from the git history, GitHub pull requests and Jira.</p>
+  </div>
+  <table>
+    <tr><td>Contributor</td><td>Rehan Sadiq (also commits as "sadiqrehann" and "Sadiq Rehan Mohammed")</td></tr>
+    <tr><td>Period</td><td>20 May – 23 October 2026</td></tr>
+    <tr><td>Source</td><td>caf-sf-integration repository, main @ 125ac13</td></tr>
+    <tr><td>Date</td><td>23 October 2026</td></tr>
+  </table>
+</section>
+
+<!-- ============================ SUMMARY ============================ -->
+<h1>1. Summary</h1>
+<p>Rehan is the project's test engineer. They built the Playwright test harness and its seed data, wrote the integration and ServiceNow test suites and their test-case catalogues, and recorded the case results used as evidence. In August they fixed the harness's JSON parsing. Commits dated August and September carry their ad hoc testing of the Approvals screen, Jest tests for the Lightning screens and a <code>.env</code> preflight check. The history places those commits in October (see "Dating" in section 4). In October they added the Apex test suites with mocked callouts (CAF-235). Later in October they moved into Salesforce build work and delivered six tickets of the October epic. CAF-218: fixed the blockers that stopped the callout log deploying. CAF-221: the CAF Viewer, Owner and Approver permission sets, with a role check on every action that writes to ServiceNow. CAF-222/226: the CAF Compliance Lightning app, tabs, icons and list views. CAF-224: the cafHome page with KPI tiles. CAF-229 and CAF-230: the task and request record pages. In Jira they own 55 CAF work items, mostly in the ETL and data quality epic. 35 are Done, and 9 of those were closed in October. Appendix A lists every Done ticket.</p>
+
+<div class="kpis">
+  <div class="kpi"><b>43</b><span>distinct changes on main (50 commits incl. repeats)</span></div>
+  <div class="kpi"><b>25%</b><span>of the team's 174 distinct changes</span></div>
+  <div class="kpi"><b>104</b><span>files touched</span></div>
+  <div class="kpi"><b>12.8k</b><span>lines added, excluding 16.2k of generated package-lock.json</span></div>
+</div>
+
+<div class="figure">
+<svg viewBox="0 0 700 220" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial" font-size="10.5">
+  <!-- scale: 15 changes = 144px; baseline y=180 -->
+  <g stroke="#D9DEE5"><line x1="50" y1="132" x2="690" y2="132"/><line x1="50" y1="84" x2="690" y2="84"/><line x1="50" y1="36" x2="690" y2="36"/></g>
+  <line x1="50" y1="180" x2="690" y2="180" stroke="#13203A"/>
+  <g fill="#6A7383" font-size="9" text-anchor="end">
+    <text x="44" y="183">0</text><text x="44" y="135">5</text><text x="44" y="87">10</text><text x="44" y="39">15</text>
+  </g>
+  <!-- 6 months, slot 106.7px, bar 50 -->
+  <g fill="#0E7364">
+    <rect x="78"  y="151.2" width="50" height="28.8"/>
+    <rect x="185" y="93.6"  width="50" height="86.4"/>
+    <rect x="292" y="36"    width="50" height="144"/>
+  </g>
+  <g fill="#A3520F">
+    <rect x="398" y="122.4" width="50" height="57.6"/>
+    <rect x="505" y="141.6" width="50" height="38.4"/>
+    <rect x="612" y="122.4" width="50" height="57.6"/>
+  </g>
+  <g text-anchor="middle" fill="#13203A">
+    <text x="103" y="145">3</text><text x="210" y="88">9</text><text x="317" y="30">15</text>
+    <text x="423" y="116">6</text><text x="530" y="135">4</text><text x="637" y="116">6</text>
+  </g>
+  <g font-size="9.5" fill="#4A5568">
+  </g>
+  <g text-anchor="middle" fill="#4A5568" font-size="9.5">
+    <text x="103" y="196">May</text><text x="210" y="196">Jun</text><text x="317" y="196">Jul</text>
+    <text x="423" y="196">Aug</text><text x="530" y="196">Sep</text><text x="637" y="196">Oct</text>
+  </g>
+  <g text-anchor="end" font-size="10" fill="#13203A">
+    <text x="690" y="14"><tspan font-weight="700">Jira tickets worked: 55</tspan><tspan fill="#4A5568"> · 35 Done</tspan></text>
+  </g>
+  <g text-anchor="middle" font-weight="700" font-size="10">
+    <text x="210" y="214" fill="#0E7364">Q2 · 27</text>
+    <text x="530" y="214" fill="#A3520F">Q3 · 16</text>
+  </g>
+</svg>
+<div class="caption">Bars: distinct code changes per month, by the date each commit carries. Repeated copies of a change are counted once, under the earlier date. 8 of these changes (4 in August, 4 in September) carry dates the history contradicts: their commits sit on top of commits made in October, so they cannot have been made in the month shown. Dated by what the history supports, all 8 belong in October (see "Dating" in section 4). Rehan made no commits in Q1 (February–April). Jira tickets worked: CAF work items assigned to Rehan at the time of writing (see section 4 and Appendix A). Section 3 shows when the code reached main.</div>
+</div>
+
+<table>
+  <thead><tr><th style="width:16%">Quarter</th><th style="width:22%">Focus</th><th>What they delivered</th></tr></thead>
+  <tbody>
+    <tr><td><b>Q2</b><br>May–Jul</td><td>Integration test harness</td><td>Salesforce JSON assertion helpers and a <code>cnit</code> CLI wrapper for record queries; seed data for the demo estate, volume testing, connectivity probes and repairing CAF record numbering; outbound ETL, ServiceNow case, spike and Lightning probe suites; integration and ServiceNow test-case catalogues; recorded case results; README data hazards and RUN-TESTS troubleshooting</td></tr>
+    <tr><td><b>Q3</b><br>Aug–Oct</td><td>Unit testing; Salesforce build</td><td>August: harness JSON-parsing fixes. Dated August–September, placed in October by the history: ad hoc testing of the Approvals screen in five rounds (unit tests TC-UNIT-109 to 117, filters, review panel, refresh); offline Jest tests for the Lightning screens and a <code>.env</code> preflight check. October: CAF-235 Apex test suites with mocked callouts; CAF-218 deploy fixes; CAF-221 permission sets and role checks; CAF-222/226 Lightning app, tabs and list views; CAF-224 cafHome; CAF-229 and CAF-230 record pages</td></tr>
+  </tbody>
+</table>
+
+<!-- ============================ AREAS ============================ -->
+<h1>2. Work by area</h1>
+
+<table>
+  <thead><tr><th style="width:28%">Area</th><th class="num" style="width:13%">Lines added</th><th>Main items</th></tr></thead>
+  <tbody>
+    <tr><td>Test results (evidence)</td><td class="num">2,904</td><td>16 recorded case results for the integration (TC-INT) and ServiceNow (TC-SN) suites</td></tr>
+    <tr><td>Test documentation</td><td class="num">2,187</td><td>Integration, ServiceNow and unit test-case catalogues; testing README; RUN-TESTS guide</td></tr>
+    <tr><td>Lightning unit tests (Jest)</td><td class="num">1,806</td><td>Tests for cafApprovals, cafDashboard, cafEvidence, cafHome, cafTaskHeader and cafTaskTimeline</td></tr>
+    <tr><td>Playwright specs</td><td class="num">1,481</td><td>Integration ETL, read-only, UI and negative suites; ServiceNow cases; spike harness; Lightning probe</td></tr>
+    <tr><td>App shell, home and record pages</td><td class="num">1,375</td><td>CAF Compliance Lightning app, tabs and list views; cafHome with CafHomeController; cafTaskHeader and the task record page; cafTaskTimeline and the request record page</td></tr>
+    <tr><td>Apex tests</td><td class="num">964</td><td>Tests for task, evidence, attestation, dashboard, callout, config and home classes, plus CafTestSupport; CafAccessTest for the role checks; CAF-218 test fixes</td></tr>
+    <tr><td>Seed data</td><td class="num">858</td><td>Demo estate, background seeding, generic business apps, connectivity probe, numbering repair</td></tr>
+    <tr><td>Harness library and preflight</td><td class="num">825</td><td><code>cnit</code> wrapper, <code>parseSfJson</code> helpers, <code>.env</code> preflight check and its tests</td></tr>
+    <tr><td>Permissions and access control</td><td class="num">296</td><td>CAF Viewer, Owner and Approver permission sets; CAF_Work_Tasks and CAF_Attest custom permissions; CafAccess checks in the task, evidence and attestation services; log trigger fix</td></tr>
+    <tr><td>Project configuration</td><td class="num">122</td><td>Jest config, package.json and sfdx-project.json; package.xml entries</td></tr>
+  </tbody>
+</table>
+<p class="note">Line counts are lines added on main, excluding merges. A generated <code>salesforce/package-lock.json</code> (16,180 lines over two commits) is left out. Recorded results are JSON evidence files, so they count high. Repeated copies of a change are counted each time, as in earlier versions of this report. The cafHome change is on main twice (553 lines each), and the five ad hoc rounds and the Jest/preflight commit are also on main twice.</p>
+
+<h2>Ticket and test-case references in commits</h2>
+<table>
+  <thead><tr><th style="width:22%">Reference</th><th class="num" style="width:12%">Changes</th><th>Scope</th></tr></thead>
+  <tbody>
+    <tr><td>CAF-235</td><td class="num">1</td><td>Apex test suites with mocked callouts</td></tr>
+    <tr><td>CAF-218</td><td class="num">1</td><td>Deploy blockers: cafCsv missing from package.xml, a formula field set in a test, log writes moved to system mode</td></tr>
+    <tr><td>CAF-221</td><td class="num">1</td><td>CAF Viewer, Owner and Approver permission sets; actions checked by custom permission</td></tr>
+    <tr><td>CAF-222/226</td><td class="num">1</td><td>CAF Compliance app, Controls tab, tab icons, Overdue and Awaiting attestation list views</td></tr>
+    <tr><td>CAF-224</td><td class="num">1</td><td>cafHome with KPI tiles (on main twice; see section 4, "Dating")</td></tr>
+    <tr><td>CAF-229</td><td class="num">1</td><td>Task record page with cafTaskHeader, cafEvidence and cafAttestation</td></tr>
+    <tr><td>CAF-230</td><td class="num">1</td><td>Request record page with cafTaskTimeline</td></tr>
+    <tr><td>Ad hoc (approvals)</td><td class="num">5</td><td>Unit tests TC-UNIT-109 to 117; support dropdown and empty-filter message; review panel highlight, close and evidence count; post-decision and failed refresh</td></tr>
+    <tr><td>Test cases</td><td class="num">6</td><td>TC-INT-020, TC-INT-035, TC-INT-037, TC-INT-065, TC-INT-070, TC-SN-017</td></tr>
+  </tbody>
+</table>
+
+<h2>Ad hoc testing</h2>
+<p>Alongside the planned suites, Rehan ran ad hoc testing of the Approvals screen. Each round added Jest unit tests to <code>cafApprovals.test.js</code> and entries to the unit test-case catalogue. The history places all five rounds on the <code>adhoc-test</code> branch in October, and they were merged to main the same month. Each round is also on main as a second copy dated in August or September. Those copies were made on top of October commits, so the dates they carry cannot be when they were made. Whether the testing itself was done earlier is not something git can show.</p>
+<table>
+  <thead><tr><th style="width:14%">Earliest possible</th><th style="width:16%">Date in copy</th><th>What was tested</th><th class="num" style="width:10%">Lines</th><th style="width:12%">Pull request</th></tr></thead>
+  <tbody>
+    <tr><td>20 Oct</td><td>3 Aug</td><td>Unit tests TC-UNIT-109 to 113</td><td class="num">+107</td><td>#31</td></tr>
+    <tr><td>20 Oct</td><td>9 Aug</td><td>Unit tests TC-UNIT-114 to 117</td><td class="num">+88</td><td>#33</td></tr>
+    <tr><td>19 Oct</td><td>20 Aug</td><td>Support dropdown and empty-filter message</td><td class="num">+38</td><td>#25</td></tr>
+    <tr><td>20 Oct</td><td>28 Aug</td><td>Review panel highlight, close and evidence count relay</td><td class="num">+80</td><td>#27</td></tr>
+    <tr><td>20 Oct</td><td>3 Sep</td><td>Post-decision refresh and failed refresh</td><td class="num">+56</td><td>#29</td></tr>
+  </tbody>
+</table>
+<p class="note">369 lines in all. The ad hoc work has no Jira tickets, so it does not appear in section 4 or Appendix A. Logging future ad hoc rounds in Jira would make this work visible there.</p>
+
+<!-- ============================ PRS ============================ -->
+<h1>3. Pull requests</h1>
+<p>All 47 pull requests were opened and merged through the Reyantech organisation account in October, so GitHub's author field does not show who did the work. The table below attributes each pull request by the authors of the commits it contains. Most of Rehan's work, the May–August harness and suites, went to main directly: only 21 of their 50 commits are in a pull request.</p>
+
+<div class="kpis">
+  <div class="kpi"><b>21</b><span>of 47 pull requests contain their commits</span></div>
+  <div class="kpi"><b>13</b><span>of 31 code-carrying pull requests are entirely theirs</span></div>
+  <div class="kpi"><b>3.7k</b><span>hand-written lines added in those 13 (11.8k incl. package-lock)</span></div>
+  <div class="kpi"><b>0</b><span>reviews or comments recorded on any pull request</span></div>
+</div>
+
+<table>
+  <thead><tr><th style="width:28%">Branch</th><th style="width:22%">Pull requests</th><th class="num" style="width:14%">Lines +/−</th><th>Content</th></tr></thead>
+  <tbody>
+    <tr><td>test/CAF-235-apex-test-suites</td><td>#4 (+#7, #9 sync)</td><td class="num">+724 / −0</td><td>Apex test suites with mocked callouts</td></tr>
+    <tr><td>test/lwc-unit-tests-and-preflight</td><td>#10 (+#11 sync)</td><td class="num">+8,832 / −0</td><td>Offline Jest tests and <code>.env</code> preflight; 8,090 lines are package-lock.json</td></tr>
+    <tr><td>adhoc-test</td><td>#25, #27, #29, #31, #33 (+4 sync)</td><td class="num">+369 / −0</td><td>Approvals screen unit tests and ad hoc cases</td></tr>
+    <tr><td>servicenow-redeploy-dev249570</td><td>#8 (shared, sync)</td><td class="num">—</td><td>2 of 3 commits, no line changes</td></tr>
+    <tr><td>feature/CAF-217-foundation-pages</td><td>#42 – #47</td><td class="num">+1,862 / −19</td><td>CAF-218 deploy fixes; CAF-221 permission sets and role check; CAF-222/226 Lightning app, tabs and list views; CAF-224 cafHome; CAF-229 task record page; CAF-230 request record page</td></tr>
+  </tbody>
+</table>
+<p class="note">"Sync" pull requests contain their commits but change no lines; they bring a branch back in line with main. #45 carries the cafHome change twice: once dated October and once dated September (see section 4, "Dating").</p>
+
+
+<!-- ============================ JIRA ============================ -->
+<h1>4. Jira</h1>
+<p>In Jira (reyantech.atlassian.net) Rehan appears as "Sadiq Rehan Mohammed". They are the assignee on 56 CAF issues: the ETL and data quality epic (CAF-31) and 55 work items, mostly integration test cases (TC-INT), with stories, bugs, tasks and subtasks.</p>
+
+<div class="kpis">
+  <div class="kpi"><b>55</b><span>CAF work items assigned (excluding epics)</span></div>
+  <div class="kpi"><b>35</b><span>Done (64%)</span></div>
+  <div class="kpi"><b>9</b><span>closed in October</span></div>
+  <div class="kpi"><b>16</b><span>To Do (6 in the October 2026 epic), plus 2 In Progress and 2 In Review</span></div>
+</div>
+
+<table>
+  <thead><tr><th style="width:12%">Epic</th><th>Title</th><th class="num" style="width:13%">Done / items</th><th style="width:16%">Epic status</th></tr></thead>
+  <tbody>
+    <tr><td>CAF-31</td><td>ETL and data quality assurance</td><td class="num">26 / 35</td><td><span class="status done">Done</span></td></tr>
+    <tr><td>CAF-32</td><td>Defect remediation and open items</td><td class="num">5 / 8</td><td><span class="status done">Done</span></td></tr>
+    <tr><td>CAF-12</td><td>CAF business logic and server scripts</td><td class="num">1 / 1</td><td><span class="status plan">To Do</span></td></tr>
+    <tr><td>CAF-217</td><td>October 2026: foundation, app shell, home and record pages</td><td class="num">3 / 11</td><td><span class="status part">In Progress</span></td></tr>
+  </tbody>
+</table>
+<p class="note">CAF-31 holds 30 test cases and 5 stories. CAF-32 counts two subtasks: CAF-244 under CAF-79 and CAF-246 under CAF-180. CAF-12 counts one subtask (CAF-18) under CAF-13. CAF-217 counts one subtask, CAF-248, under CAF-233. CAF-31 is the only epic assigned to Rehan; the status of the others is shown for context.</p>
+
+<h2>Changes since the previous version of this report</h2>
+<ul>
+  <li><b>Now Done:</b> CAF-106 (TC-INT-005 idempotent push) and CAF-142 (TC-INT-041 drift type 2), both closed in October.</li>
+  <li><b>Now In Review:</b> CAF-110 (TC-INT-009 push failures do not roll back) and CAF-111 (TC-INT-010 kill switch), previously To Do.</li>
+  <li><b>Now In Progress:</b> CAF-238 (retest cycle C2), previously To Do.</li>
+  <li><b>New:</b> CAF-248, a subtask under CAF-233 to validate the control catalogue instructions and request tier mapping, In Progress.</li>
+  <li><b>Code:</b> pull requests #42 – #47 merged to main: CAF-218, CAF-221, CAF-222/226, CAF-224, CAF-229 and CAF-230. Together they add 7 commits (6 distinct changes) and 2,415 lines. No Jira ticket changed with them.</li>
+  <li><b>Dating:</b> eight changes carry August or September dates that the history contradicts. The monthly chart shows them in the month they carry, and its caption says so (see "Dating" below).</li>
+</ul>
+
+<h2>Earlier changes this month</h2>
+<ul>
+  <li><b>CAF-235</b> (Apex test suites) was reassigned to Rehan and closed as Done, matching the merged pull request #4.</li>
+  <li><b>Now Done:</b> CAF-144 (TC-INT-043 drift type 4), CAF-174 (mirrored Name field never compared), CAF-234 (compliance roll-up fix, newly assigned to Rehan), CAF-239 (retest cycle C3), CAF-244 (Apex service coverage and negative scenarios) and CAF-246, a new subtask under CAF-180 for ETL testing of credential rotation.</li>
+  <li><b>Now In Progress:</b> CAF-106 (TC-INT-005 idempotent push) and CAF-142 (TC-INT-041 drift type 2).</li>
+</ul>
+
+<h2>Where Jira and the code disagree</h2>
+<ul>
+  <li><b>Epic Done with open items.</b> CAF-31 is Done, but 9 of its test cases are still open: 7 To Do and 2 In Review. They include drift types 1 and 3 (TC-INT-039, 042), re-sync repair (TC-INT-040) and the kill switch (TC-INT-010, In Review).</li>
+  <li><b>Code merged, ticket still open.</b> CAF-240 ("Jest set-up and unit tests for the existing LWCs") is To Do, although Rehan's Jest tests were merged in pull request #10 in October.</li>
+  <li><b>Code merged, ticket with someone else.</b> Seven tickets are assigned to Geethasri Chintha and marked To Do although Rehan's commits for them were merged in October: CAF-218 (#42), CAF-221 (#43), CAF-222 and CAF-226 (#44), CAF-224 (#45), CAF-229 (#46) and CAF-230 (#47). CAF-218 was Geethasri's build, and Rehan's commit fixed its deploy blockers. The other six are Rehan's work throughout.</li>
+  <li><b>Matches.</b> For the harness and suites, dates line up: tickets were created May–July, the same months as the commits. Test cases named in commits match Done tickets, for example TC-INT-065 (CAF-166) and TC-INT-070 (CAF-171), and recorded results TC-INT-063 and 064 (CAF-164, CAF-165).</li>
+</ul>
+
+
+<h2>Dating</h2>
+<p>A commit cannot be made before the commits it is built on. Eight of Rehan's commits on main are dated earlier than commits they are built on, so the dates they carry cannot be when they were made. Seven are second copies of a change that is also on main with an October date. In every pair, the two copies have the same minutes and seconds and differ only in day and hour. For example, the cafHome change (CAF-224) is on main as 8e6b369, dated October, and as dac5fd0, dated September. dac5fd0 sits on top of a commit made in October.</p>
+<table>
+  <thead><tr><th style="width:30%">Copy and date it carries</th><th style="width:22%">Built on a commit from</th><th>Change</th></tr></thead>
+  <tbody>
+    <tr><td>f7e3a17 · 3 Aug</td><td>20 Oct</td><td>Ad hoc: TC-UNIT-109 to 113</td></tr>
+    <tr><td>8aaae1d · 9 Aug</td><td>20 Oct</td><td>Ad hoc: TC-UNIT-114 to 117</td></tr>
+    <tr><td>089cf3e · 20 Aug</td><td>19 Oct</td><td>Ad hoc: support dropdown and empty-filter message</td></tr>
+    <tr><td>d09cb51 · 28 Aug</td><td>20 Oct</td><td>Ad hoc: review panel highlight, close and evidence count relay</td></tr>
+    <tr><td>a899c85 · 3 Sep</td><td>20 Oct</td><td>Ad hoc: post-decision refresh and failed refresh</td></tr>
+    <tr><td>893236d · 10 Sep</td><td>17 Oct</td><td>Offline LWC unit tests and <code>.env</code> preflight check</td></tr>
+    <tr><td>08b1e7b · 17 Sep</td><td>16 Oct</td><td>Merge of the CAF-235 Apex test branch (a single-parent commit)</td></tr>
+    <tr><td>dac5fd0 · 25 Sep</td><td>23 Oct</td><td>CAF-224: cafHome with KPI tiles</td></tr>
+  </tbody>
+</table>
+<p>The monthly chart in section 1 shows each change in the month it carries, and its caption counts the eight above. The earliest date the history supports is the commit's own date or the latest date of anything it is built on, whichever is later. By that rule, 4 of the August changes and all 4 September changes belong in October, which would make the months August 2, September 0 and October 14. Git shows when a commit was made, not when the work behind it was done. The same pattern appears in other contributors' commits on main.</p>
+
+<h2>Method and caveats</h2>
+<ul class="note">
+  <li>Source: <code>git log main --no-merges</code> at 125ac13, filtered by the email rehan.sadiq@reyantech.co.uk, which covers all three author names. The figures at the previous source were reproduced exactly before updating.</li>
+  <li>7 of their 50 commits repeat the subject of another. Counts of "changes" use distinct subjects, dated by the earlier copy, with contradicted dates noted as described under "Dating". The Geethasri Chintha report uses the same method.</li>
+  <li>Commits measure activity, not effort or quality. Manual test execution, review and pairing are not captured.</li>
+  <li>Pull request data: <code>gh pr view</code> for #1–#41, read in October 2026, and #42–#47, read later in October. A pull request counts as theirs when every commit in it carries their email.</li>
+  <li>Jira data: issues assigned to account "Sadiq Rehan Mohammed", read in October 2026.</li>
+</ul>
+
+
+<!-- ============================ APPENDIX ============================ -->
+<h1>Appendix A. Done Jira tickets</h1>
+<p>Every CAF work item assigned to Rehan in Jira with status Done at the time of writing, 35 in total, grouped by epic. A ticket is listed whether or not a commit names it. Tickets marked <b>Oct</b> were closed in October.</p>
+<h2>CAF-31 ETL and data quality assurance <span class="note">(26)</span></h2>
+<table>
+  <thead><tr><th style="width:12%">Ticket</th><th style="width:11%">Type</th><th>Summary</th></tr></thead>
+  <tbody>
+    <tr><td>CAF-97</td><td>Story</td><td>Seed a demo estate that reads to an audience who does not know the client</td></tr>
+    <tr><td>CAF-98</td><td>Story</td><td>Seed through a server-side script rather than the Table API</td></tr>
+    <tr><td>CAF-99</td><td>Story</td><td>Reconcile the number counter before any bulk insert</td></tr>
+    <tr><td>CAF-100</td><td>Story</td><td>Key duplicate-request detection on the control, not the relationship</td></tr>
+    <tr><td>CAF-101</td><td>Story</td><td>Take the detached requests out of both grids</td></tr>
+    <tr><td>CAF-102</td><td>Test</td><td>TC-INT-001 Full mirror parity by record, not by count</td></tr>
+    <tr><td>CAF-105</td><td>Test</td><td>TC-INT-004 Tasks created by the flow are pushed too</td></tr>
+    <tr><td>CAF-106</td><td>Test</td><td>TC-INT-005 Push is idempotent <span class="status done">Oct</span></td></tr>
+    <tr><td>CAF-107</td><td>Test</td><td>TC-INT-006 No Salesforce Id is ever stored in ServiceNow</td></tr>
+    <tr><td>CAF-109</td><td>Test</td><td>TC-INT-008 Blank and null are treated as equal</td></tr>
+    <tr><td>CAF-139</td><td>Test</td><td>TC-INT-038 Clean state reports zero differences</td></tr>
+    <tr><td>CAF-142</td><td>Test</td><td>TC-INT-041 Drift type 2: in ServiceNow, missing in Salesforce <span class="status done">Oct</span></td></tr>
+    <tr><td>CAF-144</td><td>Test</td><td>TC-INT-043 Drift type 4: Salesforce simply stale <span class="status done">Oct</span></td></tr>
+    <tr><td>CAF-145</td><td>Test</td><td>TC-INT-044 Only State__c is editable in the Salesforce mirror</td></tr>
+    <tr><td>CAF-147</td><td>Test</td><td>TC-INT-046 Snapshot is read-only</td></tr>
+    <tr><td>CAF-148</td><td>Test</td><td>TC-INT-047 Drift detection is automatic, repair never is</td></tr>
+    <tr><td>CAF-159</td><td>Test</td><td>TC-INT-058 Updating a pending-delete record recreates its twin</td></tr>
+    <tr><td>CAF-163</td><td>Test</td><td>TC-INT-062 The control catalogue is reconciled by nothing</td></tr>
+    <tr><td>CAF-164</td><td>Test</td><td>TC-INT-063 The External Id is unique and always populated</td></tr>
+    <tr><td>CAF-165</td><td>Test</td><td>TC-INT-064 Truncation headroom, and the drift it would cause</td></tr>
+    <tr><td>CAF-166</td><td>Test</td><td>TC-INT-065 Date conversion fidelity</td></tr>
+    <tr><td>CAF-167</td><td>Test</td><td>TC-INT-066 The state code-to-label mapping is total</td></tr>
+    <tr><td>CAF-168</td><td>Test</td><td>TC-INT-067 Denormalised business application is still current</td></tr>
+    <tr><td>CAF-169</td><td>Test</td><td>TC-INT-068 The control join resolves, and the name agrees</td></tr>
+    <tr><td>CAF-170</td><td>Test</td><td>TC-INT-069 The boolean cast survives the round trip</td></tr>
+    <tr><td>CAF-171</td><td>Test</td><td>TC-INT-070 Parent references resolve</td></tr>
+  </tbody>
+</table>
+<h2>CAF-32 Defect remediation and open items <span class="note">(5)</span></h2>
+<table>
+  <thead><tr><th style="width:12%">Ticket</th><th style="width:11%">Type</th><th>Summary</th></tr></thead>
+  <tbody>
+    <tr><td>CAF-174</td><td>Bug</td><td>Name is a mirrored field that is editable and never compared <span class="status done">Oct</span></td></tr>
+    <tr><td>CAF-176</td><td>Bug</td><td>A deleted control left an active orphan column in the dashboard</td></tr>
+    <tr><td>CAF-178</td><td>Bug</td><td>Control numbers are not unique, so any join keyed on them pairs the wrong records</td></tr>
+    <tr><td>CAF-244</td><td>Subtask</td><td>Validate Apex Service Test Coverage and Negative Scenarios <span class="status done">Oct</span></td></tr>
+    <tr><td>CAF-246</td><td>Subtask</td><td>ETL Testing – Validate Credential Rotation and Salesforce–ServiceNow Integration <span class="status done">Oct</span></td></tr>
+  </tbody>
+</table>
+<h2>CAF-217 October 2026: foundation, app shell, home and record pages <span class="note">(3)</span></h2>
+<table>
+  <thead><tr><th style="width:12%">Ticket</th><th style="width:11%">Type</th><th>Summary</th></tr></thead>
+  <tbody>
+    <tr><td>CAF-234</td><td>Bug</td><td>ServiceNow: fix the compliance roll-up business rule (DEF-01, DEF-02) <span class="status done">Oct</span></td></tr>
+    <tr><td>CAF-235</td><td>Story</td><td>Apex test suites with mocked callouts <span class="status done">Oct</span></td></tr>
+    <tr><td>CAF-239</td><td>Task</td><td>Retest cycle C3: verify the 12 August fixes (RT-17, RT-18) <span class="status done">Oct</span></td></tr>
+  </tbody>
+</table>
+<h2>CAF-12 CAF business logic and server scripts (via CAF-13) <span class="note">(1)</span></h2>
+<table>
+  <thead><tr><th style="width:12%">Ticket</th><th style="width:11%">Type</th><th>Summary</th></tr></thead>
+  <tbody>
+    <tr><td>CAF-18</td><td>Subtask</td><td>Test next due date calculation on request closure</td></tr>
+  </tbody>
+</table>
+
+</body>
+</html>

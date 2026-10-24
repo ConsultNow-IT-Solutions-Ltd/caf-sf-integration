@@ -1,0 +1,405 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>CAF Compliance – Contribution Report: Geethasri Chintha</title>
+<style>
+  :root {
+    --ink: #13203A; --muted: #4A5568; --faint: #6A7383; --rule: #D9DEE5;
+    --sf: #2563A8; --sn: #0E7364; --accent: #A3520F; --warn-bg: #FFF1DF;
+  }
+  @page { size: A4; margin: 18mm 16mm 20mm 16mm; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; color: var(--ink); background: #fff;
+    font-family: "Segoe UI", Arial, sans-serif; font-size: 10.5pt; line-height: 1.5; }
+  h1 { font-size: 20pt; margin: 0 0 10px; padding-bottom: 6px; border-bottom: 3px solid var(--ink); break-before: page; break-after: avoid; }
+  h2 { font-size: 13.5pt; margin: 18px 0 6px; break-after: avoid; }
+  p { margin: 0 0 8px; }
+  ul { margin: 0 0 8px; padding-left: 20px; }
+  li { margin-bottom: 3px; }
+  code { font-family: Consolas, monospace; font-size: 9pt; background: #EEF1F5; padding: 0 3px; border-radius: 3px; }
+  table { width: 100%; border-collapse: collapse; margin: 6px 0 12px; font-size: 9.5pt; }
+  th { background: var(--ink); color: #fff; text-align: left; padding: 5px 7px; font-weight: 600; }
+  td { padding: 5px 7px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  tr { break-inside: avoid; }
+  tbody tr:nth-child(even) td { background: #F7F8FA; }
+  td.num, th.num { text-align: right; }
+  .figure { margin: 10px 0 14px; break-inside: avoid; }
+  .figure svg { width: 100%; height: auto; display: block; }
+  .caption { font-size: 9pt; color: var(--faint); margin-top: 4px; }
+  .callout { border-left: 4px solid var(--accent); background: var(--warn-bg); padding: 8px 12px; margin: 8px 0 12px; break-inside: avoid; }
+  .note { font-size: 9pt; color: var(--faint); }
+  .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 10px 0 14px; }
+  .kpi { border: 1px solid var(--rule); border-radius: 6px; padding: 10px 12px; background: #F7F8FA; break-inside: avoid; }
+  .kpi b { display: block; font-size: 22pt; line-height: 1.1; color: var(--sf); }
+  .kpi span { font-size: 9pt; color: var(--muted); }
+  .status { display: inline-block; padding: 1px 8px; border-radius: 999px; font-size: 8.5pt; font-weight: 600; white-space: nowrap; }
+  .done { background: #DCEEE8; color: #0B5C50; }
+  .part { background: #FFF1DF; color: #8A4A0B; }
+  .plan { background: #EEF1F5; color: #4A5568; }
+  .cover { height: 250mm; display: flex; flex-direction: column; justify-content: space-between; background: var(--ink); color: #F5F6F2; padding: 22mm 16mm; border-radius: 6px; }
+  .cover .kicker { color: #F0A35E; letter-spacing: 3px; text-transform: uppercase; font-weight: 600; font-size: 11pt; }
+  .cover h1 { border: 0; font-size: 32pt; line-height: 1.1; margin: 14px 0; break-before: avoid; color: #F5F6F2; }
+  .cover .sub { font-size: 13.5pt; color: #BCC6D6; max-width: 150mm; }
+  .cover table { color: #F5F6F2; font-size: 10pt; max-width: 130mm; }
+  .cover td { border-bottom: 1px solid #33415E; background: transparent !important; }
+  .cover td:first-child { color: #BCC6D6; width: 42mm; }
+</style>
+</head>
+<body>
+
+<section class="cover">
+  <div>
+    <div class="kicker">Contribution Report · Individual</div>
+    <h1>Geethasri Chintha<br>CAF Compliance</h1>
+    <p class="sub">What Geethasri delivered on the ServiceNow ⇄ Salesforce CAF integration from February to October 2026, drawn from the git history, GitHub pull requests and Jira.</p>
+  </div>
+  <table>
+    <tr><td>Contributor</td><td>Geethasri Chintha (also commits as "Geethasshri")</td></tr>
+    <tr><td>Period</td><td>9 February – 20 October 2026</td></tr>
+    <tr><td>Source</td><td>caf-sf-integration repository, main @ 125ac13</td></tr>
+    <tr><td>Date</td><td>23 October 2026</td></tr>
+  </table>
+</section>
+
+<!-- ============================ SUMMARY ============================ -->
+<h1>1. Summary</h1>
+<p>Geethasri is the largest single contributor to the repository. They created it, wrote the design documents, built the Salesforce data model, the core Apex services and the first four Lightning screens, and wrote the ServiceNow side of the sync. In May they built the ServiceNow REST API, and in August the presentation decks and ServiceNow fixes. Commits dated May to September carry the ticketed UI work on the Approvals, Reports, Admin and Sync Health screens (CAF-27, CAF-233) and the task-panel and evidence fixes. The history places those commits in October (see "Dating" in section 4). In October they also delivered the hardening tickets (CAF-173, CAF-218, CAF-219, CAF-220). Their commits appear in 27 of the 47 pull requests, all merged in October. In Jira they own 81 CAF work items. 61 are Done, 4 of those closed in October, and six of their epics are complete. Appendix A lists every Done ticket.</p>
+
+<div class="kpis">
+  <div class="kpi"><b>76</b><span>distinct changes on main (92 commits incl. repeats)</span></div>
+  <div class="kpi"><b>44%</b><span>of the team's 174 distinct changes</span></div>
+  <div class="kpi"><b>131</b><span>files touched</span></div>
+  <div class="kpi"><b>22.4k</b><span>lines added (19% of the team total)</span></div>
+</div>
+
+<div class="figure">
+<svg viewBox="0 0 700 220" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial" font-size="10.5">
+  <!-- scale: 12 changes = 144px (12px per change); baseline y=180 -->
+  <g stroke="#D9DEE5"><line x1="50" y1="132" x2="690" y2="132"/><line x1="50" y1="84" x2="690" y2="84"/><line x1="50" y1="36" x2="690" y2="36"/></g>
+  <line x1="50" y1="180" x2="690" y2="180" stroke="#13203A"/>
+  <g fill="#6A7383" font-size="9" text-anchor="end">
+    <text x="44" y="183">0</text><text x="44" y="135">4</text><text x="44" y="87">8</text><text x="44" y="39">12</text>
+  </g>
+  <!-- 9 months, slot 71.1px, bar 36 -->
+  <g fill="#2563A8">
+    <rect x="68"  y="72"  width="36" height="108"/>
+    <rect x="139" y="60"  width="36" height="120"/>
+    <rect x="210" y="36"  width="36" height="144"/>
+  </g>
+  <g fill="#0E7364">
+    <rect x="281" y="36" width="36" height="144"/>
+    <rect x="352" y="120" width="36" height="60"/>
+    <rect x="423" y="108" width="36" height="72"/>
+  </g>
+  <g fill="#A3520F">
+    <rect x="494" y="36" width="36" height="144"/>
+    <rect x="565" y="132" width="36" height="48"/>
+    <rect x="636" y="108" width="36" height="72"/>
+  </g>
+  <g text-anchor="middle" fill="#13203A">
+    <text x="86" y="66">9</text><text x="157" y="54">10</text><text x="228" y="30">12</text>
+    <text x="299" y="30">12</text><text x="370" y="114">5</text><text x="441" y="102">6</text>
+    <text x="512" y="30">12</text><text x="583" y="126">4</text><text x="654" y="102">6</text>
+  </g>
+  <g font-size="9.5" fill="#4A5568">
+  </g>
+  <g text-anchor="middle" fill="#4A5568" font-size="9.5">
+    <text x="86" y="196">Feb</text><text x="157" y="196">Mar</text><text x="228" y="196">Apr</text>
+    <text x="299" y="196">May</text><text x="370" y="196">Jun</text><text x="441" y="196">Jul</text>
+    <text x="512" y="196">Aug</text><text x="583" y="196">Sep</text><text x="654" y="196">Oct</text>
+  </g>
+  <g text-anchor="end" font-size="10" fill="#13203A">
+    <text x="690" y="14"><tspan font-weight="700">Jira tickets worked: 81</tspan><tspan fill="#4A5568"> · 61 Done</tspan></text>
+  </g>
+  <g text-anchor="middle" font-weight="700" font-size="10">
+    <text x="157" y="214" fill="#2563A8">Q1 · 31</text>
+    <text x="370" y="214" fill="#0E7364">Q2 · 23</text>
+    <text x="583" y="214" fill="#A3520F">Q3 · 22</text>
+  </g>
+</svg>
+<div class="caption">Bars: distinct code changes per month, by the date each commit carries. Repeated copies of a change are counted once, under the earlier date. 16 of these changes (May 2, June 3, July 5, August 1, September 4, October 1) carry dates the history contradicts: their commits sit on top of commits made in October, so they cannot have been made in the month shown. Dated by what the history supports, all 16 belong in October (see "Dating" in section 4). Jira tickets worked: CAF work items assigned to Geethasri at the time of writing (see section 4 and Appendix A). Section 3 shows when the code reached main.</div>
+</div>
+
+<table>
+  <thead><tr><th style="width:16%">Quarter</th><th style="width:22%">Focus</th><th>What they delivered</th></tr></thead>
+  <tbody>
+    <tr><td><b>Q1</b><br>Feb–Apr</td><td>Foundation</td><td>Repository scaffold, README, technical design with integration diagram and security model; Salesforce objects, permission set, layouts and tabs; Apex task, evidence, attestation, dashboard and sync-health services; Dashboard, Evidence, Attestation and Sync Health screens</td></tr>
+    <tr><td><b>Q2</b><br>May–Jul</td><td>ServiceNow API, first tickets</td><td>Push and retire business rules; six scripted REST endpoints; ServiceNow setup guide with verified behaviour and known gaps; key design decisions in the technical design. Dated May–July, placed in October by the history: CAF-27 filters, CSV export, callout-log filtering, Sync Health and Reports changes; first CAF-233 Approvals screen and null checks</td></tr>
+    <tr><td><b>Q3</b><br>Aug–Oct</td><td>Decks, fixes, hardening</td><td>August: business and technical deck builders and screenshots; ServiceNow short-description and null-state fixes. Dated August–September, placed in October by the history: approvals test validations; task-panel, evidence-reload and outage-reporting fixes; CAF-233 grid sort and saved preferences. October: CAF-233 grid filters and totals; CAF-173, CAF-218, CAF-219, CAF-220</td></tr>
+  </tbody>
+</table>
+
+<!-- ============================ AREAS ============================ -->
+<h1>2. Work by area</h1>
+
+<table>
+  <thead><tr><th style="width:26%">Area</th><th class="num" style="width:13%">Lines added</th><th>Main items</th></tr></thead>
+  <tbody>
+    <tr><td>Salesforce · Lightning (LWC)</td><td class="num">12,667</td><td>cafDashboard, cafEvidence, cafAttestation, cafSyncHealth; Approvals, Reports and Admin screen changes; shared cafCsv helper</td></tr>
+    <tr><td>Salesforce · Apex</td><td class="num">2,645</td><td>CafTaskService, CafEvidenceService, CafAttestationService, CafDashboardController, CafSyncHealth; callout logging; custom-metadata settings</td></tr>
+    <tr><td>Salesforce · metadata</td><td class="num">1,506</td><td>Control Catalog, Request and Task objects; permission set; layouts, tabs, manifest, custom metadata, triggers</td></tr>
+    <tr><td>ServiceNow</td><td class="num">1,427</td><td>CAFSalesforceSync script include, caf_short_desc helper, business rules, six REST endpoints, SETUP.md</td></tr>
+    <tr><td>Design and docs</td><td class="num">1,541</td><td>Technical design document (diagram, security model, key design decisions), README, deployment notes, handoff archive</td></tr>
+    <tr><td>Presentation</td><td class="num">1,644</td><td>Business overview and technical architecture deck builders, screenshot cropping utility, captured screenshots</td></tr>
+    <tr><td>Testing</td><td class="num">990</td><td>Approvals test validations</td></tr>
+  </tbody>
+</table>
+<p class="note">Line counts are lines added on main, excluding merges. Generated or bulk files (for example LWC markup and deck images) push some areas up.</p>
+
+<h2>Ticketed work</h2>
+<table>
+  <thead><tr><th style="width:14%">Ticket</th><th class="num" style="width:12%">Changes</th><th>Scope</th></tr></thead>
+  <tbody>
+    <tr><td>CAF-27</td><td class="num">8</td><td>Clear-filters button; CSV export; callout log filter by operation and clearer empty states; Sync Health record-type filter and stale-check flag (15 min); Reports overdue-only and click-to-filter</td></tr>
+    <tr><td>CAF-233</td><td class="num">4</td><td>Approvals screen redesign; null checks and method comments; grid sort, saved preferences, overdue and selection markers, task summary, sync breakdown, comment limit; grid filters and totals, attestation confirmation</td></tr>
+    <tr><td>CAF-173</td><td class="num">1</td><td>Mismatch advice names the side that is short</td></tr>
+    <tr><td>CAF-218</td><td class="num">1</td><td>Log every ServiceNow callout</td></tr>
+    <tr><td>CAF-219</td><td class="num">1</td><td>Move CAF settings from Apex constants into custom metadata</td></tr>
+    <tr><td>CAF-220</td><td class="num">1</td><td>CRUD updates</td></tr>
+  </tbody>
+</table>
+
+<!-- ============================ PRS ============================ -->
+<h1>3. Pull requests</h1>
+<p>All 47 pull requests were opened and merged through the Reyantech organisation account in October, so GitHub's author field does not show who did the work. The table below attributes each pull request by the authors of the commits it contains. The six most recent (#42–#47) carry only Rehan Sadiq's commits.</p>
+
+<div class="kpis">
+  <div class="kpi"><b>27</b><span>of 47 pull requests contain their commits</span></div>
+  <div class="kpi"><b>17</b><span>of 31 code-carrying pull requests are entirely theirs</span></div>
+  <div class="kpi"><b>7.1k</b><span>lines added in those 17 (350 removed)</span></div>
+  <div class="kpi"><b>0</b><span>reviews or comments recorded on any pull request</span></div>
+</div>
+
+<table>
+  <thead><tr><th style="width:26%">Branch</th><th style="width:20%">Pull requests</th><th class="num" style="width:14%">Lines +/−</th><th>Content</th></tr></thead>
+  <tbody>
+    <tr><td>feature/CAF-218-integration-log</td><td>#2</td><td class="num">+396 / −33</td><td>Log every ServiceNow callout</td></tr>
+    <tr><td>feature/CAF-220-crud-fls</td><td>#3</td><td class="num">+30 / −0</td><td>CRUD updates</td></tr>
+    <tr><td>fix/CAF-173-mismatch-advice</td><td>#5</td><td class="num">+15 / −5</td><td>Mismatch advice names the short side</td></tr>
+    <tr><td>feature/CAF-118-enhance-fix</td><td>#12 (#13 sync)</td><td class="num">+254 / −34</td><td>Task panel, evidence reload and outage-reporting fixes</td></tr>
+    <tr><td>feature/CAF-233-push-controls</td><td>#14, #16, #18, #21, #23 (+6 sync)</td><td class="num">+5,651 / −250</td><td>Approvals screen, test validations, null checks, grid sort, filters and totals</td></tr>
+    <tr><td>CAF-27-sync-health-drift</td><td>#34 – #41</td><td class="num">+770 / −28</td><td>Filters, CSV export, callout log, Sync Health and Reports changes</td></tr>
+    <tr><td>feature/CAF-219-config-custom-metadata</td><td>#1 (shared)</td><td class="num">—</td><td>1 of 9 commits: settings moved to custom metadata</td></tr>
+  </tbody>
+</table>
+<p class="note">"Sync" pull requests contain their commits but change no lines; they bring a branch back in line with main. Pull requests #6 and #7 (ServiceNow redeploy and Apex test branches) are of this kind. Lines for CAF-27 are summed across the eight pull requests on that branch.</p>
+
+
+<!-- ============================ JIRA ============================ -->
+<h1>4. Jira</h1>
+<p>In Jira (reyantech.atlassian.net) Geethasri appears as "Chintha Geetha sri". They are the assignee on 93 issues in the CAF project: 12 epics and 81 work items (stories, bugs, tests, tasks and subtasks). Another 26 issues assigned to them sit in other projects (MONO, SCRUM, HP) from January 2025 and are left out here.</p>
+
+<div class="kpis">
+  <div class="kpi"><b>81</b><span>CAF work items assigned (excluding epics)</span></div>
+  <div class="kpi"><b>61</b><span>Done (75%)</span></div>
+  <div class="kpi"><b>4</b><span>closed in October</span></div>
+  <div class="kpi"><b>17</b><span>To Do (15 in the October 2026 epic), plus 3 in progress, testing or review</span></div>
+</div>
+
+<table>
+  <thead><tr><th style="width:12%">Epic</th><th>Title</th><th class="num" style="width:13%">Done / items</th><th style="width:16%">Epic status</th></tr></thead>
+  <tbody>
+    <tr><td>CAF-23</td><td>Salesforce foundation and org setup</td><td class="num">8 / 8</td><td><span class="status done">Done</span></td></tr>
+    <tr><td>CAF-24</td><td>Outbound integration – ServiceNow to Salesforce</td><td class="num">9 / 9</td><td><span class="status done">Done</span></td></tr>
+    <tr><td>CAF-25</td><td>Inbound integration – Salesforce to ServiceNow</td><td class="num">6 / 6</td><td><span class="status done">Done</span></td></tr>
+    <tr><td>CAF-26</td><td>CAF compliance dashboard (LWC)</td><td class="num">6 / 6</td><td><span class="status done">Done</span></td></tr>
+    <tr><td>CAF-27</td><td>Sync Health and drift detection</td><td class="num">7 / 7</td><td><span class="status done">Done</span></td></tr>
+    <tr><td>CAF-28</td><td>Evidence and attestation</td><td class="num">7 / 7</td><td><span class="status done">Done</span></td></tr>
+    <tr><td>CAF-3</td><td>CAF data model and tables (ServiceNow)</td><td class="num">6 / 8</td><td><span class="status plan">To Do</span></td></tr>
+    <tr><td>CAF-12</td><td>CAF business logic and server scripts</td><td class="num">5 / 5</td><td><span class="status plan">To Do</span></td></tr>
+    <tr><td>CAF-31</td><td>ETL and data quality assurance</td><td class="num">2 / 2</td><td>—</td></tr>
+    <tr><td>CAF-32</td><td>Defect remediation and open items</td><td class="num">5 / 7</td><td><span class="status done">Done</span></td></tr>
+    <tr><td>CAF-217</td><td>October 2026: foundation, app shell, home and record pages</td><td class="num">0 / 16</td><td><span class="status part">In Progress</span></td></tr>
+  </tbody>
+</table>
+<p class="note">Counts include subtasks (three under CAF-3, one under CAF-12). CAF-31 is not assigned to Geethasri, so its status is not shown. Two more epics assigned to them, CAF-189 ("login page error", To Do) and CAF-190 (an earlier copy of the October epic, In Progress), have no work items assigned to them.</p>
+
+<h2>Changes since the previous version of this report</h2>
+<ul>
+  <li><b>Now Done:</b> CAF-104 (TC-INT-003, a new task appears in Salesforce) and CAF-181 (the evidence gate binds the API but not the portal or an administrator).</li>
+  <li><b>Moved forward:</b> CAF-233 from In Progress to Testing.</li>
+  <li><b>Code:</b> no new commits of theirs. Six more pull requests merged in October (#42–#47), all Rehan Sadiq's, so the team totals moved: 174 distinct changes (was 168) and 47 pull requests (was 41).</li>
+  <li><b>Dating:</b> sixteen changes carry May–October dates that the history contradicts. The monthly chart shows them in the month they carry, and its caption says so (see "Dating" below).</li>
+</ul>
+
+<h2>Earlier changes this month</h2>
+<ul>
+  <li><b>Now Done:</b> CAF-180 (integration credentials exposed in a session transcript) and CAF-79 (Apex test coverage for the three service classes).</li>
+  <li><b>Moved forward:</b> CAF-233 from To Do to In Progress; CAF-181 from In Progress to Testing.</li>
+  <li><b>Moved back:</b> CAF-218, CAF-219 and CAF-220 from In Review to To Do.</li>
+  <li><b>Reassigned:</b> CAF-234 (compliance roll-up fix) moved to Rehan Sadiq, who closed it in October.</li>
+</ul>
+
+<h2>Where Jira and the code disagree</h2>
+<ul>
+  <li><b>Code merged, ticket still open.</b> CAF-233 is in Testing although its code was merged through pull requests #14–#24 in October. CAF-218, CAF-219 and CAF-220 were moved back from In Review to To Do, although their code is merged.</li>
+  <li><b>Assigned to Geethasri, built by someone else.</b> CAF-221, CAF-222, CAF-224, CAF-226, CAF-229 and CAF-230 are assigned to Geethasri and To Do, but Rehan Sadiq's commits for all six were merged in October (#43–#47). Rehan also merged a deploy fix for CAF-218 (#42).</li>
+  <li><b>Done epics with open items.</b> CAF-32 (defect remediation) is Done with two of its seven items still open: CAF-185 and CAF-78. CAF-3 and CAF-12 are the opposite: all their stories are done but the epics are still To Do.</li>
+  <li><b>Assignee differs from author.</b> CAF-173 and CAF-118 are assigned to Faiza Aslam, but the commits that fix them (#5, #12) are Geethasri's.</li>
+  <li><b>Dates do not line up.</b> Many CAF issues were created between August 2025 and January 2026, before the repository's first commit in February 2026. Most Done issues also have no resolution date. So Jira cannot be used to measure how long the work took.</li>
+</ul>
+
+
+<h2>Dating</h2>
+<p>A commit cannot be made before the commits it is built on. Sixteen of Geethasri's commits on main are dated earlier than commits they are built on, so the dates they carry cannot be when they were made. Each is a second copy of a change that is also on main with an October date. In all sixteen pairs the two copies have the same minutes and seconds and differ only in day and hour. For example, "CAF-27: Clear filters button" is on main as 868a7a9, dated October, and as 7ed82f6, dated May. 7ed82f6 sits on top of a commit made in October.</p>
+<table>
+  <thead><tr><th style="width:30%">Copy and date it carries</th><th style="width:22%">Built on a commit from</th><th>Change</th></tr></thead>
+  <tbody>
+    <tr><td>7ed82f6 · 20 May</td><td>20 Oct</td><td>CAF-27: Clear filters button</td></tr>
+    <tr><td>84026e7 · 26 May</td><td>20 Oct</td><td>CAF-27: Export CSV, shared cafCsv helper</td></tr>
+    <tr><td>63e7578 · 3 Jun</td><td>20 Oct</td><td>CAF-27: Admin - filter callout log by operation</td></tr>
+    <tr><td>33b1bd8 · 8 Jun</td><td>20 Oct</td><td>CAF-27: Admin - clearer empty callout log messages</td></tr>
+    <tr><td>7c8ffd3 · 30 Jun</td><td>20 Oct</td><td>CAF-27: Sync Health - filter differences by record type</td></tr>
+    <tr><td>31d5546 · 3 Jul</td><td>20 Oct</td><td>CAF-27: Sync Health - flag checks older than 15 minutes</td></tr>
+    <tr><td>dde14d5 · 8 Jul</td><td>20 Oct</td><td>CAF-27: Reports - Overdue only on due dates</td></tr>
+    <tr><td>2a10717 · 10 Jul</td><td>18 Oct</td><td>CAF-233: Updated screen for approvals</td></tr>
+    <tr><td>33488e3 · 10 Jul</td><td>20 Oct</td><td>CAF-27: Reports - click an application to filter</td></tr>
+    <tr><td>95c4243 · 19 Jul</td><td>19 Oct</td><td>CAF-233: Null checks and method comments on Approvals, Reports and Admin screens</td></tr>
+    <tr><td>99a7f57 · 18 Aug</td><td>19 Oct</td><td>Updated test validations for approvals</td></tr>
+    <tr><td>b38edf4 · 1 Sep</td><td>18 Oct</td><td>Close task panel on request change; fix row highlight; hide actions without sys_id</td></tr>
+    <tr><td>4f6d179 · 15 Sep</td><td>18 Oct</td><td>Report unreadable ServiceNow evidence replies separately from outages</td></tr>
+    <tr><td>502fbaf · 15 Sep</td><td>18 Oct</td><td>Reload evidence and reset attestation when the task changes</td></tr>
+    <tr><td>685298f · 25 Sep</td><td>19 Oct</td><td>CAF-233: Grid sort, saved preferences, overdue and selection markers, task summary</td></tr>
+    <tr><td>9e91962 · 2 Oct</td><td>19 Oct</td><td>CAF-233: Grid filters and totals, Sync Health fixes, evidence reload, attestation confirmation</td></tr>
+  </tbody>
+</table>
+<p>The monthly chart in section 1 shows each change in the month it carries, and its caption counts the sixteen above. The earliest date the history supports is the commit's own date or the latest date of anything it is built on, whichever is later. By that rule, 2 changes move out of May, 3 out of June, 5 out of July, 1 out of August and all 4 out of September into October. The months would then read May 10, June 2, July 1, August 11, September 0 and October 21. Git shows when a commit was made, not when the work behind it was done. The same pattern appears in other contributors' commits on main.</p>
+
+<h2>Method and caveats</h2>
+<ul class="note">
+  <li>Source: <code>git log main --no-merges</code> at 125ac13, filtered by the email geethasri.chintha@reyantech.co.uk, which covers both author names. The figures at the previous source, 571386c, were reproduced exactly before updating.</li>
+  <li>16 of their 92 commits repeat the subject of another. Counts of "changes" use distinct subjects, dated by the earlier copy, with contradicted dates noted as described under "Dating". Line counts include every copy, as in earlier versions of this report.</li>
+  <li>Commits measure activity, not effort or quality. Review, pairing and testing in the org are not captured.</li>
+  <li>Jira data: issues assigned to account "Chintha Geetha sri", read in October 2026.</li>
+  <li>Pull request data: <code>gh pr view</code> for #1–#41, read in October 2026, and #42–#47, read later in October. A pull request counts as theirs when every commit in it carries their email.</li>
+</ul>
+
+
+<!-- ============================ APPENDIX ============================ -->
+<h1>Appendix A. Done Jira tickets</h1>
+<p>Every CAF work item assigned to Geethasri in Jira with status Done at the time of writing, 61 in total, grouped by epic. A ticket is listed whether or not a commit names it. Jira issue keys are not used in most commit messages, so most of these tickets cannot be matched to a specific commit. Tickets marked <b>Oct</b> were closed in October.</p>
+<h2>CAF-3 CAF Data Model &amp; Tables <span class="note">(6)</span></h2>
+<table>
+  <thead><tr><th style="width:12%">Ticket</th><th style="width:11%">Type</th><th>Summary</th></tr></thead>
+  <tbody>
+    <tr><td>CAF-2</td><td>Story</td><td>Create CAF Controls table (caf_conformance_type)</td></tr>
+    <tr><td>CAF-4</td><td>Story</td><td>Create CAF Controls Relationships table (caf_relationship)</td></tr>
+    <tr><td>CAF-5</td><td>Subtask</td><td>Verify table schema and field attributes across all five tables</td></tr>
+    <tr><td>CAF-6</td><td>Story</td><td>Create CAF Relationship Tasks template table</td></tr>
+    <tr><td>CAF-7</td><td>Story</td><td>Create CAF Request table (caf_req)</td></tr>
+    <tr><td>CAF-8</td><td>Story</td><td>Create CAF Task table (caf_tsk)</td></tr>
+  </tbody>
+</table>
+<h2>CAF-12 CAF Business Logic &amp; Server Scripts <span class="note">(5)</span></h2>
+<table>
+  <thead><tr><th style="width:12%">Ticket</th><th style="width:11%">Type</th><th>Summary</th></tr></thead>
+  <tbody>
+    <tr><td>CAF-13</td><td>Story</td><td>BR: Manage active flag on request close/cancel</td></tr>
+    <tr><td>CAF-14</td><td>Story</td><td>BR: Set actual end date and calculate next due date on request close</td></tr>
+    <tr><td>CAF-15</td><td>Story</td><td>BR: Update Business App compliance status on out_of_compliance</td></tr>
+    <tr><td>CAF-16</td><td>Story</td><td>BR: Set Business App to undergoing_update on request insert</td></tr>
+    <tr><td>CAF-20</td><td>Subtask</td><td>Test CAFUtil.generateCAFRequests creates one request per matching relationship</td></tr>
+  </tbody>
+</table>
+<h2>CAF-23 Salesforce foundation and org setup <span class="note">(8)</span></h2>
+<table>
+  <thead><tr><th style="width:12%">Ticket</th><th style="width:11%">Type</th><th>Summary</th></tr></thead>
+  <tbody>
+    <tr><td>CAF-33</td><td>Story</td><td>Provision the Salesforce Developer Edition org and record its platform limits</td></tr>
+    <tr><td>CAF-34</td><td>Story</td><td>Establish the metadata-format source tree and a repeatable deploy</td></tr>
+    <tr><td>CAF-35</td><td>Story</td><td>Create CAF_Request__c with ServiceNow_Sys_Id__c as the External Id</td></tr>
+    <tr><td>CAF-36</td><td>Story</td><td>Create CAF_Task__c parented to CAF_Request__c</td></tr>
+    <tr><td>CAF-37</td><td>Story</td><td>Grant field-level security through the CAF_Integration permission set</td></tr>
+    <tr><td>CAF-38</td><td>Story</td><td>Add the custom fields to the page layouts</td></tr>
+    <tr><td>CAF-39</td><td>Story</td><td>Define All list views with explicit columns</td></tr>
+    <tr><td>CAF-40</td><td>Story</td><td>Create the tabs for the dashboard and the CAF objects</td></tr>
+  </tbody>
+</table>
+<h2>CAF-24 Outbound integration - ServiceNow to Salesforce <span class="note">(9)</span></h2>
+<table>
+  <thead><tr><th style="width:12%">Ticket</th><th style="width:11%">Type</th><th>Summary</th></tr></thead>
+  <tbody>
+    <tr><td>CAF-41</td><td>Story</td><td>Authenticate ServiceNow to Salesforce with the Client Credentials flow</td></tr>
+    <tr><td>CAF-42</td><td>Story</td><td>Hold the Salesforce credentials as ServiceNow system properties</td></tr>
+    <tr><td>CAF-43</td><td>Story</td><td>Build CAFSalesforceSync - token, transform and upsert by External Id</td></tr>
+    <tr><td>CAF-44</td><td>Story</td><td>Push a CAF Request to Salesforce on insert and update</td></tr>
+    <tr><td>CAF-45</td><td>Story</td><td>Push a CAF Task to Salesforce on insert and update</td></tr>
+    <tr><td>CAF-46</td><td>Story</td><td>Transform ServiceNow values into their Salesforce shapes</td></tr>
+    <tr><td>CAF-47</td><td>Story</td><td>Add a kill switch that stops all outbound push</td></tr>
+    <tr><td>CAF-48</td><td>Story</td><td>Make a failed push fire-and-forget, and log it</td></tr>
+    <tr><td>CAF-49</td><td>Story</td><td>Guard against the echo loop without stranding derived changes</td></tr>
+  </tbody>
+</table>
+<h2>CAF-25 Inbound integration - Salesforce to ServiceNow <span class="note">(6)</span></h2>
+<table>
+  <thead><tr><th style="width:12%">Ticket</th><th style="width:11%">Type</th><th>Summary</th></tr></thead>
+  <tbody>
+    <tr><td>CAF-50</td><td>Story</td><td>Create the sf.integration user and settle basic auth on the instance</td></tr>
+    <tr><td>CAF-51</td><td>Story</td><td>Build the inbound task update API with a six-field allow-list</td></tr>
+    <tr><td>CAF-52</td><td>Story</td><td>Create the ServiceNow_CAF named credential</td></tr>
+    <tr><td>CAF-53</td><td>Story</td><td>Build CafTaskService.applyChange</td></tr>
+    <tr><td>CAF-54</td><td>Story</td><td>Reconcile derived changes explicitly at the end of an inbound write</td></tr>
+    <tr><td>CAF-55</td><td>Story</td><td>Unwrap the Scripted REST response envelope in Apex</td></tr>
+  </tbody>
+</table>
+<h2>CAF-26 CAF compliance dashboard (LWC) <span class="note">(6)</span></h2>
+<table>
+  <thead><tr><th style="width:12%">Ticket</th><th style="width:11%">Type</th><th>Summary</th></tr></thead>
+  <tbody>
+    <tr><td>CAF-56</td><td>Story</td><td>Build the CafDashboardController read model</td></tr>
+    <tr><td>CAF-57</td><td>Story</td><td>Build the cafDashboard grid LWC</td></tr>
+    <tr><td>CAF-58</td><td>Story</td><td>Mirror the control catalogue into CAF_Control_Catalog__c</td></tr>
+    <tr><td>CAF-59</td><td>Story</td><td>Derive dashboard columns from the catalogue, not from the requests present</td></tr>
+    <tr><td>CAF-60</td><td>Story</td><td>Join requests to controls on sys_id, and backfill the mirrored records</td></tr>
+    <tr><td>CAF-61</td><td>Story</td><td>Drill in from a grid cell to the request's tasks</td></tr>
+  </tbody>
+</table>
+<h2>CAF-27 Sync Health and drift detection <span class="note">(7)</span></h2>
+<table>
+  <thead><tr><th style="width:12%">Ticket</th><th style="width:11%">Type</th><th>Summary</th></tr></thead>
+  <tbody>
+    <tr><td>CAF-62</td><td>Story</td><td>Expose a read-only snapshot endpoint</td></tr>
+    <tr><td>CAF-63</td><td>Story</td><td>Expose a resync endpoint that re-pushes a single record</td></tr>
+    <tr><td>CAF-64</td><td>Story</td><td>Build CafSyncHealth - compare both platforms and report the differences</td></tr>
+    <tr><td>CAF-65</td><td>Story</td><td>Build the cafSyncHealth status strip</td></tr>
+    <tr><td>CAF-66</td><td>Story</td><td>Reconcile the control catalogue, keyed on sys_id</td></tr>
+    <tr><td>CAF-67</td><td>Story</td><td>Mirror a deleted control as retired rather than leaving an orphan column</td></tr>
+    <tr><td>CAF-68</td><td>Story</td><td>Retry a push once on a transport-level failure</td></tr>
+  </tbody>
+</table>
+<h2>CAF-28 Evidence and attestation <span class="note">(7)</span></h2>
+<table>
+  <thead><tr><th style="width:12%">Ticket</th><th style="width:11%">Type</th><th>Summary</th></tr></thead>
+  <tbody>
+    <tr><td>CAF-69</td><td>Story</td><td>Accept evidence uploads into ServiceNow as attachments</td></tr>
+    <tr><td>CAF-70</td><td>Story</td><td>Expose what ServiceNow actually holds as evidence</td></tr>
+    <tr><td>CAF-71</td><td>Story</td><td>Build CafEvidenceService - Salesforce Files in, both lists out</td></tr>
+    <tr><td>CAF-72</td><td>Story</td><td>Build the cafEvidence panel with a read-only mode</td></tr>
+    <tr><td>CAF-73</td><td>Story</td><td>Build the attest endpoint - the gate, then the outcome</td></tr>
+    <tr><td>CAF-74</td><td>Story</td><td>Build CafAttestationService</td></tr>
+    <tr><td>CAF-75</td><td>Story</td><td>Build the cafAttestation form</td></tr>
+  </tbody>
+</table>
+<h2>CAF-31 ETL and data quality assurance <span class="note">(2)</span></h2>
+<table>
+  <thead><tr><th style="width:12%">Ticket</th><th style="width:11%">Type</th><th>Summary</th></tr></thead>
+  <tbody>
+    <tr><td>CAF-103</td><td>Test</td><td>TC-INT-002 A new request appears in Salesforce</td></tr>
+    <tr><td>CAF-104</td><td>Test</td><td>TC-INT-003 A new task appears in Salesforce <span class="status done">Oct</span></td></tr>
+  </tbody>
+</table>
+<h2>CAF-32 Defect remediation and open items <span class="note">(5)</span></h2>
+<table>
+  <thead><tr><th style="width:12%">Ticket</th><th style="width:11%">Type</th><th>Summary</th></tr></thead>
+  <tbody>
+    <tr><td>CAF-79</td><td>Story</td><td>Write Apex test coverage for the three service classes <span class="status done">Oct</span></td></tr>
+    <tr><td>CAF-177</td><td>Bug</td><td>Changes derived from a Salesforce write never reached Salesforce</td></tr>
+    <tr><td>CAF-179</td><td>Bug</td><td>Renaming a control strands the old name on every request already mirrored</td></tr>
+    <tr><td>CAF-180</td><td>Bug</td><td>Integration credentials were exposed in a session transcript <span class="status done">Oct</span></td></tr>
+    <tr><td>CAF-181</td><td>Bug</td><td>The evidence gate binds the API but not the portal or an administrator <span class="status done">Oct</span></td></tr>
+  </tbody>
+</table>
+
+</body>
+</html>

@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>CAF Compliance – 12-Month Deliverables Report</title>
+<style>
+  :root {
+    --ink: #13203A; --muted: #4A5568; --faint: #6A7383; --rule: #D9DEE5;
+    --sf: #2563A8; --sn: #0E7364; --accent: #A3520F; --warn-bg: #FFF1DF;
+    --q1: #2563A8; --q2: #0E7364; --q3: #A3520F; --q4: #8C99AB;
+  }
+  @page { size: A4; margin: 18mm 16mm 20mm 16mm; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; color: var(--ink); background: #fff;
+    font-family: "Segoe UI", Arial, sans-serif; font-size: 10.5pt; line-height: 1.5; }
+  h1 { font-size: 20pt; margin: 0 0 10px; padding-bottom: 6px; border-bottom: 3px solid var(--ink); break-before: page; break-after: avoid; }
+  h2 { font-size: 13.5pt; margin: 18px 0 6px; break-after: avoid; }
+  h3 { font-size: 11pt; margin: 12px 0 4px; color: #1E4F86; break-after: avoid; }
+  p { margin: 0 0 8px; }
+  ul { margin: 0 0 8px; padding-left: 20px; }
+  li { margin-bottom: 3px; }
+  code { font-family: Consolas, monospace; font-size: 9pt; background: #EEF1F5; padding: 0 3px; border-radius: 3px; }
+  table { width: 100%; border-collapse: collapse; margin: 6px 0 12px; font-size: 9.5pt; }
+  th { background: var(--ink); color: #fff; text-align: left; padding: 5px 7px; font-weight: 600; }
+  td { padding: 5px 7px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  tr { break-inside: avoid; }
+  tbody tr:nth-child(even) td { background: #F7F8FA; }
+  .figure { margin: 10px 0 14px; break-inside: avoid; }
+  .figure svg { width: 100%; height: auto; display: block; }
+  .caption { font-size: 9pt; color: var(--faint); margin-top: 4px; }
+  .callout { border-left: 4px solid var(--accent); background: var(--warn-bg); padding: 8px 12px; margin: 8px 0 12px; break-inside: avoid; }
+  .note { font-size: 9pt; color: var(--faint); }
+  .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 10px 0 14px; }
+  .kpi { border: 1px solid var(--rule); border-radius: 6px; padding: 10px 12px; background: #F7F8FA; break-inside: avoid; }
+  .kpi b { display: block; font-size: 22pt; line-height: 1.1; color: var(--sf); }
+  .kpi span { font-size: 9pt; color: var(--muted); }
+  .qhead { display: flex; align-items: center; gap: 12px; margin: 0 0 10px; }
+  .qtag { color: #fff; font-weight: 700; padding: 4px 12px; border-radius: 999px; font-size: 10pt; }
+  .status { display: inline-block; padding: 1px 8px; border-radius: 999px; font-size: 8.5pt; font-weight: 600; white-space: nowrap; }
+  .done { background: #DCEEE8; color: #0B5C50; }
+  .part { background: #FFF1DF; color: #8A4A0B; }
+  .plan { background: #EEF1F5; color: #4A5568; }
+  .cover { height: 250mm; display: flex; flex-direction: column; justify-content: space-between; background: var(--ink); color: #F5F6F2; padding: 22mm 16mm; border-radius: 6px; }
+  .cover .kicker { color: #F0A35E; letter-spacing: 3px; text-transform: uppercase; font-weight: 600; font-size: 11pt; }
+  .cover h1 { border: 0; font-size: 32pt; line-height: 1.1; margin: 14px 0; break-before: avoid; color: #F5F6F2; }
+  .cover .sub { font-size: 13.5pt; color: #BCC6D6; max-width: 150mm; }
+  .cover table { color: #F5F6F2; font-size: 10pt; max-width: 130mm; }
+  .cover td { border-bottom: 1px solid #33415E; background: transparent !important; }
+  .cover td:first-child { color: #BCC6D6; width: 42mm; }
+</style>
+</head>
+<body>
+
+<section class="cover">
+  <div>
+    <div class="kicker">Deliverables Report · Quarterly</div>
+    <h1>CAF Compliance<br>12-Month Deliverables</h1>
+    <p class="sub">What the ServiceNow ⇄ Salesforce integration project delivered in each quarter from February 2026, and what is planned for the quarter ahead.</p>
+  </div>
+  <table>
+    <tr><td>Reporting window</td><td>February 2026 – January 2027</td></tr>
+    <tr><td>Delivered (actuals)</td><td>Q1 Feb–Apr · Q2 May–Jul · Q3 Aug–Oct (to 22 Oct)</td></tr>
+    <tr><td>Planned (forecast)</td><td>Q4 Nov 2026 – Jan 2027</td></tr>
+    <tr><td>Source</td><td>caf-sf-integration repository, main @ 571386c</td></tr>
+    <tr><td>Date</td><td>22 October 2026</td></tr>
+  </table>
+</section>
+
+<!-- ============================ SUMMARY ============================ -->
+<h1>1. Executive summary</h1>
+<p>The project set out to give application owners and approvers a Salesforce experience for CAF compliance while ServiceNow stays the system of record. Over three delivered quarters it has gone from an empty repository to a working, tested two-way integration with four Salesforce screens, a six-resource ServiceNow API, drift detection, durable callout logging and a three-level test pack.</p>
+
+<div class="kpis">
+  <div class="kpi"><b>193</b><span>commits on main (excluding merges)</span></div>
+  <div class="kpi"><b>39</b><span>pull requests merged (October)</span></div>
+  <div class="kpi"><b>289</b><span>files under version control</span></div>
+  <div class="kpi"><b>3</b><span>named contributors, plus the Reyantech org account</span></div>
+</div>
+
+<table>
+  <thead><tr><th style="width:15%">Quarter</th><th style="width:20%">Theme</th><th>Headline deliverables</th><th style="width:12%">Status</th></tr></thead>
+  <tbody>
+    <tr><td><b>Q1</b><br>Feb–Apr 2026</td><td>Foundation and build</td><td>Design document; Salesforce data model; 5 Apex services; 4 Lightning components; ServiceNow outbound sync</td><td><span class="status done">Delivered</span></td></tr>
+    <tr><td><b>Q2</b><br>May–Jul 2026</td><td>Integration API and test harness</td><td>Outbound push rules; 6 inbound REST resources; Playwright harness; 139 test cases; Word evidence packs</td><td><span class="status done">Delivered</span></td></tr>
+    <tr><td><b>Q3</b><br>Aug–Oct 2026</td><td>Hardening and new screens</td><td>Decks; ServiceNow rebuilt on a new instance; Approvals, Reports, Admin screens; callout log; custom-metadata config; Apex and LWC unit tests</td><td><span class="status part">Delivered · deploy pending</span></td></tr>
+    <tr><td><b>Q4</b><br>Nov 2026–Jan 2027</td><td>Production readiness</td><td>Org deployment; CafSyncHealth tests; named approver; queued delivery; scheduled Sync Health; JWT</td><td><span class="status plan">Planned</span></td></tr>
+  </tbody>
+</table>
+
+<div class="figure">
+<svg viewBox="0 0 700 250" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial" font-size="10.5">
+  <!-- quarter bands -->
+  <rect x="50" y="10" width="160" height="200" fill="#2563A8" fill-opacity="0.07"/>
+  <rect x="210" y="10" width="160" height="200" fill="#0E7364" fill-opacity="0.07"/>
+  <rect x="370" y="10" width="160" height="200" fill="#A3520F" fill-opacity="0.07"/>
+  <rect x="530" y="10" width="160" height="200" fill="#8C99AB" fill-opacity="0.10"/>
+  <text x="130" y="26" text-anchor="middle" font-weight="700" fill="#2563A8">Q1 · 31</text>
+  <text x="290" y="26" text-anchor="middle" font-weight="700" fill="#0E7364">Q2 · 93</text>
+  <text x="450" y="26" text-anchor="middle" font-weight="700" fill="#A3520F">Q3 · 69</text>
+  <text x="610" y="26" text-anchor="middle" font-weight="700" fill="#6A7383">Q4 · planned</text>
+  <!-- axis: scale 45 commits = 150px -->
+  <line x1="50" y1="190" x2="690" y2="190" stroke="#13203A"/>
+  <g fill="#6A7383" font-size="9" text-anchor="end">
+    <text x="44" y="193">0</text><text x="44" y="143">15</text><text x="44" y="93">30</text><text x="44" y="43">45</text>
+  </g>
+  <g stroke="#D9DEE5"><line x1="50" y1="140" x2="690" y2="140"/><line x1="50" y1="90" x2="690" y2="90"/><line x1="50" y1="40" x2="690" y2="40"/></g>
+  <!-- bars: month width 53.3, bar 30 -->
+  <g>
+    <rect x="62" y="160" width="30" height="30" fill="#2563A8"/><text x="77" y="155" text-anchor="middle">9</text>
+    <rect x="115" y="156.7" width="30" height="33.3" fill="#2563A8"/><text x="130" y="151" text-anchor="middle">10</text>
+    <rect x="168" y="150" width="30" height="40" fill="#2563A8"/><text x="183" y="145" text-anchor="middle">12</text>
+    <rect x="222" y="113.3" width="30" height="76.7" fill="#0E7364"/><text x="237" y="108" text-anchor="middle">23</text>
+    <rect x="275" y="106.7" width="30" height="83.3" fill="#0E7364"/><text x="290" y="101" text-anchor="middle">25</text>
+    <rect x="328" y="40" width="30" height="150" fill="#0E7364"/><text x="343" y="35" text-anchor="middle">45</text>
+    <rect x="382" y="110" width="30" height="80" fill="#A3520F"/><text x="397" y="105" text-anchor="middle">24</text>
+    <rect x="435" y="160" width="30" height="30" fill="#A3520F"/><text x="450" y="155" text-anchor="middle">9</text>
+    <rect x="488" y="70" width="30" height="120" fill="#A3520F"/><text x="503" y="65" text-anchor="middle">36</text>
+    <rect x="542" y="150" width="30" height="40" fill="none" stroke="#8C99AB" stroke-dasharray="3 3"/>
+    <rect x="595" y="150" width="30" height="40" fill="none" stroke="#8C99AB" stroke-dasharray="3 3"/>
+    <rect x="648" y="150" width="30" height="40" fill="none" stroke="#8C99AB" stroke-dasharray="3 3"/>
+  </g>
+  <g fill="#4A5568" font-size="9.5" text-anchor="middle">
+    <text x="77" y="205">Feb</text><text x="130" y="205">Mar</text><text x="183" y="205">Apr</text>
+    <text x="237" y="205">May</text><text x="290" y="205">Jun</text><text x="343" y="205">Jul</text>
+    <text x="397" y="205">Aug</text><text x="450" y="205">Sep</text><text x="503" y="205">Oct*</text>
+    <text x="557" y="205">Nov</text><text x="610" y="205">Dec</text><text x="663" y="205">Jan</text>
+  </g>
+  <text x="50" y="235" fill="#6A7383" font-size="9">Commits per month on main, excluding merge commits, by author date. *October is a part month. Q4 outlines are placeholders, not a forecast of volume.</text>
+</svg>
+<div class="caption">Figure 1 · Delivery activity by month and quarter</div>
+</div>
+
+<!-- ============================ MILESTONES ============================ -->
+<h1>2. Milestone timeline</h1>
+<div class="figure">
+<svg viewBox="0 0 700 412" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial" font-size="10">
+  <line x1="70" y1="20" x2="70" y2="402" stroke="#13203A" stroke-width="2"/>
+  <g>
+    <rect x="0" y="12" width="60" height="18" rx="9" fill="#2563A8"/><text x="30" y="25" text-anchor="middle" fill="#fff" font-weight="700" font-size="9">Q1</text>
+    <rect x="0" y="134" width="60" height="18" rx="9" fill="#0E7364"/><text x="30" y="147" text-anchor="middle" fill="#fff" font-weight="700" font-size="9">Q2</text>
+    <rect x="0" y="258" width="60" height="18" rx="9" fill="#A3520F"/><text x="30" y="271" text-anchor="middle" fill="#fff" font-weight="700" font-size="9">Q3</text>
+    <rect x="0" y="370" width="60" height="18" rx="9" fill="#8C99AB"/><text x="30" y="383" text-anchor="middle" fill="#fff" font-weight="700" font-size="9">Q4</text>
+  </g>
+  <g>
+    <circle cx="70" cy="21" r="5" fill="#2563A8"/><text x="84" y="25"><tspan font-weight="600">9 Feb</tspan> · Repository scaffold, scope and README</text>
+    <circle cx="70" cy="45" r="5" fill="#2563A8"/><text x="84" y="49"><tspan font-weight="600">12 Feb</tspan> · Technical design document with integration diagram</text>
+    <circle cx="70" cy="69" r="5" fill="#2563A8"/><text x="84" y="73"><tspan font-weight="600">19–26 Feb</tspan> · Salesforce objects: Control Catalog, Request, Task; package manifest</text>
+    <circle cx="70" cy="93" r="5" fill="#2563A8"/><text x="84" y="97"><tspan font-weight="600">10–24 Mar</tspan> · Apex services: Task, Evidence, Attestation, Dashboard, Sync Health</text>
+    <circle cx="70" cy="117" r="5" fill="#2563A8"/><text x="84" y="121"><tspan font-weight="600">2–29 Apr</tspan> · Four Lightning components; ServiceNow CAFSalesforceSync and control push</text>
+    <circle cx="70" cy="143" r="5" fill="#0E7364"/><text x="84" y="147"><tspan font-weight="600">4–14 May</tspan> · Request push and retire rules; six Scripted REST resources</text>
+    <circle cx="70" cy="167" r="5" fill="#0E7364"/><text x="84" y="171"><tspan font-weight="600">19 May–4 Jun</tspan> · Playwright harness: config, auth, helpers, seed data</text>
+    <circle cx="70" cy="191" r="5" fill="#0E7364"/><text x="84" y="195"><tspan font-weight="600">15–24 Jun</tspan> · Test suites: outbound ETL, inbound UI, read-only, negative, ServiceNow</text>
+    <circle cx="70" cy="215" r="5" fill="#0E7364"/><text x="84" y="219"><tspan font-weight="600">2–6 Jul</tspan> · Test case catalogues: 70 integration, 69 ServiceNow</text>
+    <circle cx="70" cy="239" r="5" fill="#0E7364"/><text x="84" y="243"><tspan font-weight="600">9–28 Jul</tspan> · Evidence generator, Word evidence packs, HTML evidence report</text>
+    <circle cx="70" cy="267" r="5" fill="#A3520F"/><text x="84" y="271"><tspan font-weight="600">3–11 Aug</tspan> · Business, technical and plain-English decks</text>
+    <circle cx="70" cy="291" r="5" fill="#A3520F"/><text x="84" y="295"><tspan font-weight="600">4 Sep</tspan> · ServiceNow app rebuilt from source on dev249570 after the old instance was reclaimed</text>
+    <circle cx="70" cy="315" r="5" fill="#A3520F"/><text x="84" y="319"><tspan font-weight="600">10 Sep</tspan> · Offline LWC unit tests and .env preflight check</text>
+    <circle cx="70" cy="339" r="5" fill="#A3520F"/><text x="84" y="343"><tspan font-weight="600">4 Oct</tspan> · Test suites re-baselined on dev249570</text>
+    <circle cx="70" cy="363" r="5" fill="#A3520F"/><text x="84" y="367"><tspan font-weight="600">16–20 Oct</tspan> · 39 pull requests merged: CAF-173, 218, 219, 220, 233, 235, CAF-27</text>
+    <circle cx="70" cy="387" r="5" fill="#FFFFFF" stroke="#8C99AB" stroke-width="2"/><text x="84" y="391" fill="#4A5568"><tspan font-weight="600">Nov–Jan</tspan> · Planned: org deployment and production-readiness items (section 6)</text>
+  </g>
+</svg>
+<div class="caption">Figure 2 · Key milestones, by commit date on main</div>
+</div>
+
+<!-- ============================ Q1 ============================ -->
+<h1>3. Q1 · February – April 2026</h1>
+<div class="qhead"><span class="qtag" style="background:var(--q1)">Q1</span><b>Foundation and build</b> · 31 commits · 1 contributor</div>
+<p>The quarter established the design and built the bulk of the Salesforce application and the start of the ServiceNow outbound sync.</p>
+<table>
+  <thead><tr><th style="width:24%">Workstream</th><th>Deliverable</th><th style="width:13%">Status</th></tr></thead>
+  <tbody>
+    <tr><td>Discovery and design</td><td>Repository scaffold, README and scope; technical design document with integration diagram; instance details; discovery handoff notes; security model section</td><td><span class="status done">Delivered</span></td></tr>
+    <tr><td>Salesforce data model</td><td><code>CAF_Control_Catalog__c</code>, <code>CAF_Request__c</code>, <code>CAF_Task__c</code>; package manifest; <code>CAF_Integration</code> permission set; page layouts and tabs</td><td><span class="status done">Delivered</span></td></tr>
+    <tr><td>Apex services</td><td><code>CafTaskService</code>, <code>CafEvidenceService</code>, <code>CafAttestationService</code>, <code>CafDashboardController</code>, <code>CafSyncHealth</code>; orphan-task clean-up script</td><td><span class="status done">Delivered</span></td></tr>
+    <tr><td>Lightning UI</td><td><code>cafDashboard</code> compliance grid; <code>cafEvidence</code> upload and lists; <code>cafAttestation</code> approver flow; <code>cafSyncHealth</code> drift panel</td><td><span class="status done">Delivered</span></td></tr>
+    <tr><td>ServiceNow outbound</td><td><code>CAFSalesforceSync</code> script include; <code>caf_short_desc</code> helper; business rule pushing controls to Salesforce</td><td><span class="status done">Delivered</span></td></tr>
+    <tr><td>Documentation</td><td>Salesforce deployment notes; session handoff updates</td><td><span class="status done">Delivered</span></td></tr>
+  </tbody>
+</table>
+<h2>Outcome</h2>
+<p>By the end of April the Salesforce side could render the compliance grid from mirrored data and the outbound sync could push the control catalogue. The inbound API that the Salesforce actions depend on was still to be built.</p>
+
+<!-- ============================ Q2 ============================ -->
+<h1>4. Q2 · May – July 2026</h1>
+<div class="qhead"><span class="qtag" style="background:var(--q2)">Q2</span><b>Integration API and test harness</b> · 93 commits · 4 author accounts</div>
+<p>The busiest quarter by volume. It completed the two-way contract and built the test and evidence machinery that proves both platforms agree.</p>
+<table>
+  <thead><tr><th style="width:24%">Workstream</th><th>Deliverable</th><th style="width:13%">Status</th></tr></thead>
+  <tbody>
+    <tr><td>ServiceNow outbound</td><td>Business rules to push requests and to retire deleted controls</td><td><span class="status done">Delivered</span></td></tr>
+    <tr><td>ServiceNow inbound API</td><td>Scripted REST resources: sync snapshot, update task, upload evidence, list evidence, attest task, resync record</td><td><span class="status done">Delivered</span></td></tr>
+    <tr><td>Configuration guide</td><td>ServiceNow setup guide, verified behaviour, inbound contract, known gaps</td><td><span class="status done">Delivered</span></td></tr>
+    <tr><td>Test harness</td><td>Playwright project with Salesforce and ServiceNow projects; storage-state auth; Lightning page objects; Salesforce, ServiceNow and CAF API helpers; watch mode; single-case runner</td><td><span class="status done">Delivered</span></td></tr>
+    <tr><td>Test data</td><td>Seed definitions for the demo estate, volume seed, connectivity probe, record-numbering repair</td><td><span class="status done">Delivered</span></td></tr>
+    <tr><td>Test suites</td><td>Outbound ETL, inbound UI, read-only, negative-path and regression, ServiceNow case suite</td><td><span class="status done">Delivered</span></td></tr>
+    <tr><td>Test catalogues</td><td>70 integration cases and 69 ServiceNow cases, with coverage summaries and run instructions</td><td><span class="status done">Delivered</span></td></tr>
+    <tr><td>Evidence</td><td>Case-result parser, branded per-case Word evidence packs, HTML evidence report, results for each suite</td><td><span class="status done">Delivered</span></td></tr>
+  </tbody>
+</table>
+<h2>Outcome</h2>
+<p>The integration contract was complete in both directions, and every executed case produced a Word evidence record holding two proofs: what the screen showed and what the record held. The integration test case TC-INT-071 found a real defect in the evidence-mismatch advice, which was fixed in Q3.</p>
+
+<!-- ============================ Q3 ============================ -->
+<h1>5. Q3 · August – October 2026</h1>
+<div class="qhead"><span class="qtag" style="background:var(--q3)">Q3</span><b>Hardening, new screens and production groundwork</b> · 69 commits · 39 PRs merged</div>
+<p>The quarter covered communication material, a forced instance migration, and the largest functional additions since Q1, landed through the first pull-request reviews on main.</p>
+<table>
+  <thead><tr><th style="width:24%">Workstream</th><th>Deliverable</th><th style="width:13%">Status</th></tr></thead>
+  <tbody>
+    <tr><td>Stakeholder material</td><td>Business overview, technical architecture and plain-English decks, built from scripts and real screenshots</td><td><span class="status done">Delivered</span></td></tr>
+    <tr><td>ServiceNow fixes</td><td>Short description built from available parts; unset state pushed as empty; empty body refused on Update Task and Attest Task</td><td><span class="status done">Delivered</span></td></tr>
+    <tr><td>Instance migration</td><td>Old developer instance reclaimed; app rebuilt from source on dev249570 with deploy scripts 01–10; business-app fields in global scope; suites re-baselined</td><td><span class="status done">Delivered</span></td></tr>
+    <tr><td>New screens (CAF-233)</td><td>Approvals, Reports and Admin screens; grid sort, saved preferences, overdue and selection markers, filters and totals; attestation confirmation; comment limit</td><td><span class="status part">Merged · not deployed</span></td></tr>
+    <tr><td>Usability (CAF-27)</td><td>Clear filters; CSV export with shared helper; callout-log filter; Sync Health filter by record type and stale-check flag; Reports filters</td><td><span class="status part">Merged · not deployed</span></td></tr>
+    <tr><td>Observability (CAF-218)</td><td>Every ServiceNow callout logged through a platform event to <code>CAF_Integration_Log__c</code>, surviving rollback</td><td><span class="status part">Merged · not deployed</span></td></tr>
+    <tr><td>Configuration (CAF-219)</td><td>Settings moved from Apex constants into <code>CAF_Setting__mdt</code>, read through <code>CafConfig</code></td><td><span class="status part">Merged · not deployed</span></td></tr>
+    <tr><td>Security (CAF-220)</td><td>CRUD and field-level security updates; <code>CAF_Admin</code> permission set for the log</td><td><span class="status part">Merged · not deployed</span></td></tr>
+    <tr><td>Quality (CAF-235, CAF-173)</td><td>Apex test suites with mocked callouts (9 test classes); offline LWC unit tests (115 cases) and preflight; mismatch-advice defect fixed</td><td><span class="status done">Delivered</span></td></tr>
+    <tr><td>Fixes (ad hoc)</td><td>Post-decision refresh, review-panel highlight, evidence count relay, empty-filter messages, task-panel reset on request change</td><td><span class="status done">Delivered</span></td></tr>
+    <tr><td>Architecture pack (October)</td><td>Solution HLD PDF with diagrams; technical deck updated to 17 slides</td><td><span class="status part">Produced · not committed</span></td></tr>
+  </tbody>
+</table>
+<div class="callout"><b>Deployment gap.</b> The Salesforce README records the October screen and integration changes as not yet deployed to the Salesforce org. Most Q3 functionality is merged on main but not live. Deploying it is the first Q4 item.</div>
+
+<!-- ============================ Q4 ============================ -->
+<h1>6. Q4 · November 2026 – January 2027 (plan)</h1>
+<div class="qhead"><span class="qtag" style="background:var(--q4)">Q4</span><b>Production readiness</b> · forecast</div>
+<p>The plan comes from the known limitations recorded in the design document and READMEs. Ordering and scope are proposals for agreement, not commitments.</p>
+<table>
+  <thead><tr><th style="width:5%">#</th><th style="width:28%">Deliverable</th><th>Why</th><th style="width:12%">Priority</th></tr></thead>
+  <tbody>
+    <tr><td>1</td><td>Deploy the Q3 changes to the Salesforce org</td><td>Screens, logging, configuration and permission changes are merged but not live</td><td>High</td></tr>
+    <tr><td>2</td><td>Apex test class for <code>CafSyncHealth</code></td><td>The only Apex class without tests; Salesforce requires 75% coverage to deploy to production</td><td>High</td></tr>
+    <tr><td>3</td><td>Execute the pending integration cases</td><td>Write-path cases were held back by decision; the harness for them already exists</td><td>High</td></tr>
+    <tr><td>4</td><td>Named approver</td><td>Audit trail records only <code>sf.integration</code>; approval notifications never fire</td><td>High</td></tr>
+    <tr><td>5</td><td>Queued delivery with retry</td><td>A ServiceNow outage currently fails the user's action</td><td>Medium</td></tr>
+    <tr><td>6</td><td>Scheduled Sync Health with alerting</td><td>Drift is found only when someone opens the dashboard</td><td>Medium</td></tr>
+    <tr><td>7</td><td>JWT bearer for outbound authentication</td><td>Client credentials were a recorded deviation; JWT is the production target</td><td>Medium</td></tr>
+    <tr><td>8</td><td>Row-level security and Experience Cloud site</td><td>Deferred for the proof of concept; needed to realise the licensing benefit</td><td>Low</td></tr>
+  </tbody>
+</table>
+
+<!-- ============================ RISKS ============================ -->
+<h1>7. Risks, issues and dependencies</h1>
+<table>
+  <thead><tr><th style="width:26%">Item</th><th style="width:12%">Type</th><th>Impact and response</th></tr></thead>
+  <tbody>
+    <tr><td>Q3 work not deployed</td><td>Issue</td><td>Stakeholders see August functionality in the org. Response: Q4 item 1.</td></tr>
+    <tr><td>Developer-instance volatility</td><td>Risk</td><td>One ServiceNow instance was reclaimed in Q3. Response: the scripted rebuild under <code>servicenow/deploy</code> proved the app can be recreated from source.</td></tr>
+    <tr><td>Echo-loop guard bound to the integration user name</td><td>Risk</td><td>A wrong inbound user causes a push loop that spends the API budget. Response: preflight checks; monitor the integration log.</td></tr>
+    <tr><td>Weakest audit link: no named approver</td><td>Risk</td><td>Compliance evidence chain names the integration account. Response: Q4 item 4.</td></tr>
+    <tr><td>Rebased commit history</td><td>Issue</td><td>Several October commits duplicate earlier ones with new dates, which complicates reporting. Response: counts in this report are by author date; duplicates are noted below.</td></tr>
+    <tr><td>Salesforce API budget (15,000 per day)</td><td>Dependency</td><td>Shared by integration traffic, deploys and test runs; one end-to-end journey costs about 45 calls.</td></tr>
+  </tbody>
+</table>
+
+<h2>Method and data notes</h2>
+<ul class="note">
+  <li>Source: <code>git log</code> on main at 571386c. Commit counts exclude merge commits and use author dates.</li>
+  <li>Ticketed work (CAF-27, CAF-233 and ad hoc fixes) carries author dates as early as May but reached main through pull requests merged in October. It is reported in Q3, when it landed.</li>
+  <li>About 25 October commits repeat earlier subjects after a rebase. By unique subject, Q3 has 44 distinct changes rather than 69.</li>
+  <li>Author names were grouped as three people on the assumption that variants are the same person: Geethasri Chintha / Geethasshri; Rehan Sadiq / sadiqrehann / Sadiq Rehan Mohammed; Faiza Aslam. "Reyantech" is an organisation account.</li>
+  <li>Q4 is a forecast built from the documented limitations, not from scheduled tickets.</li>
+</ul>
+
+</body>
+</html>
