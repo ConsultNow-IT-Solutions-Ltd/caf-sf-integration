@@ -16,7 +16,7 @@ private class CafCalloutTest {
         CAF_Integration_Log__c log = [
             SELECT Operation__c, Method__c, Endpoint__c, Status_Code__c, Succeeded__c,
                    Error__c, Requested_By__c, Latency_Ms__c
-            FROM CAF_Integration_Log__c
+            FROM CAF_Integration_Log__c WITH SYSTEM_MODE
         ];
         Assert.areEqual('task.update', log.Operation__c);
         Assert.areEqual('PATCH', log.Method__c);
@@ -39,7 +39,7 @@ private class CafCalloutTest {
         Test.stopTest();
 
         Assert.areEqual(409, res.getStatusCode(), 'the caller still gets the response');
-        CAF_Integration_Log__c log = [SELECT Status_Code__c, Succeeded__c, Error__c FROM CAF_Integration_Log__c];
+        CAF_Integration_Log__c log = [SELECT Status_Code__c, Succeeded__c, Error__c FROM CAF_Integration_Log__c WITH SYSTEM_MODE];
         Assert.areEqual(409, log.Status_Code__c);
         Assert.isFalse(log.Succeeded__c);
         Assert.isTrue(log.Error__c.contains('already approved'));
@@ -60,7 +60,7 @@ private class CafCalloutTest {
         Test.stopTest();
 
         Assert.isTrue(rethrown);
-        CAF_Integration_Log__c log = [SELECT Status_Code__c, Succeeded__c, Error__c FROM CAF_Integration_Log__c];
+        CAF_Integration_Log__c log = [SELECT Status_Code__c, Succeeded__c, Error__c FROM CAF_Integration_Log__c WITH SYSTEM_MODE];
         Assert.isNull(log.Status_Code__c);
         Assert.isFalse(log.Succeeded__c);
         Assert.areEqual('Read timed out', log.Error__c);
@@ -76,7 +76,7 @@ private class CafCalloutTest {
         CafCallout.flush();
         Test.stopTest();
 
-        Assert.areEqual(0, [SELECT COUNT() FROM CAF_Integration_Log__c]);
+        Assert.areEqual(0, [SELECT COUNT() FROM CAF_Integration_Log__c WITH SYSTEM_MODE]);
         Assert.isTrue(CafCallout.pending.isEmpty(), 'nothing is left waiting either');
     }
 
@@ -85,7 +85,7 @@ private class CafCalloutTest {
         Test.startTest();
         CafCallout.flush();
         Test.stopTest();
-        Assert.areEqual(0, [SELECT COUNT() FROM CAF_Integration_Log__c]);
+        Assert.areEqual(0, [SELECT COUNT() FROM CAF_Integration_Log__c WITH SYSTEM_MODE]);
     }
 
     @IsTest

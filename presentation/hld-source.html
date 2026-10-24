@@ -1,0 +1,879 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>CAF Compliance – Solution HLD</title>
+<style>
+  :root {
+    --ink: #13203A; --muted: #4A5568; --faint: #6A7383; --rule: #D9DEE5;
+    --sf: #2563A8; --sf-bg: #E3EBF6; --sf-dark: #1E4F86;
+    --sn: #0E7364; --sn-bg: #DCEEE8; --sn-dark: #0B5C50;
+    --accent: #A3520F; --warn-bg: #FFF1DF; --warn: #D9822B; --paper: #FFFFFF; --panel: #F5F6F2;
+  }
+  @page { size: A4; margin: 18mm 16mm 20mm 16mm; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--paper); color: var(--ink);
+    font-family: "Segoe UI", "IBM Plex Sans", Arial, sans-serif; font-size: 10.5pt; line-height: 1.5; }
+  h1 { font-size: 20pt; margin: 0 0 10px; padding-bottom: 6px; border-bottom: 3px solid var(--ink); break-before: page; break-after: avoid; }
+  h2 { font-size: 13.5pt; margin: 20px 0 6px; color: var(--ink); break-after: avoid; }
+  h3 { font-size: 11pt; margin: 14px 0 4px; color: var(--sf-dark); break-after: avoid; }
+  p { margin: 0 0 8px; }
+  ul, ol { margin: 0 0 8px; padding-left: 20px; }
+  li { margin-bottom: 3px; }
+  code, .mono { font-family: Consolas, "JetBrains Mono", monospace; font-size: 9pt; background: #EEF1F5; padding: 0 3px; border-radius: 3px; }
+  table { width: 100%; border-collapse: collapse; margin: 6px 0 12px; font-size: 9.5pt; break-inside: auto; }
+  th { background: var(--ink); color: #fff; text-align: left; padding: 5px 7px; font-weight: 600; }
+  td { padding: 5px 7px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  tr { break-inside: avoid; }
+  tbody tr:nth-child(even) td { background: #F7F8FA; }
+  .figure { margin: 10px 0 16px; break-inside: avoid; }
+  .figure svg { width: 100%; height: auto; display: block; }
+  .caption { font-size: 9pt; color: var(--faint); margin-top: 4px; }
+  .callout { border-left: 4px solid var(--accent); background: var(--warn-bg); padding: 8px 12px; margin: 8px 0 12px; break-inside: avoid; }
+  .rule { background: var(--ink); color: #fff; padding: 10px 14px; border-radius: 6px; font-weight: 600; margin: 10px 0 14px; }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .card { border: 1px solid var(--rule); border-radius: 6px; padding: 10px 12px; break-inside: avoid; }
+  .card.sn { border-top: 4px solid var(--sn); background: #F4FAF8; }
+  .card.sf { border-top: 4px solid var(--sf); background: #F5F8FC; }
+  .card h3 { margin-top: 0; }
+  /* cover */
+  .cover { height: 250mm; display: flex; flex-direction: column; justify-content: space-between; background: var(--ink); color: #F5F6F2; margin: 0; padding: 22mm 16mm; border-radius: 6px; }
+  .cover .kicker { color: #F0A35E; letter-spacing: 3px; text-transform: uppercase; font-weight: 600; font-size: 11pt; }
+  .cover h1.title { border: 0; font-size: 34pt; line-height: 1.1; margin: 14px 0; break-before: avoid; color: #F5F6F2; }
+  .cover .sub { font-size: 14pt; color: #BCC6D6; max-width: 140mm; }
+  .cover table { color: #F5F6F2; font-size: 10pt; max-width: 120mm; }
+  .cover td { border-bottom: 1px solid #33415E; background: transparent !important; }
+  .cover td:first-child { color: #BCC6D6; width: 40mm; }
+  .pill { display: inline-block; padding: 5px 14px; border-radius: 999px; font-weight: 600; font-size: 10.5pt; }
+  .toc { columns: 2; column-gap: 24px; }
+  .toc li { break-inside: avoid; }
+</style>
+</head>
+<body>
+
+<!-- ============================== COVER ============================== -->
+<section class="cover">
+  <div>
+    <div class="kicker">High-Level Design · Solution Architecture</div>
+    <h1 class="title">CAF Compliance<br>ServiceNow ⇄ Salesforce</h1>
+    <p class="sub">Project architecture and solution high-level design, including the bi-directional integration between the ServiceNow compliance engine and the Salesforce engagement layer.</p>
+    <div style="margin-top:22px;display:flex;gap:10px;align-items:center">
+      <span class="pill" style="background:#0E7364">ServiceNow · system of record</span>
+      <span style="color:#F0A35E;font-size:18pt">⇄</span>
+      <span class="pill" style="background:#2563A8">Salesforce · engagement layer</span>
+    </div>
+  </div>
+  <table>
+    <tr><td>Document</td><td>Solution High-Level Design (HLD)</td></tr>
+    <tr><td>Version</td><td>1.0</td></tr>
+    <tr><td>Date</td><td>22 October 2026</td></tr>
+    <tr><td>Source baseline</td><td>caf-sf-integration · main @ 571386c</td></tr>
+    <tr><td>ServiceNow scope</td><td>x_gskn2_caf_compli v1.0.0</td></tr>
+    <tr><td>Salesforce API</td><td>v67.0</td></tr>
+  </table>
+</section>
+
+<!-- ============================== TOC ============================== -->
+<h1 style="break-before:page">Contents</h1>
+<ol class="toc">
+  <li>Executive summary</li>
+  <li>Scope and objectives</li>
+  <li>Solution context</li>
+  <li>Architecture principles</li>
+  <li>Logical architecture</li>
+  <li>Bi-directional integration design</li>
+  <li>Integration sequence flows</li>
+  <li>Data architecture</li>
+  <li>Process and state model</li>
+  <li>Security architecture</li>
+  <li>Non-functional design</li>
+  <li>Deployment and environments</li>
+  <li>Testing and assurance</li>
+  <li>Key design decisions</li>
+  <li>Risks, limitations and roadmap</li>
+  <li>Glossary</li>
+</ol>
+
+<!-- ============================== 1 ============================== -->
+<h1>1. Executive summary</h1>
+<p><b>CAF Compliance</b> keeps critical business applications provably compliant against a catalogue of controls (high availability, backup and restore, disaster recovery, RTO/RPO and similar). Controls generate recurring <b>requests</b> per business application; requests break down into <b>tasks</b>; owners gather <b>evidence</b>; approvers <b>attest</b>; anything overdue drops out of compliance automatically.</p>
+<p>The compliance engine — data model, state machine, recurrence, scheduled jobs, approvals and security — runs in <b>ServiceNow</b>. The people who do the work (application owners and approvers) already live in <b>Salesforce</b>. This solution surfaces the full compliance experience in Salesforce without moving any state out of ServiceNow.</p>
+<div class="rule">Governing rule: ServiceNow is the system of record. Salesforce holds a mirror, never a second opinion.</div>
+<p>The two platforms are joined by a <b>bi-directional integration</b>:</p>
+<ul>
+  <li><b>Outbound (ServiceNow → Salesforce): state.</b> Async business rules push requests, tasks and the control catalogue into Salesforce, upserting by the ServiceNow <code>sys_id</code>.</li>
+  <li><b>Inbound (Salesforce → ServiceNow): intentions.</b> Salesforce calls a six-resource Scripted REST API to start tasks, upload evidence, attest, read a snapshot and request a re-sync. ServiceNow applies its own rules, then pushes the resulting state back.</li>
+  <li><b>Assurance.</b> A Sync Health panel detects drift between the two systems and offers per-record repair; every Salesforce callout is logged durably.</li>
+</ul>
+<h2>Business drivers</h2>
+<table>
+  <thead><tr><th style="width:22%">Driver</th><th>Outcome</th></tr></thead>
+  <tbody>
+    <tr><td>Licensing</td><td>App owners and approvers work in Salesforce, avoiding a ServiceNow fulfiller licence per person.</td></tr>
+    <tr><td>Adoption</td><td>Low portal adoption was a named risk; compliance work now appears where users already spend their day.</td></tr>
+    <tr><td>Low delivery risk</td><td>Zero change to the 24 business rules, 2 flows, recurrence logic and security model in ServiceNow.</td></tr>
+  </tbody>
+</table>
+
+<!-- ============================== 2 ============================== -->
+<h1>2. Scope and objectives</h1>
+<div class="two">
+  <div class="card sn"><h3>In scope</h3>
+    <ul>
+      <li>Mirroring CAF Requests, CAF Tasks and the CAF Control catalogue into Salesforce</li>
+      <li>Salesforce compliance grid, drill-in, Approvals, Reports and Admin screens</li>
+      <li>Evidence upload to both platforms; attestation from Salesforce</li>
+      <li>Inbound Scripted REST API with write allow-list and evidence gate</li>
+      <li>Drift detection and manual repair (Sync Health)</li>
+      <li>Durable callout logging and externalised configuration</li>
+    </ul>
+  </div>
+  <div class="card sf"><h3>Out of scope (this release)</h3>
+    <ul>
+      <li>Moving any state machine or scheduler logic into Salesforce</li>
+      <li>Mirroring relationships, task templates or CMDB records</li>
+      <li>Experience Cloud site for external users</li>
+      <li>Named approver records (<code>sysapproval_approver</code>)</li>
+      <li>Queued/asynchronous inbound calls and automatic retry</li>
+      <li>Row-level security across the integration seam</li>
+    </ul>
+  </div>
+</div>
+<h2>Objectives</h2>
+<ol>
+  <li>Give application owners a single Salesforce screen that answers "is my application compliant, and what do I do next?".</li>
+  <li>Guarantee that every state change is decided by ServiceNow rules, regardless of where the user clicked.</li>
+  <li>Make any disagreement between the two platforms visible within one check, and repairable by one click.</li>
+  <li>Keep the integration replay-safe, so failures can be repaired by re-pushing without creating duplicates.</li>
+</ol>
+
+<!-- ============================== 3 ============================== -->
+<h1>3. Solution context</h1>
+<p>The context diagram shows who uses the solution and which systems it touches. Business users work only in Salesforce; administrators and auditors keep the ServiceNow native UI and <code>/caf</code> portal.</p>
+<div class="figure">
+<svg viewBox="0 0 700 380" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial" font-size="11">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#13203A"/></marker>
+  </defs>
+  <!-- actors -->
+  <g>
+    <rect x="10" y="20" width="150" height="54" rx="8" fill="#FFF" stroke="#2563A8" stroke-width="1.5"/>
+    <text x="85" y="43" text-anchor="middle" font-weight="600">Application owners</text>
+    <text x="85" y="60" text-anchor="middle" fill="#4A5568">gather evidence</text>
+    <rect x="10" y="94" width="150" height="54" rx="8" fill="#FFF" stroke="#2563A8" stroke-width="1.5"/>
+    <text x="85" y="117" text-anchor="middle" font-weight="600">Approvers</text>
+    <text x="85" y="134" text-anchor="middle" fill="#4A5568">attest outcomes</text>
+    <rect x="10" y="168" width="150" height="54" rx="8" fill="#FFF" stroke="#2563A8" stroke-width="1.5"/>
+    <text x="85" y="191" text-anchor="middle" font-weight="600">Salesforce admins</text>
+    <text x="85" y="208" text-anchor="middle" fill="#4A5568">monitor integration</text>
+    <rect x="540" y="20" width="150" height="54" rx="8" fill="#FFF" stroke="#0E7364" stroke-width="1.5"/>
+    <text x="615" y="43" text-anchor="middle" font-weight="600">CAF administrators</text>
+    <text x="615" y="60" text-anchor="middle" fill="#4A5568">controls, relationships</text>
+    <rect x="540" y="94" width="150" height="54" rx="8" fill="#FFF" stroke="#0E7364" stroke-width="1.5"/>
+    <text x="615" y="117" text-anchor="middle" font-weight="600">Auditors</text>
+    <text x="615" y="134" text-anchor="middle" fill="#4A5568">/caf portal, records</text>
+  </g>
+  <!-- systems -->
+  <rect x="200" y="20" width="140" height="210" rx="12" fill="#E3EBF6" stroke="#2563A8" stroke-width="2"/>
+  <text x="270" y="44" text-anchor="middle" font-weight="700" fill="#1E4F86" font-size="12">Salesforce</text>
+  <text x="270" y="62" text-anchor="middle" fill="#1E4F86">engagement layer</text>
+  <text x="270" y="96" text-anchor="middle">CAF Dashboard</text>
+  <text x="270" y="114" text-anchor="middle">Mirror objects</text>
+  <text x="270" y="132" text-anchor="middle">Salesforce Files</text>
+  <text x="270" y="150" text-anchor="middle">Integration Log</text>
+  <text x="270" y="168" text-anchor="middle">Sync Health</text>
+
+  <rect x="380" y="20" width="140" height="210" rx="12" fill="#DCEEE8" stroke="#0E7364" stroke-width="2"/>
+  <text x="450" y="44" text-anchor="middle" font-weight="700" fill="#0B5C50" font-size="12">ServiceNow</text>
+  <text x="450" y="62" text-anchor="middle" fill="#0B5C50">system of record</text>
+  <text x="450" y="96" text-anchor="middle">CAF tables (5)</text>
+  <text x="450" y="114" text-anchor="middle">Business rules, flows</text>
+  <text x="450" y="132" text-anchor="middle">Scheduled jobs</text>
+  <text x="450" y="150" text-anchor="middle">Approvals, ACLs</text>
+  <text x="450" y="168" text-anchor="middle">Scripted REST API</text>
+
+  <!-- integration arrows -->
+  <line x1="380" y1="196" x2="342" y2="196" stroke="#0E7364" stroke-width="2" marker-end="url(#a)"/>
+  <line x1="340" y1="214" x2="378" y2="214" stroke="#2563A8" stroke-width="2" marker-end="url(#a)"/>
+  <text x="360" y="252" text-anchor="middle" fill="#0B5C50" font-size="10">state (OAuth upsert)</text>
+  <text x="360" y="266" text-anchor="middle" fill="#1E4F86" font-size="10">intentions (REST)</text>
+
+  <!-- actor links -->
+  <line x1="160" y1="47" x2="198" y2="80" stroke="#13203A" marker-end="url(#a)"/>
+  <line x1="160" y1="121" x2="198" y2="121" stroke="#13203A" marker-end="url(#a)"/>
+  <line x1="160" y1="195" x2="198" y2="170" stroke="#13203A" marker-end="url(#a)"/>
+  <line x1="540" y1="47" x2="522" y2="80" stroke="#13203A" marker-end="url(#a)"/>
+  <line x1="540" y1="121" x2="522" y2="121" stroke="#13203A" marker-end="url(#a)"/>
+
+  <!-- external -->
+  <rect x="380" y="290" width="140" height="70" rx="8" fill="#FFF" stroke="#8C99AB" stroke-dasharray="4 3"/>
+  <text x="450" y="315" text-anchor="middle" font-weight="600">CMDB</text>
+  <text x="450" y="332" text-anchor="middle" fill="#4A5568">Business applications</text>
+  <text x="450" y="347" text-anchor="middle" fill="#4A5568">tier, crown jewels</text>
+  <line x1="450" y1="290" x2="450" y2="232" stroke="#13203A" marker-end="url(#a)"/>
+  <rect x="560" y="290" width="130" height="70" rx="8" fill="#FFF" stroke="#8C99AB" stroke-dasharray="4 3"/>
+  <text x="625" y="315" text-anchor="middle" font-weight="600">Email / Archer</text>
+  <text x="625" y="332" text-anchor="middle" fill="#4A5568">notifications,</text>
+  <text x="625" y="347" text-anchor="middle" fill="#4A5568">exception refs</text>
+  <line x1="560" y1="325" x2="500" y2="232" stroke="#13203A" marker-end="url(#a)"/>
+  <rect x="200" y="290" width="140" height="70" rx="8" fill="#FFF" stroke="#8C99AB" stroke-dasharray="4 3"/>
+  <text x="270" y="315" text-anchor="middle" font-weight="600">Salesforce CLI</text>
+  <text x="270" y="332" text-anchor="middle" fill="#4A5568">Metadata API deploy,</text>
+  <text x="270" y="347" text-anchor="middle" fill="#4A5568">test automation</text>
+  <line x1="270" y1="290" x2="270" y2="232" stroke="#13203A" marker-end="url(#a)"/>
+</svg>
+<div class="caption">Figure 1 · System context</div>
+</div>
+
+<!-- ============================== 4 ============================== -->
+<h1>4. Architecture principles</h1>
+<table>
+  <thead><tr><th style="width:5%">#</th><th style="width:30%">Principle</th><th>Implication</th></tr></thead>
+  <tbody>
+    <tr><td>P1</td><td>Single system of record</td><td>All state transitions, recurrence and approvals execute in ServiceNow. Salesforce never edits a value ServiceNow owns.</td></tr>
+    <tr><td>P2</td><td>Mirror, don't replicate configuration</td><td>Only requests, tasks and the control catalogue are mirrored. Relationships and templates remain in one place.</td></tr>
+    <tr><td>P3</td><td>Intentions in, state out</td><td>Salesforce asks ("start this task"); ServiceNow decides and pushes the result back.</td></tr>
+    <tr><td>P4</td><td>Replay-safe by design</td><td>All outbound writes are upserts by External Id; re-pushing a record never duplicates it.</td></tr>
+    <tr><td>P5</td><td>Never block a compliance write</td><td>Outbound pushes are async and after commit; a Salesforce outage cannot roll back ServiceNow.</td></tr>
+    <tr><td>P6</td><td>Fail loudly, never partially</td><td>The inbound allow-list rejects the whole call if any field is not writable.</td></tr>
+    <tr><td>P7</td><td>Detect automatically, repair deliberately</td><td>Drift is detected on every check; repair is a button a person presses, and only flows ServiceNow → Salesforce.</td></tr>
+    <tr><td>P8</td><td>Data-driven UI</td><td>Grid columns come from the control catalogue; adding a control needs no code change.</td></tr>
+  </tbody>
+</table>
+
+<!-- ============================== 5 ============================== -->
+<h1>5. Logical architecture</h1>
+<p>The solution is two platforms joined by a narrow seam. Each side is layered; the seam has exactly two channels, one per direction.</p>
+<div class="figure">
+<svg viewBox="0 0 700 470" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial" font-size="10.5">
+  <defs>
+    <marker id="g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#0E7364"/></marker>
+    <marker id="b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#2563A8"/></marker>
+  </defs>
+  <!-- SN column -->
+  <rect x="5" y="5" width="250" height="460" rx="12" fill="#DCEEE8"/>
+  <text x="18" y="26" font-weight="700" fill="#0B5C50" font-size="11.5" letter-spacing="1">SERVICENOW · SYSTEM OF RECORD</text>
+  <g>
+    <rect x="18" y="38" width="224" height="68" rx="7" fill="#FFF"/>
+    <text x="28" y="56" font-weight="600">Configuration</text>
+    <text x="28" y="73" fill="#4A5568">CAF Controls → Relationships</text>
+    <text x="28" y="89" fill="#4A5568">→ Relationship Tasks (templates)</text>
+    <rect x="18" y="114" width="224" height="68" rx="7" fill="#FFF"/>
+    <text x="28" y="132" font-weight="600">Execution</text>
+    <text x="28" y="149" fill="#4A5568">CAF Requests (RCAF) → Tasks (CAFT)</text>
+    <text x="28" y="165" fill="#4A5568">→ Approvals, attachments</text>
+    <rect x="18" y="190" width="224" height="68" rx="7" fill="#FFF"/>
+    <text x="28" y="208" font-weight="600">Engine</text>
+    <text x="28" y="225" fill="#4A5568">24 business rules · 2 flows</text>
+    <text x="28" y="241" fill="#4A5568">2 scheduled jobs · 8 notifications</text>
+    <rect x="18" y="266" width="224" height="68" rx="7" fill="#FFF"/>
+    <text x="28" y="284" font-weight="600">Platform</text>
+    <text x="28" y="301" fill="#4A5568">CMDB business apps · 6 roles</text>
+    <text x="28" y="317" fill="#4A5568">48+ ACLs · /caf portal</text>
+    <rect x="18" y="342" width="224" height="52" rx="7" fill="#FFF" stroke="#0E7364" stroke-width="1.5"/>
+    <text x="28" y="361" font-weight="600" fill="#0B5C50">Outbound adapter</text>
+    <text x="28" y="378" fill="#4A5568">4 push rules → CAFSalesforceSync</text>
+    <rect x="18" y="402" width="224" height="52" rx="7" fill="#FFF" stroke="#2563A8" stroke-width="1.5"/>
+    <text x="28" y="421" font-weight="600" fill="#1E4F86">Inbound API</text>
+    <text x="28" y="438" fill="#4A5568">Scripted REST "CAF Integration"</text>
+  </g>
+  <!-- SF column -->
+  <rect x="445" y="5" width="250" height="460" rx="12" fill="#E3EBF6"/>
+  <text x="458" y="26" font-weight="700" fill="#1E4F86" font-size="11.5" letter-spacing="1">SALESFORCE · ENGAGEMENT</text>
+  <g>
+    <rect x="458" y="38" width="224" height="68" rx="7" fill="#FFF"/>
+    <text x="468" y="56" font-weight="600">Presentation (LWC)</text>
+    <text x="468" y="73" fill="#4A5568">cafDashboard · cafSyncHealth</text>
+    <text x="468" y="89" fill="#4A5568">cafEvidence · cafAttestation · 3 screens</text>
+    <rect x="458" y="114" width="224" height="68" rx="7" fill="#FFF"/>
+    <text x="468" y="132" font-weight="600">Read models (Apex)</text>
+    <text x="468" y="149" fill="#4A5568">Dashboard · Approvals · Reports</text>
+    <text x="468" y="165" fill="#4A5568">Admin controllers</text>
+    <rect x="458" y="190" width="224" height="68" rx="7" fill="#FFF"/>
+    <text x="468" y="208" font-weight="600">Services (Apex)</text>
+    <text x="468" y="225" fill="#4A5568">CafTaskService · CafEvidenceService</text>
+    <text x="468" y="241" fill="#4A5568">CafAttestationService · CafSyncHealth</text>
+    <rect x="458" y="266" width="224" height="68" rx="7" fill="#FFF"/>
+    <text x="468" y="284" font-weight="600">Data</text>
+    <text x="468" y="301" fill="#4A5568">CAF_Request__c · CAF_Task__c</text>
+    <text x="468" y="317" fill="#4A5568">CAF_Control_Catalog__c · Files</text>
+    <rect x="458" y="342" width="224" height="52" rx="7" fill="#FFF" stroke="#0E7364" stroke-width="1.5"/>
+    <text x="468" y="361" font-weight="600" fill="#0B5C50">REST upsert endpoint</text>
+    <text x="468" y="378" fill="#4A5568">sobjects/…/ServiceNow_Sys_Id__c/{id}</text>
+    <rect x="458" y="402" width="224" height="52" rx="7" fill="#FFF" stroke="#2563A8" stroke-width="1.5"/>
+    <text x="468" y="421" font-weight="600" fill="#1E4F86">Outbound gateway</text>
+    <text x="468" y="438" fill="#4A5568">CafCallout → Log · CafConfig</text>
+  </g>
+  <!-- seam -->
+  <rect x="270" y="5" width="160" height="460" rx="12" fill="#F5F6F2" stroke="#D9DEE5" stroke-dasharray="5 4"/>
+  <text x="350" y="26" text-anchor="middle" font-weight="700" fill="#A3520F" font-size="11.5" letter-spacing="1">INTEGRATION SEAM</text>
+  <line x1="242" y1="368" x2="456" y2="368" stroke="#0E7364" stroke-width="2.5" marker-end="url(#g)"/>
+  <rect x="285" y="320" width="130" height="38" rx="6" fill="#FFF" stroke="#0E7364"/>
+  <text x="350" y="336" text-anchor="middle" fill="#0B5C50" font-weight="600">STATE · PATCH upsert</text>
+  <text x="350" y="351" text-anchor="middle" fill="#4A5568">OAuth client creds</text>
+  <line x1="458" y1="428" x2="244" y2="428" stroke="#2563A8" stroke-width="2.5" marker-end="url(#b)"/>
+  <rect x="285" y="380" width="130" height="38" rx="6" fill="#FFF" stroke="#2563A8"/>
+  <text x="350" y="396" text-anchor="middle" fill="#1E4F86" font-weight="600">INTENTIONS · REST</text>
+  <text x="350" y="411" text-anchor="middle" fill="#4A5568">basic, sf.integration</text>
+  <text x="350" y="70" text-anchor="middle" fill="#4A5568">Correlation key:</text>
+  <text x="350" y="86" text-anchor="middle" font-weight="600">ServiceNow sys_id</text>
+  <text x="350" y="118" text-anchor="middle" fill="#4A5568">Truth flows</text>
+  <text x="350" y="134" text-anchor="middle" font-weight="600">one way (SN → SF)</text>
+  <text x="350" y="166" text-anchor="middle" fill="#4A5568">Traffic flows</text>
+  <text x="350" y="182" text-anchor="middle" font-weight="600">both ways</text>
+  <text x="350" y="214" text-anchor="middle" fill="#4A5568">Drift detection:</text>
+  <text x="350" y="230" text-anchor="middle" font-weight="600">GET /snapshot</text>
+  <text x="350" y="262" text-anchor="middle" fill="#4A5568">Repair:</text>
+  <text x="350" y="278" text-anchor="middle" font-weight="600">POST /resync</text>
+</svg>
+<div class="caption">Figure 2 · Logical architecture and the integration seam</div>
+</div>
+
+<h2>5.1 Component responsibilities</h2>
+<table>
+  <thead><tr><th style="width:28%">Component</th><th style="width:12%">Platform</th><th>Responsibility</th></tr></thead>
+  <tbody>
+    <tr><td>CAF tables (5)</td><td>ServiceNow</td><td>Controls, relationships, relationship tasks, requests and tasks — the system of record.</td></tr>
+    <tr><td>Business rules, flows, jobs</td><td>ServiceNow</td><td>Generate requests and tasks, close requests, detect overdue, transition on approval.</td></tr>
+    <tr><td><code>CAFSalesforceSync</code></td><td>ServiceNow</td><td>Builds payloads, obtains OAuth token, upserts into Salesforce. Methods: pushRequest, pushTask, pushControl, retireControl.</td></tr>
+    <tr><td>Scripted REST "CAF Integration"</td><td>ServiceNow</td><td>Six inbound resources; enforces the allow-list and evidence gate; reconciles explicitly after each write.</td></tr>
+    <tr><td><code>CafTaskService</code></td><td>Salesforce</td><td>Task list for the drill-in; <code>applyChange</code> PATCHes a task in ServiceNow.</td></tr>
+    <tr><td><code>CafEvidenceService</code></td><td>Salesforce</td><td>Lists files on both sides; pushes a Salesforce File to ServiceNow as an attachment.</td></tr>
+    <tr><td><code>CafAttestationService</code></td><td>Salesforce</td><td>Sends the attestation outcome; returns ServiceNow's verdict.</td></tr>
+    <tr><td><code>CafSyncHealth</code></td><td>Salesforce</td><td>Compares snapshot to mirror; reports differences; triggers single-record resync.</td></tr>
+    <tr><td><code>CafCallout</code> + event trigger</td><td>Salesforce</td><td>Single callout gateway; times every call and logs it via a platform event.</td></tr>
+    <tr><td><code>CafConfig</code> + <code>CAF_Setting__mdt</code></td><td>Salesforce</td><td>Task path, evidence cap, timeout and logging switch, changeable without deploy.</td></tr>
+    <tr><td>Screen controllers (4)</td><td>Salesforce</td><td>Read models for Compliance, Approvals, Reports and Admin.</td></tr>
+  </tbody>
+</table>
+
+<!-- ============================== 6 ============================== -->
+<h1>6. Bi-directional integration design</h1>
+<p>The integration is bi-directional in traffic but one-directional in truth. Figure 3 shows every channel, its trigger, its authentication and its target.</p>
+<div class="figure">
+<svg viewBox="0 0 700 430" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial" font-size="10.5">
+  <defs>
+    <marker id="g2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#0E7364"/></marker>
+    <marker id="b2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#2563A8"/></marker>
+  </defs>
+  <rect x="5" y="5" width="200" height="420" rx="12" fill="#DCEEE8"/>
+  <text x="105" y="26" text-anchor="middle" font-weight="700" fill="#0B5C50" font-size="11.5">ServiceNow</text>
+  <rect x="495" y="5" width="200" height="420" rx="12" fill="#E3EBF6"/>
+  <text x="595" y="26" text-anchor="middle" font-weight="700" fill="#1E4F86" font-size="11.5">Salesforce</text>
+
+  <text x="350" y="26" text-anchor="middle" font-weight="700" fill="#0B5C50" font-size="11">OUTBOUND · ServiceNow → Salesforce</text>
+  <!-- outbound rows -->
+  <g>
+    <rect x="15" y="40" width="180" height="30" rx="5" fill="#FFF"/><text x="25" y="59">caf_req insert / update</text>
+    <rect x="15" y="76" width="180" height="30" rx="5" fill="#FFF"/><text x="25" y="95">caf_tsk insert / update</text>
+    <rect x="15" y="112" width="180" height="30" rx="5" fill="#FFF"/><text x="25" y="131">control insert / update</text>
+    <rect x="15" y="148" width="180" height="30" rx="5" fill="#FFF"/><text x="25" y="167">control delete</text>
+    <rect x="505" y="40" width="180" height="30" rx="5" fill="#FFF"/><text x="515" y="59" font-family="Consolas">CAF_Request__c</text>
+    <rect x="505" y="76" width="180" height="30" rx="5" fill="#FFF"/><text x="515" y="95" font-family="Consolas">CAF_Task__c</text>
+    <rect x="505" y="112" width="180" height="30" rx="5" fill="#FFF"/><text x="515" y="131" font-family="Consolas">CAF_Control_Catalog__c</text>
+    <rect x="505" y="148" width="180" height="30" rx="5" fill="#FFF"/><text x="515" y="167">Catalog row Active__c=false</text>
+    <line x1="195" y1="55" x2="503" y2="55" stroke="#0E7364" stroke-width="2" marker-end="url(#g2)"/>
+    <text x="350" y="50" text-anchor="middle" fill="#0B5C50">pushRequest · async BR</text>
+    <line x1="195" y1="91" x2="503" y2="91" stroke="#0E7364" stroke-width="2" marker-end="url(#g2)"/>
+    <text x="350" y="86" text-anchor="middle" fill="#0B5C50">pushTask · async BR</text>
+    <line x1="195" y1="127" x2="503" y2="127" stroke="#0E7364" stroke-width="2" marker-end="url(#g2)"/>
+    <text x="350" y="122" text-anchor="middle" fill="#0B5C50">pushControl · async BR</text>
+    <line x1="195" y1="163" x2="503" y2="163" stroke="#0E7364" stroke-width="2" marker-end="url(#g2)"/>
+    <text x="350" y="158" text-anchor="middle" fill="#0B5C50">retireControl · after delete</text>
+  </g>
+  <rect x="150" y="186" width="400" height="34" rx="6" fill="#FFF" stroke="#0E7364"/>
+  <text x="350" y="200" text-anchor="middle" font-size="10">PATCH /services/data/v67.0/sobjects/{obj}/ServiceNow_Sys_Id__c/{sys_id}</text>
+  <text x="350" y="214" text-anchor="middle" fill="#4A5568" font-size="10">OAuth 2.0 client credentials · echo guard · kill switch</text>
+
+  <text x="350" y="246" text-anchor="middle" font-weight="700" fill="#1E4F86" font-size="11">INBOUND · Salesforce → ServiceNow</text>
+  <g>
+    <rect x="505" y="258" width="180" height="24" rx="5" fill="#FFF"/><text x="515" y="274">Start task (CafTaskService)</text>
+    <rect x="505" y="286" width="180" height="24" rx="5" fill="#FFF"/><text x="515" y="302">Push evidence</text>
+    <rect x="505" y="314" width="180" height="24" rx="5" fill="#FFF"/><text x="515" y="330">List evidence</text>
+    <rect x="505" y="342" width="180" height="24" rx="5" fill="#FFF"/><text x="515" y="358">Attest (Approve / Reject)</text>
+    <rect x="505" y="370" width="180" height="24" rx="5" fill="#FFF"/><text x="515" y="386">Sync Health check</text>
+    <rect x="505" y="398" width="180" height="24" rx="5" fill="#FFF"/><text x="515" y="414">Re-sync one record</text>
+    <rect x="15" y="258" width="180" height="24" rx="5" fill="#FFF"/><text x="25" y="274">caf_tsk (allow-listed)</text>
+    <rect x="15" y="286" width="180" height="24" rx="5" fill="#FFF"/><text x="25" y="302">sys_attachment insert</text>
+    <rect x="15" y="314" width="180" height="24" rx="5" fill="#FFF"/><text x="25" y="330">sys_attachment read</text>
+    <rect x="15" y="342" width="180" height="24" rx="5" fill="#FFF"/><text x="25" y="358">approval → business rule</text>
+    <rect x="15" y="370" width="180" height="24" rx="5" fill="#FFF"/><text x="25" y="386">read all CAF records</text>
+    <rect x="15" y="398" width="180" height="24" rx="5" fill="#FFF"/><text x="25" y="414">re-run outbound push</text>
+    <g font-family="Consolas" font-size="9.5" fill="#1E4F86">
+    <line x1="505" y1="270" x2="197" y2="270" stroke="#2563A8" stroke-width="2" marker-end="url(#b2)"/><text x="350" y="266" text-anchor="middle">PATCH /task/{sysId}</text>
+    <line x1="505" y1="298" x2="197" y2="298" stroke="#2563A8" stroke-width="2" marker-end="url(#b2)"/><text x="350" y="294" text-anchor="middle">POST /task/{sysId}/evidence</text>
+    <line x1="505" y1="326" x2="197" y2="326" stroke="#2563A8" stroke-width="2" marker-end="url(#b2)"/><text x="350" y="322" text-anchor="middle">GET /task/{sysId}/evidence</text>
+    <line x1="505" y1="354" x2="197" y2="354" stroke="#2563A8" stroke-width="2" marker-end="url(#b2)"/><text x="350" y="350" text-anchor="middle">POST /task/{sysId}/attest</text>
+    <line x1="505" y1="382" x2="197" y2="382" stroke="#2563A8" stroke-width="2" marker-end="url(#b2)"/><text x="350" y="378" text-anchor="middle">GET /snapshot</text>
+    <line x1="505" y1="410" x2="197" y2="410" stroke="#2563A8" stroke-width="2" marker-end="url(#b2)"/><text x="350" y="406" text-anchor="middle">POST /resync/{type}/{sysId}</text>
+    </g>
+  </g>
+</svg>
+<div class="caption">Figure 3 · Bi-directional integration channels. Inbound base path: /api/x_gskn2_caf_compli/caf · authenticated as sf.integration via the ServiceNow_CAF named credential.</div>
+</div>
+
+<h2>6.1 Outbound: ServiceNow → Salesforce</h2>
+<table>
+  <thead><tr><th style="width:36%">Business rule</th><th style="width:22%">Table</th><th style="width:16%">When</th><th>Calls</th></tr></thead>
+  <tbody>
+    <tr><td>CAF - Push Request to Salesforce</td><td>caf_req</td><td>async, ins/upd</td><td>pushRequest</td></tr>
+    <tr><td>CAF - Push Task to Salesforce</td><td>caf_tsk</td><td>async, ins/upd</td><td>pushTask</td></tr>
+    <tr><td>CAF - Push Control to Salesforce</td><td>caf_conformance_type</td><td>async, ins/upd</td><td>pushControl</td></tr>
+    <tr><td>CAF - Retire Control in Salesforce</td><td>caf_conformance_type</td><td>after delete</td><td>retireControl</td></tr>
+  </tbody>
+</table>
+<p>Every rule carries the <b>echo-loop guard</b> in its condition: <code>gs.getUserName() != sf.integration_user</code>. Pushes are fire-and-forget — a failure is logged with <code>gs.error</code> and never rolls back the ServiceNow transaction.</p>
+<h3>Configuration (system properties, prefix <code>x_gskn2_caf_compli.sf.</code>)</h3>
+<table>
+  <thead><tr><th style="width:28%">Property</th><th>Purpose</th></tr></thead>
+  <tbody>
+    <tr><td>enabled</td><td>Master kill switch. <code>false</code> stops all pushes; nothing is queued.</td></tr>
+    <tr><td>instance_url</td><td>Salesforce My Domain URL, for token and data API.</td></tr>
+    <tr><td>api_version</td><td>Salesforce REST API version (v67.0).</td></tr>
+    <tr><td>client_id / client_secret</td><td>Connected app credentials; secret stored encrypted (password2).</td></tr>
+    <tr><td>integration_user</td><td>User name inbound writes arrive as; the echo guard keys off it.</td></tr>
+  </tbody>
+</table>
+
+<h2>6.2 Inbound: Salesforce → ServiceNow</h2>
+<p>One Scripted REST API, six resources, all authenticated. The generic update accepts only an allow-list of six fields:</p>
+<p><code>state · met_criteria · approval · comments · vqd_link · vqd_link_2</code></p>
+<div class="callout">Any field outside the allow-list fails the <b>whole</b> call with HTTP 400 and nothing is applied. A partial write the caller cannot see is worse than an error.</div>
+<table>
+  <thead><tr><th style="width:10%">Code</th><th>Meaning</th></tr></thead>
+  <tbody>
+    <tr><td>200</td><td>Update or attestation applied</td></tr>
+    <tr><td>201</td><td>Evidence stored as a sys_attachment</td></tr>
+    <tr><td>400</td><td>Empty body, non-allow-listed field, invalid outcome or criteria</td></tr>
+    <tr><td>404</td><td>No CAF Task with that sys_id</td></tr>
+    <tr><td>409</td><td>Task not In Progress, no longer active, or outcome already recorded</td></tr>
+    <tr><td>428</td><td>Evidence gate: no attachment on the task</td></tr>
+  </tbody>
+</table>
+
+<h2>6.3 Echo-loop guard and explicit reconcile</h2>
+<p>The echo guard stops a Salesforce-originated change bouncing straight back. On its own it also <b>strands derived changes</b>: cascading rules (for example a task moving its parent request to In Progress) run in the same transaction as the same user, so their pushes are skipped too.</p>
+<p>The fix: every inbound resource ends with an <b>explicit reconcile</b> — exactly two upserts, the task and its parent request — triggered by the API request rather than a record change, so no loop can form. A healthy round trip logs one <code>[SF-&gt;CAF]</code> line followed by two <code>[CAF-&gt;SF]</code> lines.</p>
+<div class="callout">Do not simplify the reconcile away. Its failure is silent: the mirror simply stops matching, and only Sync Health notices.</div>
+
+<!-- ============================== 7 ============================== -->
+<h1>7. Integration sequence flows</h1>
+<p>Each diagram shows Salesforce participants on a blue lane and ServiceNow participants on a green lane. Solid arrows are calls; dashed arrows are responses.</p>
+
+<h2>7.1 Outbound record push (ServiceNow → Salesforce)</h2>
+<div class="figure seq" data-seq="outbound"></div>
+<h2>7.2 Start a task (inbound write with explicit reconcile)</h2>
+<div class="figure seq" data-seq="start"></div>
+<h2>7.3 Upload evidence</h2>
+<div class="figure seq" data-seq="evidence"></div>
+<p>Upload and push are two Apex transactions because Apex cannot call out after uncommitted DML. Files are capped at 2 MB: Apex holds the blob and its base64 copy in the same 6 MB heap.</p>
+<h2>7.4 Attest a task</h2>
+<div class="figure seq" data-seq="attest"></div>
+<p>The endpoint enforces the gate and writes three fields; the existing ServiceNow business rule <i>CAF - success criteria not met</i> performs the transition. The transition is not reimplemented, so the <code>/caf</code> portal and Salesforce share one rule.</p>
+<h2>7.5 Sync Health check and repair</h2>
+<div class="figure seq" data-seq="sync"></div>
+<h2>7.6 Callout logging (Salesforce)</h2>
+<div class="figure seq" data-seq="log"></div>
+<p>Logging uses the <code>CAF_Callout_Event__e</code> platform event so the log row survives when the caller's transaction rolls back, and so no DML happens between two callouts.</p>
+
+<!-- ============================== 8 ============================== -->
+<h1>8. Data architecture</h1>
+<p>Five ServiceNow tables form the data model. Three are mirrored into Salesforce; two remain configuration-only.</p>
+<div class="figure">
+<svg viewBox="0 0 700 330" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial" font-size="10.5">
+  <defs>
+    <marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#0E7364"/></marker>
+    <marker id="k3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#4A5568"/></marker>
+  </defs>
+  <rect x="5" y="5" width="300" height="320" rx="12" fill="#DCEEE8"/>
+  <text x="18" y="26" font-weight="700" fill="#0B5C50" font-size="11.5">ServiceNow tables</text>
+  <rect x="395" y="5" width="300" height="320" rx="12" fill="#E3EBF6"/>
+  <text x="408" y="26" font-weight="700" fill="#1E4F86" font-size="11.5">Salesforce objects</text>
+
+  <rect x="20" y="40" width="270" height="44" rx="6" fill="#FFF" stroke="#0E7364"/>
+  <text x="30" y="58" font-weight="600">CAF Controls</text><text x="30" y="74" fill="#4A5568" font-family="Consolas" font-size="9.5">caf_conformance_type · CNFTYPE</text>
+  <rect x="20" y="100" width="270" height="44" rx="6" fill="#FFF" stroke="#8C99AB" stroke-dasharray="4 3"/>
+  <text x="30" y="118" font-weight="600">CAF Relationships</text><text x="30" y="134" fill="#4A5568">control × tier × crown jewel · not mirrored</text>
+  <rect x="20" y="160" width="270" height="44" rx="6" fill="#FFF" stroke="#8C99AB" stroke-dasharray="4 3"/>
+  <text x="30" y="178" font-weight="600">CAF Relationship Tasks</text><text x="30" y="194" fill="#4A5568">task templates · not mirrored</text>
+  <rect x="20" y="220" width="270" height="44" rx="6" fill="#FFF" stroke="#0E7364"/>
+  <text x="30" y="238" font-weight="600">CAF Requests</text><text x="30" y="254" fill="#4A5568" font-family="Consolas" font-size="9.5">caf_req · RCAF</text>
+  <rect x="20" y="276" width="270" height="44" rx="6" fill="#FFF" stroke="#0E7364"/>
+  <text x="30" y="294" font-weight="600">CAF Tasks</text><text x="30" y="310" fill="#4A5568" font-family="Consolas" font-size="9.5">caf_tsk · CAFT · + sys_attachment</text>
+
+  <line x1="155" y1="84" x2="155" y2="98" stroke="#4A5568" marker-end="url(#k3)"/>
+  <line x1="155" y1="144" x2="155" y2="158" stroke="#4A5568" marker-end="url(#k3)"/>
+  <path d="M290,122 C320,122 320,236 292,236" fill="none" stroke="#4A5568" marker-end="url(#k3)"/>
+  <text x="300" y="185" fill="#4A5568" font-size="9.5">instantiates</text>
+  <line x1="155" y1="264" x2="155" y2="274" stroke="#4A5568" marker-end="url(#k3)"/>
+
+  <rect x="410" y="40" width="270" height="44" rx="6" fill="#FFF" stroke="#2563A8"/>
+  <text x="420" y="58" font-weight="600" font-family="Consolas">CAF_Control_Catalog__c</text><text x="420" y="74" fill="#4A5568">SN number · Active__c</text>
+  <rect x="410" y="220" width="270" height="44" rx="6" fill="#FFF" stroke="#2563A8"/>
+  <text x="420" y="238" font-weight="600" font-family="Consolas">CAF_Request__c</text><text x="420" y="254" fill="#4A5568">app, control, CAF status, state, due</text>
+  <rect x="410" y="276" width="270" height="44" rx="6" fill="#FFF" stroke="#2563A8"/>
+  <text x="420" y="294" font-weight="600" font-family="Consolas">CAF_Task__c</text><text x="420" y="310" fill="#4A5568">request lookup, state, approval · Files</text>
+  <line x1="545" y1="264" x2="545" y2="274" stroke="#4A5568" marker-end="url(#k3)"/>
+
+  <line x1="290" y1="62" x2="408" y2="62" stroke="#0E7364" stroke-width="2" marker-end="url(#m3)"/>
+  <line x1="290" y1="242" x2="408" y2="242" stroke="#0E7364" stroke-width="2" marker-end="url(#m3)"/>
+  <line x1="290" y1="298" x2="408" y2="298" stroke="#0E7364" stroke-width="2" marker-end="url(#m3)"/>
+  <text x="350" y="56" text-anchor="middle" fill="#0B5C50" font-size="9.5">upsert by sys_id</text>
+  <text x="350" y="236" text-anchor="middle" fill="#0B5C50" font-size="9.5">upsert by sys_id</text>
+  <text x="350" y="292" text-anchor="middle" fill="#0B5C50" font-size="9.5">upsert by sys_id</text>
+  <text x="545" y="140" text-anchor="middle" fill="#4A5568">Every mirror object carries</text>
+  <text x="545" y="156" text-anchor="middle" font-family="Consolas" font-size="10">ServiceNow_Sys_Id__c</text>
+  <text x="545" y="172" text-anchor="middle" fill="#4A5568">(External Id, unique)</text>
+</svg>
+<div class="caption">Figure 4 · Data model and mirroring</div>
+</div>
+
+<h2>8.1 Mirrored field mapping</h2>
+<table>
+  <thead><tr><th style="width:30%">ServiceNow (caf_req / caf_tsk)</th><th style="width:30%">Salesforce</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td>sys_id</td><td>ServiceNow_Sys_Id__c</td><td>External Id, unique — the correlation key</td></tr>
+    <tr><td>number</td><td>Name, SN_Number__c</td><td>RCAF… / CAFT…</td></tr>
+    <tr><td>short_description</td><td>Short_Description__c</td><td>Truncated to 255</td></tr>
+    <tr><td>business_application</td><td>Business_Application__c</td><td>Display value; CMDB is not mirrored</td></tr>
+    <tr><td>caf_conformance_type → control</td><td>CAF_Control__c, CAF_Control_Sys_Id__c</td><td>Resolved two hops via relationship; sys_id is the join key</td></tr>
+    <tr><td>caf_status</td><td>CAF_Status__c</td><td>in_compliance · approaching_due · out_of_compliance · archer_exception_approved</td></tr>
+    <tr><td>state (1, 2, 3, −1)</td><td>State__c</td><td>Label: Open · In Progress · Closed Complete · Cancelled</td></tr>
+    <tr><td>planned_completion_date</td><td>Planned_Completion_Date__c</td><td>Converted to ISO date-time</td></tr>
+    <tr><td>approval, met_criteria (task)</td><td>Approval__c, Met_Criteria__c</td><td>requested / approved / rejected · yes / no</td></tr>
+    <tr><td>parent (task)</td><td>CAF_Request__c lookup</td><td>Parented by External Id, not by Salesforce Id</td></tr>
+  </tbody>
+</table>
+<h2>8.2 Correlation and lifecycle rules</h2>
+<ul>
+  <li><b>One-directional correlation.</b> No Salesforce Id is stored in ServiceNow. A rebuilt Salesforce org repopulates by re-pushing.</li>
+  <li><b>Deletes do not propagate</b>, except a deleted control is mirrored as <code>Active__c = false</code> so its grid column disappears.</li>
+  <li><b>Evidence is held twice, deliberately.</b> Salesforce Files serve preview and download; the ServiceNow attachment is the auditor's copy and the only one the attestation gate counts.</li>
+  <li><b>Salesforce-only objects:</b> <code>CAF_Integration_Log__c</code>, <code>CAF_Callout_Event__e</code>, <code>CAF_Setting__mdt</code>.</li>
+</ul>
+
+<!-- ============================== 9 ============================== -->
+<h1>9. Process and state model</h1>
+<h2>9.1 End-to-end compliance process</h2>
+<div class="figure">
+<svg viewBox="0 0 700 230" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial" font-size="10.5">
+  <defs><marker id="p" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#13203A"/></marker></defs>
+  <rect x="5" y="5" width="690" height="100" rx="10" fill="#DCEEE8"/>
+  <text x="15" y="22" font-weight="700" fill="#0B5C50" font-size="10">SERVICENOW</text>
+  <rect x="5" y="125" width="690" height="100" rx="10" fill="#E3EBF6"/>
+  <text x="15" y="142" font-weight="700" fill="#1E4F86" font-size="10">SALESFORCE</text>
+  <g>
+    <rect x="15" y="35" width="110" height="56" rx="6" fill="#FFF" stroke="#0E7364"/><text x="70" y="58" text-anchor="middle" font-weight="600">Initiate CAF</text><text x="70" y="74" text-anchor="middle" fill="#4A5568">on business app</text>
+    <rect x="145" y="35" width="110" height="56" rx="6" fill="#FFF" stroke="#0E7364"/><text x="200" y="58" text-anchor="middle" font-weight="600">Requests +</text><text x="200" y="74" text-anchor="middle" fill="#4A5568">tasks created</text>
+    <rect x="415" y="35" width="120" height="56" rx="6" fill="#FFF" stroke="#0E7364"/><text x="475" y="58" text-anchor="middle" font-weight="600">Rule transitions</text><text x="475" y="74" text-anchor="middle" fill="#4A5568">task + request</text>
+    <rect x="555" y="35" width="130" height="56" rx="6" fill="#FFF" stroke="#0E7364"/><text x="620" y="58" text-anchor="middle" font-weight="600">All closed → next</text><text x="620" y="74" text-anchor="middle" fill="#4A5568">due date, renewal</text>
+    <rect x="145" y="155" width="110" height="56" rx="6" fill="#FFF" stroke="#2563A8"/><text x="200" y="178" text-anchor="middle" font-weight="600">Grid shows</text><text x="200" y="194" text-anchor="middle" fill="#4A5568">status per control</text>
+    <rect x="275" y="155" width="110" height="56" rx="6" fill="#FFF" stroke="#2563A8"/><text x="330" y="178" text-anchor="middle" font-weight="600">Owner starts,</text><text x="330" y="194" text-anchor="middle" fill="#4A5568">uploads evidence</text>
+    <rect x="415" y="155" width="120" height="56" rx="6" fill="#FFF" stroke="#2563A8"/><text x="475" y="178" text-anchor="middle" font-weight="600">Approver attests</text><text x="475" y="194" text-anchor="middle" fill="#4A5568">approve / reject</text>
+    <rect x="555" y="155" width="130" height="56" rx="6" fill="#FFF" stroke="#2563A8"/><text x="620" y="178" text-anchor="middle" font-weight="600">Grid updates</text><text x="620" y="194" text-anchor="middle" fill="#4A5568">via push</text>
+    <line x1="125" y1="63" x2="143" y2="63" stroke="#13203A" marker-end="url(#p)"/>
+    <line x1="200" y1="91" x2="200" y2="153" stroke="#0E7364" stroke-width="2" marker-end="url(#p)"/><text x="206" y="125" fill="#0B5C50" font-size="9.5">push</text>
+    <line x1="255" y1="183" x2="273" y2="183" stroke="#13203A" marker-end="url(#p)"/>
+    <line x1="330" y1="155" x2="415" y2="70" stroke="#2563A8" stroke-width="2" marker-end="url(#p)"/><text x="340" y="112" fill="#1E4F86" font-size="9.5">PATCH, evidence</text>
+    <line x1="475" y1="155" x2="475" y2="93" stroke="#2563A8" stroke-width="2" marker-end="url(#p)"/><text x="481" y="125" fill="#1E4F86" font-size="9.5">attest</text>
+    <line x1="535" y1="63" x2="553" y2="63" stroke="#13203A" marker-end="url(#p)"/>
+    <line x1="590" y1="91" x2="590" y2="153" stroke="#0E7364" stroke-width="2" marker-end="url(#p)"/><text x="596" y="125" fill="#0B5C50" font-size="9.5">push</text>
+  </g>
+</svg>
+<div class="caption">Figure 5 · Compliance process across both platforms</div>
+</div>
+
+<h2>9.2 Task state model and Salesforce actions</h2>
+<div class="figure">
+<svg viewBox="0 0 700 170" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial" font-size="10.5">
+  <defs><marker id="s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#13203A"/></marker></defs>
+  <rect x="10" y="50" width="120" height="50" rx="25" fill="#FFF" stroke="#13203A" stroke-width="1.5"/><text x="70" y="72" text-anchor="middle" font-weight="600">Open</text><text x="70" y="88" text-anchor="middle" fill="#4A5568" font-size="9.5">state 1</text>
+  <rect x="220" y="50" width="130" height="50" rx="25" fill="#FFF" stroke="#13203A" stroke-width="1.5"/><text x="285" y="72" text-anchor="middle" font-weight="600">In Progress</text><text x="285" y="88" text-anchor="middle" fill="#4A5568" font-size="9.5">state 2</text>
+  <rect x="460" y="10" width="230" height="50" rx="25" fill="#DCEEE8" stroke="#0E7364" stroke-width="1.5"/><text x="575" y="32" text-anchor="middle" font-weight="600">Closed Complete · approved</text><text x="575" y="48" text-anchor="middle" fill="#4A5568" font-size="9.5">request → in_compliance</text>
+  <rect x="460" y="90" width="230" height="50" rx="25" fill="#FBE5D0" stroke="#A3520F" stroke-width="1.5"/><text x="575" y="112" text-anchor="middle" font-weight="600">Closed · rejected</text><text x="575" y="128" text-anchor="middle" fill="#4A5568" font-size="9.5">request → out_of_compliance</text>
+  <line x1="130" y1="75" x2="218" y2="75" stroke="#13203A" marker-end="url(#s)"/><text x="174" y="68" text-anchor="middle" font-size="9.5">Start</text>
+  <line x1="350" y1="68" x2="458" y2="38" stroke="#13203A" marker-end="url(#s)"/><text x="400" y="42" text-anchor="middle" font-size="9.5">Approve</text>
+  <line x1="350" y1="82" x2="458" y2="112" stroke="#13203A" marker-end="url(#s)"/><text x="400" y="114" text-anchor="middle" font-size="9.5">Reject</text>
+  <text x="70" y="125" text-anchor="middle" fill="#1E4F86" font-size="9.5">Start · Upload evidence</text>
+  <text x="285" y="125" text-anchor="middle" fill="#1E4F86" font-size="9.5">Upload evidence · Attest</text>
+  <text x="285" y="140" text-anchor="middle" fill="#A3520F" font-size="9.5">Attest requires ≥1 SN attachment</text>
+  <text x="575" y="160" text-anchor="middle" fill="#1E4F86" font-size="9.5">View evidence only (read-only)</text>
+</svg>
+<div class="caption">Figure 6 · Task states (decided in ServiceNow) and the Salesforce actions offered in each</div>
+</div>
+<p>Closing the last task on a request does not necessarily close the request — the ServiceNow flow may create the next task in the chain. An overdue request is moved out of compliance by the daily scheduled job, independently of user action.</p>
+
+<!-- ============================== 10 ============================== -->
+<h1>10. Security architecture</h1>
+<div class="figure">
+<svg viewBox="0 0 700 200" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial" font-size="10.5">
+  <defs><marker id="z" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#13203A"/></marker></defs>
+  <rect x="5" y="5" width="240" height="190" rx="12" fill="#DCEEE8"/>
+  <text x="15" y="24" font-weight="700" fill="#0B5C50">ServiceNow</text>
+  <rect x="15" y="36" width="220" height="44" rx="6" fill="#FFF"/><text x="25" y="54" font-weight="600">CAFSalesforceSync</text><text x="25" y="70" fill="#4A5568">client_id + encrypted secret</text>
+  <rect x="15" y="130" width="220" height="54" rx="6" fill="#FFF"/><text x="25" y="148" font-weight="600">Scripted REST API</text><text x="25" y="163" fill="#4A5568">requires auth · runs as sf.integration</text><text x="25" y="177" fill="#4A5568">allow-list · evidence gate</text>
+  <rect x="455" y="5" width="240" height="190" rx="12" fill="#E3EBF6"/>
+  <text x="465" y="24" font-weight="700" fill="#1E4F86">Salesforce</text>
+  <rect x="465" y="36" width="220" height="44" rx="6" fill="#FFF"/><text x="475" y="54" font-weight="600">Connected app</text><text x="475" y="70" fill="#4A5568">client credentials flow → run-as user</text>
+  <rect x="465" y="130" width="220" height="54" rx="6" fill="#FFF"/><text x="475" y="148" font-weight="600">Named credential ServiceNow_CAF</text><text x="475" y="163" fill="#4A5568">basic auth · created by hand</text><text x="475" y="177" fill="#4A5568">not in source control</text>
+  <line x1="235" y1="58" x2="463" y2="58" stroke="#13203A" stroke-width="1.5" marker-end="url(#z)"/>
+  <text x="350" y="50" text-anchor="middle" font-weight="600">OAuth 2.0 client credentials</text>
+  <text x="350" y="74" text-anchor="middle" fill="#4A5568">token → PATCH upsert (HTTPS)</text>
+  <line x1="465" y1="157" x2="237" y2="157" stroke="#13203A" stroke-width="1.5" marker-end="url(#z)"/>
+  <text x="350" y="149" text-anchor="middle" font-weight="600">HTTP basic as sf.integration</text>
+  <text x="350" y="173" text-anchor="middle" fill="#4A5568">via callout:ServiceNow_CAF (HTTPS)</text>
+</svg>
+<div class="caption">Figure 7 · Authentication in each direction</div>
+</div>
+<table>
+  <thead><tr><th style="width:28%">Control</th><th>Design</th></tr></thead>
+  <tbody>
+    <tr><td>Outbound authentication</td><td>OAuth 2.0 client credentials; secret stored as an encrypted <code>password2</code> property.</td></tr>
+    <tr><td>Inbound authentication</td><td>HTTP basic as the dedicated <code>sf.integration</code> user through the <code>ServiceNow_CAF</code> named credential.</td></tr>
+    <tr><td>Least privilege (inbound)</td><td>Six-field allow-list; all-or-nothing rejection; state checks (409) and evidence gate (428).</td></tr>
+    <tr><td>Salesforce permissions</td><td><code>CAF_Integration</code>: objects, field-level security, Apex classes, tabs. <code>CAF_Admin</code>: adds read on the integration log.</td></tr>
+    <tr><td>Mirror integrity</td><td>Mirrored fields are read-only on layouts; Salesforce changes state only by asking ServiceNow.</td></tr>
+    <tr><td>ServiceNow roles</td><td>6 roles (admin, engineer, three tier owners, read-only), 48+ ACLs, query business rules for row-level security.</td></tr>
+    <tr><td>Secrets handling</td><td>No credential in source. The named credential password is set in Setup; test automation reuses the CLI's OAuth grant.</td></tr>
+  </tbody>
+</table>
+<div class="callout">The echo-loop guard keys off the user name. Running the inbound API as any other account silently disables the guard and creates a push loop.</div>
+
+<!-- ============================== 11 ============================== -->
+<h1>11. Non-functional design</h1>
+<table>
+  <thead><tr><th style="width:20%">Quality</th><th>Design response</th></tr></thead>
+  <tbody>
+    <tr><td>Reliability</td><td>Outbound pushes async after commit; inbound calls synchronous with clear status codes; idempotent upserts allow safe replay.</td></tr>
+    <tr><td>Consistency</td><td>Explicit reconcile after every inbound write; Sync Health compares 3 record types field by field (blank treated as null) and flags checks older than 15 minutes.</td></tr>
+    <tr><td>Observability</td><td>Every Salesforce callout logged to <code>CAF_Integration_Log__c</code> (operation, status, latency, error, user). ServiceNow logs <code>[SF-&gt;CAF]</code> / <code>[CAF-&gt;SF]</code> lines. Admin screen shows success rate and latency.</td></tr>
+    <tr><td>Performance limits</td><td>Evidence ≤ 2 MB per file (6 MB Apex heap); callout timeout 120 s; one file per Apex transaction.</td></tr>
+    <tr><td>Capacity</td><td>Salesforce Developer Edition: 15,000 inbound API requests per day; one end-to-end journey costs roughly 45. Current data: 463 requests, 496 tasks, 6 controls, 77 applications.</td></tr>
+    <tr><td>Configurability</td><td><code>CAF_Setting__mdt</code> (task path, evidence cap, timeout, logging) and ServiceNow <code>sf.*</code> properties, including a kill switch.</td></tr>
+    <tr><td>Extensibility</td><td>New controls appear as grid columns with no code change; LWCs carry record-page and Experience Cloud targets.</td></tr>
+    <tr><td>Recoverability</td><td>Salesforce org can be rebuilt and repopulated by re-push; single-record Re-sync for drift.</td></tr>
+  </tbody>
+</table>
+
+<!-- ============================== 12 ============================== -->
+<h1>12. Deployment and environments</h1>
+<table>
+  <thead><tr><th style="width:20%">Platform</th><th style="width:32%">Environment</th><th>Deployment method</th></tr></thead>
+  <tbody>
+    <tr><td>ServiceNow</td><td>PDI dev249570 · scope x_gskn2_caf_compli</td><td>Scripted rebuild from source: <code>servicenow/deploy/01–10</code> (app, roles, tables, fields, choices, properties, navigation, seed data, code).</td></tr>
+    <tr><td>Salesforce</td><td>Developer Edition orgfarm-4938c7f768 · API v67.0</td><td>Metadata API deploy of <code>salesforce/force-app</code> via the <code>sf</code> CLI (alias <code>caf-sf</code>).</td></tr>
+    <tr><td>Manual steps</td><td>Both</td><td>Named credential <code>ServiceNow_CAF</code>; connected app for client credentials; permission-set assignment.</td></tr>
+  </tbody>
+</table>
+<h2>Repository structure</h2>
+<table>
+  <thead><tr><th style="width:30%">Path</th><th>Contents</th></tr></thead>
+  <tbody>
+    <tr><td>salesforce/force-app</td><td>Apex (classes, tests, trigger), 9 LWCs, objects, metadata, layouts, permission sets, tabs</td></tr>
+    <tr><td>salesforce/test/lwc</td><td>Jest unit tests for LWCs</td></tr>
+    <tr><td>servicenow/</td><td>Push business rules, Scripted REST resources, script includes, deploy scripts</td></tr>
+    <tr><td>testing/</td><td>Test case catalogues, Playwright automation, evidence generator and packs</td></tr>
+    <tr><td>presentation/</td><td>Business, technical and plain-English decks</td></tr>
+  </tbody>
+</table>
+
+<!-- ============================== 13 ============================== -->
+<h1>13. Testing and assurance</h1>
+<table>
+  <thead><tr><th style="width:24%">Level</th><th style="width:16%">Volume</th><th>Approach</th></tr></thead>
+  <tbody>
+    <tr><td>Apex unit tests</td><td>9 test classes</td><td>Every service and controller; mocked callouts; shared <code>CafTestSupport</code> fixtures.</td></tr>
+    <tr><td>Offline unit tests</td><td>115 cases</td><td>Jest suites for 7 LWCs plus harness preflight; no org required.</td></tr>
+    <tr><td>Integration (E2E)</td><td>70 cases</td><td>Playwright drives Salesforce and verifies ServiceNow records.</td></tr>
+    <tr><td>ServiceNow</td><td>69 cases</td><td>Engine, native UI and /caf portal.</td></tr>
+  </tbody>
+</table>
+<p>Every end-to-end case records <b>two proofs</b>: what the screen showed and what the record holds. Results are merged with the case definitions into branded Word evidence records, so a document cannot claim a result the specification does not contain.</p>
+
+<!-- ============================== 14 ============================== -->
+<h1>14. Key design decisions</h1>
+<table>
+  <thead><tr><th style="width:6%">ID</th><th style="width:34%">Decision</th><th>Rationale</th></tr></thead>
+  <tbody>
+    <tr><td>D1</td><td>State machine stays in ServiceNow</td><td>One scheduler, one truth, one audit trail.</td></tr>
+    <tr><td>D2</td><td>Mirror only requests, tasks, controls</td><td>Configuration stays in one place.</td></tr>
+    <tr><td>D3</td><td>Upsert by External Id on sys_id</td><td>Replay-safe; org rebuild survivable.</td></tr>
+    <tr><td>D4</td><td>No Salesforce Id stored in ServiceNow</td><td>One-directional correlation; orphans on delete are the cheaper problem.</td></tr>
+    <tr><td>D5</td><td>Async, fire-and-forget push</td><td>A Salesforce outage never rolls back a compliance write.</td></tr>
+    <tr><td>D6</td><td>Echo guard plus explicit reconcile</td><td>The guard alone strands derived changes, silently.</td></tr>
+    <tr><td>D7</td><td>Allow-list rejects the whole call</td><td>No invisible partial writes.</td></tr>
+    <tr><td>D8</td><td>Detection automatic, repair manual, SN → SF only</td><td>Unattended repair can spread a problem; a disagreeing mirror is stale by definition.</td></tr>
+    <tr><td>D9</td><td>Evidence gate in the attest endpoint</td><td>Portal closure behaviour unchanged; pre-existing tasks unaffected.</td></tr>
+    <tr><td>D10</td><td>Attestation reuses the existing business rule</td><td>One transition shared by portal and Salesforce.</td></tr>
+    <tr><td>D11</td><td>Callout log via platform event</td><td>Log survives rollback; no DML between callouts.</td></tr>
+    <tr><td>D12</td><td>Client credentials rather than JWT</td><td>ServiceNow JWT provider lacks required claims without custom script; JWT is the production target.</td></tr>
+  </tbody>
+</table>
+
+<!-- ============================== 15 ============================== -->
+<h1>15. Risks, limitations and roadmap</h1>
+<table>
+  <thead><tr><th style="width:26%">Limitation / risk</th><th style="width:34%">Impact</th><th>Mitigation / next step</th></tr></thead>
+  <tbody>
+    <tr><td>No named approver</td><td>Audit trail records only sf.integration; approval notification never fires</td><td>Create <code>sysapproval_approver</code> records with the Salesforce user</td></tr>
+    <tr><td>Synchronous inbound calls</td><td>ServiceNow outage fails the user action; no retry</td><td>Queue intentions (platform events / queueable) with retry</td></tr>
+    <tr><td>Sync Health on demand only</td><td>Drift waits until someone looks</td><td>Scheduled nightly check with alerting</td></tr>
+    <tr><td>No Experience Cloud site</td><td>Licensing benefit not fully realised</td><td>Verify licences; place existing LWCs on a site</td></tr>
+    <tr><td>Client credentials auth</td><td>Acceptable for POC, weaker for production</td><td>Move outbound to JWT bearer</td></tr>
+    <tr><td>Row-level security deferred</td><td>All mirrored rows visible to permitted users</td><td>Sharing rules by application owner</td></tr>
+    <tr><td>Fire-and-forget push</td><td>Failed push visible only via Sync Health / logs</td><td>Scheduled Sync Health; alert on failure count</td></tr>
+    <tr><td>Echo guard bound to user name</td><td>Misconfigured user causes loop and API burn</td><td>Preflight check of integration user; monitor API usage</td></tr>
+  </tbody>
+</table>
+
+<!-- ============================== 16 ============================== -->
+<h1>16. Glossary</h1>
+<table>
+  <thead><tr><th style="width:24%">Term</th><th>Meaning</th></tr></thead>
+  <tbody>
+    <tr><td>CAF</td><td>The compliance assurance framework: controls, requests, tasks and attestation.</td></tr>
+    <tr><td>Control</td><td>A compliance requirement, e.g. "Test Backup &amp; Restore" (CNFTYPE…).</td></tr>
+    <tr><td>Request (RCAF)</td><td>One control applied to one business application for one cycle.</td></tr>
+    <tr><td>Task (CAFT)</td><td>A unit of work under a request, with success criteria and approval.</td></tr>
+    <tr><td>Attestation</td><td>An approver's approve/reject decision on a task, based on evidence.</td></tr>
+    <tr><td>Mirror</td><td>Salesforce's read-only copy of ServiceNow records.</td></tr>
+    <tr><td>Drift</td><td>Any disagreement between a ServiceNow record and its mirror.</td></tr>
+    <tr><td>Echo-loop guard</td><td>Business rule condition that skips pushes for writes made by sf.integration.</td></tr>
+    <tr><td>Reconcile</td><td>The explicit two-record push at the end of each inbound write.</td></tr>
+    <tr><td>Upsert</td><td>Insert-or-update keyed on an External Id.</td></tr>
+  </tbody>
+</table>
+
+<script>
+/* Sequence diagram renderer: participants + steps -> inline SVG */
+const SEQS = {
+  outbound: {
+    p: [['br','Push business rule','sn'],['sync','CAFSalesforceSync','sn'],['tok','SF OAuth token','sf'],['api','SF REST upsert','sf'],['obj','Mirror object','sf']],
+    s: [
+      {n:'Record committed in caf_req / caf_tsk / control', over:['br','br']},
+      {n:'Condition: user ≠ sf.integration · runs async', over:['br','sync']},
+      ['br','sync','pushRequest / pushTask / pushControl'],
+      {n:'Check sf.enabled; build payload', over:['sync','sync']},
+      ['sync','tok','POST /oauth2/token (client credentials)'],
+      ['tok','sync','access_token',1],
+      ['sync','api','PATCH …/ServiceNow_Sys_Id__c/{sys_id}'],
+      ['api','obj','insert or update'],
+      ['api','sync','201 / 204',1],
+      {n:'On failure: gs.error, no rollback (Sync Health finds it)', over:['sync','api']}
+    ]
+  },
+  start: {
+    p: [['lwc','cafDashboard','sf'],['apx','CafTaskService','sf'],['mir','Mirror records','sf'],['rest','PATCH /task','sn'],['eng','CAF engine','sn'],['sync','CAFSalesforceSync','sn']],
+    s: [
+      ['lwc','apx','applyChange(sysId, state, 2)'],
+      ['apx','rest','PATCH via callout:ServiceNow_CAF'],
+      {n:'Check allow-list (400 if violated)', over:['rest','rest']},
+      ['rest','eng','update task state = 2'],
+      {n:'Cascade moves parent request · echo guard skips both pushes', over:['eng','sync']},
+      ['rest','sync','explicit reconcile: task + request'],
+      ['sync','mir','upsert × 2 by External Id'],
+      ['rest','apx','200 OK + current task',1],
+      ['apx','lwc','result → refreshApex()',1]
+    ]
+  },
+  evidence: {
+    p: [['lwc','cafEvidence','sf'],['files','Salesforce Files','sf'],['apx','CafEvidenceService','sf'],['post','POST /evidence','sn'],['att','sys_attachment','sn'],['get','GET /evidence','sn']],
+    s: [
+      ['lwc','files','1 · lightning-file-upload (txn 1)'],
+      ['lwc','apx','2 · pushEvidence(contentVersionId) (txn 2)'],
+      {n:'Reject if > 2 MB · base64 encode', over:['apx','apx']},
+      ['apx','post','POST base64 body'],
+      ['post','att','insert attachment'],
+      ['post','apx','201 Created',1],
+      ['lwc','apx','3 · getEvidence(task)'],
+      ['apx','files','query ContentDocumentLinks'],
+      ['apx','get','GET evidence list'],
+      ['get','apx','ServiceNow files',1],
+      ['apx','lwc','both lists · warn if counts differ',1]
+    ]
+  },
+  attest: {
+    p: [['lwc','cafAttestation','sf'],['apx','CafAttestation Service','sf'],['mir','Mirror records','sf'],['rest','POST /attest','sn'],['br','Success-criteria rule','sn'],['sync','CAFSalesforceSync','sn']],
+    s: [
+      {n:'Approver confirms dialog (names task and criteria)', over:['lwc','lwc']},
+      ['lwc','apx','attest(sysId, outcome, criteria, comments)'],
+      ['apx','rest','POST /task/{sysId}/attest'],
+      {n:'Gate: In Progress (409) · active (409) · undecided (409) · has attachment (428)', over:['rest','br']},
+      ['rest','br','set approval, met_criteria, comments'],
+      {n:'Close task · request in_compliance / out_of_compliance', over:['br','br']},
+      ['rest','sync','reconcile task + request'],
+      ['sync','mir','upsert × 2'],
+      ['rest','apx','200 verdict (or 409 / 428)',1],
+      ['apx','lwc','show verdict',1]
+    ]
+  },
+  sync: {
+    p: [['lwc','cafSyncHealth','sf'],['apx','CafSyncHealth','sf'],['mir','Mirror (3 objects)','sf'],['snap','GET /snapshot','sn'],['rs','POST /resync','sn'],['sync','CAFSalesforceSync','sn']],
+    s: [
+      ['lwc','apx','check() (not cacheable)'],
+      ['apx','snap','GET /snapshot'],
+      ['snap','apx','requests, tasks, controls',1],
+      ['apx','mir','SOQL the mirror'],
+      {n:'Compare field by field · blank = null · 4 drift types', over:['apx','mir']},
+      ['apx','lwc','in sync, or list of differences',1],
+      {n:'User presses Re-sync on one difference', over:['lwc','lwc']},
+      ['lwc','apx','resync(type, sysId)'],
+      ['apx','rs','POST /resync/{type}/{sysId}'],
+      ['rs','sync','push record (ServiceNow unchanged)'],
+      ['sync','mir','upsert · ServiceNow wins'],
+      ['rs','apx','200 result',1]
+    ]
+  },
+  log: {
+    p: [['svc','CAF service (Apex)','sf'],['co','CafCallout','sf'],['bus','EventBus','sf'],['trg','Event trigger','sf'],['log','Integration Log','sf'],['sn','CAF REST API','sn']],
+    s: [
+      ['svc','co','send(operation, method, endpoint, body)'],
+      ['co','sn','HTTP via named credential (timeout from CafConfig)'],
+      ['sn','co','response or exception',1],
+      {n:'Record status, latency, error in memory (no DML)', over:['co','co']},
+      ['co','svc','response (failure may roll back caller)',1],
+      ['svc','co','flush() in finally'],
+      ['co','bus','EventBus.publish (if Logging_Enabled)'],
+      ['bus','trg','after insert · own transaction'],
+      ['trg','log','insert CAF_Integration_Log__c rows']
+    ]
+  }
+};
+function esc(t){return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function render(spec){
+  const W=700, pad=6, n=spec.p.length, colW=(W-2*pad)/n, top=12, headH=40, rowH=30;
+  const x={}; spec.p.forEach((p,i)=>x[p[0]]=pad+colW*i+colW/2);
+  const rows=spec.s.length, H=top+headH+16+rows*rowH+10;
+  let o=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial" font-size="10">`;
+  o+=`<defs><marker id="sq" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#13203A"/></marker><marker id="sqd" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#5B6B80"/></marker></defs>`;
+  // lanes
+  let groups=[]; spec.p.forEach((p,i)=>{ if(!groups.length||groups[groups.length-1].side!==p[2]) groups.push({side:p[2],a:i,b:i}); else groups[groups.length-1].b=i; });
+  groups.forEach(g=>{ const x0=pad+colW*g.a+2, w=colW*(g.b-g.a+1)-4; const c=g.side==='sf'?'#E3EBF6':'#DCEEE8';
+    o+=`<rect x="${x0}" y="2" width="${w}" height="${H-4}" rx="8" fill="${c}"/>`;
+    o+=`<text x="${x0+8}" y="12" font-size="8.5" font-weight="700" fill="${g.side==='sf'?'#1E4F86':'#0B5C50'}" letter-spacing="1">${g.side==='sf'?'SALESFORCE':'SERVICENOW'}</text>`; });
+  spec.p.forEach(p=>{ const c=p[2]==='sf'?'#2563A8':'#0E7364'; const bw=colW-12;
+    o+=`<rect x="${x[p[0]]-bw/2}" y="${top+4}" width="${bw}" height="${headH-6}" rx="6" fill="${c}"/>`;
+    const words=p[1].split(' '); let l1=p[1], l2='';
+    if(p[1].length>16 && words.length>1){ const mid=Math.ceil(words.length/2); l1=words.slice(0,mid).join(' '); l2=words.slice(mid).join(' '); }
+    if(l2){ o+=`<text x="${x[p[0]]}" y="${top+20}" text-anchor="middle" fill="#fff" font-weight="600">${esc(l1)}</text><text x="${x[p[0]]}" y="${top+32}" text-anchor="middle" fill="#fff" font-weight="600">${esc(l2)}</text>`; }
+    else o+=`<text x="${x[p[0]]}" y="${top+26}" text-anchor="middle" fill="#fff" font-weight="600">${esc(l1)}</text>`;
+    o+=`<line x1="${x[p[0]]}" y1="${top+headH-2}" x2="${x[p[0]]}" y2="${H-6}" stroke="#8C99AB" stroke-width="1" stroke-dasharray="3 3"/>`; });
+  spec.s.forEach((st,i)=>{ const y=top+headH+16+i*rowH+rowH/2+4;
+    if(Array.isArray(st)){ const [a,b,label,dash]=st; const xa=x[a], xb=x[b];
+      if(a===b){ o+=`<path d="M${xa},${y-6} h24 v10 h-22" fill="none" stroke="#13203A" marker-end="url(#sq)"/>`; }
+      else { const dir=xb>xa?1:-1; o+=`<line x1="${xa}" y1="${y}" x2="${xb-dir*2}" y2="${y}" stroke="${dash?'#5B6B80':'#13203A'}" stroke-width="1.4" ${dash?'stroke-dasharray="5 3"':''} marker-end="url(#${dash?'sqd':'sq'})"/>`; }
+      const tw=label.length*5.3+10, mx=Math.max(pad+tw/2+2, Math.min((xa+xb)/2, W-pad-tw/2-2));
+      o+=`<rect x="${mx-tw/2}" y="${y-16}" width="${tw}" height="13" rx="3" fill="#FFFFFF" fill-opacity="0.92"/>`;
+      o+=`<text x="${mx}" y="${y-6}" text-anchor="middle" fill="${dash?'#4A5568':'#13203A'}">${esc(label)}</text>`;
+    } else { const xa=Math.min(x[st.over[0]],x[st.over[1]]), xb=Math.max(x[st.over[0]],x[st.over[1]]);
+      const tw=Math.max(xb-xa+colW*0.8, st.n.length*5.3+16); const cx=(xa+xb)/2; let x0=Math.max(pad+2, Math.min(cx-tw/2, W-pad-2-tw));
+      o+=`<rect x="${x0}" y="${y-15}" width="${tw}" height="20" rx="4" fill="#FFF1DF" stroke="#D9822B"/>`;
+      o+=`<text x="${x0+tw/2}" y="${y-1}" text-anchor="middle" fill="#13203A">${esc(st.n)}</text>`; }
+  });
+  return o+'</svg>';
+}
+const titles={outbound:'Figure 8 · Outbound push',start:'Figure 9 · Start a task',evidence:'Figure 10 · Upload evidence',attest:'Figure 11 · Attest a task',sync:'Figure 12 · Sync Health check and repair',log:'Figure 13 · Callout logging'};
+document.querySelectorAll('.seq').forEach(el=>{ const k=el.dataset.seq; el.innerHTML=render(SEQS[k])+`<div class="caption">${titles[k]}</div>`; });
+</script>
+</body>
+</html>

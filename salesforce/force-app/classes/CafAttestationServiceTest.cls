@@ -38,7 +38,7 @@ private class CafAttestationServiceTest {
         Assert.areEqual('yes', body.get('met_criteria'));
         Assert.areEqual('Evidence reviewed', body.get('comments'));
 
-        Assert.areEqual('task.attest', [SELECT Operation__c FROM CAF_Integration_Log__c].Operation__c);
+        Assert.areEqual('task.attest', [SELECT Operation__c FROM CAF_Integration_Log__c WITH SYSTEM_MODE].Operation__c);
     }
 
     @IsTest
@@ -67,7 +67,7 @@ private class CafAttestationServiceTest {
         Test.stopTest();
 
         Assert.isTrue(raised);
-        CAF_Integration_Log__c log = [SELECT Status_Code__c, Error__c FROM CAF_Integration_Log__c];
+        CAF_Integration_Log__c log = [SELECT Status_Code__c, Error__c FROM CAF_Integration_Log__c WITH SYSTEM_MODE];
         Assert.areEqual(428, log.Status_Code__c);
         Assert.isTrue(log.Error__c.contains('evidence file'));
     }
