@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomPermission xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Approve or reject a task. Checked by CafAccess; granted by CAF_Approver and CAF_Integration.</description>
+    <isLicensed>false</isLicensed>
+    <label>CAF: attest tasks</label>
+</CustomPermission>

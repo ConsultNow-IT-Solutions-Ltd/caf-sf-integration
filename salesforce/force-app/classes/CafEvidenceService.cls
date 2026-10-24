@@ -153,6 +153,7 @@ public with sharing class CafEvidenceService {
         if (String.isBlank(taskSysId) || String.isBlank(contentDocumentId)) {
             throw new AuraHandledException('taskSysId and contentDocumentId are both required.');
         }
+        CafAccess.require(CafAccess.WORK_TASKS, 'upload evidence');
 
         List<ContentVersion> versions = [
             SELECT Id, Title, FileExtension, ContentSize, VersionData

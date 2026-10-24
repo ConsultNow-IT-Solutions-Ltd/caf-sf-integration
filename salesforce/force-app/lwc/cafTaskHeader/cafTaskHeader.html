@@ -1,0 +1,38 @@
+<template>
+    <div class="view head">
+        <template lwc:if={error}>
+            <p class="msg msg--error">{error}</p>
+        </template>
+
+        <template lwc:elseif={loaded}>
+            <div class="view__head">
+                <div>
+                    <h2 class="view__title">{name}</h2>
+                    <p class="view__sub">{description}</p>
+                </div>
+                <template lwc:if={canStart}>
+                    <button type="button" class="btn" disabled={busy} onclick={handleStart}>Start</button>
+                </template>
+            </div>
+
+            <ol class="path" aria-label="Task status">
+                <template for:each={steps} for:item="s">
+                    <li key={s.label} class={s.cls} aria-current={s.current}>{s.label}</li>
+                </template>
+            </ol>
+
+            <p class="meta">
+                <template lwc:if={due}>
+                    <span class={due.cls}>{due.text}</span>
+                </template>
+                <template lwc:if={approval}>
+                    <span class="approval">Approval: {approval}</span>
+                </template>
+            </p>
+        </template>
+
+        <template lwc:else>
+            <p class="msg">Loading&hellip;</p>
+        </template>
+    </div>
+</template>

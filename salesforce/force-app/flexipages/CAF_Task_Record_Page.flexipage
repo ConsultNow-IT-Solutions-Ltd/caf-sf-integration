@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    CAF_Task__c record page (CAF-229): cafTaskHeader across the top, the
+    record detail in the main column, evidence and attestation beside it -
+    the same two panels the dashboard drill-in uses, so a task reads the same
+    wherever it is opened.
+
+    Assigned as the View override in the CAF Compliance app
+    (applications/CAF_Compliance.app). The org-wide default stays the
+    standard page until someone activates this one in App Builder: setting it
+    in source would mean deploying CAF_Task__c as a whole object, which this
+    repo does not hold.
+-->
+<FlexiPage xmlns="http://soap.sforce.com/2006/04/metadata">
+    <flexiPageRegions>
+        <itemInstances>
+            <componentInstance>
+                <componentName>cafTaskHeader</componentName>
+                <identifier>c_cafTaskHeader</identifier>
+            </componentInstance>
+        </itemInstances>
+        <name>header</name>
+        <type>Region</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <itemInstances>
+            <componentInstance>
+                <componentName>force:detailPanel</componentName>
+                <identifier>force_detailPanel</identifier>
+            </componentInstance>
+        </itemInstances>
+        <name>main</name>
+        <type>Region</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <itemInstances>
+            <componentInstance>
+                <componentName>cafEvidence</componentName>
+                <identifier>c_cafEvidence</identifier>
+            </componentInstance>
+        </itemInstances>
+        <itemInstances>
+            <componentInstance>
+                <componentName>cafAttestation</componentName>
+                <identifier>c_cafAttestation</identifier>
+            </componentInstance>
+        </itemInstances>
+        <name>sidebar</name>
+        <type>Region</type>
+    </flexiPageRegions>
+    <masterLabel>CAF Task Record Page</masterLabel>
+    <sobjectType>CAF_Task__c</sobjectType>
+    <template>
+        <name>flexipage:recordHomeTemplateDesktop</name>
+    </template>
+    <type>RecordPage</type>
+</FlexiPage>

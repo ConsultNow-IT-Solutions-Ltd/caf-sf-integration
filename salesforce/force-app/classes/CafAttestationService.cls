@@ -48,6 +48,7 @@ public with sharing class CafAttestationService {
         if (metCriteria != 'yes' && metCriteria != 'no') {
             throw new AuraHandledException('Record whether the success criteria were met.');
         }
+        CafAccess.require(CafAccess.ATTEST, 'attest tasks');
 
         Map<String, Object> body = new Map<String, Object>{
             'met_criteria' => metCriteria,
