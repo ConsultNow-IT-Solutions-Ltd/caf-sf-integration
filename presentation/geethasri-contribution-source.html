@@ -52,81 +52,89 @@
   <div>
     <div class="kicker">Contribution Report · Individual</div>
     <h1>Geethasri Chintha<br>CAF Compliance</h1>
-    <p class="sub">What Geethasri delivered on the ServiceNow ⇄ Salesforce CAF integration from February to October 2026, drawn from the git history, GitHub pull requests and Jira.</p>
+    <p class="sub">What Geethasri has delivered on the ServiceNow ⇄ Salesforce CAF integration from April 2026, and the work assigned to them through to project closure in March 2027, drawn from the git history, GitHub pull requests and Jira.</p>
   </div>
   <table>
     <tr><td>Contributor</td><td>Geethasri Chintha (also commits as "Geethasshri")</td></tr>
-    <tr><td>Period</td><td>9 February – 20 October 2026</td></tr>
-    <tr><td>Source</td><td>caf-sf-integration repository, main @ 125ac13</td></tr>
-    <tr><td>Date</td><td>23 October 2026</td></tr>
+    <tr><td>Period</td><td>April 2026 – March 2027</td></tr>
+    <tr><td>Recorded to date</td><td>April – 24 October 2026</td></tr>
+    <tr><td>Planned</td><td>November 2026 – March 2027</td></tr>
+    <tr><td>Source</td><td>caf-sf-integration repository, main @ 9a52d51</td></tr>
+    <tr><td>Date</td><td>24 October 2026</td></tr>
   </table>
 </section>
 
 <!-- ============================ SUMMARY ============================ -->
 <h1>1. Summary</h1>
-<p>Geethasri is the largest single contributor to the repository. They created it, wrote the design documents, built the Salesforce data model, the core Apex services and the first four Lightning screens, and wrote the ServiceNow side of the sync. In May they built the ServiceNow REST API, and in August the presentation decks and ServiceNow fixes. Commits dated May to September carry the ticketed UI work on the Approvals, Reports, Admin and Sync Health screens (CAF-27, CAF-233) and the task-panel and evidence fixes. The history places those commits in October (see "Dating" in section 4). In October they also delivered the hardening tickets (CAF-173, CAF-218, CAF-219, CAF-220). Their commits appear in 27 of the 47 pull requests, all merged in October. In Jira they own 81 CAF work items. 61 are Done, 4 of those closed in October, and six of their epics are complete. Appendix A lists every Done ticket.</p>
+<p>Geethasri is the largest single contributor to the repository. Commits dated April carry the first four Lightning screens (Dashboard, Evidence, Attestation, Sync Health) and the ServiceNow outbound sync. Commits dated May carry the push and retire business rules and the six ServiceNow REST endpoints, followed by the setup guide and design decisions in June and July, and the presentation decks and ServiceNow fixes in August. These commits, dated April to 12 August, reached the repository in a single merge on 12 August 2026. Commits dated May to October also carry the ticketed UI work on the Approvals, Reports, Admin and Sync Health screens (CAF-27, CAF-233) and the task-panel and evidence fixes, which the history places in October (see "Dating" in section 4). In October they also delivered the hardening tickets (CAF-173, CAF-218, CAF-219, CAF-220), which were deployed to the Salesforce org on 21 October. Their commits appear in 27 of the 47 pull requests, all merged in October. In Jira they own 81 CAF work items, 61 Done. Section 5 lists the work assigned to them for November 2026 to March 2027.</p>
 
 <div class="kpis">
-  <div class="kpi"><b>76</b><span>distinct changes on main (92 commits incl. repeats)</span></div>
-  <div class="kpi"><b>44%</b><span>of the team's 174 distinct changes</span></div>
-  <div class="kpi"><b>131</b><span>files touched</span></div>
-  <div class="kpi"><b>22.4k</b><span>lines added (19% of the team total)</span></div>
+  <div class="kpi"><b>57</b><span>distinct changes dated April – October</span></div>
+  <div class="kpi"><b>27</b><span>of 47 pull requests contain their commits</span></div>
+  <div class="kpi"><b>61</b><span>of 81 CAF Jira work items Done</span></div>
+  <div class="kpi"><b>9</b><span>Jira items open for November – March</span></div>
 </div>
 
 <div class="figure">
 <svg viewBox="0 0 700 220" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial" font-size="10.5">
-  <!-- scale: 12 changes = 144px (12px per change); baseline y=180 -->
+  <!-- scale: 12 changes = 144px (12px per change); baseline y=180; 12 months, slot 53.33px, bar 30 -->
+  <rect x="50" y="20" width="160" height="160" fill="#2563A8" fill-opacity="0.06"/>
+  <rect x="210" y="20" width="160" height="160" fill="#0E7364" fill-opacity="0.06"/>
+  <rect x="370" y="20" width="160" height="160" fill="#A3520F" fill-opacity="0.06"/>
+  <rect x="530" y="20" width="160" height="160" fill="#8C99AB" fill-opacity="0.09"/>
   <g stroke="#D9DEE5"><line x1="50" y1="132" x2="690" y2="132"/><line x1="50" y1="84" x2="690" y2="84"/><line x1="50" y1="36" x2="690" y2="36"/></g>
   <line x1="50" y1="180" x2="690" y2="180" stroke="#13203A"/>
   <g fill="#6A7383" font-size="9" text-anchor="end">
     <text x="44" y="183">0</text><text x="44" y="135">4</text><text x="44" y="87">8</text><text x="44" y="39">12</text>
   </g>
-  <!-- 9 months, slot 71.1px, bar 36 -->
   <g fill="#2563A8">
-    <rect x="68"  y="72"  width="36" height="108"/>
-    <rect x="139" y="60"  width="36" height="120"/>
-    <rect x="210" y="36"  width="36" height="144"/>
+    <rect x="61.7" y="36" width="30" height="144"/>
+    <rect x="115" y="36" width="30" height="144"/>
+    <rect x="168.3" y="120" width="30" height="60"/>
   </g>
   <g fill="#0E7364">
-    <rect x="281" y="36" width="36" height="144"/>
-    <rect x="352" y="120" width="36" height="60"/>
-    <rect x="423" y="108" width="36" height="72"/>
+    <rect x="221.7" y="108" width="30" height="72"/>
+    <rect x="275" y="36" width="30" height="144"/>
+    <rect x="328.3" y="132" width="30" height="48"/>
   </g>
   <g fill="#A3520F">
-    <rect x="494" y="36" width="36" height="144"/>
-    <rect x="565" y="132" width="36" height="48"/>
-    <rect x="636" y="108" width="36" height="72"/>
+    <rect x="381.7" y="108" width="30" height="72"/>
+  </g>
+  <g fill="none" stroke="#8C99AB" stroke-dasharray="3 3">
+    <rect x="435" y="150" width="30" height="30"/><rect x="488.3" y="150" width="30" height="30"/>
+    <rect x="541.7" y="150" width="30" height="30"/><rect x="595" y="150" width="30" height="30"/><rect x="648.3" y="150" width="30" height="30"/>
   </g>
   <g text-anchor="middle" fill="#13203A">
-    <text x="86" y="66">9</text><text x="157" y="54">10</text><text x="228" y="30">12</text>
-    <text x="299" y="30">12</text><text x="370" y="114">5</text><text x="441" y="102">6</text>
-    <text x="512" y="30">12</text><text x="583" y="126">4</text><text x="654" y="102">6</text>
-  </g>
-  <g font-size="9.5" fill="#4A5568">
+    <text x="76.7" y="30">12</text><text x="130" y="30">12</text><text x="183.3" y="114">5</text>
+    <text x="236.7" y="102">6</text><text x="290" y="30">12</text><text x="343.3" y="126">4</text>
+    <text x="396.7" y="102">6</text>
   </g>
   <g text-anchor="middle" fill="#4A5568" font-size="9.5">
-    <text x="86" y="196">Feb</text><text x="157" y="196">Mar</text><text x="228" y="196">Apr</text>
-    <text x="299" y="196">May</text><text x="370" y="196">Jun</text><text x="441" y="196">Jul</text>
-    <text x="512" y="196">Aug</text><text x="583" y="196">Sep</text><text x="654" y="196">Oct</text>
+    <text x="76.7" y="196">Apr</text><text x="130" y="196">May</text><text x="183.3" y="196">Jun</text>
+    <text x="236.7" y="196">Jul</text><text x="290" y="196">Aug</text><text x="343.3" y="196">Sep</text>
+    <text x="396.7" y="196">Oct</text><text x="450" y="196">Nov</text><text x="503.3" y="196">Dec</text>
+    <text x="556.7" y="196">Jan</text><text x="610" y="196">Feb</text><text x="663.3" y="196">Mar</text>
   </g>
   <g text-anchor="end" font-size="10" fill="#13203A">
     <text x="690" y="14"><tspan font-weight="700">Jira tickets worked: 81</tspan><tspan fill="#4A5568"> · 61 Done</tspan></text>
   </g>
   <g text-anchor="middle" font-weight="700" font-size="10">
-    <text x="157" y="214" fill="#2563A8">Q1 · 31</text>
-    <text x="370" y="214" fill="#0E7364">Q2 · 23</text>
-    <text x="583" y="214" fill="#A3520F">Q3 · 22</text>
+    <text x="130" y="214" fill="#2563A8">Q1 · 29</text>
+    <text x="290" y="214" fill="#0E7364">Q2 · 22</text>
+    <text x="450" y="214" fill="#A3520F">Q3 · 6 to date</text>
+    <text x="610" y="214" fill="#6A7383">Q4 · planned</text>
   </g>
 </svg>
-<div class="caption">Bars: distinct code changes per month, by the date each commit carries. Repeated copies of a change are counted once, under the earlier date. 16 of these changes (May 2, June 3, July 5, August 1, September 4, October 1) carry dates the history contradicts: their commits sit on top of commits made in October, so they cannot have been made in the month shown. Dated by what the history supports, all 16 belong in October (see "Dating" in section 4). Jira tickets worked: CAF work items assigned to Geethasri at the time of writing (see section 4 and Appendix A). Section 3 shows when the code reached main.</div>
+<div class="caption">Bars: distinct code changes per month, by the date each commit carries. Repeated copies of a change are counted once, under the earlier date. Commits dated April to 12 August reached the repository in one merge on 12 August 2026. 16 of these changes (May 2, June 3, July 5, August 1, September 4, October 1) carry dates the history contradicts: their commits sit on top of commits made in October, so they cannot have been made in the month shown. Dated by what the history supports, all 16 belong in October (see "Dating" in section 4). Outlines from November are planned months, not a forecast of volume. Jira tickets worked: CAF work items assigned to Geethasri at the time of writing (see section 4 and Appendix A).</div>
 </div>
 
 <table>
   <thead><tr><th style="width:16%">Quarter</th><th style="width:22%">Focus</th><th>What they delivered</th></tr></thead>
   <tbody>
-    <tr><td><b>Q1</b><br>Feb–Apr</td><td>Foundation</td><td>Repository scaffold, README, technical design with integration diagram and security model; Salesforce objects, permission set, layouts and tabs; Apex task, evidence, attestation, dashboard and sync-health services; Dashboard, Evidence, Attestation and Sync Health screens</td></tr>
-    <tr><td><b>Q2</b><br>May–Jul</td><td>ServiceNow API, first tickets</td><td>Push and retire business rules; six scripted REST endpoints; ServiceNow setup guide with verified behaviour and known gaps; key design decisions in the technical design. Dated May–July, placed in October by the history: CAF-27 filters, CSV export, callout-log filtering, Sync Health and Reports changes; first CAF-233 Approvals screen and null checks</td></tr>
-    <tr><td><b>Q3</b><br>Aug–Oct</td><td>Decks, fixes, hardening</td><td>August: business and technical deck builders and screenshots; ServiceNow short-description and null-state fixes. Dated August–September, placed in October by the history: approvals test validations; task-panel, evidence-reload and outage-reporting fixes; CAF-233 grid sort and saved preferences. October: CAF-233 grid filters and totals; CAF-173, CAF-218, CAF-219, CAF-220</td></tr>
+    <tr><td><b>Q1</b><br>Apr–Jun 2026</td><td>Lightning screens, ServiceNow sync and API</td><td>Dated April: Dashboard, Evidence, Attestation and Sync Health screens; CAFSalesforceSync, caf_short_desc and the control push rule. Dated May: request push and control retire rules; six scripted REST endpoints; ServiceNow setup guide. Dated June: verified behaviour; key design decisions. Dated May–June, placed in October by the history: CAF-27 clear filters, CSV export and callout-log changes</td></tr>
+    <tr><td><b>Q2</b><br>Jul–Sep 2026</td><td>Decks and ServiceNow fixes</td><td>Dated July: known gaps in the setup guide. Dated August: business and technical deck builders and screenshots; ServiceNow short-description and null-state fixes. Dated July–September, placed in October by the history: CAF-27 Sync Health and Reports changes; CAF-233 Approvals screen, null checks, grid sort and saved preferences; approvals test validations; task-panel, evidence-reload and outage-reporting fixes</td></tr>
+    <tr><td><b>Q3</b><br>Oct–Dec 2026</td><td>Hardening; workflow and UAT planned</td><td>October: CAF-233 grid filters and totals; CAF-173, CAF-218, CAF-219, CAF-220, merged and deployed to the Salesforce org on 21 October. November–December: planned items in section 5</td></tr>
+    <tr><td><b>Q4</b><br>Jan–Mar 2027</td><td>Planned</td><td>Project milestones: defect resolution, production readiness and handover. No Jira items assigned to them yet (section 5)</td></tr>
   </tbody>
 </table>
 
@@ -145,7 +153,7 @@
     <tr><td>Testing</td><td class="num">990</td><td>Approvals test validations</td></tr>
   </tbody>
 </table>
-<p class="note">Line counts are lines added on main, excluding merges. Generated or bulk files (for example LWC markup and deck images) push some areas up.</p>
+<p class="note">Line counts are lines added on main, excluding merges, across all of their commits including the 19 dated February and March 2026. Generated or bulk files (for example LWC markup and deck images) push some areas up.</p>
 
 <h2>Ticketed work</h2>
 <table>
@@ -217,6 +225,7 @@
 
 <h2>Changes since the previous version of this report</h2>
 <ul>
+  <li><b>Period:</b> now April 2026 – March 2027. The 19 changes dated February and March 2026 are left out of the chart, the quarter table and the change count; the area table and Appendix A still cover all of their work. Section 5 adds the work assigned for November – March.</li>
   <li><b>Now Done:</b> CAF-104 (TC-INT-003, a new task appears in Salesforce) and CAF-181 (the evidence gate binds the API but not the portal or an administrator).</li>
   <li><b>Moved forward:</b> CAF-233 from In Progress to Testing.</li>
   <li><b>Code:</b> no new commits of theirs. Six more pull requests merged in October (#42–#47), all Rehan Sadiq's, so the team totals moved: 174 distinct changes (was 168) and 47 pull requests (was 41).</li>
@@ -266,9 +275,27 @@
 </table>
 <p>The monthly chart in section 1 shows each change in the month it carries, and its caption counts the sixteen above. The earliest date the history supports is the commit's own date or the latest date of anything it is built on, whichever is later. By that rule, 2 changes move out of May, 3 out of June, 5 out of July, 1 out of August and all 4 out of September into October. The months would then read May 10, June 2, July 1, August 11, September 0 and October 21. Git shows when a commit was made, not when the work behind it was done. The same pattern appears in other contributors' commits on main.</p>
 
+<!-- ============================ PLANNED ============================ -->
+<h1>5. Planned work, November 2026 – March 2027</h1>
+<p>Work assigned to Geethasri in Jira and not yet done, at the time of writing. This is planned work, not delivered work. Jira states are as read in October 2026.</p>
+<table>
+  <thead><tr><th style="width:12%">Ticket</th><th>Title</th><th style="width:20%">Depends on</th><th style="width:12%">Month</th></tr></thead>
+  <tbody>
+    <tr><td>CAF-218, 219, 220</td><td>Close out: code merged and deployed 21 October; tickets moved back to To Do</td><td>Review and test</td><td>Nov</td></tr>
+    <tr><td>CAF-232</td><td>ServiceNow: push request and task assignee, manager and Business Owner</td><td>—</td><td>Nov</td></tr>
+    <tr><td>CAF-223</td><td>Utility bar: my open tasks count and sync status chip</td><td>CAF-232</td><td>Nov</td></tr>
+    <tr><td>CAF-225</td><td>cafMyWork: my open, due in seven days, overdue, recently attested</td><td>CAF-232</td><td>Nov</td></tr>
+    <tr><td>CAF-231</td><td>Route CafSyncHealth through CafCallout and decide its permission checks</td><td>—</td><td>Nov</td></tr>
+    <tr><td>CAF-227</td><td>Dashboard v2: filters and search by control, status, tier and my applications</td><td>CAF-232, tier push</td><td>Dec</td></tr>
+    <tr><td>CAF-228</td><td>Dashboard v2: tooltips, column drill, legend, show/hide, sticky header, CSV export and print</td><td>Control instructions push</td><td>Dec</td></tr>
+  </tbody>
+</table>
+<p class="note">CAF-221, CAF-222, CAF-224, CAF-226, CAF-229 and CAF-230 are also assigned to Geethasri in Jira, but they were built and merged under other commits in October (see "Where Jira and the code disagree"), so they are not listed as their planned work. The project's January – March 2027 milestones (defect resolution and regression; production readiness and integration hardening; final validation, UAT sign-off and handover) have no Jira items assigned to Geethasri yet.</p>
+
 <h2>Method and caveats</h2>
 <ul class="note">
-  <li>Source: <code>git log main --no-merges</code> at 125ac13, filtered by the email geethasri.chintha@reyantech.co.uk, which covers both author names. The figures at the previous source, 571386c, were reproduced exactly before updating.</li>
+  <li>Source: <code>git log main --no-merges</code> at 9a52d51 (24 October 2026), filtered by the email geethasri.chintha@reyantech.co.uk, which covers both author names. No commits of theirs were added between 125ac13 and 9a52d51.</li>
+  <li>The repository was created on GitHub on 9 August 2026. Commits dated before then arrived in merge <code>b4a6eea</code> on 12 August 2026 and carry the dates recorded by their authors.</li>
   <li>16 of their 92 commits repeat the subject of another. Counts of "changes" use distinct subjects, dated by the earlier copy, with contradicted dates noted as described under "Dating". Line counts include every copy, as in earlier versions of this report.</li>
   <li>Commits measure activity, not effort or quality. Review, pairing and testing in the org are not captured.</li>
   <li>Jira data: issues assigned to account "Chintha Geetha sri", read in October 2026.</li>
